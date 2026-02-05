@@ -1,11 +1,21 @@
 from django.urls import path
 from . import views
 
+app_name = 'team7'
+
 urlpatterns = [
-    # API Endpoints
-    path("api/submit-writing/", views.submit_writing, name="submit_writing"),
+    # API Endpoints (Controller Layer - SDD Section 2.A)
     
-    # HTML Views (Front-end will use these later)
-    path("", views.base, name="team7_index"),
-    path("ping/", views.ping, name="team7_ping"),
+    # Writing Evaluation Endpoint (UC-01, FR-WR, FR-API-02)
+    path("api/v1/evaluate/writing/", views.submit_writing, name="evaluate-writing"),
+    
+    # Student History/Progress Endpoint (UC-03, FR-MON)
+    path("api/v1/history/", views.get_history, name="get-history"),
+    path("api/v1/history/<str:user_id>/", views.get_history, name="get-history-by-user"),
+    
+    # Health Check (FR-API-01)
+    path("ping/", views.ping, name="ping"),
+    
+    # HTML Views (Front-end)
+    path("", views.base, name="index"),
 ]
