@@ -20,17 +20,17 @@
     <header class="header">
         <div class="header-inner">
             <div class="logo-section">
-                <a href="index.html" class="logo-link">
+                <a href="{% url 'team7:index' %}" class="logo-link">
                     <div class="logo-icon">AI</div>
                     <div class="logo-text">آکادمی زبان</div>
                 </a>
             </div>
             <nav class="navigation-menu">
-                <a href="index.html" class="nav-link active">خانه</a>
+                <a href="{% url 'team7:index' %}" class="nav-link active">خانه</a>
                 <a href="#speaking" class="nav-link">مکالمه</a>
                 <a href="#writing" class="nav-link">نوشتن</a>
                 <a href="#tests" class="nav-link">آزمون‌ها</a>
-                <a href="#dashboard" class="nav-link">داشبورد</a>
+                <a href="{% url 'team7:dashboard' %}" class="nav-link">داشبورد</a>
             </nav>
             <div class="header-buttons">
                 <button class="btn-login">ورود</button>
