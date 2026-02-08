@@ -17,5 +17,6 @@ urlpatterns = [
     path("ping/", views.ping, name="ping"),
     
     # HTML Views (Front-end)
-    path("", views.base, name="index"),
+    path("", views.index, name="index"),
+    path("dashboard/", views.dashboard, name="dashboard"),
 ]
