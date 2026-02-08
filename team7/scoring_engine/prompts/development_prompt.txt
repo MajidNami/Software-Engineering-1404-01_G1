@@ -1,0 +1,4 @@
+You evaluate idea development depth.
+Return format:
+SCORE: X
+EXPLANATION: ...

@@ -1,10 +1,9 @@
 import json
 import logging
 import uuid
-from django.conf import settings
 from django.utils import timezone
-from openai import OpenAI
 from .models import Evaluation, DetailedScore, Question
+from .scoring_engine.api import score_essay
 
 logger = logging.getLogger(__name__)
 
@@ -21,12 +20,7 @@ class WritingEvaluator:
     MAX_WORDS = 1000
 
     def __init__(self):
-        """Initialize LLM client from Django settings."""
-        self.client = OpenAI(
-            api_key=getattr(settings, 'AI_GENERATOR_API_KEY', 'PLACEHOLDER_KEY'),
-            base_url="https://api.gpt4-all.xyz/v1"
-        )
-        self.model = "gemini-3-flash-preview"
+        pass
 
     def validate_length(self, text):
         """Validate word count per SRS FR-WR-01.
@@ -42,62 +36,26 @@ class WritingEvaluator:
         return True, "OK"
 
     def analyze(self, text, question_obj, mode="independent"):
-        """Send text to LLM and return structured JSON per ETS rubric.
-        
-        Args:
-            text: Student essay
-            question_obj: Question model instance
-            mode: 'independent' or 'integrated'
-            
-        Returns:
-            dict: Parsed JSON with overall_score, feedback, criteria OR None on failure
-        """
-        system_prompt = (
-            "You are a strict TOEFL iBT Writing evaluator. "
-            "Analyze the student's essay based on ETS official rubrics. "
-            "Return ONLY a raw JSON object (no markdown, no code blocks). \n"
-            "JSON SCHEMA: {\n"
-            "  'overall_score': float between 0.0 and 5.0,\n"
-            "  'feedback': string with overall constructive feedback,\n"
-            "  'criteria': [\n"
-            "    {'name': 'Grammar', 'score': float 0-5, 'comment': string},\n"
-            "    {'name': 'Vocabulary', 'score': float 0-5, 'comment': string},\n"
-            "    {'name': 'Organization', 'score': float 0-5, 'comment': string},\n"
-            "    {'name': 'Topic Development', 'score': float 0-5, 'comment': string}\n"
-            "  ]\n"
-            "}\n"
-            "Ensure 'feedback' includes at least ONE specific suggestion (FR-WR-05)."
-        )
-
-        user_content = (
-            f"Task Mode: {mode}\n"
-            f"Question: {question_obj.prompt_text}\n"
-            f"\nStudent Essay:\n{text}"
-        )
-
         try:
-            response = self.client.chat.completions.create(
-                model=self.model,
-                messages=[
-                    {"role": "system", "content": system_prompt},
-                    {"role": "user", "content": user_content}
-                ],
-                stream=False,
-                temperature=0.3,  # Low temperature for consistency
+            band_score = score_essay(
+                essay=text,
+                question=question_obj.prompt_text
             )
 
-            raw_content = response.choices[0].message.content
-            clean_content = raw_content.replace("```json", "").replace("```", "").strip()
-            result_json = json.loads(clean_content)
+            return {
+                "overall_score": band_score,
+                "feedback": "Automated TOEFL evaluation completed.",
+                "criteria": [
+                    {
+                        "name": "Overall",
+                        "score": band_score,
+                        "comment": "AI generated score"
+                    }
+                ]
+            }
 
-            logger.info(f"WritingEvaluator.analyze: Success. Score={result_json.get('overall_score')}")
-            return result_json
-
-        except json.JSONDecodeError as e:
-            logger.error(f"WritingEvaluator JSON parse error: {str(e)}")
-            return None
         except Exception as e:
-            logger.error(f"WritingEvaluator LLM error: {str(e)}")
+            logger.error(f"Scoring engine error: {str(e)}")
             return None
 
 
