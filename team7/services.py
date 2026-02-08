@@ -507,3 +507,197 @@ class EvaluationService:
                 "error": "INTERNAL_ERROR",
                 "message": "Failed to retrieve history."
             }, 500
+
+
+class AnalyticsService:
+    """Analytics and trend calculation service (UC-03, FR-MON-02).
+    
+    Provides statistical analysis of user performance over time.
+    Calculates trends, averages, and improvement metrics.
+    """
+
+    @staticmethod
+    def calculate_moving_average(scores, window_size=3):
+        """Calculate moving average for trend smoothing.
+        
+        Args:
+            scores: List of numeric scores
+            window_size: Number of data points to average (default 3)
+            
+        Returns:
+            list: Moving averages (same length as input, padded with None)
+        """
+        if not scores or len(scores) < window_size:
+            return [None] * len(scores)
+        
+        moving_avgs = []
+        for i in range(len(scores)):
+            if i < window_size - 1:
+                moving_avgs.append(None)
+            else:
+                window = scores[i - window_size + 1:i + 1]
+                avg = sum(window) / window_size
+                moving_avgs.append(round(avg, 2))
+        
+        return moving_avgs
+
+    @staticmethod
+    def calculate_improvement_rate(scores):
+        """Calculate overall improvement rate (first to last score).
+        
+        Args:
+            scores: List of numeric scores (chronological order)
+            
+        Returns:
+            dict: {
+                'improvement': float (percentage change),
+                'trend': str ('improving', 'declining', 'stable')
+            }
+        """
+        if not scores or len(scores) < 2:
+            return {'improvement': 0.0, 'trend': 'insufficient_data'}
+        
+        first_score = scores[0]
+        last_score = scores[-1]
+        
+        if first_score == 0:
+            return {'improvement': 0.0, 'trend': 'stable'}
+        
+        improvement = ((last_score - first_score) / first_score) * 100
+        
+        if improvement > 5:
+            trend = 'improving'
+        elif improvement < -5:
+            trend = 'declining'
+        else:
+            trend = 'stable'
+        
+        return {
+            'improvement': round(improvement, 2),
+            'trend': trend
+        }
+
+    @staticmethod
+    def calculate_statistics(scores):
+        """Calculate basic statistics for a score set.
+        
+        Args:
+            scores: List of numeric scores
+            
+        Returns:
+            dict: Statistics including mean, min, max, median
+        """
+        if not scores:
+            return {
+                'mean': None,
+                'min': None,
+                'max': None,
+                'median': None,
+                'count': 0
+            }
+        
+        sorted_scores = sorted(scores)
+        n = len(sorted_scores)
+        
+        return {
+            'mean': round(sum(scores) / n, 2),
+            'min': min(scores),
+            'max': max(scores),
+            'median': sorted_scores[n // 2] if n % 2 == 1 else round((sorted_scores[n // 2 - 1] + sorted_scores[n // 2]) / 2, 2),
+            'count': n
+        }
+
+    def get_user_analytics(self, user_id, limit=50):
+        """Enhanced analytics with trends and statistics (UC-03).
+        
+        Args:
+            user_id: UUID of student
+            limit: Max records to analyze
+            
+        Returns:
+            tuple: (response_dict, http_status_code)
+        """
+        try:
+            evaluations = Evaluation.objects.filter(
+                user_id=user_id
+            ).select_related('question').prefetch_related('detailed_scores').order_by('-created_at')[:limit]
+
+            if not evaluations.exists():
+                logger.info(f"No evaluations found for user {user_id}")
+                return {
+                    "status": "no_data",
+                    "message": "No attempts yet. Start a practice test!",
+                    "attempts": [],
+                    "analytics": None
+                }, 200
+
+            # Reverse to get chronological order for trend calculation
+            evaluations_list = list(evaluations)
+            evaluations_list.reverse()
+
+            # Extract scores by task type
+            writing_scores = []
+            speaking_scores = []
+            all_scores = []
+            attempts = []
+
+            for eval_obj in evaluations_list:
+                score = float(eval_obj.overall_score) if eval_obj.overall_score else None
+                
+                if score is not None:
+                    all_scores.append(score)
+                    if eval_obj.task_type == 'writing':
+                        writing_scores.append(score)
+                    elif eval_obj.task_type == 'speaking':
+                        speaking_scores.append(score)
+                
+                attempts.append({
+                    "evaluation_id": str(eval_obj.evaluation_id),
+                    "task_type": eval_obj.task_type,
+                    "question_id": str(eval_obj.question.question_id),
+                    "overall_score": score,
+                    "created_at": eval_obj.created_at.isoformat(),
+                    "criteria": [
+                        {
+                            "name": ds.criterion,
+                            "score": float(ds.score_value)
+                        }
+                        for ds in eval_obj.detailed_scores.all()
+                    ]
+                })
+
+            # Reverse attempts back to descending order for display
+            attempts.reverse()
+
+            # Calculate analytics
+            analytics = {
+                'overall': {
+                    'statistics': self.calculate_statistics(all_scores),
+                    'improvement': self.calculate_improvement_rate(all_scores),
+                    'moving_average': self.calculate_moving_average(all_scores, window_size=3)
+                },
+                'writing': {
+                    'statistics': self.calculate_statistics(writing_scores),
+                    'improvement': self.calculate_improvement_rate(writing_scores),
+                } if writing_scores else None,
+                'speaking': {
+                    'statistics': self.calculate_statistics(speaking_scores),
+                    'improvement': self.calculate_improvement_rate(speaking_scores),
+                } if speaking_scores else None
+            }
+
+            logger.info(f"Analytics calculated for user {user_id}: {analytics['overall']['statistics']['count']} evaluations")
+
+            return {
+                "status": "success",
+                "total_attempts": len(attempts),
+                "attempts": attempts,
+                "analytics": analytics
+            }, 200
+
+        except Exception as e:
+            logger.exception(f"Error fetching analytics for user {user_id}: {str(e)}")
+            return {
+                "error": "INTERNAL_ERROR",
+                "message": "Failed to retrieve analytics."
+            }, 500

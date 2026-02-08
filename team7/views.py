@@ -6,7 +6,7 @@ from core.auth import api_login_required
 import json
 import logging
 from .models import Question, Evaluation, DetailedScore
-from .services import EvaluationService
+from .services import EvaluationService, AnalyticsService
 
 logger = logging.getLogger(__name__)
 TEAM_NAME = "team7"
@@ -164,4 +164,46 @@ def submit_speaking(request):
         return JsonResponse({
             "error": "INTERNAL_ERROR",
             "message": "An unexpected error occurred"
+        }, status=500)
+
+
+@require_http_methods(["GET"])
+@api_login_required
+def get_analytics(request, user_id=None):
+    """Controller endpoint for student analytics with trends (UC-03, FR-MON-02).
+    
+    Returns evaluation history with statistical analysis and trends.
+    
+    Query Parameters:
+        - limit: Max number of records (default 50)
+    
+    Response includes:
+        - attempts: List of evaluations
+        - analytics: Overall, writing, and speaking statistics
+            - statistics: mean, min, max, median, count
+            - improvement: percentage change and trend direction
+            - moving_average: 3-point moving average for smoothing
+    """
+    try:
+        # Use request.user.id if available, else from query param
+        if not user_id:
+            user_id = request.GET.get('user_id') or str(request.user.id)
+
+        analytics_service = AnalyticsService()
+        limit = int(request.GET.get('limit', 50))
+        result, status_code = analytics_service.get_user_analytics(user_id, limit)
+
+        return JsonResponse(result, status=status_code)
+
+    except ValueError:
+        logger.error(f"Invalid limit parameter: {request.GET.get('limit')}")
+        return JsonResponse({
+            "error": "INVALID_INPUT",
+            "message": "limit must be an integer"
+        }, status=400)
+    except Exception as e:
+        logger.exception(f"Error in get_analytics: {str(e)}")
+        return JsonResponse({
+            "error": "INTERNAL_ERROR",
+            "message": "Failed to retrieve analytics"
         }, status=500)

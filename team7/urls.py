@@ -16,6 +16,10 @@ urlpatterns = [
     path("api/v1/history/", views.get_history, name="get-history"),
     path("api/v1/history/<str:user_id>/", views.get_history, name="get-history-by-user"),
     
+    # Analytics Endpoint with Trends (UC-03, FR-MON-02)
+    path("api/v1/analytics/", views.get_analytics, name="get-analytics"),
+    path("api/v1/analytics/<str:user_id>/", views.get_analytics, name="get-analytics-by-user"),
+    
     # Health Check (FR-API-01)
     path("ping/", views.ping, name="ping"),
     
