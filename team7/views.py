@@ -107,3 +107,61 @@ def get_history(request, user_id=None):
             "error": "INTERNAL_ERROR",
             "message": "Failed to retrieve history"
         }, status=500)
+
+
+@csrf_exempt
+@require_http_methods(["POST"])
+@api_login_required
+def submit_speaking(request):
+    """Controller endpoint for speaking submission (UC-02, FR-SP, FR-API-02).
+    
+    Expects multipart/form-data:
+        - user_id: UUID string
+        - question_id: UUID string
+        - audio_file: Audio file (.wav, .mp3, .flac)
+    
+    Returns JSON with evaluation result, transcript, and detailed scores.
+    """
+    try:
+        # Extract form data
+        user_id = request.POST.get('user_id')
+        question_id = request.POST.get('question_id')
+        
+        # Input validation
+        if not all([user_id, question_id]):
+            logger.warning(f"Missing required fields in speaking submission")
+            return JsonResponse({
+                "error": "INVALID_INPUT",
+                "message": "Missing user_id or question_id"
+            }, status=400)
+
+        # Check for audio file in request.FILES
+        if 'audio_file' not in request.FILES:
+            logger.warning(f"No audio file in request")
+            return JsonResponse({
+                "error": "INVALID_INPUT",
+                "message": "Missing audio_file in request"
+            }, status=400)
+
+        audio_file = request.FILES['audio_file']
+        
+        # Log file info
+        logger.info(f"Received speaking submission: user={user_id}, question={question_id}, file={audio_file.name}, size={audio_file.size} bytes")
+
+        # Call service orchestrator
+        service = EvaluationService()
+        result, status_code = service.evaluate_speaking(
+            user_id=user_id,
+            question_id=question_id,
+            audio_file=audio_file,
+            audio_filename=audio_file.name
+        )
+
+        return JsonResponse(result, status=status_code)
+
+    except Exception as e:
+        logger.exception(f"Unexpected error in submit_speaking: {str(e)}")
+        return JsonResponse({
+            "error": "INTERNAL_ERROR",
+            "message": "An unexpected error occurred"
+        }, status=500)

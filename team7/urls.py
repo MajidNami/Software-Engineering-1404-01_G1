@@ -9,6 +9,9 @@ urlpatterns = [
     # Writing Evaluation Endpoint (UC-01, FR-WR, FR-API-02)
     path("api/v1/evaluate/writing/", views.submit_writing, name="evaluate-writing"),
     
+    # Speaking Evaluation Endpoint (UC-02, FR-SP, FR-API-02)
+    path("api/v1/evaluate/speaking/", views.submit_speaking, name="evaluate-speaking"),
+    
     # Student History/Progress Endpoint (UC-03, FR-MON)
     path("api/v1/history/", views.get_history, name="get-history"),
     path("api/v1/history/<str:user_id>/", views.get_history, name="get-history-by-user"),
