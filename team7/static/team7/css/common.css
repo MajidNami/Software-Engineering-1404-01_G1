@@ -1,0 +1,342 @@
+/* ==================== Base Styles ==================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: var(--font-family);
+    padding: var(--spacing-sm);
+    min-height: 100vh;
+    direction: rtl;
+    color: var(--color-primary-dark);
+}
+
+/* ==================== HEADER ==================== */
+.header {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(8px);
+    box-shadow: var(--shadow-sm);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    height: var(--header-height);
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 var(--spacing-4xl);
+    gap: var(--spacing-3xl);
+}
+
+.header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+    padding: 0 var(--spacing-4xl);
+}
+
+/* ==================== LOGO ==================== */
+.logo-section {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    flex-shrink: 0;
+}
+
+.logo-icon {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--gradient-primary);
+    border-radius: var(--radius-md);
+    font-size: 24px;
+    font-weight: var(--font-weight-bold);
+    color: var(--color-white);
+    flex-shrink: 0;
+}
+
+.logo-text {
+    font-size: 20px;
+    font-weight: var(--font-weight-bold);
+    color: var(--color-primary-dark);
+    white-space: nowrap;
+}
+
+.logo-link {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    text-decoration: none;
+    transition: opacity var(--transition-normal);
+}
+
+.logo-link:hover {
+    opacity: 0.9;
+}
+
+/* ==================== NAVIGATION ==================== */
+.navigation-menu {
+    display: flex;
+    gap: var(--spacing-2xl);
+    align-items: center;
+    flex: 1;
+    justify-content: center;
+}
+
+.nav-link {
+    text-decoration: none;
+    color: var(--color-primary-dark);
+    font-size: 15px;
+    font-weight: var(--font-weight-medium);
+    transition: color var(--transition-normal);
+    position: relative;
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    right: 0;
+    width: 0;
+    height: 2px;
+    background: var(--color-accent-pink);
+    transition: width var(--transition-normal);
+}
+
+.nav-link:hover::after,
+.nav-link.active::after {
+    width: 100%;
+}
+
+.nav-link:hover,
+.nav-link.active {
+    color: var(--color-accent-pink);
+}
+
+.header-buttons {
+    display: flex;
+    gap: var(--spacing-md);
+    align-items: center;
+    flex-shrink: 0;
+}
+
+/* ==================== BUTTONS ==================== */
+.btn-login {
+    background: transparent;
+    border: 2px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: var(--font-weight-medium);
+    color: var(--color-primary-dark);
+    cursor: pointer;
+    transition: all var(--transition-normal);
+}
+
+.btn-login:hover {
+    background: var(--color-background-light);
+    border-color: var(--color-primary-light);
+}
+
+.btn-login:active {
+    transform: scale(0.98);
+}
+
+.btn-signup {
+    background: var(--gradient-primary);
+    border: none;
+    border-radius: var(--radius-sm);
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: var(--font-weight-bold);
+    color: var(--color-white);
+    cursor: pointer;
+    box-shadow: var(--shadow-md);
+    transition: all var(--transition-normal);
+}
+
+.btn-signup:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-hover);
+}
+
+.btn-signup:active {
+    transform: translateY(0);
+}
+
+.btn-start {
+    background: var(--gradient-primary);
+    border: none;
+    border-radius: var(--radius-sm);
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: var(--font-weight-bold);
+    color: var(--color-white);
+    cursor: pointer;
+    box-shadow: var(--shadow-md);
+    transition: all var(--transition-normal);
+}
+
+.btn-start:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-hover);
+}
+
+.btn-start:active {
+    transform: scale(0.95);
+}
+
+/* Mobile Menu Toggle Button */
+.menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: var(--color-primary-dark);
+}
+
+.menu-toggle:focus {
+    outline: none;
+}
+
+/* ==================== USER PROFILE ==================== */
+.user-profile {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+}
+
+.user-name {
+    font-size: 16px;
+    font-weight: var(--font-weight-medium);
+    color: var(--color-primary-dark);
+}
+
+.user-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-full);
+    background: var(--gradient-avatar);
+}
+
+/* ==================== FOOTER ==================== */
+.footer {
+    background: var(--color-primary-dark);
+    color: var(--color-white);
+    padding: var(--spacing-4xl) var(--spacing-4xl);
+    text-align: center;
+    margin-top: auto;
+}
+
+.footer-content {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.footer-text {
+    font-size: 14px;
+    opacity: 0.9;
+}
+
+/* ==================== ANIMATIONS ==================== */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.fade-in-up {
+    animation: fadeInUp var(--transition-slow) ease forwards;
+}
+
+.slide-in {
+    animation: slideIn var(--transition-slow) ease forwards;
+}
+
+.slide-in-right {
+    animation: slideInRight var(--transition-slow) ease forwards;
+}
+
+/* ==================== UTILITY CLASSES ==================== */
+.container {
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 var(--spacing-4xl);
+}
+
+/* Responsive Helper */
+@media (max-width: 1024px) {
+    .header-inner,
+    .header-content {
+        padding: 0 var(--spacing-2xl);
+    }
+    
+    .navigation-menu {
+        gap: var(--spacing-lg);
+    }
+}
+
+@media (max-width: 768px) {
+    .header-inner,
+    .header-content {
+        padding: 0 var(--spacing-lg);
+    }
+    
+    .navigation-menu {
+        display: none;
+    }
+    
+    .menu-toggle {
+        display: block;
+    }
+    
+    .header-buttons {
+        gap: var(--spacing-sm);
+    }
+}
