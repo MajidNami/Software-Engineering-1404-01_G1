@@ -3,6 +3,261 @@
  * Page-specific functionality for exams
  */
 
+// ==================== Mock Data ====================
+/**
+ * Hardcoded exam data - can be replaced with API calls in future
+ */
+const examData = {
+    speaking: [
+        {
+            id: 'speak-1',
+            title: 'توصیف یک مکان مورد علاقه',
+            description: 'در این آزمون باید درباره مکانی که دوست دارید صحبت کنید و دلایل علاقه خود را بیان کنید',
+            type: 'گفتاری',
+            difficulty: 'آسان',
+            duration: '10 دقیقه',
+            questions: 3
+        },
+        {
+            id: 'speak-2',
+            title: 'بحث درباره فناوری و آموزش',
+            description: 'نظرات خود را درباره تأثیر فناوری بر سیستم آموزشی بیان کنید',
+            type: 'گفتاری',
+            difficulty: 'متوسط',
+            duration: '15 دقیقه',
+            questions: 3
+        },
+        {
+            id: 'speak-3',
+            title: 'معرفی خود و علایق شخصی',
+            description: 'خودتان را معرفی کنید و درباره علایق و سرگرمی‌های خود صحبت کنید',
+            type: 'گفتاری',
+            difficulty: 'آسان',
+            duration: '10 دقیقه',
+            questions: 2
+        },
+        {
+            id: 'speak-4',
+            title: 'بیان نظر درباره یک موضوع اجتماعی',
+            description: 'نظرات خود درباره یک موضوع اجتماعی جاری را بیان کنید و دلایل آن را توضیح دهید',
+            type: 'گفتاری',
+            difficulty: 'سخت',
+            duration: '20 دقیقه',
+            questions: 4
+        }
+    ],
+    writing: [
+        {
+            id: 'write-1',
+            title: 'نامه رسمی',
+            description: 'یک نامه رسمی برای درخواست اطلاعات بنویسید',
+            type: 'نوشتاری',
+            difficulty: 'آسان',
+            duration: '20 دقیقه',
+            questions: 1
+        },
+        {
+            id: 'write-2',
+            title: 'تحلیل متن آکادمیک',
+            description: 'متن آکادمیک داده شده را تحلیل کنید و نظرات خود را بیان کنید',
+            type: 'نوشتاری',
+            difficulty: 'متوسط',
+            duration: '25 دقیقه',
+            questions: 1
+        },
+        {
+            id: 'write-3',
+            title: 'داستان کوتاه',
+            description: 'با توجه به موضوع داده شده یک داستان کوتاه بنویسید',
+            type: 'نوشتاری',
+            difficulty: 'آسان',
+            duration: '25 دقیقه',
+            questions: 1
+        },
+        {
+            id: 'write-4',
+            title: 'مقاله توصیفی',
+            description: 'موضوعی را برگزینید و یک مقاله توصیفی بنویسید',
+            type: 'نوشتاری',
+            difficulty: 'سخت',
+            duration: '40 دقیقه',
+            questions: 1
+        }
+    ]
+};
+
+/**
+ * Hardcoded history data - can be replaced with API calls in future
+ */
+const historyData = [
+    {
+        id: 'hist-1',
+        title: 'توصیف مکان',
+        type: 'گفتاری',
+        score: 8.5,
+        duration: '15 دقیقه',
+        date: '1403/09/15'
+    },
+    {
+        id: 'hist-2',
+        title: 'معرفی خود',
+        type: 'گفتاری',
+        score: 7.5,
+        duration: '20 دقیقه',
+        date: '1403/09/12'
+    },
+    {
+        id: 'hist-3',
+        title: 'نامه رسمی',
+        type: 'نوشتاری',
+        score: 8.0,
+        duration: '25 دقیقه',
+        date: '1403/09/10'
+    },
+    {
+        id: 'hist-4',
+        title: 'تحلیل متن آکادمیک',
+        type: 'نوشتاری',
+        score: 7.0,
+        duration: '40 دقیقه',
+        date: '1403/09/08'
+    },
+    {
+        id: 'hist-5',
+        title: 'فناوری و آموزش',
+        type: 'گفتاری',
+        score: 7.8,
+        duration: '18 دقیقه',
+        date: '1403/09/05'
+    },
+    {
+        id: 'hist-6',
+        title: 'داستان کوتاه',
+        type: 'نوشتاری',
+        score: 8.2,
+        duration: '30 دقیقه',
+        date: '1403/08/28'
+    },
+    {
+        id: 'hist-7',
+        title: 'فناوری و آموزش',
+        type: 'گفتاری',
+        score: 7.8,
+        duration: '18 دقیقه',
+        date: '1403/09/05'
+    },
+    {
+        id: 'hist-8',
+        title: 'فناوری و آموزش',
+        type: 'گفتاری',
+        score: 7.8,
+        duration: '18 دقیقه',
+        date: '1403/09/05'
+    },
+    {
+        id: 'hist-9',
+        title: 'فناوری و آموزش',
+        type: 'گفتاری',
+        score: 7.8,
+        duration: '18 دقیقه',
+        date: '1403/09/05'
+    },
+    {
+        id: 'hist-10',
+        title: 'فناوری و آموزش',
+        type: 'گفتاری',
+        score: 7.8,
+        duration: '18 دقیقه',
+        date: '1403/09/05'
+    },
+];
+
+// ==================== Data Rendering Functions ====================
+/**
+ * Render carousel items from data
+ */
+function renderCarouselItems(containerId, items) {
+    const carousel = document.getElementById(containerId);
+    if (!carousel) return;
+
+    carousel.innerHTML = '';
+    
+    items.forEach((item, index) => {
+        const card = document.createElement('div');
+        card.className = 'exam-card';
+        if (index === 0) card.classList.add('active-card');
+        else card.classList.add('blur-card');
+        
+        const difficultyClass = 
+            item.difficulty === 'آسان' ? 'green' :
+            item.difficulty === 'متوسط' ? 'yellow' :
+            'red';
+        
+        card.innerHTML = `
+            <div class="card-header">
+                <span class="type-tag">${item.type}</span>
+                <span class="difficulty-badge ${difficultyClass}">${item.difficulty}</span>
+            </div>
+            <h3 class="card-title">${item.title}</h3>
+            <p class="card-description">${item.description}</p>
+            <div class="card-meta">
+                <div class="meta-item">
+                    <div class="meta-icon"></div>
+                    <span>${item.duration}</span>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-icon"></div>
+                    <span>${item.questions} سؤال</span>
+                </div>
+            </div>
+            <button class="card-button">شروع آزمون</button>
+        `;
+        
+        carousel.appendChild(card);
+    });
+}
+
+/**
+ * Render history table rows from data
+ */
+function renderHistoryTable(items) {
+    const tableContainer = document.querySelector('.history-table');
+    if (!tableContainer) return;
+
+    // Find or create table body
+    let tableBody = tableContainer.querySelector('.table-body');
+    if (!tableBody) {
+        tableBody = document.createElement('div');
+        tableBody.className = 'table-body';
+        tableContainer.appendChild(tableBody);
+    }
+
+    tableBody.innerHTML = '';
+    
+    if (items.length === 0) {
+        const emptyMessage = document.createElement('div');
+        emptyMessage.className = 'empty-message';
+        emptyMessage.textContent = 'آزمونی برای این دسته وجود ندارد';
+        tableBody.appendChild(emptyMessage);
+        return;
+    }
+    
+    items.forEach(item => {
+        const row = document.createElement('div');
+        row.className = 'table-row';
+        
+        row.innerHTML = `
+            <div><button class="view-button">مشاهده جزئیات</button></div>
+            <div><span class="score-badge">${item.score}</span></div>
+            <div>${item.duration}</div>
+            <div>${item.date}</div>
+            <div data-title="${item.title}">${item.title}</div>
+        `;
+        
+        tableBody.appendChild(row);
+    });
+}
+
 // ==================== Carousel Handlers ====================
 /**
  * Initialize carousel functionality
@@ -131,9 +386,8 @@ function initializeExamButtons() {
  */
 function initializeHistoryTabs() {
     const tabButtons = document.querySelectorAll('.tab-button');
-    const tableRows = document.querySelectorAll('.table-row');
     
-    tabButtons.forEach(button => {
+    tabButtons.forEach((button, index) => {
         button.addEventListener('click', function() {
             // Remove active class from all tabs
             tabButtons.forEach(btn => btn.classList.remove('active'));
@@ -143,10 +397,30 @@ function initializeHistoryTabs() {
             const tabType = this.textContent.trim();
             console.log('Switched to:', tabType);
             
-            // Filter table rows based on selected tab
-            filterHistoryTable(tabType);
+            // Update pagination state and reload data
+            paginationState.currentType = tabType;
+            paginationState.currentPage = 1;
+            
+            // Re-render table and pagination
+            const filteredData = getFilteredHistoryData(tabType);
+            paginationState.totalPages = calculateTotalPages(filteredData);
+            const paginatedData = getPaginatedItems(filteredData, 1);
+            
+            renderHistoryTable(paginatedData);
+            generatePaginationButtons(paginationState.totalPages);
+            initializeViewButtons();
         });
     });
+}
+
+/**
+ * Switch tab programmatically (backward compatibility)
+ */
+function switchTab(index) {
+    const tabButtons = document.querySelectorAll('.tab-button');
+    if (tabButtons[index]) {
+        tabButtons[index].click();
+    }
 }
 
 /**
@@ -192,31 +466,166 @@ function initializeViewButtons() {
     });
 }
 
-// ==================== Pagination Handlers ====================
+// ==================== Pagination State ====================
+const paginationState = {
+    currentPage: 1,
+    itemsPerPage: 5,
+    currentType: 'گفتاری',
+    totalPages: 1
+};
+
+// ==================== Pagination Utilities ====================
 /**
- * Initialize pagination controls
+ * Get filtered data based on current exam type
+ */
+function getFilteredHistoryData(examType) {
+    return historyData.filter(item => item.type === examType);
+}
+
+/**
+ * Calculate total pages
+ */
+function calculateTotalPages(filteredData) {
+    return Math.ceil(filteredData.length / paginationState.itemsPerPage);
+}
+
+/**
+ * Get paginated items
+ */
+function getPaginatedItems(filteredData, page) {
+    const startIndex = (page - 1) * paginationState.itemsPerPage;
+    const endIndex = startIndex + paginationState.itemsPerPage;
+    return filteredData.slice(startIndex, endIndex);
+}
+
+/**
+ * Generate pagination buttons dynamically
+ */
+function generatePaginationButtons(totalPages) {
+    const paginationContainer = document.querySelector('.pagination');
+    if (!paginationContainer) return;
+    
+    paginationContainer.innerHTML = '';
+    
+    // Previous button
+    const prevButton = document.createElement('button');
+    prevButton.className = 'pagination-button';
+    prevButton.textContent = 'قبلی';
+    prevButton.disabled = paginationState.currentPage === 1;
+    prevButton.addEventListener('click', () => goToPreviousPage());
+    paginationContainer.appendChild(prevButton);
+    
+    // Page number buttons
+    const maxVisiblePages = 5;
+    let startPage = 1;
+    let endPage = Math.min(totalPages, maxVisiblePages);
+    
+    // Adjust start and end if current page is near the end
+    if (paginationState.currentPage > maxVisiblePages - 2) {
+        startPage = Math.max(1, paginationState.currentPage - 2);
+        endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+    }
+    
+    // Add dots before if needed
+    if (startPage > 1) {
+        const dotsSpan = document.createElement('span');
+        dotsSpan.className = 'pagination-dots';
+        dotsSpan.textContent = '...';
+        paginationContainer.appendChild(dotsSpan);
+    }
+    
+    // Add page number buttons
+    for (let i = startPage; i <= endPage; i++) {
+        const pageButton = document.createElement('button');
+        pageButton.className = 'pagination-button';
+        pageButton.textContent = i;
+        
+        if (i === paginationState.currentPage) {
+            pageButton.classList.add('active');
+        }
+        
+        pageButton.addEventListener('click', () => goToPage(i));
+        paginationContainer.appendChild(pageButton);
+    }
+    
+    // Add dots after if needed
+    if (endPage < totalPages) {
+        const dotsSpan = document.createElement('span');
+        dotsSpan.className = 'pagination-dots';
+        dotsSpan.textContent = '...';
+        paginationContainer.appendChild(dotsSpan);
+    }
+    
+    // Add last page button if not visible
+    if (endPage < totalPages) {
+        const lastPageButton = document.createElement('button');
+        lastPageButton.className = 'pagination-button';
+        lastPageButton.textContent = totalPages;
+        lastPageButton.addEventListener('click', () => goToPage(totalPages));
+        paginationContainer.appendChild(lastPageButton);
+    }
+    
+    // Next button
+    const nextButton = document.createElement('button');
+    nextButton.className = 'pagination-button';
+    nextButton.textContent = 'بعدی';
+    nextButton.disabled = paginationState.currentPage === totalPages;
+    nextButton.addEventListener('click', () => goToNextPage());
+    paginationContainer.appendChild(nextButton);
+}
+
+/**
+ * Go to specific page
+ */
+function goToPage(pageNumber) {
+    const filteredData = getFilteredHistoryData(paginationState.currentType);
+    const totalPages = calculateTotalPages(filteredData);
+    
+    if (pageNumber < 1 || pageNumber > totalPages) return;
+    
+    paginationState.currentPage = pageNumber;
+    const paginatedData = getPaginatedItems(filteredData, pageNumber);
+    
+    renderHistoryTable(paginatedData);
+    generatePaginationButtons(totalPages);
+    initializeViewButtons();
+    
+    // Scroll to history section
+    document.querySelector('.history-section')?.scrollIntoView({ behavior: 'smooth' });
+}
+
+/**
+ * Go to next page
+ */
+function goToNextPage() {
+    const filteredData = getFilteredHistoryData(paginationState.currentType);
+    const totalPages = calculateTotalPages(filteredData);
+    
+    if (paginationState.currentPage < totalPages) {
+        goToPage(paginationState.currentPage + 1);
+    }
+}
+
+/**
+ * Go to previous page
+ */
+function goToPreviousPage() {
+    if (paginationState.currentPage > 1) {
+        goToPage(paginationState.currentPage - 1);
+    }
+}
+
+/**
+ * Initialize pagination on page load
  */
 function initializePagination() {
-    const paginationButtons = document.querySelectorAll('.pagination-button');
+    const filteredData = getFilteredHistoryData(paginationState.currentType);
+    paginationState.totalPages = calculateTotalPages(filteredData);
+    paginationState.currentPage = 1;
     
-    paginationButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            if (this.classList.contains('active')) return;
-            
-            // Remove active class from all buttons
-            paginationButtons.forEach(btn => btn.classList.remove('active'));
-            // Add active class to clicked button
-            this.classList.add('active');
-            
-            const pageNum = this.textContent.trim();
-            console.log('Navigating to page:', pageNum);
-            
-            // Scroll to top of history section
-            document.querySelector('.history-section')?.scrollIntoView({ behavior: 'smooth' });
-            
-            // Load new page data (implement actual data loading)
-        });
-    });
+    const paginatedData = getPaginatedItems(filteredData, 1);
+    renderHistoryTable(paginatedData);
+    generatePaginationButtons(paginationState.totalPages);
 }
 
 // ==================== Start Exam Button Handlers ====================
@@ -269,6 +678,12 @@ function initializeChatIcon() {
  * Initialize all exam page specific functionality
  */
 function initializeExamPage() {
+    // Render data from hardcoded mock data
+    renderCarouselItems('speakingCarousel', examData.speaking);
+    renderCarouselItems('writingCarousel', examData.writing);
+    renderHistoryTable(historyData);
+    
+    // Initialize all event handlers
     initializeCarousels();
     initializeExamCards();
     initializeExamButtons();
@@ -286,6 +701,10 @@ document.addEventListener('DOMContentLoaded', initializeExamPage);
 // Export for testing
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = {
+        examData,
+        historyData,
+        renderCarouselItems,
+        renderHistoryTable,
         initializeCarousels,
         moveSpeakingCarousel,
         moveWritingCarousel,
