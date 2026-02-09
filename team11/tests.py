@@ -1,6 +1,7 @@
 from pathlib import Path
 
 from django.test import TestCase
+from django.contrib.auth import get_user_model
 from openai import OpenAI, APIError, APIConnectionError, RateLimitError
 
 from .services import assess_writing, assess_speaking
@@ -99,3 +100,16 @@ class Team11AuthTests(TestCase):
         response = self.client.get("/team11/ping/")
         self.assertEqual(response.status_code, 401)
         self.assertEqual(response.json().get("detail"), "Authentication required")
+
+    def test_ping_with_auth(self):
+        user = get_user_model().objects.create_user(
+            email="test_user@example.com",
+            password="testpass123",
+        )
+        self.client.force_login(user)
+
+        response = self.client.get("/team11/ping/")
+        self.assertEqual(response.status_code, 200)
+        body = response.json()
+        self.assertEqual(body.get("team"), "team11")
+        self.assertTrue(body.get("ok"))
