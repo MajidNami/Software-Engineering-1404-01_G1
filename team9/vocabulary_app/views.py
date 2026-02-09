@@ -5,7 +5,10 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '.
 from django.http import JsonResponse
 from django.shortcuts import render
 from core.auth import api_login_required
-from rest_framework import viewsets
+from rest_framework import viewsets, status
+from rest_framework.decorators import action
+from rest_framework.response import Response
+from datetime import date
 from .models import Lesson, Word
 from .serializers import LessonSerializer, WordSerializer
 
@@ -30,6 +33,70 @@ class LessonViewSet(viewsets.ModelViewSet):
     serializer_class = LessonSerializer
 
 class WordViewSet(viewsets.ModelViewSet):
-    # Basic CRUD for words
+    # Basic CRUD for words with 8-Tick Leitner System support
     queryset = Word.objects.all()
     serializer_class = WordSerializer
+    
+    def get_queryset(self):
+        """
+        Optionally filter words based on query parameters.
+        Secured to only show words belonging to the authenticated user.
+        """
+        queryset = Word.objects.all()
+        
+        # Filter for words that need review
+        if self.request.query_params.get('to_review') == 'true':
+            # Get user_id from authenticated user (security enhancement)
+            user_id = self.request.user.id
+            today = date.today()
+            
+            # Filter words where next_review_date is today or earlier
+            queryset = queryset.filter(
+                lesson__user_id=user_id,
+                current_day__lt=8,
+                is_learned=False,
+                next_review_date__lte=today
+            )
+        
+        return queryset
+    
+    @action(detail=True, methods=['post'])
+    def review(self, request, pk=None):
+        """
+        Perform a review on a specific word.
+        
+        Expected payload:
+        {
+            "is_correct": true/false
+        }
+        
+        Returns the updated word status.
+        """
+        word = self.get_object()
+        is_correct = request.data.get('is_correct')
+        
+        # Validate input
+        if is_correct is None:
+            return Response(
+                {'error': 'is_correct field is required'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        # Perform the review
+        result = word.perform_review(is_correct)
+        
+        if result['success']:
+            serializer = self.get_serializer(word)
+            return Response({
+                'message': result['message'],
+                'word': serializer.data,
+                'current_day': result['current_day'],
+                'review_history': result['review_history'],
+                'is_learned': result['is_learned'],
+                'next_review_date': result.get('next_review_date')
+            }, status=status.HTTP_200_OK)
+        else:
+            return Response(
+                {'error': result['message']},
+                status=status.HTTP_400_BAD_REQUEST
+            )

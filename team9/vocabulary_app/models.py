@@ -1,4 +1,6 @@
 from django.db import models
+from django.utils import timezone
+from datetime import date, timedelta
 
 # Create your models here.
 
@@ -30,6 +32,90 @@ class Word(models.Model):
     
     # To prevent multiple reviews on the same day
     last_review_date = models.DateField(null=True, blank=True)
+    
+    # Next scheduled review date based on spaced repetition
+    next_review_date = models.DateField(null=True, blank=True)
 
     def __str__(self):
         return self.term
+    
+    def perform_review(self, is_correct):
+        """
+        Execute the 8-Tick Leitner review logic with spaced repetition.
+        
+        Args:
+            is_correct (bool): Whether the user answered correctly.
+        
+        Returns:
+            dict: Status dictionary with success flag and message.
+        """
+        today = date.today()
+        
+        # Check if already reviewed today
+        if self.last_review_date == today:
+            return {
+                'success': False,
+                'message': 'Word already reviewed today'
+            }
+        
+        # Ensure current_day is within valid range
+        if self.current_day >= 8:
+            return {
+                'success': False,
+                'message': 'Word has completed all 8 review days'
+            }
+        
+        # Update review_history at the current_day index
+        history_list = list(self.review_history)
+        history_list[self.current_day] = '1' if is_correct else '0'
+        self.review_history = ''.join(history_list)
+        
+        # Increment current_day
+        self.current_day += 1
+        
+        # Calculate next_review_date based on spaced repetition intervals
+        if is_correct:
+            # Spaced repetition intervals by day (box number)
+            intervals = {
+                1: 1,   # Day 1: +1 day
+                2: 2,   # Day 2: +2 days
+                3: 4,   # Day 3: +4 days
+                4: 8,   # Day 4: +8 days
+                5: 16,  # Day 5: +16 days
+                6: 32,  # Day 6: +32 days
+                7: 64,  # Day 7: +64 days
+                8: None # Day 8: Learned (no next review)
+            }
+            
+            interval_days = intervals.get(self.current_day)
+            if interval_days is not None:
+                self.next_review_date = today + timedelta(days=interval_days)
+            else:
+                # Day 8 - no next review needed
+                self.next_review_date = None
+        else:
+            # If incorrect, schedule for tomorrow
+            self.next_review_date = today + timedelta(days=1)
+        
+        # Check if learning is complete (current_day reached 8)
+        if self.current_day == 8:
+            # Count the number of '1's (correct answers)
+            correct_count = self.review_history.count('1')
+            if correct_count >= 6:
+                self.is_learned = True
+                self.next_review_date = None  # No more reviews needed
+        
+        # Update last_review_date to today
+        self.last_review_date = today
+        
+        # Save the changes
+        self.save()
+        
+        return {
+            'success': True,
+            'message': 'Review recorded successfully',
+            'current_day': self.current_day,
+            'review_history': self.review_history,
+            'is_learned': self.is_learned,
+            'next_review_date': self.next_review_date
+        }
