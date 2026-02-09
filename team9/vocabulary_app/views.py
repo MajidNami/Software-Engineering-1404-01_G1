@@ -8,9 +8,12 @@ from core.auth import api_login_required
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import filters
 from datetime import date
 from .models import Lesson, Word
 from .serializers import LessonSerializer, WordSerializer
+from .filters import WordFilter
 
 TEAM_NAME = "team9"
 
@@ -28,23 +31,84 @@ def base(request):
 # --- New REST API ViewSets ---
 
 class LessonViewSet(viewsets.ModelViewSet):
-    # Basic CRUD for lessons
+    """
+    ViewSet for Lesson model with search, filtering, and ordering capabilities.
+    
+    Endpoints:
+    - GET /api/lessons/ - List all lessons
+    - POST /api/lessons/ - Create new lesson
+    - GET /api/lessons/{id}/ - Retrieve specific lesson
+    - PUT /api/lessons/{id}/ - Update lesson
+    - DELETE /api/lessons/{id}/ - Delete lesson
+    
+    Query Parameters:
+    - search: Search in title and description
+    - user_id: Filter by user ID
+    - ordering: Order by created_at (e.g., ?ordering=-created_at for descending)
+    """
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
+    
+    # Enable filter backends
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    
+    # Search in title and description
+    search_fields = ['title', 'description']
+    
+    # Exact match filtering for user_id
+    filterset_fields = ['user_id']
+    
+    # Allow ordering by created_at
+    ordering_fields = ['created_at']
+    ordering = ['-created_at']  # Default ordering
 
 class WordViewSet(viewsets.ModelViewSet):
-    # Basic CRUD for words with 8-Tick Leitner System support
+    """
+    ViewSet for Word model with advanced search, filtering, and ordering.
+    
+    Endpoints:
+    - GET /api/words/ - List all words
+    - POST /api/words/ - Create new word
+    - GET /api/words/{id}/ - Retrieve specific word
+    - PUT /api/words/{id}/ - Update word
+    - DELETE /api/words/{id}/ - Delete word
+    - POST /api/words/{id}/review/ - Review a word
+    
+    Query Parameters:
+    - search: Search in term (English) and definition (Persian)
+    - lesson: Filter by lesson ID (exact match)
+    - is_learned: Filter by learned status (true/false)
+    - current_day: Filter by current day (0-8)
+    - today_review: Filter for today's reviews (true) - words due today and not learned
+    - ordering: Order by next_review_date or current_day (e.g., ?ordering=next_review_date)
+    
+    Legacy Parameter:
+    - to_review: Deprecated, use today_review instead
+    """
     queryset = Word.objects.all()
     serializer_class = WordSerializer
+    
+    # Enable filter backends
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    
+    # Search in both term (English) and definition (Persian)
+    search_fields = ['term', 'definition']
+    
+    # Use custom filter class for advanced filtering
+    filterset_class = WordFilter
+    
+    # Allow ordering by next_review_date and current_day
+    ordering_fields = ['next_review_date', 'current_day']
+    ordering = ['next_review_date']  # Default ordering
     
     def get_queryset(self):
         """
         Optionally filter words based on query parameters.
-        Secured to only show words belonging to the authenticated user.
+        Maintains backward compatibility with legacy 'to_review' parameter.
         """
-        queryset = Word.objects.all()
+        queryset = super().get_queryset()
         
-        # Filter for words that need review
+        # Legacy support: Handle old 'to_review' parameter
         if self.request.query_params.get('to_review') == 'true':
             # Get user_id from authenticated user (security enhancement)
             user_id = self.request.user.id
