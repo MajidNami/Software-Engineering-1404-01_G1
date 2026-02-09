@@ -130,19 +130,35 @@ body {
 .carousel {
     display: flex;
     gap: var(--spacing-lg);
-    transition: transform 0.5s ease;
     overflow-x: auto;
-    padding-bottom: var(--spacing-md);
+    padding-bottom: 16px;
     scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-accent-pink) transparent;
 }
 
 .carousel::-webkit-scrollbar {
-    height: 4px;
+    height: 8px;
+}
+
+.carousel::-webkit-scrollbar-track {
+    background: transparent;
+    margin: 0 var(--spacing-lg);
 }
 
 .carousel::-webkit-scrollbar-thumb {
     background: var(--color-accent-pink);
-    border-radius: 2px;
+    border-radius: 4px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+    transition: all var(--transition-normal);
+}
+
+.carousel::-webkit-scrollbar-thumb:hover {
+    background-color: var(--color-accent-pink);
+    background-clip: content-box;
+    border: 1px solid transparent;
 }
 
 .exam-card {
@@ -152,26 +168,20 @@ body {
     display: flex;
     flex-direction: column;
     gap: var(--spacing-lg);
-    min-width: 430px;
-    max-width: 530px;
+    min-width: 380px;
+    max-width: 380px;
+    flex-shrink: 0;
     position: relative;
-    box-shadow: var(--shadow-md);
+    box-shadow: 0 2px 8px rgba(11, 7, 84, 0.08);
     transition: all var(--transition-normal);
+    border: 1px solid rgba(209, 217, 222, 0.5);
+    animation: cardSlideIn 0.6s ease-out;
 }
 
 .exam-card:hover {
-    box-shadow: var(--shadow-lg);
-    transform: translateY(-4px);
-}
-
-.exam-card.blur-card {
-    filter: blur(2px);
-    opacity: 0.7;
-}
-
-.exam-card.active-card {
-    box-shadow: var(--shadow-lg);
-    min-width: 530px;
+    box-shadow: 0 8px 24px rgba(11, 7, 84, 0.12);
+    transform: translateY(-6px);
+    border-color: var(--color-accent-pink);
 }
 
 .card-header {
@@ -266,34 +276,6 @@ body {
 .card-button:hover {
     transform: translateY(-2px);
     box-shadow: var(--shadow-hover);
-}
-
-.carousel-controls {
-    display: flex;
-    justify-content: center;
-    gap: var(--spacing-xl);
-    padding: var(--spacing-lg) 0;
-}
-
-.carousel-btn {
-    background: none;
-    border: 2px solid var(--color-primary-dark);
-    width: 48px;
-    height: 48px;
-    border-radius: var(--radius-md);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all var(--transition-normal);
-    color: var(--color-primary-dark);
-    font-size: 20px;
-}
-
-.carousel-btn:hover {
-    background: var(--color-primary-dark);
-    color: var(--color-white);
-    transform: scale(1.05);
 }
 
 /* ==================== HISTORY SECTION ==================== */
@@ -577,4 +559,46 @@ body {
         width: 60px;
         height: 60px;
     }
+}
+
+/* ==================== CAROUSEL ANIMATIONS ==================== */
+@keyframes cardSlideIn {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes cardHoverGlow {
+    0% {
+        box-shadow: 0 2px 8px rgba(11, 7, 84, 0.08);
+    }
+    100% {
+        box-shadow: 0 8px 24px rgba(11, 7, 84, 0.12);
+    }
+}
+
+.exam-card {
+    animation: cardSlideIn 0.6s ease-out;
+}
+
+/* ==================== SECTION TITLE ENHANCEMENTS ==================== */
+.exam-category .section-title {
+    position: relative;
+    padding-bottom: 12px;
+}
+
+.exam-category .section-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 60px;
+    height: 3px;
+    background: var(--gradient-primary);
+    border-radius: 2px;
 }

@@ -182,11 +182,9 @@ function renderCarouselItems(containerId, items) {
 
     carousel.innerHTML = '';
     
-    items.forEach((item, index) => {
+    items.forEach((item) => {
         const card = document.createElement('div');
         card.className = 'exam-card';
-        if (index === 0) card.classList.add('active-card');
-        else card.classList.add('blur-card');
         
         const difficultyClass = 
             item.difficulty === 'آسان' ? 'green' :
@@ -267,64 +265,11 @@ function initializeCarousels() {
     const writingCarousel = document.getElementById('writingCarousel');
     
     if (speakingCarousel) {
-        setupCarouselControls('speakingCarousel');
+        renderCarouselItems('speakingCarousel', examData.speaking);
     }
     
     if (writingCarousel) {
-        setupCarouselControls('writingCarousel');
-    }
-}
-
-/**
- * Setup carousel navigation controls
- */
-function setupCarouselControls(carouselId) {
-    const carousel = document.getElementById(carouselId);
-    if (!carousel) return;
-    
-    const cards = carousel.querySelectorAll('.exam-card');
-    const cardWidth = 530; // Active card width
-    const gap = 24; // Gap between cards
-    
-    window[`move${carouselId}`] = function(direction) {
-        const currentScroll = carousel.scrollLeft;
-        const moveDistance = cardWidth + gap;
-        
-        if (direction > 0) {
-            carousel.scrollLeft += moveDistance;
-        } else {
-            carousel.scrollLeft -= moveDistance;
-        }
-    };
-}
-
-/**
- * Move speaking carousel
- */
-function moveSpeakingCarousel(direction) {
-    const carousel = document.getElementById('speakingCarousel');
-    if (!carousel) return;
-    
-    const moveDistance = 554; // Card width + gap
-    if (direction > 0) {
-        carousel.scrollLeft += moveDistance;
-    } else {
-        carousel.scrollLeft -= moveDistance;
-    }
-}
-
-/**
- * Move writing carousel
- */
-function moveWritingCarousel(direction) {
-    const carousel = document.getElementById('writingCarousel');
-    if (!carousel) return;
-    
-    const moveDistance = 554; // Card width + gap
-    if (direction > 0) {
-        carousel.scrollLeft += moveDistance;
-    } else {
-        carousel.scrollLeft -= moveDistance;
+        renderCarouselItems('writingCarousel', examData.writing);
     }
 }
 
@@ -678,13 +623,13 @@ function initializeChatIcon() {
  * Initialize all exam page specific functionality
  */
 function initializeExamPage() {
-    // Render data from hardcoded mock data
-    renderCarouselItems('speakingCarousel', examData.speaking);
-    renderCarouselItems('writingCarousel', examData.writing);
+    // Initialize carousels with data
+    initializeCarousels();
+    
+    // Render history table
     renderHistoryTable(historyData);
     
     // Initialize all event handlers
-    initializeCarousels();
     initializeExamCards();
     initializeExamButtons();
     initializeHistoryTabs();
@@ -706,8 +651,6 @@ if (typeof module !== 'undefined' && module.exports) {
         renderCarouselItems,
         renderHistoryTable,
         initializeCarousels,
-        moveSpeakingCarousel,
-        moveWritingCarousel,
         initializeExamCards,
         initializeExamButtons,
         initializeHistoryTabs,
