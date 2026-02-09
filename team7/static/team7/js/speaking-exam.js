@@ -98,7 +98,7 @@ const speakingExamState = {
     currentQuestionIndex: 0,
     totalQuestions: 0,
     currentExam: null,
-    recordings: {}, // { questionId: audioBlob }
+    recordings: {}, // { questionId: [{ blob, duration, attempt }, ...] }
     startTime: null,
     timeRemaining: 0,
     timerInterval: null,
@@ -211,14 +211,76 @@ function loadQuestion(questionIndex) {
         `;
     }
     
-    // Update attempts
+    // Update attempts for this question
+    const questionId = question.id;
+    const questionRecordings = speakingExamState.recordings[questionId] || [];
     const attempts = document.getElementById('attempts');
     if (attempts) {
-        attempts.textContent = `${speakingExamState.currentAttempt}/${speakingExamState.maxAttempts}`;
+        attempts.textContent = `${questionRecordings.length + 1}/${speakingExamState.maxAttempts}`;
     }
+    
+    // Load playback items for this question
+    loadPlaybackItems(questionId);
     
     // Reset recording state for new question
     resetRecordingState();
+}
+
+// ==================== LOAD PLAYBACK ITEMS ====================
+function loadPlaybackItems(questionId) {
+    const playbackList = document.getElementById('playbackList');
+    if (!playbackList) return;
+    
+    // Clear existing playback items
+    playbackList.innerHTML = '';
+    
+    // Get recordings for this question
+    const questionRecordings = speakingExamState.recordings[questionId];
+    if (!questionRecordings || questionRecordings.length === 0) {
+        return; // No recordings yet
+    }
+    
+    // Add each recording
+    questionRecordings.forEach((recording, index) => {
+        const playbackHTML = `
+            <div class="playback-item" data-question-id="${questionId}" data-recording-index="${index}">
+                <div class="playback-item-inner">
+                    <!-- Playback Actions -->
+                    <div class="playback-actions">
+                        <div class="playback-action-btn download-btn" onclick="downloadRecording('${questionId}', ${index})">
+                            <svg viewBox="0 0 40 40" fill="none">
+                                <rect width="40" height="40" rx="8" fill="white"/>
+                                <path d="M20 14V26M20 26L16 22M20 26L24 22" stroke="#0B0754" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <div class="playback-action-btn play-btn" onclick="playRecording('${questionId}', ${index})">
+                            <svg viewBox="0 0 40 40" fill="none">
+                                <rect x="1" y="1" width="38" height="38" rx="7" fill="white" stroke="#4CAF50" stroke-width="2"/>
+                                <path d="M17 14L26 20L17 26V14Z" fill="#4CAF50"/>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <!-- Playback Left -->
+                    <div class="playback-left">
+                        <div class="playback-info">
+                            <p class="playback-name">ضبط ${index + 1} - تلاش ${index + 1}</p>
+                            <p class="playback-duration">مدت زمان: ${formatTime(recording.duration)}</p>
+                        </div>
+                        <div class="playback-sound-wave">
+                            <div class="sound-wave-small">
+                                <div class="bar-small bar1-small"></div>
+                                <div class="bar-small bar2-small"></div>
+                                <div class="bar-small bar3-small"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        playbackList.insertAdjacentHTML('beforeend', playbackHTML);
+    });
 }
 
 // ==================== TIMER FUNCTIONS ====================
@@ -277,6 +339,15 @@ async function startRecording() {
         
         speakingExamState.mediaRecorder.start();
         
+        // Add animation classes
+        const micButton = document.querySelector('.mic-button');
+        const bars = document.querySelectorAll('.sound-wave-icon .bar');
+        const pauseBtn = document.getElementById('pauseBtn');
+        
+        if (micButton) micButton.classList.add('recording');
+        bars.forEach(bar => bar.classList.add('recording'));
+        if (pauseBtn) pauseBtn.classList.remove('paused');
+        
         // Update UI
         const micTitle = document.getElementById('micTitle');
         if (micTitle) micTitle.textContent = 'در حال ضبط...';
@@ -322,36 +393,70 @@ function togglePause() {
     
     speakingExamState.isPaused = !speakingExamState.isPaused;
     
-    if (speakingExamState.isPaused) {
-        speakingExamState.mediaRecorder.pause();
-        const micTitle = document.getElementById('micTitle');
-        if (micTitle) micTitle.textContent = 'ضبط متوقف شد';
-    } else {
-        speakingExamState.mediaRecorder.resume();
-        const micTitle = document.getElementById('micTitle');
-        if (micTitle) micTitle.textContent = 'در حال ضبط...';
-    }
+    const pauseBtn = document.getElementById('pauseBtn');
+    const micTitle = document.getElementById('micTitle');
+    const micButton = document.querySelector('.mic-button');
+    const bars = document.querySelectorAll('.sound-wave-icon .bar');
     
-    console.log(speakingExamState.isPaused ? 'Recording paused' : 'Recording resumed');
+    if (speakingExamState.isPaused) {
+        // Paused state
+        speakingExamState.mediaRecorder.pause();
+        if (micTitle) micTitle.textContent = 'ضبط متوقف شد';
+        if (pauseBtn) pauseBtn.classList.add('paused');
+        
+        // Stop animation
+        if (micButton) micButton.classList.remove('recording');
+        bars.forEach(bar => bar.classList.remove('recording'));
+        
+        console.log('Recording paused');
+    } else {
+        // Recording state
+        speakingExamState.mediaRecorder.resume();
+        if (micTitle) micTitle.textContent = 'در حال ضبط...';
+        if (pauseBtn) pauseBtn.classList.remove('paused');
+        
+        // Resume animation
+        if (micButton) micButton.classList.add('recording');
+        bars.forEach(bar => bar.classList.add('recording'));
+        
+        console.log('Recording resumed');
+    }
 }
 
 function stopRecording() {
     if (!speakingExamState.isRecording || !speakingExamState.mediaRecorder) return;
     
+    // Remove animation classes
+    const micButton = document.querySelector('.mic-button');
+    const bars = document.querySelectorAll('.sound-wave-icon .bar');
+    if (micButton) micButton.classList.remove('recording');
+    bars.forEach(bar => bar.classList.remove('recording'));
+    
     speakingExamState.mediaRecorder.stop();
     speakingExamState.mediaRecorder.onstop = function() {
         const audioBlob = new Blob(speakingExamState.audioChunks, { type: 'audio/wav' });
         const questionId = speakingExamState.currentExam.questions[speakingExamState.currentQuestionIndex].id;
-        speakingExamState.recordings[questionId] = audioBlob;
+        
+        // Initialize recordings array for this question if it doesn't exist
+        if (!speakingExamState.recordings[questionId]) {
+            speakingExamState.recordings[questionId] = [];
+        }
+        
+        // Store recording with metadata
+        speakingExamState.recordings[questionId].push({
+            blob: audioBlob,
+            duration: speakingExamState.recordingTime,
+            attempt: speakingExamState.recordings[questionId].length + 1
+        });
         
         // Stop all tracks
         speakingExamState.mediaRecorder.stream.getTracks().forEach(track => track.stop());
         
+        // Update playback items display
+        loadPlaybackItems(questionId);
+        
         // Reset recording state
         resetRecordingState();
-        
-        // Add playback item
-        addPlaybackItem(questionId, speakingExamState.recordingTime);
     };
     
     if (speakingExamState.recordingTimer) {
@@ -378,6 +483,10 @@ function resetRecordingState() {
     if (recordingTime) recordingTime.textContent = '00:00';
     const recordingTimerLarge = document.getElementById('recordingTimerLarge');
     if (recordingTimerLarge) recordingTimerLarge.textContent = '00:00';
+    
+    // Reset pause button state
+    const pauseBtn = document.getElementById('pauseBtn');
+    if (pauseBtn) pauseBtn.classList.remove('paused');
     
     if (speakingExamState.recordingTimer) {
         clearInterval(speakingExamState.recordingTimer);
@@ -428,29 +537,31 @@ function addPlaybackItem(questionId, duration) {
     playbackList.insertAdjacentHTML('beforeend', playbackHTML);
 }
 
-function playRecording(questionId) {
-    const audioBlob = speakingExamState.recordings[questionId];
-    if (!audioBlob) {
-        alert('ضبط یافت نشد');
+function playRecording(questionId, recordingIndex) {
+    const questionRecordings = speakingExamState.recordings[questionId];
+    if (!questionRecordings || !questionRecordings[recordingIndex] || !questionRecordings[recordingIndex].blob) {
+        console.error('Recording not found');
         return;
     }
     
+    const audioBlob = questionRecordings[recordingIndex].blob;
     const audioUrl = URL.createObjectURL(audioBlob);
     const audio = new Audio(audioUrl);
     audio.play();
 }
 
-function downloadRecording(questionId) {
-    const audioBlob = speakingExamState.recordings[questionId];
-    if (!audioBlob) {
-        alert('ضبط یافت نشد');
+function downloadRecording(questionId, recordingIndex) {
+    const questionRecordings = speakingExamState.recordings[questionId];
+    if (!questionRecordings || !questionRecordings[recordingIndex] || !questionRecordings[recordingIndex].blob) {
+        console.error('Recording not found');
         return;
     }
     
+    const audioBlob = questionRecordings[recordingIndex].blob;
     const audioUrl = URL.createObjectURL(audioBlob);
     const a = document.createElement('a');
     a.href = audioUrl;
-    a.download = `recording-${questionId}.wav`;
+    a.download = `recording-${questionId}-${recordingIndex + 1}.wav`;
     a.click();
     URL.revokeObjectURL(audioUrl);
 }

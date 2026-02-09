@@ -6,10 +6,15 @@
     box-sizing: border-box;
 }
 
+html {
+    scroll-behavior: smooth;
+}
+
 body {
     font-family: 'Inter', 'Noto Sans Arabic', sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    background: linear-gradient(-32.0054deg, rgb(240, 255, 254) 64.645%, rgb(240, 243, 245) 135.36%);
 }
 
 .exam-template-container {
@@ -17,7 +22,6 @@ body {
     flex-direction: column;
     width: 100%;
     min-height: 100vh;
-    background: linear-gradient(-32.0054deg, rgb(240, 255, 254) 64.645%, rgb(240, 243, 245) 135.36%);
 }
 
 /* ==================== EXAM NAVBAR ==================== */
@@ -589,6 +593,7 @@ body {
 
 .answer-textarea {
     flex: 1;
+    text-align: left;
     padding: 16px;
     border: 1px solid #d1d9de;
     border-radius: 12px;
@@ -608,6 +613,7 @@ body {
 
 .answer-textarea::placeholder {
     color: #a7bccc;
+    text-align: right;
 }
 
 /* ==================== SCROLLBAR STYLING ==================== */
@@ -661,85 +667,112 @@ body {
     }
 }
 
-@media (max-width: 768px) {
-    .navbar-content {
-        flex-wrap: wrap;
-        padding: 12px 16px;
-        gap: 12px;
-        height: auto;
-    }
+/* ==================== RESPONSIVE DESIGN ==================== */
 
-    .exam-navbar {
-        height: auto;
+/* Tablet - Large */
+@media (max-width: 1024px) {
+    .navbar-content {
+        padding: 12px 24px;
+        gap: 12px;
     }
 
     .nav-left-section {
         gap: 12px;
-        width: 100%;
-        order: 3;
-    }
-
-    .nav-center-section {
-        order: 1;
-    }
-
-    .nav-right-section {
-        gap: 8px;
-        order: 2;
-    }
-
-    .previous-button,
-    .next-button,
-    .save-button,
-    .submit-button {
-        padding: 10px 16px;
-        font-size: 13px;
-    }
-
-    .question-number {
-        min-width: 110px;
-        padding: 8px 12px;
-    }
-
-    .timer-value {
-        font-size: 20px;
-    }
-
-    .question-panel,
-    .answer-panel {
-        padding: 16px;
-    }
-
-    .question-title {
-        font-size: 20px;
-    }
-
-    .answer-textarea {
-        font-size: 14px;
-    }
-}
-
-@media (max-width: 480px) {
-    .navbar-content {
-        padding: 8px;
-    }
-
-    .nav-left-section {
-        width: 100%;
     }
 
     .previous-button,
     .next-button {
-        flex: 1;
-        padding: 8px 12px;
+        padding: 10px 16px;
+        font-size: 14px;
     }
 
     .question-number {
-        min-width: 100%;
+        padding: 8px 16px;
+        min-width: auto;
+    }
+
+    .exam-content {
+        flex-direction: column;
+        min-height: auto;
+        padding: 0;
+    }
+
+    .question-panel {
+        width: 100%;
+        max-height: none;
+        border-right: none;
+        border-bottom: 1px solid #e8e8f0;
+        padding: 24px 16px;
+    }
+
+    .answer-panel {
+        width: 100%;
+        max-height: none;
+        padding: 24px 16px;
+    }
+}
+
+/* Tablet - Medium */
+@media (max-width: 768px) {
+    body {
+        font-size: 14px;
+    }
+
+    .exam-navbar {
+        height: auto;
+        padding: 8px 0;
+    }
+
+    .navbar-content {
+        flex-direction: column;
+        padding: 12px 16px;
+        gap: 10px;
+        height: auto;
+    }
+
+    .nav-left-section {
+        width: 100%;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .nav-center-section {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .nav-right-section {
+        width: 100%;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .previous-button,
+    .next-button {
+        padding: 10px 14px;
+        font-size: 13px;
+        flex: 1;
+        min-width: 120px;
+    }
+
+    .question-number {
+        padding: 8px 12px;
+        min-width: 140px;
+        font-size: 13px;
+    }
+
+    .save-button,
+    .submit-button {
+        padding: 10px 14px;
+        font-size: 13px;
+        flex: 1;
+        min-width: 120px;
     }
 
     .timer-container {
-        padding: 8px 12px;
+        padding: 10px 16px;
     }
 
     .timer-label {
@@ -747,12 +780,39 @@ body {
     }
 
     .timer-value {
-        font-size: 18px;
+        font-size: 20px;
     }
 
-    .question-panel,
+    .exam-content {
+        flex-direction: column;
+        min-height: auto;
+        padding: 0;
+    }
+
+    .question-panel {
+        width: 100%;
+        max-height: none;
+        border-right: none;
+        border-bottom: 1px solid #e8e8f0;
+        padding: 16px;
+        gap: 16px;
+        box-shadow: none;
+    }
+
+    .question-panel::-webkit-scrollbar {
+        width: 4px;
+    }
+
+    .question-panel::-webkit-scrollbar-thumb {
+        background: #d1d9de;
+        border-radius: 2px;
+    }
+
     .answer-panel {
-        padding: 12px;
+        width: 100%;
+        max-height: none;
+        padding: 16px;
+        border-top: 1px solid #e8e8f0;
     }
 
     .question-title {
@@ -763,14 +823,232 @@ body {
     .question-content p,
     .requirement p,
     .tip p {
-        font-size: 14px;
+        font-size: 13px;
+        line-height: 1.5;
+    }
+
+    .requirement {
+        gap: 12px;
+    }
+
+    .tip {
+        gap: 12px;
     }
 
     .answer-header {
         flex-direction: column-reverse;
+        gap: 12px;
+    }
+
+    .answer-title {
+        font-size: 16px;
     }
 
     .answer-stats {
         width: 100%;
+        justify-content: space-between;
+    }
+
+    .stat-label {
+        font-size: 11px;
+    }
+
+    .stat-value {
+        font-size: 16px;
+    }
+
+    .toolbar {
+        flex-wrap: wrap;
+        gap: 12px;
+        padding: 12px 0;
+    }
+
+    .font-size-control {
+        flex-direction: row;
+        gap: 8px;
+    }
+
+    .answer-textarea {
+        font-size: 14px;
+        min-height: 400px;
+        padding: 12px;
+    }
+}
+
+/* Mobile - Large */
+@media (max-width: 480px) {
+    body {
+        font-size: 13px;
+    }
+
+    .exam-navbar {
+        height: auto;
+        padding: 6px 0;
+    }
+
+    .navbar-content {
+        padding: 10px 12px;
+        gap: 8px;
+    }
+
+    .nav-left-section {
+        gap: 8px;
+    }
+
+    .previous-button,
+    .next-button {
+        padding: 8px 12px;
+        font-size: 12px;
+        min-width: 100px;
+    }
+
+    .question-number {
+        padding: 6px 10px;
+        font-size: 12px;
+        min-width: auto;
+    }
+
+    .save-button,
+    .submit-button {
+        padding: 8px 12px;
+        font-size: 12px;
+        min-width: 100px;
+    }
+
+    .timer-container {
+        padding: 8px 12px;
+    }
+
+    .timer-label {
+        font-size: 10px;
+    }
+
+    .timer-value {
+        font-size: 16px;
+    }
+
+    .question-panel {
+        padding: 12px;
+        gap: 12px;
+    }
+
+    .answer-panel {
+        padding: 12px;
+    }
+
+    .question-title {
+        font-size: 16px;
+        line-height: 1.3;
+    }
+
+    .instruction-title,
+    .requirements-title,
+    .tips-title {
+        font-size: 12px;
+    }
+
+    .instruction-text,
+    .question-content p,
+    .requirement p,
+    .tip p {
+        font-size: 12px;
+        line-height: 1.4;
+    }
+
+    .requirement {
+        gap: 10px;
+    }
+
+    .tip {
+        gap: 10px;
+    }
+
+    .bullet,
+    .tip-icon {
+        width: 6px;
+        height: 6px;
+    }
+
+    .answer-title {
+        font-size: 14px;
+    }
+
+    .answer-stats {
+        gap: 8px;
+        flex-direction: column;
+    }
+
+    .stat-label {
+        font-size: 10px;
+    }
+
+    .stat-value {
+        font-size: 14px;
+    }
+
+    .toolbar {
+        gap: 10px;
+        padding: 8px 0;
+    }
+
+    .font-size-control {
+        gap: 6px;
+    }
+
+    .font-size-control button {
+        padding: 6px 10px;
+        font-size: 12px;
+    }
+
+    .answer-textarea {
+        font-size: 13px;
+        min-height: 300px;
+        padding: 10px;
+    }
+}
+
+/* Mobile - Small */
+@media (max-width: 380px) {
+    .navbar-content {
+        padding: 8px;
+    }
+
+    .nav-left-section {
+        gap: 6px;
+    }
+
+    .previous-button,
+    .next-button {
+        padding: 6px 10px;
+        font-size: 11px;
+        min-width: 90px;
+    }
+
+    .question-number {
+        padding: 6px 8px;
+        font-size: 11px;
+    }
+
+    .save-button,
+    .submit-button {
+        padding: 6px 10px;
+        font-size: 11px;
+        min-width: 90px;
+    }
+
+    .timer-label {
+        font-size: 9px;
+    }
+
+    .timer-value {
+        font-size: 14px;
+    }
+
+    .question-title {
+        font-size: 15px;
+    }
+
+    .answer-textarea {
+        min-height: 250px;
     }
 }

@@ -642,28 +642,7 @@ document.addEventListener('DOMContentLoaded', () => {
         initializeExam(examId);
     } else {
         console.error('Invalid exam ID or exam data not found:', examId);
-        // Show error popup instead of alert
-        const popup = document.createElement('div');
-        popup.className = 'popup-container';
-        popup.innerHTML = `
-            <div class="popup-header">
-                <h2 class="popup-title">خطا</h2>
-            </div>
-            <div class="popup-body">
-                <p class="popup-body-text warning">
-                    خطا: آزمون با شناسه "<strong>${examId}</strong>" یافت نشد.
-                </p>
-                <p class="popup-body-text">
-                    آزمون‌های موجود: <strong>${Object.keys(mockExamData).join(', ')}</strong>
-                </p>
-            </div>
-            <div class="popup-footer">
-                <button class="popup-button popup-button-primary" onclick="window.location.href='/team7/exams/';">
-                    بازگشت به صفحه آزمون‌ها
-                </button>
-            </div>
-        `;
-        PopupManager.showPopup(popup, false);
+        alert(`خطا: آزمون با شناسه "${examId}" یافت نشد.\n\nآزمون‌های موجود: ${Object.keys(mockExamData).join(', ')}`);
     }
 });
 

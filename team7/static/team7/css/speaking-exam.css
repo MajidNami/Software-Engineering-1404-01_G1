@@ -5,10 +5,16 @@
     box-sizing: border-box;
 }
 
+html {
+    scroll-behavior: smooth;
+}
+
 body {
     font-family: 'Inter', 'Noto Sans Arabic', sans-serif;
     direction: rtl;
     overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 /* Exam Template Container */
@@ -28,6 +34,9 @@ body {
     width: 100%;
     box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.1);
     flex-shrink: 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
 }
 
 .navbar-content {
@@ -37,6 +46,7 @@ body {
     padding: 0 40px;
     width: 100%;
     height: 100%;
+    gap: 20px;
 }
 
 /* Nav Left Section */
@@ -708,6 +718,7 @@ body {
     height: 56px;
     cursor: pointer;
     transition: all 0.2s ease;
+    border: none;
 }
 
 .pause-button:hover,
@@ -716,12 +727,18 @@ body {
     transform: scale(1.05);
 }
 
+.pause-button.playing,
+.pause-button.paused {
+    background: #f0f3f5;
+}
+
 .pause-bars {
     display: flex;
     gap: 5px;
     align-items: center;
     justify-content: center;
     padding: 5px 3px;
+    transition: all 0.3s ease;
 }
 
 .pause-bar {
@@ -730,6 +747,29 @@ body {
     border-radius: 5px;
     flex-shrink: 0;
     width: 8px;
+    transition: all 0.3s ease;
+}
+
+/* Pause button paused state - shows play icon */
+.pause-button.paused .pause-bars {
+    display: none;
+}
+
+.pause-button.paused {
+    position: relative;
+}
+
+.pause-button.paused::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-left: 10px solid #0b0754;
+    border-top: 6px solid transparent;
+    border-bottom: 6px solid transparent;
+    left: 50%;
+    top: 50%;
+    transform: translate(-4px, -50%);
 }
 
 .stop-icon {
@@ -738,6 +778,7 @@ body {
     border-radius: 6px;
     flex-shrink: 0;
     width: 26px;
+    transition: all 0.3s ease;
 }
 
 .record-button-frame {
@@ -757,10 +798,25 @@ body {
     background: linear-gradient(-45deg, rgb(250, 11, 103) 64.645%, rgb(128, 202, 255) 135.36%);
     cursor: pointer;
     transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .record-button:hover {
     transform: scale(1.05);
+}
+
+.record-button::after {
+    content: '';
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    background: white;
+    border-radius: 50%;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
 }
 
 .microphone-animation {
@@ -769,6 +825,7 @@ body {
     top: 11px;
     width: 34px;
     height: 34px;
+    display: none;
 }
 
 .microphone-animation svg {
@@ -1009,5 +1066,378 @@ body {
     .recording-panel {
         width: 100%;
         max-height: none;
+    }
+}
+
+/* ==================== ANIMATIONS ==================== */
+@keyframes micPulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(250, 11, 103, 0.7);
+    }
+    50% {
+        box-shadow: 0 0 0 10px rgba(250, 11, 103, 0.3);
+    }
+    100% {
+        box-shadow: 0 0 0 20px rgba(250, 11, 103, 0);
+    }
+}
+
+@keyframes wavePulse {
+    0% {
+        transform: scaleY(0.6);
+        opacity: 0.5;
+    }
+    50% {
+        transform: scaleY(1);
+        opacity: 1;
+    }
+    100% {
+        transform: scaleY(0.6);
+        opacity: 0.5;
+    }
+}
+
+@keyframes recordingGlow {
+    0%, 100% {
+        box-shadow: 0px 12px 40px 0px rgba(250, 11, 103, 0.2);
+        transform: scale(1);
+    }
+    50% {
+        box-shadow: 0px 12px 40px 0px rgba(250, 11, 103, 0.4);
+        transform: scale(1.02);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Apply recording animation when recording */
+.mic-button.recording {
+    animation: recordingGlow 1.5s ease-in-out infinite;
+}
+
+.sound-wave-icon .bar.recording {
+    animation: wavePulse 0.8s ease-in-out infinite;
+}
+
+.sound-wave-icon .bar1.recording {
+    animation-delay: 0s;
+}
+
+.sound-wave-icon .bar2.recording {
+    animation-delay: 0.15s;
+}
+
+.sound-wave-icon .bar3.recording {
+    animation-delay: 0.3s;
+}
+
+/* ==================== RESPONSIVE DESIGN ==================== */
+
+/* Desktop */
+@media (min-width: 1200px) {
+    .navbar-content {
+        gap: 40px;
+    }
+
+    .exam-content {
+        flex-direction: row;
+    }
+
+    .question-panel {
+        width: 50%;
+    }
+
+    .recording-panel {
+        width: 50%;
+    }
+}
+
+/* Tablet */
+@media (max-width: 1200px) {
+    .exam-navbar {
+        height: auto;
+        padding: 12px 0;
+    }
+
+    .navbar-content {
+        flex-wrap: wrap;
+        padding: 0 20px;
+        gap: 15px;
+    }
+
+    .nav-left-section {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .nav-center-section {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .nav-right-section {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .exam-content {
+        flex-direction: column;
+        min-height: auto;
+    }
+
+    .question-panel {
+        width: 100%;
+        max-height: none;
+        padding: 24px 20px;
+        box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    .recording-panel {
+        width: 100%;
+        max-height: none;
+        padding: 32px 20px;
+    }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    body {
+        font-size: 14px;
+    }
+
+    .exam-navbar {
+        height: auto;
+        padding: 8px 0;
+    }
+
+    .navbar-content {
+        flex-direction: column;
+        padding: 0 16px;
+        gap: 12px;
+    }
+
+    .nav-left-section {
+        width: 100%;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .nav-center-section {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .nav-right-section {
+        width: 100%;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .previous-button,
+    .next-button {
+        padding: 10px 16px;
+        font-size: 13px;
+        flex: 1;
+        min-width: 120px;
+    }
+
+    .question-number {
+        padding: 8px 12px;
+        min-width: auto;
+        flex: 1;
+        min-width: 140px;
+    }
+
+    .save-button,
+    .submit-button {
+        padding: 10px 16px;
+        font-size: 13px;
+        flex: 1;
+        min-width: 120px;
+    }
+
+    .exam-content {
+        flex-direction: column;
+        min-height: auto;
+        padding: 0;
+    }
+
+    .question-panel {
+        width: 100%;
+        max-height: none;
+        padding: 16px;
+        gap: 16px;
+        box-shadow: none;
+        border-bottom: 1px solid #e8e8f0;
+    }
+
+    .recording-panel {
+        width: 100%;
+        max-height: none;
+        padding: 20px 16px;
+    }
+
+    .recording-header {
+        padding: 12px 0;
+        gap: 16px;
+    }
+
+    .recording-title {
+        font-size: 16px;
+    }
+
+    .recording-main {
+        padding: 20px 0;
+    }
+
+    .mic-frame {
+        width: 120px;
+        height: 120px;
+    }
+
+    .mic-button {
+        width: 120px;
+        height: 120px;
+    }
+
+    .sound-wave-icon {
+        width: 50px;
+        height: 50px;
+        left: 35px;
+        top: 35px;
+    }
+
+    .mic-title {
+        font-size: 18px;
+    }
+
+    .mic-subtitle {
+        font-size: 13px;
+    }
+
+    .recording-controls {
+        gap: 12px;
+    }
+
+    .pause-button,
+    .stop-button,
+    .record-button-frame {
+        width: 48px;
+        height: 48px;
+    }
+
+    .recording-timer {
+        gap: 8px;
+    }
+
+    .timer-label-small {
+        font-size: 12px;
+    }
+
+    .timer-value-large {
+        font-size: 32px;
+    }
+
+    .playback-list {
+        gap: 12px;
+    }
+
+    .playback-item {
+        flex-direction: column;
+    }
+
+    .question-title {
+        font-size: 16px;
+    }
+
+    .instruction-text,
+    .question-content p {
+        font-size: 13px;
+        line-height: 1.5;
+    }
+
+    .requirements-title,
+    .tips-title {
+        font-size: 12px;
+    }
+}
+
+/* Small Mobile */
+@media (max-width: 480px) {
+    .navbar-content {
+        padding: 0 12px;
+    }
+
+    .previous-button,
+    .next-button,
+    .save-button,
+    .submit-button {
+        padding: 8px 12px;
+        font-size: 12px;
+        min-width: 100px;
+    }
+
+    .question-number {
+        padding: 6px 10px;
+        font-size: 12px;
+    }
+
+    .timer-value {
+        font-size: 16px;
+    }
+
+    .mic-frame {
+        width: 100px;
+        height: 100px;
+    }
+
+    .mic-button {
+        width: 100px;
+        height: 100px;
+    }
+
+    .sound-wave-icon {
+        width: 40px;
+        height: 40px;
+        left: 30px;
+        top: 30px;
+    }
+
+    .mic-title {
+        font-size: 16px;
+    }
+
+    .timer-value-large {
+        font-size: 28px;
+    }
+
+    .recording-stats {
+        gap: 12px;
+    }
+
+    .recording-time-stat,
+    .attempts-stat {
+        padding: 10px;
     }
 }
