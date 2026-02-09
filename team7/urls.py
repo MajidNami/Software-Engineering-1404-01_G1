@@ -29,4 +29,5 @@ urlpatterns = [
     # HTML Views (Front-end)
     path("", views.index, name="index"),
     path("dashboard/", views.dashboard, name="dashboard"),
+    path("exams/", views.exams, name="exams"),
 ]
