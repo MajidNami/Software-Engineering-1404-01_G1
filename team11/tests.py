@@ -92,3 +92,10 @@ class Team11AISmokeTests(TestCase):
 
         self.assertTrue(result.get("success"), msg=result.get("error"))
         self.assertIsNotNone(result.get("overall_score"))
+
+
+class Team11AuthTests(TestCase):
+    def test_ping_requires_auth(self):
+        response = self.client.get("/team11/ping/")
+        self.assertEqual(response.status_code, 401)
+        self.assertEqual(response.json().get("detail"), "Authentication required")
