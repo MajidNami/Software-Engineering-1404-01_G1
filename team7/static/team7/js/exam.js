@@ -309,11 +309,34 @@ function initializeExamButtons() {
             
             // Navigate to correct exam page based on type
             if (examId) {
-                // Determine exam type from card and navigate accordingly
+                // Get exam data from appropriate source
+                let examData = null;
                 if (examTypeTag === 'گفتاری') {
-                    window.location.href = `/team7/speaking-exam/?exam_id=${examId}`;
+                    if (typeof mockSpeakingExamData !== 'undefined') {
+                        examData = mockSpeakingExamData[examId];
+                    }
+                    // Show start exam popup before navigating
+                    if (examData) {
+                        showStartExamPopup(examData, () => {
+                            PopupManager.closePopup();
+                            window.location.href = `/team7/speaking-exam/?exam_id=${examId}`;
+                        });
+                    } else {
+                        window.location.href = `/team7/speaking-exam/?exam_id=${examId}`;
+                    }
                 } else if (examTypeTag === 'نوشتاری') {
-                    window.location.href = `/team7/writing-exam/?exam_id=${examId}`;
+                    if (typeof mockExamData !== 'undefined') {
+                        examData = mockExamData[examId];
+                    }
+                    // Show start exam popup before navigating
+                    if (examData) {
+                        showStartExamPopup(examData, () => {
+                            PopupManager.closePopup();
+                            window.location.href = `/team7/writing-exam/?exam_id=${examId}`;
+                        });
+                    } else {
+                        window.location.href = `/team7/writing-exam/?exam_id=${examId}`;
+                    }
                 } else {
                     alert('خطا: نوع آزمون نامشخص است');
                 }

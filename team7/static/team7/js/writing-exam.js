@@ -129,7 +129,7 @@ function initializeExam(examId) {
     console.log('Total Questions:', examState.totalQuestions);
     console.log('First Question:', examState.currentExam.questions[0]);
 
-    // Initialize first question
+    // Initialize first question (popup was shown in exam.js)
     loadQuestion(0);
     startTimer();
     attachEventListeners();
@@ -481,43 +481,51 @@ function saveDraft() {
  * Submit exam
  */
 function submitExam() {
-    // Save current answer
-    const textarea = document.getElementById('answerTextarea');
-    const currentQuestion = examState.currentExam.questions[examState.currentQuestionIndex];
-    examState.userAnswers[currentQuestion.id] = textarea.value;
+    // Show submit confirmation popup
+    showSubmitExamPopup(() => {
+        // Save current answer
+        const textarea = document.getElementById('answerTextarea');
+        const currentQuestion = examState.currentExam.questions[examState.currentQuestionIndex];
+        examState.userAnswers[currentQuestion.id] = textarea.value;
 
-    // Stop timers
-    clearInterval(examState.timerInterval);
-    clearInterval(examState.timeElapsedInterval);
+        // Stop timers
+        clearInterval(examState.timerInterval);
+        clearInterval(examState.timeElapsedInterval);
 
-    // Prepare submission data
-    const submissionData = {
-        examId: examState.currentExamId,
-        examTitle: examState.currentExam.title,
-        totalQuestions: examState.totalQuestions,
-        answers: examState.userAnswers,
-        submittedAt: new Date().toISOString(),
-        timeUsed: Math.floor((Date.now() - examState.startTime) / 1000)
-    };
+        // Prepare submission data
+        const submissionData = {
+            examId: examState.currentExamId,
+            examTitle: examState.currentExam.title,
+            totalQuestions: examState.totalQuestions,
+            answers: examState.userAnswers,
+            submittedAt: new Date().toISOString(),
+            timeUsed: Math.floor((Date.now() - examState.startTime) / 1000)
+        };
 
-    console.log('Submitting exam:', submissionData);
+        console.log('Submitting exam:', submissionData);
 
-    // TODO: Send to API
-    // fetch('/api/submit-exam', {
-    //     method: 'POST',
-    //     headers: {
-    //         'Content-Type': 'application/json',
-    //     },
-    //     body: JSON.stringify(submissionData)
-    // }).then(response => response.json())
-    //   .then(data => {
-    //       // Handle response
-    //       window.location.href = '/exams/results/';
-    //   });
+        // TODO: Send to API
+        // fetch('/api/submit-exam', {
+        //     method: 'POST',
+        //     headers: {
+        //         'Content-Type': 'application/json',
+        //     },
+        //     body: JSON.stringify(submissionData)
+        // }).then(response => response.json())
+        //   .then(data => {
+        //       // Handle response
+        //       window.location.href = '/exams/results/';
+        //   });
 
-    // For now, show success message
-    alert('آزمون شما با موفقیت ارسال شد!\n\nجوابات:\n' + JSON.stringify(examState.userAnswers, null, 2));
-    window.location.href = '/team7/exams/';
+        // Show result popup
+        const resultData = {
+            score: 8.2,
+            totalScore: 10,
+            type: examState.currentExam.title,
+            message: 'عملکرد خوبی داشتید. برای بهبود بیشتر، نکات ضعیف خود را بررسی کنید.'
+        };
+        showExamResultPopup(resultData);
+    });
 }
 
 // ==================== EVENT LISTENERS ====================
@@ -558,9 +566,8 @@ function attachEventListeners() {
     
     if (submitBtn) {
         submitBtn.addEventListener('click', () => {
-            if (confirm('آیا از ارسال آزمون مطمئن هستید؟')) {
                 submitExam();
-            }
+            
         });
         console.log('Submit button listener attached');
     } else {
@@ -635,7 +642,28 @@ document.addEventListener('DOMContentLoaded', () => {
         initializeExam(examId);
     } else {
         console.error('Invalid exam ID or exam data not found:', examId);
-        alert(`خطا: آزمون با شناسه "${examId}" یافت نشد.\n\nآزمون‌های موجود: ${Object.keys(mockExamData).join(', ')}`);
+        // Show error popup instead of alert
+        const popup = document.createElement('div');
+        popup.className = 'popup-container';
+        popup.innerHTML = `
+            <div class="popup-header">
+                <h2 class="popup-title">خطا</h2>
+            </div>
+            <div class="popup-body">
+                <p class="popup-body-text warning">
+                    خطا: آزمون با شناسه "<strong>${examId}</strong>" یافت نشد.
+                </p>
+                <p class="popup-body-text">
+                    آزمون‌های موجود: <strong>${Object.keys(mockExamData).join(', ')}</strong>
+                </p>
+            </div>
+            <div class="popup-footer">
+                <button class="popup-button popup-button-primary" onclick="window.location.href='/team7/exams/';">
+                    بازگشت به صفحه آزمون‌ها
+                </button>
+            </div>
+        `;
+        PopupManager.showPopup(popup, false);
     }
 });
 

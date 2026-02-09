@@ -139,7 +139,7 @@ function initializeSpeakingExam(examId) {
     speakingExamState.currentQuestionIndex = 0;
     speakingExamState.timeRemaining = exam.totalTime;
     
-    // Start the exam
+    // Start the exam directly (popup was shown in exam.js)
     loadQuestion(0);
     startExamTimer();
 }
@@ -470,7 +470,8 @@ function nextQuestion() {
 
 // ==================== SUBMIT EXAM ====================
 function submitExam() {
-    if (confirm('آیا مطمئن هستید که می‌خواهید آزمون را ارسال کنید؟')) {
+    // Show submit confirmation popup
+    showSubmitExamPopup(() => {
         // Stop all timers
         if (speakingExamState.timerInterval) clearInterval(speakingExamState.timerInterval);
         if (speakingExamState.recordingTimer) clearInterval(speakingExamState.recordingTimer);
@@ -499,13 +500,21 @@ function submitExam() {
         // })
         // .then(response => response.json())
         // .then(data => {
-        //     alert('آزمون با موفقیت ارسال شد!');
         //     window.location.href = '/team7/';
         // })
         // .catch(error => console.error('Error:', error));
         
-        alert('آزمون با موفقیت ارسال شد!');
-    }
+        // Show result popup
+        const resultData = {
+            score: 7.8,
+            answeredQuestions: speakingExamState.totalQuestions,
+            totalQuestions: speakingExamState.totalQuestions,
+            timeSpent: speakingExamState.currentExam.totalTime - speakingExamState.timeRemaining,
+            type: speakingExamState.currentExam.title,
+            message: 'عملکرد خوبی در آزمون گفتاری داشتید. برای بهبود تلفظ، تمرین بیشتری انجام دهید.'
+        };
+        showExamResultPopup(resultData);
+    });
 }
 
 function saveRecording() {
