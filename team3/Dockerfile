@@ -1,4 +1,14 @@
-# Teams must replace this with a real Dockerfile for their chosen stack.
+FROM python:3.12-slim
+WORKDIR /app
 
-FROM alpine:3.20
-CMD ["sh", "-c", "echo 'Replace this Dockerfile with your service'; sleep infinity"]
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential pkg-config default-libmysqlclient-dev \
+  && rm -rf /var/lib/apt/lists/*
+
+COPY requirements.txt /app/requirements.txt
+RUN pip install --no-cache-dir -r /app/requirements.txt
+
+# copy the whole repo (so team1..team15, core, app404, manage.py all exist)
+COPY . /app
+
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]

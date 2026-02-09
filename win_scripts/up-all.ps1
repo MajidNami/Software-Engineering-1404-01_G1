@@ -22,8 +22,11 @@ Write-Host "Starting core..."
 docker network inspect app404_net *> $null; if ($LASTEXITCODE -ne 0) { docker network create app404_net | Out-Null }
 docker compose up -d --build
 
+$scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
+$rootDir   = Resolve-Path (Join-Path $scriptDir "..")
+
 foreach ($t in 1..15) {
-  $composePath = "..\team$t\docker-compose.yml"
+  $composePath = Join-Path $rootDir "team$t/docker-compose.yml"
   if (Test-Path $composePath) {
     $env:TEAM_PORT = "$($TeamPort[$t])"
     Write-Host ("Starting team{0} on port {1} ..." -f $t, $env:TEAM_PORT)
