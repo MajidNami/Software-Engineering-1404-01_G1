@@ -32,6 +32,21 @@ def dashboard(request):
     return render(request, f"{TEAM_NAME}/dashboard.html")
 
 
+def exams(request):
+    """Serve team7 exams page (exams listing and history)."""
+    return render(request, f"{TEAM_NAME}/exam.html")
+
+
+def writing_exam(request):
+    """Serve team7 writing exam page (writing exam taking interface)."""
+    return render(request, f"{TEAM_NAME}/writing-exam.html")
+
+
+def speaking_exam(request):
+    """Serve team7 speaking exam page (speaking exam taking interface)."""
+    return render(request, f"{TEAM_NAME}/speaking-exam.html")
+
+
 @csrf_exempt
 @require_http_methods(["POST"])
 @api_login_required

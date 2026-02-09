@@ -1,0 +1,427 @@
+/**
+ * Language Academy - Popup Styles
+ * Beautiful popup UI for exam interactions
+ */
+
+/* ==================== BACKDROP STYLES ==================== */
+.popup-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(11, 7, 84, 0.5);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.popup-backdrop.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* ==================== POPUP CONTAINER ==================== */
+.popup-container {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 20px 60px rgba(11, 7, 84, 0.15);
+    padding: 0;
+    max-width: 500px;
+    width: 90%;
+    transform: scale(0.95) translateY(20px);
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.popup-backdrop.active .popup-container {
+    transform: scale(1) translateY(0);
+}
+
+/* ==================== POPUP HEADER ==================== */
+.popup-header {
+    padding: 32px 32px 24px;
+    border-bottom: 1px solid #e8e8f0;
+    text-align: right;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+}
+
+.popup-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: #0b0754;
+    margin: 0;
+    line-height: 1.2;
+}
+
+.popup-close-btn {
+    background: none;
+    border: none;
+    font-size: 28px;
+    color: #999;
+    cursor: pointer;
+    padding: 0;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s ease;
+    flex-shrink: 0;
+}
+
+.popup-close-btn:hover {
+    color: #0b0754;
+}
+
+/* ==================== POPUP BODY ==================== */
+.popup-body {
+    padding: 24px 32px;
+}
+
+.popup-body-text {
+    color: #4a4a6a;
+    font-size: 14px;
+    line-height: 1.6;
+    margin: 0 0 24px 0;
+}
+
+.popup-body-text strong {
+    color: #0b0754;
+    font-weight: 600;
+}
+
+.popup-body-text.warning {
+    color: #ffb02d;
+    background: rgba(255, 176, 45, 0.1);
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    border-right: 4px solid #ffb02d;
+}
+
+/* ==================== POPUP INFO GRID ==================== */
+.popup-info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.popup-info-item {
+    background: #f5f5f8;
+    padding: 16px;
+    border-radius: 12px;
+    text-align: center;
+}
+
+.popup-info-label {
+    font-size: 12px;
+    color: #999;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+    display: block;
+}
+
+.popup-info-value {
+    font-size: 20px;
+    font-weight: 700;
+    color: #0b0754;
+    margin: 0;
+}
+
+/* ==================== POPUP FEATURES LIST ==================== */
+.popup-features {
+    margin: 20px 0;
+}
+
+.popup-features-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: #0b0754;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 12px;
+    display: block;
+}
+
+.popup-feature-item {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 12px;
+    align-items: flex-start;
+}
+
+.popup-feature-icon {
+    width: 20px;
+    height: 20px;
+    background: linear-gradient(135deg, #fa0b67 0%, #80caff 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.popup-feature-text {
+    font-size: 14px;
+    color: #4a4a6a;
+    line-height: 1.4;
+    margin: 0;
+}
+
+/* ==================== POPUP RESULT SECTION ==================== */
+.popup-result-container {
+    text-align: center;
+    padding: 20px 0;
+}
+
+.popup-result-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    margin: 0 auto 20px;
+    font-size: 48px;
+    box-shadow: 0 10px 30px rgba(76, 175, 80, 0.2);
+    animation: popupBadgePulse 0.6s ease-out;
+}
+
+.popup-result-score {
+    font-size: 36px;
+    font-weight: 700;
+    color: #0b0754;
+    margin: 0 0 8px 0;
+}
+
+.popup-result-score span {
+    font-size: 24px;
+    color: #999;
+    font-weight: 500;
+}
+
+.popup-result-text {
+    font-size: 14px;
+    color: #4a4a6a;
+    margin: 0 0 16px 0;
+    line-height: 1.6;
+}
+
+.popup-result-text strong {
+    color: #0b0754;
+    font-weight: 600;
+}
+
+.popup-result-text.hint {
+    background: rgba(88, 124, 230, 0.1);
+    color: #587ce6;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    border-right: 4px solid #587ce6;
+}
+
+/* ==================== POPUP FOOTER ==================== */
+.popup-footer {
+    padding: 24px 32px;
+    border-top: 1px solid #e8e8f0;
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+}
+
+.popup-button {
+    padding: 12px 28px;
+    border-radius: 10px;
+    border: none;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    font-family: 'Inter', 'Noto Sans Arabic', sans-serif;
+}
+
+.popup-button-primary {
+    background: linear-gradient(to top, #fa0b67 50%, #80caff 150%);
+    color: white;
+}
+
+.popup-button-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(250, 11, 103, 0.3);
+}
+
+.popup-button-primary:active {
+    transform: translateY(0);
+}
+
+.popup-button-secondary {
+    background: rgba(76, 175, 80, 0.1);
+    color: #4caf50;
+    border: 1px solid rgba(76, 175, 80, 0.2);
+}
+
+.popup-button-secondary:hover {
+    background: rgba(76, 175, 80, 0.2);
+    transform: translateY(-2px);
+}
+
+.popup-button-outline {
+    background: transparent;
+    color: #0b0754;
+    border: 2px solid #e8e8f0;
+}
+
+.popup-button-outline:hover {
+    border-color: #0b0754;
+    background: #f5f5f8;
+}
+
+/* ==================== ANIMATIONS ==================== */
+@keyframes popupBadgePulse {
+    0% {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* ==================== RESULT BADGES GRID (NEW) ==================== */
+.result-badges-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+    margin: 20px 0;
+}
+
+.result-badge {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px;
+    background: #f5f5f8;
+    border-radius: 12px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.result-badge:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(11, 7, 84, 0.1);
+}
+
+.result-badge-inner {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 10px 30px rgba(11, 7, 84, 0.15);
+    animation: popupBadgePulse 0.6s ease-out;
+}
+
+.result-badge-icon {
+    font-size: 36px;
+    color: white;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.result-badge-content {
+    flex: 1;
+    text-align: right;
+}
+
+.result-badge-label {
+    font-size: 12px;
+    color: #999;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin: 0 0 8px 0;
+}
+
+.result-badge-value {
+    font-size: 24px;
+    font-weight: 700;
+    color: #0b0754;
+    margin: 0;
+    line-height: 1.2;
+}
+
+/* ==================== RESPONSIVE DESIGN ==================== */
+@media (max-width: 640px) {
+    .popup-container {
+        width: 95%;
+        max-width: 100%;
+    }
+
+    .popup-header {
+        padding: 24px 20px 16px;
+    }
+
+    .popup-title {
+        font-size: 20px;
+    }
+
+    .popup-body {
+        padding: 16px 20px;
+    }
+
+    .popup-footer {
+        padding: 16px 20px;
+        flex-direction: column-reverse;
+    }
+
+    .popup-button {
+        width: 100%;
+    }
+
+    .popup-info-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ==================== SCROLLBAR STYLING ==================== */
+.popup-container::-webkit-scrollbar {
+    width: 6px;
+}
+
+.popup-container::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.popup-container::-webkit-scrollbar-thumb {
+    background: #ddd;
+    border-radius: 3px;
+}
+
+.popup-container::-webkit-scrollbar-thumb:hover {
+    background: #999;
+}
