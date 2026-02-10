@@ -10,6 +10,9 @@ services:
     networks: [app404]
 
   web:
+    depends_on:
+      mysql:
+        condition: service_healthy
     build:
       context: ..
       dockerfile: team3/Dockerfile
@@ -18,13 +21,36 @@ services:
     networks: [app404]
     command: >
       sh -c "
-       python manage.py migrate --database=team3 &&
+       python manage.py migrate &&
        python manage.py migrate team3 --database=team3 &&
        python manage.py runserver 0.0.0.0:8000
        "
     volumes:
       - ../:/app
     working_dir: /app
+
+  mysql:
+    image: mysql:8.0
+    container_name: mysql-se-project
+    environment:
+      MYSQL_DATABASE: se_project
+      MYSQL_USER: username
+      MYSQL_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: rootpassword
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - app404
+
+volumes:
+  mysql_data:
 
 networks:
   app404:
