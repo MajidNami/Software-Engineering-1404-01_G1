@@ -30,7 +30,7 @@ def api_perform_analysis(request):
     user_id = 1 
     
     if mode == 'quick':
-        target_readings = ReadingMaterial.objects.filter(user_id=user_id).order_by('-created_at')[:5]
+        target_readings = ReadingMaterial.objects.all().order_by('-created_at')[:5]
     else:
         selected_ids = request.GET.getlist('ids[]') # لیست آیدی‌ها از فرانت
         target_readings = ReadingMaterial.objects.filter(id__in=selected_ids)
@@ -43,10 +43,10 @@ def api_perform_analysis(request):
     For each level, return the count of words and a preview list of 3 words.
     Return ONLY a JSON object like this:
     {{
-      "results": [
+    "results": [
         {{"level": "B2", "count": 15, "preview": ["word1", "word2", "word3"]}},
         {{"level": "C1", "count": 5, "preview": ["word4", "word5", "word6"]}}
-      ]
+    ]
     }}
     """
 
