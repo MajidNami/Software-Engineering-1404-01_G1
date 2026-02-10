@@ -8,7 +8,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 COPY requirements.txt /app/requirements.txt
 RUN pip install --no-cache-dir -r /app/requirements.txt
 
-# copy the whole repo (so team1..team15, core, app404, manage.py all exist)
 COPY . /app
 
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+# Runtime - migrations + server
+CMD ["python manage.py runserver 0.0.0.0:8000"]

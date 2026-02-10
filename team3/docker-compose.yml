@@ -2,7 +2,7 @@ services:
   gateway:
     image: nginx:alpine
     ports:
-      - "${TEAM_PORT}:80"
+      - "80:80"
     volumes:
       - ./gateway.conf:/etc/nginx/conf.d/default.conf:ro
     depends_on:
@@ -16,7 +16,15 @@ services:
     environment:
       - TEAM_NAME=team3
     networks: [app404]
-    command: sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    command: >
+      sh -c "
+       python manage.py migrate --database=team3 &&
+       python manage.py migrate team3 --database=team3 &&
+       python manage.py runserver 0.0.0.0:8000
+       "
+    volumes:
+      - ../:/app
+    working_dir: /app
 
 networks:
   app404:

@@ -1,54 +1,94 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="fa" dir="rtl">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>میکروسرویس گروه ۱</title>
-
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta charset="utf-8" />
     <!-- Team-local shared + team-local page styles -->
     <link rel="stylesheet" href="{% static 'team3/styles/common.css' %}">
     <link rel="stylesheet" href="{% static 'team3/styles/style.css' %}">
+    <link rel="stylesheet" href="{% static 'team3/styles/global.css' %}">
 </head>
-
 <body>
-<div class="container">
-    <header class="header">
-        <div class="header-right">
-            <a href="{% url 'microservices' %}" class="home-btn">میکروسرویس‌ها</a>
-        </div>
-
-        <div class="header-left">
-            <div class="flag-settings">
-                <img src="{% static 'team3/public/images/settings.png' %}" alt="" class="settings-icon">
-
-                <div class="iran-flag">
-                    <div class="flag-green"></div>
-                    <div class="flag-white"></div>
-                    <div class="flag-red"></div>
-                </div>
-            </div>
-
-            <div class="login-container">
-                {% if request.user.is_authenticated %}
-                <a href="{% url 'logout' %}" class="login-text">خروج</a>
-                {% else %}
-                <a href="{% url 'auth' %}" class="login-text">ورود</a>
-                {% endif %}
-
-                <div class="user-avatar" aria-hidden="true">
-                    <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="15" cy="10" r="5" fill="#647eb4" />
-                        <path d="M5 25C5 20 9 17 15 17C21 17 25 20 25 25" stroke="#647eb4" stroke-width="2" fill="none" />
-                    </svg>
-                </div>
-            </div>
-        </div>
-    </header>
-
-    <main class="welcome-section">
-        <h1 style="font-size: 3rem; color: var(--navy);">به میکروسرویس گروه 3 خوش آمدید</h1>
-    </main>
+<div class="exam-page">
+    <div class="rectangle"></div>
+    <img class="settings" src="img/settings.png" />
+    <img class="iran" src="img/iran.png" />
+    <img class="support" src="img/support.png" />
+    <div class="div"></div>
+    <div class="rectangle-2"></div>
+    <div class="rectangle-3"></div>
+    <div class="rectangle-4"></div>
+    <div class="rectangle-5"></div>
+    <div class="rectangle-6"></div>
+    <div class="rectangle-7"></div>
+    <div class="rectangle-8"></div>
+    <div class="rectangle-9"></div>
+    <div class="rectangle-10"></div>
+    <img class="profile" src="img/profile.png" />
+    <div class="rectangle-11"></div>
+    <div class="rectangle-12"></div>
+    <div class="rectangle-13"></div>
+    <div class="rectangle-14"></div>
+    <div class="rectangle-15"></div>
+    <div class="rectangle-16"></div>
+    <div class="rectangle-17"></div>
+    <div class="rectangle-18"></div>
+    <div class="rectangle-19"></div>
+    <div class="text-wrapper">برگزاری ازمون</div>
+    <div class="text-wrapper-2">شروع یادگیری</div>
+    <div class="text-wrapper-3">خانه</div>
+    <div class="text-wrapper-4">درباره ما</div>
+    <div class="text-wrapper-5">ورود</div>
+    <div class="text-wrapper-6">فیدبک ازمون</div>
+    <div class="text-wrapper-7">میکروسرویس 3</div>
+    <div class="text-wrapper-8">میکروسرویس 4</div>
+    <div class="text-wrapper-9">میکروسرویس 5</div>
+    <div class="text-wrapper-10">میکروسرویس 6</div>
+    <div class="text-wrapper-11">میکروسرویس 7</div>
+    <div class="text-wrapper-12">میکروسرویس 8</div>
+    <div class="text-wrapper-13">میکروسرویس 9</div>
+    <div class="text-wrapper-14">میکروسرویس 10</div>
+    <img class="telegram" src="img/telegram.png" />
+    <img class="instagram" src="img/instagram.png" />
+    <p class="p">ما را در شبکه‌های اجتماعی دنبال کنید !</p>
+    <div class="frame">
+        <img class="element-f" src="img/360-f-595853983-gbuzyhj7j1s4q2qdotkcd4k5it9kt14d-1.png" />
+        <p class="div-2">
+            <span class="span">شبیه ساز ازمون های آیلتس<br /></span>
+            <span class="text-wrapper-15"><br /></span>
+            <span class="text-wrapper-16">همین حالا اولین ازمون رو شروع کن!</span>
+        </p>
+    </div>
+    <div class="text-wrapper-17">ازمون شماره ۳</div>
+    <div class="text-wrapper-18">speaking</div>
+    <div class="text-wrapper-19">writing</div>
+    <div class="text-wrapper-20">reading</div>
+    <div class="text-wrapper-21">listening</div>
+    <div class="rectangle-20"></div>
+    <div class="rectangle-21"></div>
+    <div class="rectangle-22"></div>
+    <div class="rectangle-23"></div>
+    <div class="rectangle-24"></div>
+    <div class="text-wrapper-22">ازمون شماره ۱</div>
+    <div class="text-wrapper-23">speaking</div>
+    <div class="text-wrapper-24">writing</div>
+    <div class="text-wrapper-25">reading</div>
+    <div class="text-wrapper-26">listening</div>
+    <div class="text-wrapper-27">speaking</div>
+    <div class="text-wrapper-28">writing</div>
+    <div class="text-wrapper-29">reading</div>
+    <div class="text-wrapper-30">listening</div>
+    <div class="rectangle-25"></div>
+    <div class="rectangle-26"></div>
+    <div class="rectangle-27"></div>
+    <div class="rectangle-28"></div>
+    <div class="rectangle-29"></div>
+    <div class="text-wrapper-31">ازمون شماره ۲</div>
+    <div class="text-wrapper-32">speaking</div>
+    <div class="text-wrapper-33">writing</div>
+    <div class="text-wrapper-34">reading</div>
+    <div class="text-wrapper-35">listening</div>
 </div>
 </body>
 </html>
