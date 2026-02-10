@@ -4,97 +4,189 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VocabAI | Text Analysis</title>
+    
+    <!-- Vazirmatn Font (Required by Project) -->
     <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
+    
     <style>
         :root {
             --primary-orange: #ff8a65;
-            --primary-blue: #6c5ce7;
+            --secondary-orange: #ffb199;
             --bg-gradient: linear-gradient(180deg, #fce4ec 0%, #e3f2fd 100%);
+            --text-dark: #2d3436;
+            --text-grey: #636e72;
+            --card-shadow: 0 10px 30px rgba(0,0,0,0.05);
         }
 
         body {
             font-family: 'Vazirmatn', sans-serif;
             background: var(--bg-gradient);
-            margin: 0; padding: 0;
-            color: #2d3436; min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            color: var(--text-dark);
+            min-height: 100vh;
         }
 
         /* --- Navigation --- */
         nav {
-            background: white; padding: 10px 5%;
-            display: flex; justify-content: space-between; align-items: center;
+            background: white;
+            padding: 10px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             box-shadow: 0 2px 10px rgba(0,0,0,0.05);
         }
-        .logo-area { font-weight: bold; text-decoration: none; color: #2d3436; font-size: 20px; }
+        .logo { font-weight: bold; text-decoration: none; color: var(--text-dark); font-size: 20px; }
         .nav-tabs { display: flex; gap: 15px; list-style: none; margin: 0; padding: 0; }
-        .nav-tabs li { padding: 8px 15px; border-radius: 20px; font-size: 14px; cursor: pointer; color: #636e72; }
+        .nav-tabs li { padding: 8px 15px; border-radius: 20px; font-size: 14px; cursor: pointer; color: var(--text-grey); }
         .nav-tabs li.active { background: #ff7043; color: white; font-weight: bold; }
 
         .container { max-width: 1000px; margin: 30px auto; padding: 0 20px; }
 
-        /* --- Header --- */
+        /* --- Page Header --- */
         .header-card {
-            background: white; border-radius: 20px; padding: 20px 30px;
-            display: flex; align-items: center; gap: 15px; margin-bottom: 25px;
+            background: white;
+            border-radius: 20px;
+            padding: 20px 30px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            box-shadow: var(--card-shadow);
         }
+        .icon-box { background: #ffe0d1; color: #ff8a65; padding: 10px; border-radius: 12px; font-size: 20px; }
 
-        /* --- Selection Views --- */
+        /* --- Selection View --- */
         .card-ui {
-            background: white; border-radius: 24px; padding: 40px;
-            text-align: center; margin-bottom: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            background: white;
+            border-radius: 24px;
+            padding: 40px;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: var(--card-shadow);
         }
 
-        .btn-orange {
-            background: linear-gradient(90deg, #ff8a65, #ffb199);
-            color: white; border: none; padding: 15px 40px;
-            border-radius: 15px; font-size: 18px; font-weight: bold;
-            cursor: pointer; font-family: 'Vazirmatn'; margin: 20px 0;
+        .btn-main {
+            background: linear-gradient(90deg, var(--primary-orange), var(--secondary-orange));
+            color: white;
+            border: none;
+            padding: 15px 45px;
+            border-radius: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            font-family: 'Vazirmatn';
             transition: 0.3s;
+            margin: 20px 0;
         }
-        .btn-orange:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(255, 138, 101, 0.3); }
+        .btn-main:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(255, 138, 101, 0.3); }
+        .btn-main:disabled { opacity: 0.6; cursor: wait; }
 
-        /* Manual List */
+        /* Manual Selection List */
         .history-list {
-            max-height: 300px; overflow-y: auto; margin: 20px 0;
-            border: 1px solid #eee; border-radius: 15px; text-align: left;
+            max-height: 350px;
+            overflow-y: auto;
+            margin: 20px 0;
+            border: 1px solid #eee;
+            border-radius: 15px;
+            text-align: left;
         }
         .history-item {
-            display: flex; align-items: center; gap: 15px;
-            padding: 15px; border-bottom: 1px solid #f1f1f1;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            border-bottom: 1px solid #f9f9f9;
+            transition: 0.2s;
         }
+        .history-item:hover { background: #fcfcfc; }
+        .item-info { flex: 1; }
+        .item-title { font-weight: bold; display: block; margin-bottom: 4px; }
+        .item-meta { font-size: 12px; color: #999; }
 
-        /* --- Dynamic Results Grid --- */
+        /* --- Results View --- */
+        #results-view { display: none; }
         .results-grid {
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 25px; margin-top: 30px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
         }
         .level-card {
-            background: white; border-radius: 24px; padding: 30px;
-            text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.04);
-            animation: fadeIn 0.5s ease;
+            background: white;
+            border-radius: 24px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: var(--card-shadow);
+            border: 1px solid #f1f1f1;
+            animation: slideUp 0.5s ease;
         }
         .level-badge {
-            background: #2d3436; color: white; width: 50px; height: 50px;
-            border-radius: 12px; display: flex; align-items: center; justify-content: center;
-            font-weight: bold; font-size: 18px; margin-bottom: 15px;
+            background: #2d3436;
+            color: white;
+            width: 55px;
+            height: 55px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 20px;
+            margin: 0 auto 20px;
         }
-        .preview-tags { display: flex; gap: 8px; justify-content: center; margin: 15px 0; flex-wrap: wrap; }
-        .tag { background: #f1f2f6; padding: 4px 12px; border-radius: 8px; font-size: 13px; color: #555; }
-        
+        .preview-tags {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        .tag {
+            background: #f1f2f6;
+            padding: 5px 12px;
+            border-radius: 10px;
+            font-size: 13px;
+            color: #555;
+        }
         .btn-study {
-            width: 100%; background: #2d3436; color: white; border: none;
-            padding: 12px; border-radius: 12px; cursor: pointer; font-family: 'Vazirmatn'; font-weight: bold;
+            width: 100%;
+            background: #2d3436;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            font-family: 'Vazirmatn';
+            transition: 0.2s;
+        }
+        .btn-study:hover { background: #000; }
+
+        /* Loading Animation */
+        #loading-overlay {
+            display: none;
+            text-align: center;
+            padding: 60px;
+        }
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--primary-orange);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
         }
 
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        
-        #loading-view { display: none; text-align: center; padding: 50px; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
     </style>
 </head>
 <body>
 
     <nav>
-        <a href="/team8/" class="logo-area">✦ VocabAI</a>
+        <a href="/team8/" class="logo">✦ VocabAI</a>
         <ul class="nav-tabs">
             <li>Word Cards</li>
             <li>Practice</li>
@@ -106,118 +198,159 @@
 
     <div class="container">
         
+        <!-- HEADER -->
         <div class="header-card">
-            <div style="font-size: 24px;">📄</div>
+            <div class="icon-box">📄</div>
             <div style="text-align: left;">
-                <strong style="display: block;">Text Analysis</strong>
-                <span style="font-size: 12px; color: #888;">AI will extract vocabulary from your readings</span>
+                <strong style="display: block; font-size: 18px;">Text Analysis</strong>
+                <span style="font-size: 13px; color: var(--text-grey);">Extract difficult words from your reading history</span>
             </div>
         </div>
 
         <!-- 1. VIEW: SELECTION -->
         <div id="selection-view">
-            <!-- Quick -->
+            <!-- Quick Analysis Card -->
             <div class="card-ui">
-                <div style="font-size: 40px; margin-bottom: 15px;">⚡</div>
-                <h2>Quick Analysis</h2>
-                <p style="color: #636e72;">Automatically analyze your 5 most recent readings.</p>
-                <button class="btn-orange" onclick="runAIAnalysis('quick')">Start Quick Analysis</button>
+                <div style="font-size: 50px; margin-bottom: 15px;">⚡</div>
+                <h2 style="margin:0">Quick Analysis</h2>
+                <p style="color: var(--text-grey); margin-top: 10px;">Automatically analyze your 5 most recent readings.</p>
+                <button class="btn-main" onclick="startAIAnalysis('quick')">Start Quick Analysis</button>
+                <div style="font-size: 12px; color: #b2bec3; display: flex; justify-content: center; gap: 20px;">
+                    <span>📖 5 Recent Texts</span>
+                    <span>✨ AI-Powered</span>
+                </div>
             </div>
 
-            <!-- Manual -->
+            <!-- Manual Selection Card -->
             <div class="card-ui" style="text-align: left;">
-                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
-                    <div style="background: #fff9db; padding: 8px; border-radius: 10px;">📝</div>
+                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 5px;">
+                    <div style="background: #fff9db; padding: 10px; border-radius: 12px;">📝</div>
                     <strong>Manual Selection</strong>
                 </div>
+                <p style="font-size: 14px; color: var(--text-grey); margin-bottom: 20px;">Select specific readings to analyze vocabulary.</p>
+                
                 <div class="history-list" id="historyList">
-                    <!-- کدهای این بخش باید از دیتابیس لود شوند -->
-                    <div class="history-item">
-                        <input type="checkbox" value="1" class="read-check">
-                        <div style="margin-left: 10px;">
-                            <span style="display: block; font-weight: bold;">Artificial Intelligence Trends</span>
-                            <span style="font-size: 12px; color: #999;">1200 words • Oct 2025</span>
-                        </div>
-                    </div>
+                    <!-- History items will be loaded here via JS -->
+                    <div style="padding: 20px; text-align: center; color: #ccc;">Loading your history...</div>
                 </div>
-                <button class="btn-orange" style="width: 100%;" onclick="runAIAnalysis('manual')">Analyze Selected Texts</button>
+
+                <button class="btn-main" style="width: 100%;" id="manualBtn" onclick="startAIAnalysis('manual')">
+                    Analyze Selected Readings
+                </button>
             </div>
         </div>
 
         <!-- 2. VIEW: LOADING -->
-        <div id="loading-view">
-            <h2 id="loading-text">AI is analyzing your texts...</h2>
-            <p>Please wait while we categorize new vocabulary by level.</p>
+        <div id="loading-overlay">
+            <div class="spinner"></div>
+            <h2 id="loading-text">AI is analyzing your content...</h2>
+            <p style="color: var(--text-grey);">Categorizing new vocabulary by difficulty level.</p>
         </div>
 
         <!-- 3. VIEW: RESULTS -->
-        <div id="results-view" style="display: none;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                <h2 style="margin: 0;">Extracted Vocabulary</h2>
-                <button onclick="location.reload()" style="background:none; border:none; color:var(--primary-blue); cursor:pointer; font-family:'Vazirmatn'">← Reset</button>
+        <div id="results-view">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+                <h2 style="margin: 0; color: #30336b;">Extracted Vocabulary</h2>
+                <button onclick="location.reload()" style="background:none; border:none; color:#6c5ce7; cursor:pointer; font-family:'Vazirmatn'; font-weight:bold;">
+                    ← Reset Analysis
+                </button>
             </div>
             
-            <!-- این بخش کاملاً توسط جاوااسکریپت و دیتای هوش مصنوعی پر می‌شود -->
+            <!-- Cards (A1-C2) will be injected here -->
             <div class="results-grid" id="resultsGrid"></div>
         </div>
 
     </div>
 
     <script>
-        async function runAIAnalysis(mode) {
+        // 1. Load history when page opens
+        window.onload = async function() {
+            try {
+                const response = await fetch('/team8/api/reading-history/');
+                const data = await response.json();
+                const historyList = document.getElementById('historyList');
+
+                if (data.history && data.history.length > 0) {
+                    historyList.innerHTML = data.history.map(item => `
+                        <div class="history-item">
+                            <input type="checkbox" value="${item.id}" class="reading-checkbox">
+                            <div class="item-info">
+                                <span class="item-title">${item.title}</span>
+                                <span class="item-meta">${item.category} • ${item.date || 'Recent'}</span>
+                            </div>
+                        </div>
+                    `).join('');
+                } else {
+                    historyList.innerHTML = '<div style="padding:40px; text-align:center; color:#888;">No reading history found.</div>';
+                    document.getElementById('manualBtn').disabled = true;
+                }
+            } catch (error) {
+                console.error("History Load Error:", error);
+            }
+        };
+
+        // 2. Main Analysis Trigger
+        async function startAIAnalysis(mode) {
             const selectionView = document.getElementById('selection-view');
-            const loadingView = document.getElementById('loading-view');
+            const loadingOverlay = document.getElementById('loading-overlay');
             const resultsView = document.getElementById('results-view');
             const resultsGrid = document.getElementById('resultsGrid');
 
+            let url = `/team8/api/text-analysis/?mode=${mode}`;
+
+            // If manual, gather selected IDs
+            if (mode === 'manual') {
+                const selected = Array.from(document.querySelectorAll('.reading-checkbox:checked')).map(cb => cb.value);
+                if (selected.length === 0) {
+                    alert("Please select at least one reading.");
+                    return;
+                }
+                selected.forEach(id => url += `&ids[]=${id}`);
+            }
+
+            // UI Switch to Loading
             selectionView.style.display = 'none';
-            loadingView.style.display = 'block';
+            loadingOverlay.style.display = 'block';
 
             try {
-                // فراخوانی API واقعی تیم ۸
-                const response = await fetch(`/team8/api/text-analysis/?mode=${mode}`);
-                const data = await response.json(); 
-                /* 
-                   فرمت پاسخ هوش مصنوعی باید اینطور باشد:
-                   {
-                     "results": [
-                        {"level": "A1", "count": 8, "preview": ["work", "use", "find"]},
-                        {"level": "B2", "count": 15, "preview": ["impact", "achieve", "resource"]},
-                        ...
-                     ]
-                   }
-                */
+                const response = await fetch(url);
+                const data = await response.json();
 
-                // پاکسازی نتایج قبلی
-                resultsGrid.innerHTML = '';
+                // 3. Render Level Cards dynamically
+                resultsGrid.innerHTML = ''; // Clear previous
+                
+                if (data.results && data.results.length > 0) {
+                    data.results.forEach(item => {
+                        const card = document.createElement('div');
+                        card.className = 'level-card';
+                        card.innerHTML = `
+                            <div class="level-badge">${item.level}</div>
+                            <h3 style="margin-bottom: 5px;">${item.count} words found</h3>
+                            <p style="font-size:13px; color:#999; margin-top:0;">Suggested for your level</p>
+                            <div class="preview-tags">
+                                ${item.preview.map(word => `<span class="tag">${word}</span>`).join('')}
+                            </div>
+                            <button class="btn-study" onclick="goToStudy('${item.level}')">Study Level ${item.level}</button>
+                        `;
+                        resultsGrid.appendChild(card);
+                    });
 
-                // ساخت داینامیک کارت‌ها بر اساس پاسخ AI
-                data.results.forEach(item => {
-                    const card = document.createElement('div');
-                    card.className = `level-card`;
-                    card.innerHTML = `
-                        <div style="display: flex; justify-content: center;"><div class="level-badge">${item.level}</div></div>
-                        <h3 style="margin: 10px 0;">${item.count} words found</h3>
-                        <div class="preview-tags">
-                            ${item.preview.map(word => `<span class="tag">${word}</span>`).join('')}
-                        </div>
-                        <button class="btn-study" onclick="startStudy('${item.level}')">Study Level ${item.level}</button>
-                    `;
-                    resultsGrid.appendChild(card);
-                });
-
-                loadingView.style.display = 'none';
-                resultsView.style.display = 'block';
+                    loadingOverlay.style.display = 'none';
+                    resultsView.style.display = 'block';
+                } else {
+                    document.getElementById('loading-text').innerText = "No significant vocabulary found.";
+                }
 
             } catch (error) {
-                document.getElementById('loading-text').innerText = "Error connecting to AI service.";
-                console.error(error);
+                alert("AI Analysis failed. Check backend connection.");
+                selectionView.style.display = 'block';
+                loadingOverlay.style.display = 'none';
             }
         }
 
-        function startStudy(level) {
-            // هدایت به صفحه Word Cards برای شروع مطالعه این سطح
-            window.location.href = `/team8/card/?level=${level}`;
+        function goToStudy(level) {
+            // Redirect to Word Card page with the selected level
+            window.location.href = `/team8/wordcard/?level=${level}`;
         }
     </script>
 </body>
