@@ -1,5 +1,8 @@
-Django>=4.2
+Django==4.2.27
 gunicorn
 psycopg2-binary
 openai
 python-dotenv
+mysqlclient
+dj-database-url
+requests
