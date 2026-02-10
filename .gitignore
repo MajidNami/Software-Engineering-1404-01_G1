@@ -23,6 +23,7 @@ node_modules/
 dist/
 build/
 
-win_scripts/
+/win_scripts
+
 
 
