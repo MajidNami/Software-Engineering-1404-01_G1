@@ -55,3 +55,34 @@ class DetailedScore(models.Model):
 
     def __str__(self):
         return f"{self.criterion}: {self.score_value}"
+
+
+class APILog(models.Model):
+    """API request logging for monitoring and analytics (FR-MON, NFR-AVAIL-01).
+    
+    Tracks all API requests to monitor system health, performance,
+    and identify bottlenecks or failures.
+    """
+    log_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user_id = models.UUIDField(null=True, blank=True, help_text="Reference to User UUID (null for unauthenticated)")
+    endpoint = models.CharField(max_length=200, help_text="API endpoint path")
+    method = models.CharField(max_length=10, default='GET', help_text="HTTP method")
+    status_code = models.IntegerField(help_text="HTTP response status code")
+    latency_ms = models.IntegerField(help_text="Request processing time in milliseconds")
+    timestamp = models.DateTimeField(auto_now_add=True, db_index=True)
+    
+    # Optional fields for detailed debugging
+    error_message = models.TextField(blank=True, null=True, help_text="Error details if status >= 400")
+    request_size = models.IntegerField(null=True, blank=True, help_text="Request body size in bytes")
+    response_size = models.IntegerField(null=True, blank=True, help_text="Response body size in bytes")
+
+    class Meta:
+        ordering = ['-timestamp']
+        indexes = [
+            models.Index(fields=['endpoint', '-timestamp']),
+            models.Index(fields=['status_code', '-timestamp']),
+            models.Index(fields=['user_id', '-timestamp']),
+        ]
+
+    def __str__(self):
+        return f"{self.method} {self.endpoint} - {self.status_code} ({self.latency_ms}ms)"

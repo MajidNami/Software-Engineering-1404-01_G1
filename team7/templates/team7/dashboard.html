@@ -41,26 +41,22 @@
         <div class="main-content">
             <!-- Sidebar -->
             <aside class="sidebar">
-                <div class="menu-item active">
+                <a href="{% url 'team7:dashboard' %}" class="menu-item active">
                     <div class="menu-icon"></div>
                     <span>داشبورد</span>
-                </div>
-                <div class="menu-item">
+                </a>
+                <a href="{% url 'team7:exams' %}#writing" class="menu-item">
                     <div class="menu-icon"></div>
                     <span>آزمون نوشتاری</span>
-                </div>
-                <div class="menu-item">
+                </a>
+                <a href="{% url 'team7:exams' %}#speaking" class="menu-item">
                     <div class="menu-icon"></div>
                     <span>آزمون گفتاری</span>
-                </div>
-                <div class="menu-item">
+                </a>
+                <a href="#statistics-section" class="menu-item">
                     <div class="menu-icon"></div>
-                    <span>گزارشات</span>
-                </div>
-                <div class="menu-item">
-                    <div class="menu-icon"></div>
-                    <span>تنظیمات</span>
-                </div>
+                    <span>آمار و تحلیل عملکرد</span>
+                </a>
             </aside>
 
             <!-- Content Wrapper -->
@@ -171,7 +167,7 @@
                 </section>
 
                 <!-- Statistics Section -->
-                <section class="statistics-section">
+                <section class="statistics-section" id="statistics-section">
                     <h2 class="section-title">آمار و تحلیل عملکرد</h2>
                     <div class="stats-grid">
                         <div class="stat-card">

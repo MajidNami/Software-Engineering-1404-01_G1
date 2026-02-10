@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>آزمون نوشتاری - آکادمی زبان</title>
+    <!-- CSS Files -->
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'team7/css/variables.css' %}">
+    <link rel="stylesheet" href="{% static 'team7/css/common.css' %}">
+    <link rel="stylesheet" href="{% static 'team7/css/writing-exam.css' %}">
+    <link rel="stylesheet" href="{% static 'team7/css/popups.css' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="writing-exam-container">
+        <!-- Exam Navbar -->
+        <div class="exam-navbar">
+            <div class="navbar-content">
+                <!-- Nav Left Section -->
+                <div class="nav-left-section">
+                    <div class="previous-button" id="previousBtn">
+                        <p>سوال قبلی</p>
+                    </div>
+                    <div class="question-number">
+                        <p id="questionCounter">سوال 1 از 4</p>
+                    </div>
+                    <div class="next-button" id="nextBtn">
+                        <p>سوال بعدی</p>
+                    </div>
+                </div>
+
+                <!-- Nav Center Section -->
+                <div class="nav-center-section">
+                    <div class="timer-container">
+                        <div class="timer-text">
+                            <p class="timer-label">زمان باقیمانده</p>
+                            <p class="timer-value" id="timer">28:45</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Nav Right Section -->
+                <div class="nav-right-section">
+                    <div class="save-button" id="saveBtn">
+                        <p>ذخیره پیش‌نویس</p>
+                    </div>
+                    <div class="submit-button" id="submitBtn">
+                        <p>اتمام و ارسال</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Exam Content -->
+        <div class="exam-content">
+            <!-- Question Panel (will be loaded via AJAX) -->
+            <div id="questionPanel" class="question-panel">
+                <div class="loading-spinner">
+                    <p>درحال بارگذاری سوال...</p>
+                </div>
+            </div>
+
+            <!-- Answer Panel -->
+            <div class="answer-panel">
+                <div class="answer-panel-content">
+                    <!-- Answer Header -->
+                    <div class="answer-header">
+                        <p class="answer-title">پاسخ شما</p>
+                        <div class="answer-stats">
+                            <div class="word-count-stat">
+                                <p class="stat-label">تعداد کلمات</p>
+                                <p class="stat-value word-count" id="wordCount">0</p>
+                            </div>
+                            <div class="time-stat">
+                                <p class="stat-label">زمان سپری شده</p>
+                                <p class="stat-value time-elapsed" id="timeElapsed">00:00</p>
+                            </div>
+                            <div class="progress-stat">
+                                <p class="stat-label">پیشرفت</p>
+                                <p class="stat-value progress" id="progress">0%</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Toolbar -->
+                    <div class="toolbar">
+                        <div class="toolbar-right">
+                            <div class="font-size-display">
+                                <p id="fontSizeDisplay">16</p>
+                            </div>
+                            <div class="font-size-control">
+                                <p class="font-size-label">اندازه متن:</p>
+                                <button class="decrease-font" id="decreaseFont">-</button>
+                                <button class="increase-font" id="increaseFont">+</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Answer Textarea -->
+                    <div class="answer-textarea-container">
+                        <textarea class="answer-textarea" id="answerTextarea" placeholder="پاسخ خود را اینجا بنویسید..."></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Files -->
+    <script src="{% static 'team7/js/shared.js' %}"></script>
+    <script src="{% static 'team7/js/popups.js' %}"></script>
+    <script src="{% static 'team7/js/writing-exam.js' %}"></script>
+</body>
+</html>

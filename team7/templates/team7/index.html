@@ -27,9 +27,9 @@
             </div>
             <nav class="navigation-menu">
                 <a href="{% url 'team7:index' %}" class="nav-link active">خانه</a>
-                <a href="#speaking" class="nav-link">مکالمه</a>
-                <a href="#writing" class="nav-link">نوشتن</a>
-                <a href="#tests" class="nav-link">آزمون‌ها</a>
+                <a href="{% url 'team7:exams' %}#speaking" class="nav-link">مکالمه</a>
+                <a href="{% url 'team7:exams' %}#writing" class="nav-link">نوشتن</a>
+                <a href="{% url 'team7:exams' %}" class="nav-link">آزمون‌ها</a>
                 <a href="{% url 'team7:dashboard' %}" class="nav-link">داشبورد</a>
             </nav>
             <div class="header-buttons">
@@ -50,8 +50,8 @@
                         با استفاده از تکنولوژی پیشرفته هوش مصنوعی، مهارت‌های زبانی خود را به سطح حرفه‌ای برسانید. ارزیابی دقیق، بازخورد آنی و مسیر یادگیری شخصی‌سازی شده
                     </p>
                     <div class="hero-cta-buttons">
-                        <button class="btn-primary-cta">شروع آزمون رایگان</button>
-                        <button class="btn-secondary-cta">مشاهده نمونه آزمون</button>
+                        <a href="{% url 'team7:exams' %}" class="btn-primary-cta">شروع آزمون رایگان</a>
+                        <a href="{% url 'team7:exams' %}" class="btn-secondary-cta">مشاهده نمونه آزمون</a>
                     </div>
                     <div class="hero-stats">
                         <div class="stat">
@@ -147,7 +147,7 @@
                             <p>گزارش‌های جامع و قابل فهم از عملکرد</p>
                         </div>
                     </div>
-                    <button class="btn-ai-cta">شروع آزمون رایگان</button>
+                    <a href="{% url 'team7:exams' %}" class="btn-ai-cta">شروع آزمون رایگان</a>
                 </div>
             </div>
         </section>
@@ -195,7 +195,7 @@
             <div class="cta-inner">
                 <h2 class="cta-title">آماده‌اید مهارت‌های زبانی خود را ارتقا دهید؟</h2>
                 <p class="cta-description">همین حالا به هزاران دانشجوی موفق بپیوندید و سفر یادگیری خود را آغاز کنید</p>
-                <button class="btn-cta">شروع آزمون رایگان</button>
+                <a href="{% url 'team7:exams' %}" class="btn-cta">شروع آزمون رایگان</a>
             </div>
         </section>
     </main>
@@ -224,8 +224,8 @@
             </div>
             <div class="footer-column">
                 <h3 class="footer-title">دسترسی سریع</h3>
-                <a href="#speaking" class="footer-link">آزمون مکالمه</a>
-                <a href="#writing" class="footer-link">آزمون نوشتن</a>
+                <a href="{% url 'team7:exams' %}" class="footer-link">آزمون مکالمه</a>
+                <a href="{% url 'team7:exams' %}" class="footer-link">آزمون نوشتن</a>
                 <a href="#" class="footer-link">قیمت‌ها</a>
                 <a href="#" class="footer-link">درباره ما</a>
             </div>
