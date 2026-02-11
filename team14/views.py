@@ -1,6 +1,8 @@
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
+from django.db.models import Count
+import random
 
 from core.auth import api_login_required
 from django.contrib.auth.decorators import login_required
@@ -227,7 +229,7 @@ def submit_answer(request):
         session = get_object_or_404(
             UserSession,
             id=data['session_id'],
-            user_id=str(request.user.id)  # ✅ خیلی مهم: اطمینان حاصل کنید که نوع داده یکسان است (Char vs Int)
+            user_id=str(request.user.id)
         )
 
         question = get_object_or_404(
@@ -236,29 +238,27 @@ def submit_answer(request):
             passage=session.passage
         )
 
-        # در اینجا user_id: request.user.id است
-        # اگر در مدل UserAnswer فیلد user_id ندارید و فقط session است
-        # باید بر اساس session و question ایجاد یا به روز کنید
-        # در مدل UserAnswer فقط session و question دارید، نه user_id مستقیم
-        # بنابراین این خط باید اصلاح شود:
         user_answer, created = UserAnswer.objects.get_or_create(
             session=session,
             question=question,
-            defaults={'selected_option_id': data['option_id']}
+            defaults={
+                'selected_option_id': data['option_id'],
+                'is_correct': False,        # ✅ مهم
+                'response_time': 0          # ✅ مهم
+            }
         )
 
+        # اگر قبلاً وجود داشته و جواب عوض شده
         if not created and user_answer.selected_option_id != data['option_id']:
             user_answer.selected_option_id = data['option_id']
             user_answer.changed_count += 1
-            user_answer.save()
-        elif created and data['option_id'] is None:  # اگر برای null کردن گزینه ارسال شده و تازه ساخته شده
-            user_answer.selected_option = None
             user_answer.save()
 
         return JsonResponse({'success': True})
 
     except Exception as e:
         return JsonResponse({'success': False, 'error': str(e)}, status=400)
+
 
 
 def finish_practice(request, session_id):
@@ -342,3 +342,25 @@ def practice_result(request, session_id):
         "results": result_data,
         "level": session.passage.get_difficulty_level_display()  # ✅ اینجا اصلاح شد
     })
+
+
+@login_required
+def start_exam(request):
+    # فقط passage هایی که سوال دارند
+    passages = Passage.objects.annotate(
+        q_count=Count('questions')
+    ).filter(q_count__gt=0)
+
+    if not passages.exists():
+        return redirect('Exam_Page')
+
+    passage = random.choice(list(passages))
+
+    session = UserSession.objects.create(
+        user_id=str(request.user.id),  # ✅ خیلی مهم
+        passage=passage,
+        mode='exam',
+        start_time=timezone.now()
+    )
+
+    return redirect('practice_page', passage_id=passage.id)
