@@ -192,12 +192,17 @@ body {
     align-items: center;
     justify-content: center;
     overflow: hidden;
+    position: relative;
 }
 
 .chart-placeholder img {
     width: 100%;
     height: 100%;
     object-fit: contain;
+}
+
+.chart-placeholder canvas {
+    max-height: 280px !important;
 }
 
 /* ==================== EXAMS SECTION ==================== */
@@ -308,6 +313,14 @@ body {
     display: flex;
     flex-direction: column;
     gap: var(--spacing-xl);
+    text-decoration: none;
+    color: inherit;
+    transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+}
+
+.access-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-xl);
 }
 
 .access-title {

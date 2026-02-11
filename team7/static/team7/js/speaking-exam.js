@@ -3,199 +3,6 @@
  * Handles AJAX loading of speaking exam questions and exam flow
  */
 
-// ==================== MOCK DATA FOR EXAMS ====================
-/**
- * Mock exam questions data - Replace with API calls later
- */
-const mockSpeakingExamData = {
-    'speak-1': {
-        title: 'توصیف تجربه شخصی',
-        type: 'گفتاری',
-        totalQuestions: 2,
-        totalTime: 900, // 15 minutes in seconds
-        questions: [
-            {
-                id: 'q1',
-                title: 'Part 1: سوال شخصی',
-                type: 'گفتاری',
-                badge: 'آزمون گفتاری تافل',
-                instruction: 'دستورالعمل: در این بخش باید درباره یک موضوع شخصی صحبت کنید. 45 ثانیه زمان دارید تا آماده شوید و سپس 2 دقیقه برای پاسخ دادن.',
-                content: 'درباره یک معلمی که تأثیر مثبتی بر زندگی شما داشته است صحبت کنید. توضیح دهید که این معلم چه کاری انجام داد و چرا این تأثیر برای شما مهم بود.',
-                requirements: [
-                    'معلم را معرفی کنید',
-                    'اقدامات او را توضیح دهید',
-                    'تأثیر بر زندگی شما را بیان کنید',
-                    'با وضوح و روانی صحبت کنید'
-                ],
-                tips: [
-                    'از زمان آماده‌سازی برای یادداشت نکات کلیدی استفاده کنید',
-                    'پاسخ خود را با ساختار منطقی سازماندهی کنید',
-                    'از مثال‌های مشخص استفاده کنید',
-                    'با آرامش و اعتماد به نفس صحبت کنید'
-                ],
-                preparationTime: 45,
-                speakingTime: 120
-            },
-            {
-                id: 'q2',
-                title: 'Part 2: روایت داستان',
-                type: 'گفتاری',
-                badge: 'آزمون گفتاری تافل',
-                instruction: 'دستورالعمل: در این بخش باید یک داستان را روایت کنید. 45 ثانیه زمان دارید تا آماده شوید و سپس 2 دقیقه برای صحبت کردن.',
-                content: 'درباره یک سفر خاطره‌انگیز صحبت کنید. توضیح دهید کجا رفتید، چه کسی با شما بود، چه کاری کردید و چرا آن سفر برای شما خاص بود.',
-                requirements: [
-                    'مقصد سفر را توضیح دهید',
-                    'هم‌سفران را معرفی کنید',
-                    'فعالیت‌های انجام‌شده را شرح دهید',
-                    'احساسات و تأثیرات را بیان کنید'
-                ],
-                tips: [
-                    'ترتیب زمانی را رعایت کنید',
-                    'جزئیات جالب و دلچسب را شامل کنید',
-                    'از انتقالات صحیح استفاده کنید',
-                    'صدای خود را متنوع نگه دارید'
-                ],
-                preparationTime: 45,
-                speakingTime: 120
-            }
-        ]
-    },
-    'speak-2': {
-        title: 'بحث و بررسی',
-        type: 'گفتاری',
-        totalQuestions: 2,
-        totalTime: 1200, // 20 minutes in seconds
-        questions: [
-            {
-                id: 'q1',
-                title: 'Part 1: تحلیل مسئله',
-                type: 'گفتاری',
-                badge: 'آزمون گفتاری تافل',
-                instruction: 'دستورالعمل: یک مسئله اجتماعی معطوف شده است. باید آن را تحلیل کنید و نظرات خود را بیان کنید. 1 دقیقه زمان برای آماده شدن و 3 دقیقه برای صحبت کردن.',
-                content: 'بیش‌تر جوانان برای تحصیل و شغل به شهرهای بزرگ مهاجرت می‌کنند. این مسئله را در شهرهای کوچک بحث کنید. مزایا و معایب این مهاجرت را تحلیل کنید.',
-                requirements: [
-                    'مسئله را واضح تعریف کنید',
-                    'مزایا را ذکر کنید',
-                    'معایب را بیان کنید',
-                    'راه‌حل یا نظر شخصی ارائه دهید'
-                ],
-                tips: [
-                    'موضوع را به خوبی درک کنید',
-                    'از مثال‌های واقعی استفاده کنید',
-                    'هر دو طرف مسئله را بررسی کنید',
-                    'به موضوع اصلی وفادار بمانید'
-                ],
-                preparationTime: 60,
-                speakingTime: 180
-            }
-        ]
-    },
-    'speak-3': {
-        title: 'مستند‌سازی تجربه کاری',
-        type: 'گفتاری',
-        totalQuestions: 2,
-        totalTime: 900, // 15 minutes in seconds
-        questions: [
-            {
-                id: 'q1',
-                title: 'Part 1: توضیح تجربه شغلی',
-                type: 'گفتاری',
-                badge: 'آزمون گفتاری تافل',
-                instruction: 'دستورالعمل: درباره یکی از بزرگترین چالش‌های شغلی خود صحبت کنید. 30 ثانیه برای آماده شدن و 2 دقیقه برای صحبت کردن.',
-                content: 'درباره یک چالش شغلی بزرگ صحبت کنید که آن را با موفقیت حل کردید. چالش چیست، چگونه آن را مواجه کردید، و نتیجه نهایی چه بود؟',
-                requirements: [
-                    'چالش را به وضوح تعریف کنید',
-                    'اقدامات خود را شرح دهید',
-                    'روند حل را توضیح دهید',
-                    'نتیجه و درس‌های آموخته شده را بیان کنید'
-                ],
-                tips: [
-                    'از یک مثال واقعی استفاده کنید',
-                    'ترتیب زمانی رویدادها را رعایت کنید',
-                    'نقش خود را برجسته کنید',
-                    'نتایج مثبت را تأکید کنید'
-                ],
-                preparationTime: 30,
-                speakingTime: 120
-            },
-            {
-                id: 'q2',
-                title: 'Part 2: رهبری و کار تیمی',
-                type: 'گفتاری',
-                badge: 'آزمون گفتاری تافل',
-                instruction: 'دستورالعمل: درباره یک موقعیتی صحبت کنید که در آن برای تیم خود رهبری کردید. 45 ثانیه برای آماده شدن و 2 دقیقه برای صحبت.',
-                content: 'درباره زمانی صحبت کنید که رهبری یک پروژه یا تیم را برعهده گرفتید. پروژه چه بود، چالش‌هایی با آن روبرو شدید، و چگونه تیم را به سمت موفقیت هدایت کردید؟',
-                requirements: [
-                    'پروژه را به وضوح توصیف کنید',
-                    'نقش رهبری خود را بیان کنید',
-                    'چگونگی انگیزش تیم را شرح دهید',
-                    'نتایج و دستاوردهای تیم را بیان کنید'
-                ],
-                tips: [
-                    'بر توانایی‌های رهبری خود تأکید کنید',
-                    'مثال‌های خاص از تصمیمات آورید',
-                    'از مهارت‌های ارتباطی صحبت کنید',
-                    'نتایج اقتصادی یا عملیاتی را ذکر کنید'
-                ],
-                preparationTime: 45,
-                speakingTime: 120
-            }
-        ]
-    },
-    'speak-4': {
-        title: 'دیدگاه‌های فرهنگی و اجتماعی',
-        type: 'گفتاری',
-        totalQuestions: 2,
-        totalTime: 1050, // 17.5 minutes in seconds
-        questions: [
-            {
-                id: 'q1',
-                title: 'Part 1: تفاوت فرهنگی',
-                type: 'گفتاری',
-                badge: 'آزمون گفتاری تافل',
-                instruction: 'دستورالعمل: درباره تفاوتی بین فرهنگ شما و یک فرهنگ دیگر صحبت کنید. 45 ثانیه برای آماده شدن و 2 دقیقه برای صحبت.',
-                content: 'یک تفاوت فرهنگی مهم را انتخاب کنید. آن را توضیح دهید، چرا فکر می‌کنید که این تفاوت وجود دارد، و آیا این تفاوت برای شما مثبت یا منفی است؟',
-                requirements: [
-                    'تفاوت را به وضوح توصیف کنید',
-                    'ریشه تاریخی یا فرهنگی را شرح دهید',
-                    'تأثیرات آن را بیان کنید',
-                    'نظر خود را اضافه کنید'
-                ],
-                tips: [
-                    'احترام به فرهنگ‌های مختلف نشان دهید',
-                    'مثال‌های عملی بیاورید',
-                    'از تحقیقات یا تجربیات شخصی صحبت کنید',
-                    'نتیجه‌گیری متوازن ارائه دهید'
-                ],
-                preparationTime: 45,
-                speakingTime: 120
-            },
-            {
-                id: 'q2',
-                title: 'Part 2: موضوع اجتماعی',
-                type: 'گفتاری',
-                badge: 'آزمون گفتاری تافل',
-                instruction: 'دستورالعمل: درباره یک موضوع اجتماعی مهم صحبت کنید. 60 ثانیه برای آماده شدن و 2 دقیقه برای صحبت.',
-                content: 'یک موضوع اجتماعی مهم را انتخاب کنید (مثلاً تغییر آب‌وهوایی، نابرابری تحصیلی، یا بهداشت روان‌شناختی). آن را توضیح دهید و نظر خود را بیان کنید.',
-                requirements: [
-                    'موضوع را تعریف کنید',
-                    'چرایی اهمیت آن را شرح دهید',
-                    'اثرات اجتماعی را بیان کنید',
-                    'راه‌حل‌های ممکن را پیشنهاد کنید'
-                ],
-                tips: [
-                    'یک موضوع دقیق انتخاب کنید',
-                    'از آمار یا شواهد صحبت کنید',
-                    'دیدگاه‌های مختلف را در نظر بگیرید',
-                    'برای اقدام فراخوان کنید'
-                ],
-                preparationTime: 60,
-                speakingTime: 120
-            }
-        ]
-    }
-};
-
 // ==================== EXAM STATE MANAGEMENT ====================
 const speakingExamState = {
     currentExamId: null,
@@ -222,27 +29,68 @@ const speakingExamState = {
 document.addEventListener('DOMContentLoaded', function() {
     console.log('Speaking exam page loaded');
     
-    // Get exam ID from URL or default
+    // Get exam ID from URL
     const params = new URLSearchParams(window.location.search);
-    const examId = params.get('exam_id') || Object.keys(mockSpeakingExamData)[0];
+    const examId = params.get('exam_id');
+    
+    if (!examId) {
+        console.error('No exam_id provided');
+        // alert('خطا: شناسه آزمون مشخص نشده است');
+        return;
+    }
     
     initializeSpeakingExam(examId);
     attachEventListeners();
 });
 
+// ==================== API FUNCTIONS ====================
+/**
+ * Fetch exam data from API
+ * @param {string} examId - The exam UUID to fetch
+ * @returns {Promise<Object>} Exam data
+ */
+async function fetchExamFromAPI(examId) {
+    try {
+        const response = await fetch(`/team7/api/exams/?exam_id=${examId}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+        
+        if (!response.ok) {
+            console.error(`API error: ${response.status}`);
+            return null;
+        }
+        
+        const data = await response.json();
+        return data.exams && data.exams.length > 0 ? data.exams[0] : null;
+    } catch (error) {
+        console.error('Error fetching exam from API:', error);
+        return null;
+    }
+}
+
 // ==================== INITIALIZE EXAM ====================
-function initializeSpeakingExam(examId) {
-    if (!mockSpeakingExamData[examId]) {
-        console.error(`Exam ${examId} not found`);
+async function initializeSpeakingExam(examId) {
+    console.log('Initializing speaking exam:', examId);
+    
+    // Load from API
+    let exam = await fetchExamFromAPI(examId);
+    
+    if (!exam) {
+        console.error('Failed to load exam from API:', examId);
+        alert('خطا: آزمون مورد نظر یافت نشد');
         return;
     }
     
-    const exam = mockSpeakingExamData[examId];
     speakingExamState.currentExamId = examId;
     speakingExamState.currentExam = exam;
-    speakingExamState.totalQuestions = exam.questions.length;
+    speakingExamState.totalQuestions = exam.totalQuestions || exam.questions.length;
     speakingExamState.currentQuestionIndex = 0;
     speakingExamState.timeRemaining = exam.totalTime;
+    
+    console.log('Speaking exam initialized:', exam);
     
     // Start the exam directly (popup was shown in exam.js)
     loadQuestion(0);

@@ -330,7 +330,7 @@ body {
     font-style: normal;
     font-size: 24px;
     color: #0b0754;
-    text-align: right;
+    text-align: left;
     width: 100%;
     white-space: pre-wrap;
     line-height: normal;
@@ -359,7 +359,7 @@ body {
     padding: 20px;
     line-height: normal;
     font-style: normal;
-    text-align: right;
+    text-align: left;
     white-space: pre-wrap;
 }
 
@@ -394,7 +394,7 @@ body {
     font-style: normal;
     font-size: 16px;
     color: #0b0754;
-    text-align: right;
+    text-align: left;
     width: 100%;
     white-space: pre-wrap;
     line-height: normal;
@@ -419,7 +419,7 @@ body {
     font-style: normal;
     font-size: 15px;
     color: #ffb02d;
-    text-align: right;
+    text-align: left;
     width: 100%;
     white-space: pre-wrap;
     line-height: normal;
@@ -470,7 +470,7 @@ body {
     font-style: normal;
     font-size: 15px;
     color: #587ce6;
-    text-align: right;
+    text-align: left;
     width: 100%;
     white-space: pre-wrap;
     line-height: normal;

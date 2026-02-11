@@ -10,13 +10,30 @@ class Mode(models.TextChoices):
     INDEPENDENT = 'independent', _('Independent')
     INTEGRATED = 'integrated', _('Integrated')
 
+# New Exam model to group questions and hold shared metadata
+class Exam(models.Model):
+    exam_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    title = models.CharField(max_length=255)
+    exam_type = models.CharField(max_length=20, choices=TaskType.choices, default=TaskType.WRITING)
+    total_time = models.IntegerField(default=0, help_text="Total time for the exam in seconds")
+    total_questions = models.IntegerField(default=0)
+    difficulty = models.IntegerField(default=1)  # 1 to 5
+
+    def __str__(self):
+        return f"{self.title} ({self.get_exam_type_display()})"
+
+
 class Question(models.Model):
     question_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    title = models.CharField(max_length=255, blank=True, help_text="Display title for the question")
     prompt_text = models.TextField()
     task_type = models.CharField(max_length=20, choices=TaskType.choices, default=TaskType.WRITING)
     mode = models.CharField(max_length=20, choices=Mode.choices, default=Mode.INDEPENDENT)
     resource_url = models.CharField(max_length=500, blank=True, null=True)
-    difficulty = models.IntegerField(default=1) # 1 to 5
+    # difficulty moved to Exam; questions now reference an Exam
+    exam = models.ForeignKey(Exam, on_delete=models.CASCADE, related_name='questions', null=True, blank=True)
+    requirements = models.JSONField(default=list, blank=True, help_text="List of requirements/instructions for the task")
+    tips = models.JSONField(default=list, blank=True, help_text="List of helpful tips for completing the task")
 
     def __str__(self):
         return f"{self.get_task_type_display()} - {self.mode} ({self.question_id})"
@@ -25,6 +42,7 @@ class Evaluation(models.Model):
     evaluation_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user_id = models.UUIDField(help_text="Reference to Core User UUID")
     question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='evaluations')
+    exam = models.ForeignKey(Exam, on_delete=models.CASCADE, related_name='evaluations', null=True, blank=True, help_text="Reference to Exam")
     task_type = models.CharField(max_length=20, choices=TaskType.choices, default=TaskType.WRITING)
     
     # Inputs

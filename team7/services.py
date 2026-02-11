@@ -468,7 +468,7 @@ class EvaluationService:
         try:
             evaluations = Evaluation.objects.filter(
                 user_id=user_id
-            ).select_related('question').prefetch_related('detailed_scores').order_by('-created_at')[:limit]
+            ).select_related('question', 'exam').prefetch_related('detailed_scores').order_by('-created_at')[:limit]
 
             if not evaluations.exists():
                 logger.info(f"No evaluations found for user {user_id}")
@@ -483,6 +483,8 @@ class EvaluationService:
                 attempts.append({
                     "evaluation_id": str(eval_obj.evaluation_id),
                     "task_type": eval_obj.task_type,
+                    "exam_id": str(eval_obj.exam.exam_id) if eval_obj.exam else None,
+                    "exam_name": eval_obj.exam.title if eval_obj.exam else "Unknown Exam",
                     "question_id": str(eval_obj.question.question_id),
                     "overall_score": float(eval_obj.overall_score) if eval_obj.overall_score else None,
                     "created_at": eval_obj.created_at.isoformat(),

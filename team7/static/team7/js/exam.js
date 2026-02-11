@@ -14,143 +14,74 @@ let examData = {
 };
 
 /**
- * Generate carousel data from mockExamData
- * This ensures single source of truth - all exam data comes from writing-exam.js and speaking-exam.js
+ * Convert difficulty level (1-5) to difficulty text
+ * @param {number} difficultyLevel - Difficulty level (1-5)
+ * @returns {string} Difficulty text ('آسان', 'متوسط', 'سخت')
  */
-function generateExamDataFromMock() {
+function getDifficultyText(difficultyLevel) {
+    if (difficultyLevel <= 2) return 'آسان';
+    if (difficultyLevel <= 3) return 'متوسط';
+    return 'سخت';
+}
+
+/**
+ * Fetch exam data from API and generate carousel data
+ * This ensures single source of truth - all exam data comes from the API
+ */
+async function generateExamDataFromAPI() {
     examData.speaking = [];
     examData.writing = [];
     
-    // Check if writing exam data is available from writing-exam.js
-    if (typeof mockExamData !== 'undefined') {
-        Object.keys(mockExamData).forEach(examId => {
-            const exam = mockExamData[examId];
-            const carouselItem = {
-                id: examId,
-                title: exam.title,
-                description: exam.title,
-                type: exam.type,
-                difficulty: 'متوسط',
-                duration: Math.round(exam.totalTime / 60) + ' دقیقه',
-                questions: exam.totalQuestions
-            };
-            
-            if (exam.type === 'نوشتاری') {
-                examData.writing.push(carouselItem);
+    try {
+        const response = await fetch('/team7/api/exams/', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
             }
         });
-    }
-    
-    // Check if speaking exam data is available from speaking-exam.js
-    if (typeof mockSpeakingExamData !== 'undefined') {
-        Object.keys(mockSpeakingExamData).forEach(examId => {
-            const exam = mockSpeakingExamData[examId];
+        
+        if (!response.ok) {
+            throw new Error(`API error: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        
+        if (!data.exams || data.exams.length === 0) {
+        console.warn('No exams returned from API');
+        return;
+        }
+        
+        // Convert API exams to carousel format
+        data.exams.forEach(exam => {
             const carouselItem = {
-                id: examId,
+                id: exam.id,
                 title: exam.title,
                 description: exam.title,
-                type: exam.type,
-                difficulty: 'متوسط',
+                type: exam.type === 'writing' ? 'نوشتاری' : 'گفتاری',
+                difficulty: getDifficultyText(exam.difficulty),
                 duration: Math.round(exam.totalTime / 60) + ' دقیقه',
                 questions: exam.totalQuestions
             };
             
-            if (exam.type === 'گفتاری') {
+            if (exam.type === 'writing') {
+                examData.writing.push(carouselItem);
+            } else if (exam.type === 'speaking') {
                 examData.speaking.push(carouselItem);
             }
         });
-    }
-    
-    if (examData.speaking.length === 0 && examData.writing.length === 0) {
-        console.warn('No exam data loaded. Make sure writing-exam.js and speaking-exam.js are loaded before exam.js');
+        
+        console.log('Loaded exams from API:', examData);
+    } catch (error) {
+        console.error('Error fetching exams from API:', error);
+        // Don't show alert - just log the error and continue
+        console.log('Could not load exams from API, carousels may be empty');
     }
 }
 
 /**
- * Hardcoded history data - can be replaced with API calls in future
+ * History data - fetched from API
  */
-const historyData = [
-    {
-        id: 'hist-1',
-        title: 'توصیف مکان',
-        type: 'گفتاری',
-        score: 8.5,
-        duration: '15 دقیقه',
-        date: '1403/09/15'
-    },
-    {
-        id: 'hist-2',
-        title: 'معرفی خود',
-        type: 'گفتاری',
-        score: 7.5,
-        duration: '20 دقیقه',
-        date: '1403/09/12'
-    },
-    {
-        id: 'hist-3',
-        title: 'نامه رسمی',
-        type: 'نوشتاری',
-        score: 8.0,
-        duration: '25 دقیقه',
-        date: '1403/09/10'
-    },
-    {
-        id: 'hist-4',
-        title: 'تحلیل متن آکادمیک',
-        type: 'نوشتاری',
-        score: 7.0,
-        duration: '40 دقیقه',
-        date: '1403/09/08'
-    },
-    {
-        id: 'hist-5',
-        title: 'فناوری و آموزش',
-        type: 'گفتاری',
-        score: 7.8,
-        duration: '18 دقیقه',
-        date: '1403/09/05'
-    },
-    {
-        id: 'hist-6',
-        title: 'داستان کوتاه',
-        type: 'نوشتاری',
-        score: 8.2,
-        duration: '30 دقیقه',
-        date: '1403/08/28'
-    },
-    {
-        id: 'hist-7',
-        title: 'فناوری و آموزش',
-        type: 'گفتاری',
-        score: 7.8,
-        duration: '18 دقیقه',
-        date: '1403/09/05'
-    },
-    {
-        id: 'hist-8',
-        title: 'فناوری و آموزش',
-        type: 'گفتاری',
-        score: 7.8,
-        duration: '18 دقیقه',
-        date: '1403/09/05'
-    },
-    {
-        id: 'hist-9',
-        title: 'فناوری و آموزش',
-        type: 'گفتاری',
-        score: 7.8,
-        duration: '18 دقیقه',
-        date: '1403/09/05'
-    },
-    {
-        id: 'hist-10',
-        title: 'فناوری و آموزش',
-        type: 'گفتاری',
-        score: 7.8,
-        duration: '18 دقیقه',
-        date: '1403/09/05'
-    },
-];
+let historyData = [];
 
 // ==================== Data Rendering Functions ====================
 /**
@@ -165,7 +96,10 @@ function renderCarouselItems(containerId, items) {
     items.forEach((item) => {
         const card = document.createElement('div');
         card.className = 'exam-card';
-        card.id = item.id;
+        // Make sure we have a valid ID - use 'id' field from API response
+        card.id = item.id || `exam-${Date.now()}-${Math.random()}`;
+        // Also store the ID as a data attribute for extra reliability
+        card.setAttribute('data-exam-id', item.id);
         
         const difficultyClass = 
             item.difficulty === 'آسان' ? 'green' :
@@ -239,11 +173,11 @@ function renderHistoryTable(items) {
 
 // ==================== Carousel Handlers ====================
 /**
- * Initialize carousel functionality
+ * Initialize carousel functionality (fetch from API)
  */
-function initializeCarousels() {
-    // Generate carousel data from mockExamData first
-    generateExamDataFromMock();
+async function initializeCarousels() {
+    // Fetch exam data from API (with fallback to mock)
+    await generateExamDataFromAPI();
     
     const speakingCarousel = document.getElementById('speakingCarousel');
     const writingCarousel = document.getElementById('writingCarousel');
@@ -270,8 +204,10 @@ function initializeExamCards() {
             if (e.target.closest('.card-button')) return;
             
             // Remove active class from all cards
-            examCards.forEach(c => c.classList.remove('active-card'));
-            c.classList.add('blur-card');
+            examCards.forEach(c => {
+                c.classList.remove('active-card');
+                c.classList.add('blur-card');
+            });
             
             // Add active class to clicked card
             this.classList.add('active-card');
@@ -292,14 +228,26 @@ function initializeExamButtons() {
     const examButtons = document.querySelectorAll('.card-button');
     
     examButtons.forEach(button => {
-        button.addEventListener('click', function(e) {
+        button.addEventListener('click', async function(e) {
             e.preventDefault();
             const card = this.closest('.exam-card');
-            const examId = card?.id;
+            // Try to get ID from data attribute first, then from element ID
+            let examId = card?.getAttribute('data-exam-id') || card?.id;
             const examTitle = card?.querySelector('.card-title')?.textContent;
             const examTypeTag = card?.querySelector('.type-tag')?.textContent?.trim();
             
+            console.log('Card element:', card);
+            console.log('Card ID attribute:', card?.id);
+            console.log('Card data-exam-id:', card?.getAttribute('data-exam-id'));
             console.log('Starting exam:', examTitle, 'ID:', examId, 'Type:', examTypeTag);
+            
+            if (!examId) {
+                console.error('Exam ID not found on card element');
+                console.error('Card HTML:', card?.outerHTML);
+                // Silently return instead of alerting - the card may not be fully initialized yet
+                console.warn('Button clicked but exam ID not available, ignoring click');
+                return;
+            }
             
             // Add visual feedback
             this.style.transform = 'scale(0.95)';
@@ -307,41 +255,44 @@ function initializeExamButtons() {
                 this.style.transform = '';
             }, 150);
             
-            // Navigate to correct exam page based on type
-            if (examId) {
-                // Get exam data from appropriate source
-                let examData = null;
-                if (examTypeTag === 'گفتاری') {
-                    if (typeof mockSpeakingExamData !== 'undefined') {
-                        examData = mockSpeakingExamData[examId];
+            try {
+                console.log('Fetching exam data for ID:', examId);
+                const response = await fetch(`/team7/api/exams/?exam_id=${examId}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
                     }
-                    // Show start exam popup before navigating
-                    if (examData) {
-                        showStartExamPopup(examData, () => {
-                            PopupManager.closePopup();
-                            window.location.href = `/team7/speaking-exam/?exam_id=${examId}`;
-                        });
-                    } else {
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`API error: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                console.log('API response:', data);
+                
+                const examData = data.exams && data.exams.length > 0 ? data.exams[0] : null;
+                
+                if (!examData) {
+                    throw new Error('No exam data found in response');
+                }
+                
+                console.log('Exam data loaded successfully:', examData);
+                console.log('Exam type from API:', examData.type, 'Type of:', typeof examData.type);
+                
+                // Show start exam popup before navigating
+                showStartExamPopup(examData, () => {
+                    PopupManager.closePopup();
+                    // Use the exam type from API response instead of card tag
+                    if (examData.type && examData.type.toLowerCase() === 'speaking') {
                         window.location.href = `/team7/speaking-exam/?exam_id=${examId}`;
-                    }
-                } else if (examTypeTag === 'نوشتاری') {
-                    if (typeof mockExamData !== 'undefined') {
-                        examData = mockExamData[examId];
-                    }
-                    // Show start exam popup before navigating
-                    if (examData) {
-                        showStartExamPopup(examData, () => {
-                            PopupManager.closePopup();
-                            window.location.href = `/team7/writing-exam/?exam_id=${examId}`;
-                        });
                     } else {
                         window.location.href = `/team7/writing-exam/?exam_id=${examId}`;
                     }
-                } else {
-                    alert('خطا: نوع آزمون نامشخص است');
-                }
-            } else {
-                alert('خطا: شناسه آزمون یافت نشد');
+                });
+            } catch (error) {
+                console.error('Error fetching exam data:', error);
+                alert('خطا در بارگذاری آزمون: ' + error.message);
             }
         });
     });
@@ -412,14 +363,26 @@ function filterHistoryTable(examType) {
 function initializeViewButtons() {
     const viewButtons = document.querySelectorAll('.view-button');
     
-    viewButtons.forEach(button => {
+    viewButtons.forEach((button, buttonIndex) => {
         button.addEventListener('click', function(e) {
             e.preventDefault();
             const row = this.closest('.table-row');
-            const examTitle = row.querySelector('[data-title]')?.textContent;
             const score = row.querySelector('.score-badge')?.textContent;
             
-            console.log('Viewing details:', examTitle, 'Score:', score);
+            // Get the current filtered data based on active tab
+            const filteredData = getFilteredHistoryData(paginationState.currentType);
+            
+            // Calculate which item in the filtered data this button represents
+            const startIndex = (paginationState.currentPage - 1) * paginationState.itemsPerPage;
+            const itemIndexInFiltered = startIndex + Array.from(viewButtons).indexOf(button);
+            
+            // Get the evaluation data from filtered data
+            const evaluationData = filteredData[itemIndexInFiltered];
+            
+            if (!evaluationData) {
+                console.error('Could not find evaluation data for this row');
+                return;
+            }
             
             // Add visual feedback
             this.style.transform = 'scale(0.95)';
@@ -427,9 +390,283 @@ function initializeViewButtons() {
                 this.style.transform = '';
             }, 150);
             
-            // Navigate to exam details (implement actual navigation)
-            // window.location.href = `/exams/details/${examTitle}`;
+            // Show detailed popup - pass evaluationData and score only
+            showEvaluationDetailsPopup(evaluationData, score);
         });
+    });
+}
+
+/**
+ * Show evaluation details popup with criteria
+ * @param {Object} evaluationData - Evaluation data from API
+ * @param {Number} score - Overall score
+ */
+function showEvaluationDetailsPopup(evaluationData, score) {
+    // Detect exam type from task_type field in evaluation data
+    const taskType = evaluationData.task_type;
+    const isSpeaking = taskType === "speaking";
+    const examTypePersian = isSpeaking ? 'گفتاری' : 'نوشتاری';
+    const badgeText = isSpeaking ? 'TOEFL Speaking Exam' : 'TOEFL Writing Exam';
+    
+    // Get criteria HTML directly from API response (should be the 3 standard criteria)
+    let criteriaHTML = '';
+    if (evaluationData.criteria && evaluationData.criteria.length > 0) {
+        criteriaHTML = evaluationData.criteria.map(criterion => {
+            return `
+                <div class="criteria-item">
+                    <div class="criteria-header">
+                        <span class="criteria-name">${criterion.name}</span>
+                        <span class="criteria-score">${criterion.score}</span>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+    
+    // Create popup HTML
+    const popupHTML = `
+        <div class="evaluation-details-popup">
+            <div class="popup-header">
+                <h2>جزئیات ارزیابی</h2>
+                <button class="close-button">&times;</button>
+            </div>
+            
+            <div class="badge-section">
+                <span class="exam-badge">${badgeText}</span>
+            </div>
+            
+            <div class="evaluation-overview">
+                <div class="overview-item">
+                    <span class="overview-label">نوع:</span>
+                    <span class="overview-value">${examTypePersian}</span>
+                </div>
+                <div class="overview-item">
+                    <span class="overview-label">نمره کل:</span>
+                    <span class="overview-value score-highlight">${score}</span>
+                </div>
+                <div class="overview-item">
+                    <span class="overview-label">تاریخ:</span>
+                    <span class="overview-value">${evaluationData.date}</span>
+                </div>
+            </div>
+            
+            <div class="criteria-section">
+                <h3>معیارهای ارزیابی</h3>
+                <div class="criteria-list">
+                    ${criteriaHTML || '<p class="no-criteria">معیاری موجود نیست</p>'}
+                </div>
+            </div>
+        </div>
+    `;
+    
+    // Create modal container
+    const modal = document.createElement('div');
+    modal.className = 'modal-overlay';
+    modal.innerHTML = popupHTML;
+    
+    // Add styles if not already present
+    if (!document.getElementById('evaluation-popup-styles')) {
+        const style = document.createElement('style');
+        style.id = 'evaluation-popup-styles';
+        style.textContent = `
+            .modal-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0, 0, 0, 0.5);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                z-index: 2000;
+                direction: rtl;
+            }
+            
+            .evaluation-details-popup {
+                background: white;
+                border-radius: 12px;
+                padding: 30px;
+                max-width: 500px;
+                width: 90%;
+                max-height: 80vh;
+                overflow-y: auto;
+                box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+                animation: popupSlideIn 0.3s ease-out;
+            }
+            
+            @keyframes popupSlideIn {
+                from {
+                    transform: translateY(-20px);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateY(0);
+                    opacity: 1;
+                }
+            }
+            
+            .popup-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 25px;
+                border-bottom: 2px solid #f0f0f0;
+                padding-bottom: 15px;
+            }
+            
+            .popup-header h2 {
+                margin: 0;
+                font-size: 20px;
+                color: #2c3e50;
+                font-weight: 600;
+            }
+            
+            .close-button {
+                background: none;
+                border: none;
+                font-size: 28px;
+                color: #95a5a6;
+                cursor: pointer;
+                padding: 0;
+                width: 32px;
+                height: 32px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 50%;
+                transition: all 0.2s;
+            }
+            
+            .close-button:hover {
+                background: #ecf0f1;
+                color: #2c3e50;
+            }
+            
+            .badge-section {
+                display: flex;
+                justify-content: center;
+                margin-bottom: 20px;
+            }
+            
+            .exam-badge {
+                display: inline-block;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                color: white;
+                padding: 8px 16px;
+                border-radius: 20px;
+                font-size: 12px;
+                font-weight: 600;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }
+            
+            .evaluation-overview {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                border-radius: 8px;
+                padding: 20px;
+                margin-bottom: 25px;
+                color: white;
+            }
+            
+            .overview-item {
+                display: flex;
+                justify-content: space-between;
+                margin-bottom: 12px;
+                font-size: 14px;
+            }
+            
+            .overview-item:last-child {
+                margin-bottom: 0;
+            }
+            
+            .overview-label {
+                font-weight: 600;
+                opacity: 0.9;
+            }
+            
+            .overview-value {
+                font-weight: 500;
+            }
+            
+            .score-highlight {
+                font-size: 18px;
+                font-weight: 700;
+                background: rgba(255, 255, 255, 0.2);
+                padding: 4px 12px;
+                border-radius: 6px;
+            }
+            
+            .criteria-section h3 {
+                font-size: 16px;
+                color: #2c3e50;
+                margin-bottom: 15px;
+                font-weight: 600;
+            }
+            
+            .criteria-list {
+                display: flex;
+                flex-direction: column;
+                gap: 12px;
+            }
+            
+            .criteria-item {
+                background: #f8f9fa;
+                border-left: 4px solid #667eea;
+                padding: 15px;
+                border-radius: 6px;
+                transition: all 0.2s;
+            }
+            
+            .criteria-item:hover {
+                background: #f0f2ff;
+                transform: translateX(-4px);
+            }
+            
+            .criteria-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+            
+            .criteria-name {
+                font-size: 14px;
+                color: #2c3e50;
+                font-weight: 500;
+            }
+            
+            .criteria-score {
+                background: #667eea;
+                color: white;
+                padding: 4px 12px;
+                border-radius: 20px;
+                font-size: 13px;
+                font-weight: 600;
+            }
+            
+            .no-criteria {
+                color: #95a5a6;
+                font-size: 14px;
+                text-align: center;
+                padding: 20px;
+            }
+        `;
+        document.head.appendChild(style);
+    }
+    
+    // Add to DOM
+    document.body.appendChild(modal);
+    
+    // Close button handler
+    modal.querySelector('.close-button').addEventListener('click', () => {
+        modal.remove();
+    });
+    
+    // Click outside to close
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.remove();
+        }
     });
 }
 
@@ -586,6 +823,12 @@ function goToPreviousPage() {
  * Initialize pagination on page load
  */
 function initializePagination() {
+    // Get the first tab's type (should be گفتاری by default)
+    const firstTab = document.querySelector('.tab-button');
+    if (firstTab) {
+        paginationState.currentType = firstTab.textContent.trim();
+    }
+    
     const filteredData = getFilteredHistoryData(paginationState.currentType);
     paginationState.totalPages = calculateTotalPages(filteredData);
     paginationState.currentPage = 1;
@@ -593,6 +836,7 @@ function initializePagination() {
     const paginatedData = getPaginatedItems(filteredData, 1);
     renderHistoryTable(paginatedData);
     generatePaginationButtons(paginationState.totalPages);
+    initializeViewButtons();  // Initialize view buttons after rendering the initial table
 }
 
 // ==================== Start Exam Button Handlers ====================
@@ -644,25 +888,46 @@ function initializeChatIcon() {
 /**
  * Initialize all exam page specific functionality
  */
-function initializeExamPage() {
-    // Initialize carousels with data
-    initializeCarousels();
+async function initializeExamPage() {
+    // Wait for auth to be ready
+    if (window.authManager && window.authManager.isInitialized && !window.authManager.isInitialized()) {
+        await window.authManager.initialize();
+    }
     
-    // Render history table
-    renderHistoryTable(historyData);
+    // Check authentication and update user profile
+    if (window.authManager) {
+        const isAuthenticated = await window.authManager.checkAuthStatus();
+        const currentUser = window.authManager.getCurrentUser();
+        
+        if (isAuthenticated && currentUser) {
+            // Update user name in header
+            const userNameElement = document.querySelector('.user-name');
+            if (userNameElement) {
+                const fullName = `${currentUser.first_name || ''} ${currentUser.last_name || ''}`.trim();
+                userNameElement.textContent = fullName || currentUser.email || 'کاربر';
+            }
+        }
+    }
     
-    // Initialize all event handlers
+    // Initialize carousels with data - WAIT for this to complete
+    await initializeCarousels();
+    
+    // Fetch history data from API - WAIT for this to complete
+    await generateHistoryDataFromAPI();
+    
+    // Initialize all event handlers AFTER data is loaded
     initializeExamCards();
     initializeExamButtons();
     initializeHistoryTabs();
-    initializeViewButtons();
+    
+    // Initialize pagination (which renders the table and sets up view buttons)
     initializePagination();
+    
+    // Initialize other handlers
     initializeCtaButtons();
     initializeChatIcon();
     initializeAnimations(['.hero-text', '.exam-card', '.history-container']);
 }
-
-// Run initialization when DOM is ready
 document.addEventListener('DOMContentLoaded', initializeExamPage);
 
 // Export for testing
@@ -683,4 +948,58 @@ if (typeof module !== 'undefined' && module.exports) {
         initializeChatIcon,
         initializeExamPage
     };
+}
+
+/**
+ * Fetch history data from API
+ * Converts API response to format suitable for display
+ */
+async function generateHistoryDataFromAPI() {
+    try {
+        const response = await fetch('/team7/api/history/', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+        
+        if (!response.ok) {
+            throw new Error(`API error: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        
+        if (!data.attempts || data.attempts.length === 0) {
+            console.warn('No history data returned from API');
+            historyData = [];
+            return;
+        }
+        
+        // Convert API history to display format
+        historyData = data.attempts.map((attempt, index) => {
+            const date = new Date(attempt.created_at);
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            
+            return {
+                evaluation_id: attempt.evaluation_id,
+                title: attempt.exam_name || `Evaluation ${index + 1}`,
+                type: attempt.task_type === 'writing' ? 'نوشتاری' : 'گفتاری',
+                task_type: attempt.task_type,  // Keep the original task_type (writing or speaking) for detection
+                score: attempt.overall_score || 0,
+                duration: attempt.exam_name || '—',  // Use exam name instead of duration
+                date: `${year}/${month}/${day}`,
+                criteria: attempt.criteria || [],
+                question_id: attempt.question_id,
+                created_at: attempt.created_at
+            };
+        });
+        
+        console.log('Loaded history from API:', historyData);
+    } catch (error) {
+        console.error('Error fetching history from API:', error);
+        console.log('Could not load history from API');
+        historyData = [];
+    }
 }

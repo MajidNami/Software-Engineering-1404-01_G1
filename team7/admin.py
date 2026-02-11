@@ -1,21 +1,45 @@
 from django.contrib import admin
-from .models import Question, Evaluation, DetailedScore, APILog
+from .models import Question, Evaluation, DetailedScore, APILog, Exam
+
+
+@admin.register(Exam)
+class ExamAdmin(admin.ModelAdmin):
+    """Admin panel for exam management."""
+    list_display = ('exam_id', 'title', 'exam_type', 'total_questions', 'total_time', 'difficulty')
+    list_filter = ('exam_type', 'difficulty')
+    search_fields = ('title',)
+    readonly_fields = ('exam_id',)
+
+    fieldsets = (
+        ('Exam Info', {
+            'fields': ('exam_id', 'title', 'exam_type')
+        }),
+        ('Exam Details', {
+            'fields': ('total_questions', 'total_time', 'difficulty')
+        }),
+    )
 
 
 @admin.register(Question)
 class QuestionAdmin(admin.ModelAdmin):
     """Admin panel for question management (FR-MON)."""
-    list_display = ('question_id', 'task_type', 'mode', 'difficulty')
-    list_filter = ('task_type', 'mode', 'difficulty')
-    search_fields = ('prompt_text',)
+    list_display = ('question_id', 'title', 'task_type', 'mode', 'exam')
+    list_filter = ('task_type', 'mode', 'exam')
+    search_fields = ('prompt_text', 'title')
     readonly_fields = ('question_id',)
 
     fieldsets = (
         ('Question Info', {
-            'fields': ('question_id', 'prompt_text', 'task_type', 'mode')
+            'fields': ('question_id', 'title', 'prompt_text', 'task_type', 'mode')
+        }),
+        ('Exam Association', {
+            'fields': ('exam',)
         }),
         ('Metadata', {
-            'fields': ('difficulty', 'resource_url')
+            'fields': ('resource_url',)
+        }),
+        ('Instructions & Guidance', {
+            'fields': ('requirements', 'tips')
         }),
     )
 

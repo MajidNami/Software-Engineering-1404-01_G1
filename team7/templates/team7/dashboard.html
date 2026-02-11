@@ -12,6 +12,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
 </head>
 <body>
     <div class="dashboard-container">
@@ -68,23 +70,23 @@
                     <div class="status-card">
                         <div class="card-header">
                             <div class="card-icon"></div>
-                            <p class="card-title">گزارش هفتگی</p>
+                            <p class="card-title">آمار فعالیت</p>
                         </div>
                         <div class="report-row">
-                            <p class="report-label">زمان روزانه نوشتاری</p>
-                            <p class="report-value">45 دقیقه</p>
+                            <p class="report-label">کل آزمون‌های انجام شده</p>
+                            <p class="report-value" id="total-attempts">--</p>
                         </div>
                         <div class="report-row">
-                            <p class="report-label">زمان روزانه گفتاری</p>
-                            <p class="report-value">30 دقیقه</p>
+                            <p class="report-label">بهترین نمره</p>
+                            <p class="report-value" id="best-score">--</p>
                         </div>
                         <div class="report-row">
-                            <p class="report-label">بهترین نمره نوشتاری</p>
-                            <p class="report-value">8.5</p>
+                            <p class="report-label">میانگین نمرات</p>
+                            <p class="report-value" id="avg-score">--</p>
                         </div>
                         <div class="report-row">
-                            <p class="report-label">بهترین نمره گفتاری</p>
-                            <p class="report-value">7.5</p>
+                            <p class="report-label">آخرین آزمون</p>
+                            <p class="report-value" id="last-attempt">--</p>
                         </div>
                     </div>
 
@@ -93,16 +95,16 @@
                             <div class="card-icon"></div>
                             <p class="card-title">آزمون‌های گفتاری</p>
                         </div>
-                        <p class="card-number">18</p>
-                        <p class="card-label">تعداد کل آزمون‌ها</p>
+                        <p class="card-number" id="speaking-count">0</p>
+                        <p class="card-label">تعداد آزمون‌های انجام شده</p>
                     </div>
                     <div class="status-card">
                         <div class="card-header">
                             <div class="card-icon"></div>
                             <p class="card-title">آزمون‌های نوشتاری</p>
                         </div>
-                        <p class="card-number">24</p>
-                        <p class="card-label">تعداد کل آزمون‌ها</p>
+                        <p class="card-number" id="writing-count">0</p>
+                        <p class="card-label">تعداد آزمون‌های انجام شده</p>
                     </div>
                    
                 </section>
@@ -110,15 +112,15 @@
                 <!-- Charts Section -->
                 <section class="charts-section">
                     <div class="chart-card">
-                        <h3 class="chart-title">نمودار فعالیت ماهانه</h3>
+                        <h3 class="chart-title">نمودار نمرات در طول زمان</h3>
                         <div class="chart-placeholder">
-                            <img src="{% static 'team7/images/activity chart.png' %}" alt="Activity Chart">
+                            <canvas id="scoresChart"></canvas>
                         </div>
                     </div>
                      <div class="chart-card">
-                        <h3 class="chart-title">نمودار پیشرفت هفتگی</h3>
-                        <div class="chart-placeholder">
-                            <img src="{% static 'team7/images/progress chart.png' %}" alt="Progress Chart">
+                        <h3 class="chart-title">توزیع نمرات بر اساس معیارها</h3>
+                        <div class="chart-placeholder" style="position: relative; height: 280px;">
+                            <canvas id="criteriaChart"></canvas>
                         </div>
                     </div>
                 </section>
@@ -153,17 +155,17 @@
 
                 <!-- Access Section -->
                 <section class="access-section">
-                    <div class="access-card">
+                    <a href="{% url 'team7:exams' %}#writing" class="access-card">
                         <h3 class="access-title">آزمون نوشتاری جدید</h3>
                         <p class="access-description">مهارت نوشتاری خود را با آزمون‌های هوشمند ارتقا دهید</p>
                         <button class="btn-start">شروع آزمون</button>
-                    </div>
+                    </a>
 
-                    <div class="access-card">
+                    <a href="{% url 'team7:exams' %}#speaking" class="access-card">
                         <h3 class="access-title">آزمون گفتاری جدید</h3>
                         <p class="access-description">مهارت مکالمه خود را با تمرین‌های صوتی تقویت کنید</p>
                         <button class="btn-start">شروع آزمون</button>
-                    </div>
+                    </a>
                 </section>
 
                 <!-- Statistics Section -->
@@ -172,34 +174,34 @@
                     <div class="stats-grid">
                         <div class="stat-card">
                             <h3 class="stat-title">دقت گرامری</h3>
-                            <div class="stat-chart">
-                                <img src="{% static 'team7/images/grammar chart.png' %}" alt="Accuracy Chart">
+                            <div class="stat-chart" style="position: relative; height: 200px;">
+                                <canvas id="grammarChart"></canvas>
                             </div>
                             <div class="stat-info">
                                 <span class="stat-label">میزان دقت</span>
-                                <span class="stat-value">85%</span>
+                                <span class="stat-value" id="grammar-value">--</span>
                             </div>
                         </div>
 
                         <div class="stat-card">
                             <h3 class="stat-title">دامنه واژگان</h3>
-                            <div class="stat-chart">
-                                <img src="{% static 'team7/images/vocabulary chart.png' %}" alt="Vocabulary Chart">
+                            <div class="stat-chart" style="position: relative; height: 200px;">
+                                <canvas id="vocabularyChart"></canvas>
                             </div>
                             <div class="stat-info">
                                 <span class="stat-label">سطح واژگان</span>
-                                <span class="stat-value">72%</span>
+                                <span class="stat-value" id="vocabulary-value">--</span>
                             </div>
                         </div>
 
                         <div class="stat-card">
                             <h3 class="stat-title">روانی گفتار</h3>
-                            <div class="stat-chart">
-                                <img src="{% static 'team7/images/Fluency Chart.png' %}" alt="Fluency Chart">
+                            <div class="stat-chart" style="position: relative; height: 200px;">
+                                <canvas id="fluencyChart"></canvas>
                             </div>
                             <div class="stat-info">
                                 <span class="stat-label">میزان روانی</span>
-                                <span class="stat-value">78%</span>
+                                <span class="stat-value" id="fluency-value">--</span>
                             </div>
                         </div>
                     </div>
@@ -212,6 +214,7 @@
     <script src="{% static 'team7/js/auth.js' %}"></script>
     <script src="{% static 'team7/js/auth-debug.js' %}"></script>
     <script src="{% static 'team7/js/shared.js' %}" defer></script>
+    <script src="{% static 'team7/js/dashboard-charts.js' %}" defer></script>
     <script src="{% static 'team7/js/dashboard.js' %}" defer></script>
 </body>
 </html>

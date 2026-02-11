@@ -3,185 +3,6 @@
  * Handles AJAX loading of exam questions and exam flow
  */
 
-// ==================== MOCK DATA FOR EXAMS ====================
-/**
- * Mock exam questions data - Replace with API calls later
- */
-const mockExamData = {
-    'write-1': {
-        title: 'نامه رسمی',
-        type: 'نوشتاری',
-        totalQuestions: 2,
-        totalTime: 1200, // 20 minutes in seconds
-        questions: [
-            {
-                id: 'q1',
-                title: 'Task 1: نامه رسمی',
-                type: 'نوشتاری',
-                badge: 'آزمون نوشتاری تافل',
-                instruction: 'دستورالعمل: در این بخش باید یک نامه رسمی بنویسید. موضوع را با دقت بخوانید و نامه خود را به صورت حرفه‌ای تنظیم کنید.',
-                content: 'شما می‌خواهید برای بورسیه تحصیلی در دانشگاه بین‌المللی درخواست دهید. یک نامه رسمی برای درخواست اطلاعات بیشتر درباره برنامه‌های بورسیه بنویسید.',
-                requirements: [
-                    'حداقل 150 کلمه بنویسید',
-                    'نامه را با سلام و الفاظ مناسب شروع کنید',
-                    'منظور خود را به وضوح بیان کنید',
-                    'نامه را با الفاظ احترام‌آمیز پایان دهید'
-                ],
-                tips: [
-                    'ساختار نامه رسمی را رعایت کنید',
-                    'از زبان رسمی و احترام‌آمیز استفاده کنید',
-                    'نامه را منظم و خوانا بنویسید',
-                    'قبل از ارسال، نامه را بررسی کنید'
-                ]
-            },
-            {
-                id: 'q2',
-                title: 'Task 2: نامه شکایت',
-                type: 'نوشتاری',
-                badge: 'آزمون نوشتاری تافل',
-                instruction: 'دستورالعمل: در این بخش باید یک نامه شکایت بنویسید. وضعیت مسئله را به وضوح شرح دهید و راه‌حل مناسب پیشنهاد کنید.',
-                content: 'شما اخیراً یک محصول آنلاین خریده‌اید اما محصول معیوب است. نامه‌ای رسمی برای فروشنده بنویسید و مسئله را شرح دهید و درخواست تعویض یا بازگشت پول کنید.',
-                requirements: [
-                    'حداقل 180 کلمه بنویسید',
-                    'مسئله را به تفصیل توضیح دهید',
-                    'راه‌حل مناسب پیشنهاد کنید',
-                    'نامه را به صورت رسمی پایان دهید'
-                ],
-                tips: [
-                    'ابتدا وضعیت فعلی را شرح دهید',
-                    'مراحل مورد انتظار را مشخص کنید',
-                    'از عبارات پلیت و محترمانه استفاده کنید',
-                    'فاصله زمانی معقولی برای پاسخ درنظر بگیرید'
-                ]
-            }
-        ]
-    },
-    'write-2': {
-        title: 'تحلیل متن آکادمیک',
-        type: 'نوشتاری',
-        totalQuestions: 2,
-        totalTime: 1500, // 25 minutes in seconds
-        questions: [
-            {
-                id: 'q1',
-                title: 'Task 1: تحلیل متن آکادمیک',
-                type: 'نوشتاری',
-                badge: 'آزمون نوشتاری تافل',
-                instruction: 'دستورالعمل: متن آکادمیک زیر را بخوانید و تحلیل آن را بنویسید. اصلی‌ترین ایده‌ها و نتایج گیری را مشخص کنید.',
-                content: 'تحقیقات اخیر نشان می‌دهد که فناوری هوش مصنوعی تأثیری عمیق بر نظام آموزشی دارد. این فناوری نه تنها روش تدریس را تغییر داده بلکه شیوه یادگیری دانشجویان را نیز دگرگون کرده است. از یک طرف، استفاده از سیستم‌های هوشمند مدرسی، سفارشی‌سازی یادگیری را ممکن ساخته است. از طرف دیگر، افزایش وابستگی به فناوری می‌تواند مهارت‌های اجتماعی دانشجویان را تحت تأثیر قرار دهد.',
-                requirements: [
-                    'حداقل 200 کلمه بنویسید',
-                    'اصلی‌ترین ایده را مشخص کنید',
-                    'شواهد و مستندات را بررسی کنید',
-                    'نتیجه‌گیری منطقی ارائه دهید'
-                ],
-                tips: [
-                    'متن را دقیق بخوانید و اصلی‌ترین ایده‌ها را یادداشت کنید',
-                    'بین ایده‌های اصلی و فرعی تفریق قایل شوید',
-                    'موضع خود را با شواهد پشتیبانی کنید',
-                    'تحلیل خود را منطقی و منسجم نوشته کنید'
-                ]
-            }
-        ]
-    },
-    'write-3': {
-        title: 'نوشتن پیشنهاد بهبود',
-        type: 'نوشتاری',
-        totalQuestions: 2,
-        totalTime: 1200, // 20 minutes in seconds
-        questions: [
-            {
-                id: 'q1',
-                title: 'Task 1: نوشتن پیشنهاد بهبود',
-                type: 'نوشتاری',
-                badge: 'آزمون نوشتاری تافل',
-                instruction: 'دستورالعمل: یک پیشنهاد برای بهبود سرویس یا محصول بنویسید. مشکل فعلی و راه‌حل پیشنهادی خود را به صورت واضح ارائه دهید.',
-                content: 'شما در یک شرکت کاری می‌کنید. سیستم مدیریت زمان شرکت بسیار قدیمی است و کارمندان را با مشکلات زیادی روبرو می‌کند. یک پیشنهاه برای بهبود این سیستم بنویسید.',
-                requirements: [
-                    'حداقل 150 کلمه بنویسید',
-                    'مشاکل فعلی را تشریح کنید',
-                    'راه‌حل مفصل پیشنهاد کنید',
-                    'مزایای پیشنهاد را بیان کنید'
-                ],
-                tips: [
-                    'با درخواست توجه شروع کنید',
-                    'مشاکل را با مثال‌های واقعی توضیح دهید',
-                    'راه‌حل را مرحله به مرحله ارائه دهید',
-                    'با درخواست ملاقات برای بحث بیشتر بپایان برسانید'
-                ]
-            },
-            {
-                id: 'q2',
-                title: 'Task 2: نامه توصیه‌ای',
-                type: 'نوشتاری',
-                badge: 'آزمون نوشتاری تافل',
-                instruction: 'دستورالعمل: یک نامه توصیه‌ای برای یکی از دوستان خود که برای شغل جدید درخواست داده است، بنویسید.',
-                content: 'دوست شما برای کار در یک شرکت معروف اپلیکیشن داده است. از شما خواسته شده که یک نامه توصیه‌ای برای او بنویسید. در این نامه توانایی‌ها و صفات مثبت او را بیان کنید.',
-                requirements: [
-                    'حداقل 180 کلمه بنویسید',
-                    'درباره صفات و توانایی‌های دوست صحبت کنید',
-                    'مثال‌های خاص از کار او ارائه دهید',
-                    'نامه را با توصیه قوی پایان دهید'
-                ],
-                tips: [
-                    'نامه را رسمی و احترام‌آمیز بنویسید',
-                    'تجربه و مهارت‌های خاص را برجسته کنید',
-                    'مثال‌های واقعی از عملکرد خوب ارائه دهید',
-                    'نامه را با درخواست پیگیری پایان دهید'
-                ]
-            }
-        ]
-    },
-    'write-4': {
-        title: 'توضیح و دفاع از نظر شخصی',
-        type: 'نوشتاری',
-        totalQuestions: 2,
-        totalTime: 1400, // 23 minutes in seconds
-        questions: [
-            {
-                id: 'q1',
-                title: 'Task 1: دفاع از یک ادعا',
-                type: 'نوشتاری',
-                badge: 'آزمون نوشتاری تافل',
-                instruction: 'دستورالعمل: موضوع زیر را بخوانید و نظر خود را بیان کنید. نظرتان را با شواهد قوی دفاع کنید.',
-                content: 'آیا شما بر این باور هستید که آموزش آنلاین به اندازه آموزش حضوری مؤثر است؟ نظر خود را بیان کنید.',
-                requirements: [
-                    'حداقل 200 کلمه بنویسید',
-                    'نظر خود را واضح بیان کنید',
-                    'حداقل سه دلیل برای پشتیبانی از نظر ارائه دهید',
-                    'احتمال اعتراضات را پاسخ دهید'
-                ],
-                tips: [
-                    'موضع واضح و قاطع اتخاذ کنید',
-                    'دلایل منطقی ارائه دهید',
-                    'مثال‌های عملی استفاده کنید',
-                    'نتیجه‌گیری قوی نوشته کنید'
-                ]
-            },
-            {
-                id: 'q2',
-                title: 'Task 2: مقایسه دو راه‌حل',
-                type: 'نوشتاری',
-                badge: 'آزمون نوشتاری تافل',
-                instruction: 'دستورالعمل: دو راه‌حل مختلف برای یک مسئله ارائه می‌شود. بهتری را انتخاب کنید و دلایل خود را توضیح دهید.',
-                content: 'برای کاهش ترافیک شهری، دو راه‌حل وجود دارد: 1) افزایش و بهبود حمل‌ونقل عمومی، 2) محدود کردن ورود خودروهای شخصی به مرکز شهر. کدام راه‌حل بهتر است؟',
-                requirements: [
-                    'حداقل 210 کلمه بنویسید',
-                    'هر دو راه‌حل را تحلیل کنید',
-                    'مزایا و معایب را مقایسه کنید',
-                    'انتخاب خود را توجیه کنید'
-                ],
-                tips: [
-                    'هر دو طرف را بی‌طرفانه بررسی کنید',
-                    'معایب و مزایای واقعی را نام ببرید',
-                    'از مثال‌های واقع نزدیک استفاده کنید',
-                    'نتیجه‌گیری را با استدلال منطقی پشتیبانی کنید'
-                ]
-            }
-        ]
-    }
-};
-
 // ==================== EXAM STATE MANAGEMENT ====================
 const examState = {
     currentExamId: null,
@@ -201,23 +22,56 @@ let currentFontSize = 16;
 const minFontSize = 12;
 const maxFontSize = 24;
 
+// ==================== API FUNCTIONS ====================
+/**
+ * Fetch exam data from API
+ * @param {string} examId - The exam UUID to fetch
+ * @returns {Promise<Object>} Exam data
+ */
+async function fetchExamFromAPI(examId) {
+    try {
+        const response = await fetch(`/team7/api/exams/?exam_id=${examId}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+        
+        if (!response.ok) {
+            console.error(`API error: ${response.status}`);
+            return null;
+        }
+        
+        const data = await response.json();
+        return data.exams && data.exams.length > 0 ? data.exams[0] : null;
+    } catch (error) {
+        console.error('Error fetching exam from API:', error);
+        return null;
+    }
+}
+
 // ==================== INITIALIZATION ====================
 /**
- * Initialize exam with mock data
+ * Initialize exam - fetches from API
  * @param {string} examId - The exam ID to load
  */
-function initializeExam(examId) {
-    // Load mock data (replace with API call later)
-    if (!mockExamData[examId]) {
-        console.error('Exam not found:', examId, 'Available:', Object.keys(mockExamData));
+async function initializeExam(examId) {
+    console.log('Initializing exam:', examId);
+    
+    // Load from API
+    let exam = await fetchExamFromAPI(examId);
+    
+    if (!exam) {
+        console.error('Failed to load exam from API:', examId);
+        alert('خطا: آزمون مورد نظر یافت نشد');
         return;
     }
 
     console.log('Setting up exam state for:', examId);
     examState.currentExamId = examId;
-    examState.currentExam = mockExamData[examId];
-    examState.totalQuestions = examState.currentExam.questions.length;
-    examState.timeRemaining = examState.currentExam.totalTime;
+    examState.currentExam = exam;
+    examState.totalQuestions = exam.totalQuestions || exam.questions.length;
+    examState.timeRemaining = exam.totalTime;
     examState.startTime = Date.now();
     examState.userAnswers = {};
 
@@ -722,24 +576,23 @@ function attachEventListeners() {
  * Initialize exam page on DOM ready
  */
 document.addEventListener('DOMContentLoaded', () => {
-    // Get exam ID from URL or data attribute
+    // Get exam ID from URL parameters
     const urlParams = new URLSearchParams(window.location.search);
-    const examId = urlParams.get('exam') || document.body.dataset.examId || 'write-1';
+    const examId = urlParams.get('exam_id');
     
-    console.log('Exam Template Page Loaded');
+    console.log('Writing Exam Page Loaded');
     console.log('URL:', window.location.href);
-    console.log('Query Parameters:', Object.fromEntries(urlParams));
     console.log('Exam ID:', examId);
-    console.log('Available exams:', Object.keys(mockExamData));
 
     // Initialize exam
-    if (examId && mockExamData[examId]) {
-        console.log('Initializing exam:', examId);
-        initializeExam(examId);
-    } else {
-        console.error('Invalid exam ID or exam data not found:', examId);
-        alert(`خطا: آزمون با شناسه "${examId}" یافت نشد.\n\nآزمون‌های موجود: ${Object.keys(mockExamData).join(', ')}`);
+    if (!examId) {
+        console.error('No exam ID specified in URL');
+        // alert('خطا: شناسه آزمون مشخص نشده است');
+        return;
     }
+    
+    console.log('Initializing exam:', examId);
+    initializeExam(examId);
 });
 
 // ==================== EXPORT FOR TESTING ====================

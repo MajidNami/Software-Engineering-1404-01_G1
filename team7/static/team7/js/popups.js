@@ -86,7 +86,7 @@ const PopupManager = {
 // ==================== EXAM START POPUP ====================
 /**
  * Show exam start confirmation popup
- * @param {Object} examData - Exam information (title, totalTime, totalQuestions)
+ * @param {Object} examData - Exam information (title, totalTime, totalQuestions, difficulty, type)
  * @param {Function} onStart - Callback when user clicks start
  */
 function showStartExamPopup(examData, onStart) {
@@ -96,6 +96,25 @@ function showStartExamPopup(examData, onStart) {
     const minutes = Math.floor(examData.totalTime / 60);
     const seconds = examData.totalTime % 60;
     const timeString = `${minutes}:${String(seconds).padStart(2, '0')}`;
+    
+    // Convert difficulty level (1-5) to stars/text
+    let difficultyDisplay = 'متوسط';
+    let difficultyColor = 'yellow';
+    if (examData.difficulty <= 2) {
+        difficultyDisplay = 'آسان';
+        difficultyColor = 'green';
+    } else if (examData.difficulty >= 4) {
+        difficultyDisplay = 'سخت';
+        difficultyColor = 'red';
+    }
+    
+    // Determine exam type for display (English to Persian conversion)
+    console.log('Popup - Exam data type:', examData.type, 'Type of:', typeof examData.type);
+    let examTypeDisplay = 'نوشتاری';
+    if (examData.type && examData.type.toLowerCase && examData.type.toLowerCase() === 'speaking') {
+        examTypeDisplay = 'گفتاری';
+    }
+    console.log('Popup - Exam type display:', examTypeDisplay);
 
     popup.innerHTML = `
         <div class="popup-header">
@@ -110,12 +129,20 @@ function showStartExamPopup(examData, onStart) {
 
             <div class="popup-info-grid">
                 <div class="popup-info-item">
+                    <span class="popup-info-label">نوع آزمون</span>
+                    <p class="popup-info-value">${examTypeDisplay}</p>
+                </div>
+                <div class="popup-info-item">
                     <span class="popup-info-label">زمان کل</span>
                     <p class="popup-info-value">${timeString}</p>
                 </div>
                 <div class="popup-info-item">
                     <span class="popup-info-label">تعداد سوالات</span>
                     <p class="popup-info-value">${examData.totalQuestions}</p>
+                </div>
+                <div class="popup-info-item">
+                    <span class="popup-info-label">سطح دشواری</span>
+                    <p class="popup-info-value"><span class="difficulty-badge ${difficultyColor}">${difficultyDisplay}</span></p>
                 </div>
             </div>
 

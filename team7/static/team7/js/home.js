@@ -22,25 +22,47 @@ async function initializeHomePage() {
  * Initialize all button click handlers on home page
  */
 function initializeHomeButtons() {
+    // Handle all protected links (requiring authentication)
+    document.querySelectorAll('.protected-link').forEach(link => {
+        link.addEventListener('click', async (e) => {
+            e.preventDefault();
+            const redirectUrl = link.getAttribute('data-redirect');
+            
+            if (window.authManager) {
+                const isAuthenticated = await window.authManager.checkAuthStatus();
+                if (isAuthenticated) {
+                    window.location.href = redirectUrl;
+                } else {
+                    sessionStorage.setItem('redirectAfterLogin', redirectUrl);
+                    window.location.href = '/auth/';
+                }
+            } else {
+                sessionStorage.setItem('redirectAfterLogin', redirectUrl);
+                window.location.href = '/auth/';
+            }
+        });
+    });
+
     // Primary CTA - Start Free Test (in hero section)
-    const primaryCTA = document.querySelector('.btn-primary-cta');
+    const primaryCTA = document.querySelector('.btn-primary-cta:not(.protected-link)');
     if (primaryCTA) {
         primaryCTA.addEventListener('click', async (e) => {
             e.preventDefault();
             if (window.authManager) {
-                await window.authManager.navigateToProtectedPage('/team7/dashboard/');
+                await window.authManager.navigateToProtectedPage('/team7/exams/');
             } else {
+                sessionStorage.setItem('redirectAfterLogin', '/team7/exams/');
                 window.location.href = '/auth/';
             }
         });
     }
 
     // Secondary CTA - View Sample Test
-    const secondaryCTA = document.querySelector('.btn-secondary-cta');
+    const secondaryCTA = document.querySelector('.btn-secondary-cta:not(.protected-link)');
     if (secondaryCTA) {
         secondaryCTA.addEventListener('click', (e) => {
             e.preventDefault();
-            // Scroll to tests section
+            // Scroll to tests section or show demo
             const testsSection = document.getElementById('tests');
             if (testsSection) {
                 testsSection.scrollIntoView({ behavior: 'smooth' });
@@ -52,26 +74,28 @@ function initializeHomeButtons() {
     }
 
     // AI Section CTA button
-    const aiCTA = document.querySelector('.btn-ai-cta');
+    const aiCTA = document.querySelector('.btn-ai-cta:not(.protected-link)');
     if (aiCTA) {
         aiCTA.addEventListener('click', async (e) => {
             e.preventDefault();
             if (window.authManager) {
-                await window.authManager.navigateToProtectedPage('/team7/dashboard/');
+                await window.authManager.navigateToProtectedPage('/team7/exams/');
             } else {
+                sessionStorage.setItem('redirectAfterLogin', '/team7/exams/');
                 window.location.href = '/auth/';
             }
         });
     }
 
     // Main CTA section button at bottom
-    const mainCTA = document.querySelector('.btn-cta');
+    const mainCTA = document.querySelector('.btn-cta:not(.protected-link)');
     if (mainCTA) {
         mainCTA.addEventListener('click', async (e) => {
             e.preventDefault();
             if (window.authManager) {
-                await window.authManager.navigateToProtectedPage('/team7/dashboard/');
+                await window.authManager.navigateToProtectedPage('/team7/exams/');
             } else {
+                sessionStorage.setItem('redirectAfterLogin', '/team7/exams/');
                 window.location.href = '/auth/';
             }
         });
@@ -83,9 +107,9 @@ function initializeHomeButtons() {
             e.preventDefault();
             const testType = card.dataset.testType || 'writing';
             if (window.authManager) {
-                await window.authManager.navigateToProtectedPage(`/team7/dashboard/?test=${testType}`);
+                await window.authManager.navigateToProtectedPage(`/team7/exams/?test=${testType}`);
             } else {
-                sessionStorage.setItem('redirectAfterLogin', `/team7/dashboard/?test=${testType}`);
+                sessionStorage.setItem('redirectAfterLogin', `/team7/exams/?test=${testType}`);
                 window.location.href = '/auth/';
             }
         });
@@ -98,16 +122,16 @@ function initializeHomeButtons() {
             const action = btn.dataset.action;
             if (action === 'writing') {
                 if (window.authManager) {
-                    await window.authManager.navigateToProtectedPage('/team7/dashboard/?test=writing');
+                    await window.authManager.navigateToProtectedPage('/team7/exams/?test=writing');
                 } else {
-                    sessionStorage.setItem('redirectAfterLogin', '/team7/dashboard/?test=writing');
+                    sessionStorage.setItem('redirectAfterLogin', '/team7/exams/?test=writing');
                     window.location.href = '/auth/';
                 }
             } else if (action === 'speaking') {
                 if (window.authManager) {
-                    await window.authManager.navigateToProtectedPage('/team7/dashboard/?test=speaking');
+                    await window.authManager.navigateToProtectedPage('/team7/exams/?test=speaking');
                 } else {
-                    sessionStorage.setItem('redirectAfterLogin', '/team7/dashboard/?test=speaking');
+                    sessionStorage.setItem('redirectAfterLogin', '/team7/exams/?test=speaking');
                     window.location.href = '/auth/';
                 }
             }
