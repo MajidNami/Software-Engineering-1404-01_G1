@@ -4,7 +4,7 @@ from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from groq import Groq
 from ..models.word import Word
-from ..models.menemonics import WordStory
+from ..models.menemonic import WordStory
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -15,8 +15,6 @@ image_client = None  # TODO: Replace with your image generation client (e.g., Op
 def text_analysis_page(request):
     return render(request, 'team8/menemonic_page.html')
 
-
-@require_POST
 def generate_story(request):
     """
     Expects JSON body:
@@ -52,7 +50,6 @@ def generate_story(request):
         )
 
         return JsonResponse({
-            "id": word_story.id,
             "word": word.word,
             "story": story_text
         })
@@ -62,8 +59,6 @@ def generate_story(request):
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=500)
 
-
-@require_POST
 def generate_image(request):
     """
     Expects JSON body:
