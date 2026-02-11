@@ -174,3 +174,23 @@ class Team11SubmissionApiTests(TestCase):
         )
         thread_mock.assert_called_once()
         thread_mock.return_value.start.assert_called_once()
+
+    def test_submission_status_returns_failed_message_from_assessment_result(self):
+        submission = Submission.objects.using("team11").create(
+            user_id=self.user.id,
+            submission_type=SubmissionType.WRITING,
+            status=AnalysisStatus.FAILED,
+        )
+        AssessmentResult.objects.using("team11").create(
+            submission=submission,
+            feedback_summary="Custom failure from assessment",
+            suggestions=[],
+        )
+
+        response = self.client.get(f"/team11/api/submission-status/{submission.submission_id}/")
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json().get("status"), "failed")
+        self.assertEqual(
+            response.json().get("message"),
+            "Custom failure from assessment",
+        )
