@@ -984,11 +984,11 @@ async function generateHistoryDataFromAPI() {
             
             return {
                 evaluation_id: attempt.evaluation_id,
-                title: `Evaluation ${index + 1}`,  // Will be updated with question title if available
+                title: attempt.exam_name || `Evaluation ${index + 1}`,
                 type: attempt.task_type === 'writing' ? 'نوشتاری' : 'گفتاری',
                 task_type: attempt.task_type,  // Keep the original task_type (writing or speaking) for detection
                 score: attempt.overall_score || 0,
-                duration: '—',  // Duration not available in API
+                duration: attempt.exam_name || '—',  // Use exam name instead of duration
                 date: `${year}/${month}/${day}`,
                 criteria: attempt.criteria || [],
                 question_id: attempt.question_id,

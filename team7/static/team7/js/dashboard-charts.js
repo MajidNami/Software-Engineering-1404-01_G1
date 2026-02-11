@@ -84,9 +84,10 @@ function updateStatusCards(analyticsData) {
             document.getElementById('total-attempts').textContent = '0';
             document.getElementById('best-score').textContent = '--';
             document.getElementById('avg-score').textContent = '--';
-            document.getElementById('last-attempt').textContent = 'هنوز آزمونی انجام نشده';
+            document.getElementById('last-attempt').textContent = 'No exams taken yet';
             document.getElementById('speaking-count').textContent = '0';
             document.getElementById('writing-count').textContent = '0';
+            renderLatestExams([]);
             return;
         }
         
@@ -101,17 +102,11 @@ function updateStatusCards(analyticsData) {
         const avgScore = (attempts.reduce((sum, a) => sum + (a.overall_score || 0), 0) / attempts.length).toFixed(1);
         document.getElementById('avg-score').textContent = avgScore;
         
-        // Last attempt
+        // Last attempt - show exam name
         if (attempts.length > 0) {
-            const lastAttempt = new Date(attempts[0].created_at);
-            const daysAgo = Math.floor((new Date() - lastAttempt) / (1000 * 60 * 60 * 24));
-            if (daysAgo === 0) {
-                document.getElementById('last-attempt').textContent = 'امروز';
-            } else if (daysAgo === 1) {
-                document.getElementById('last-attempt').textContent = 'دیروز';
-            } else {
-                document.getElementById('last-attempt').textContent = `${daysAgo} روز پیش`;
-            }
+            const lastAttempt = attempts[0];
+            const examName = lastAttempt.exam_name || 'Unknown';
+            document.getElementById('last-attempt').textContent = examName;
         }
         
         // Count by task type
@@ -119,9 +114,64 @@ function updateStatusCards(analyticsData) {
         const writingCount = attempts.filter(a => a.task_type === 'writing').length;
         document.getElementById('speaking-count').textContent = speakingCount;
         document.getElementById('writing-count').textContent = writingCount;
+        
+        // Render latest exams section
+        renderLatestExams(attempts.slice(0, 2)); // Get top 2 most recent
     } catch (error) {
         console.error('Error updating status cards:', error);
     }
+}
+
+/**
+ * Render the latest exams section with real data from API
+ */
+function renderLatestExams(attempts) {
+    const examsGrid = document.querySelector('.exams-grid');
+    if (!examsGrid) return;
+    
+    examsGrid.innerHTML = '';
+    
+    if (attempts.length === 0) {
+        const emptyMessage = document.createElement('div');
+        emptyMessage.style.cssText = 'grid-column: 1 / -1; text-align: center; padding: 40px; color: #a7bccc;';
+        emptyMessage.innerHTML = '<p>No exams taken yet. Start your first exam!</p>';
+        examsGrid.appendChild(emptyMessage);
+        return;
+    }
+    
+    attempts.forEach(attempt => {
+        const card = document.createElement('div');
+        card.className = 'exam-card';
+        
+        const examType = attempt.task_type === 'speaking' ? 'Speaking' : 'Writing';
+        const badgeClass = attempt.task_type === 'speaking' ? 'speaking' : 'writing';
+        const badgeText = attempt.task_type === 'speaking' ? 'گفتاری' : 'نوشتاری';
+        
+        // Format the date
+        const createdDate = new Date(attempt.created_at);
+        const now = new Date();
+        const daysDiff = Math.floor((now - createdDate) / (1000 * 60 * 60 * 24));
+        let dateText = '';
+        if (daysDiff === 0) {
+            dateText = 'امروز';
+        } else if (daysDiff === 1) {
+            dateText = 'دیروز';
+        } else {
+            dateText = `${daysDiff} روز پیش`;
+        }
+        
+        card.innerHTML = `
+            <div class="exam-badge ${badgeClass}">${badgeText}</div>
+            <p class="exam-date">${dateText}</p>
+            <p class="exam-title">${attempt.exam_name || 'Unnamed Exam'}</p>
+            <div class="exam-score">
+                <span class="score-label">Score:</span>
+                <span class="score-value">${(attempt.overall_score || 0).toFixed(1)}</span>
+            </div>
+        `;
+        
+        examsGrid.appendChild(card);
+    });
 }
 
 /**
