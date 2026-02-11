@@ -1,5 +1,5 @@
 from django.http import JsonResponse
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.views.decorators.http import require_http_methods
 
 from core.auth import api_login_required
@@ -30,3 +30,24 @@ def lessons_list_view(request):
     }
     # TODO : create team2_Lessons_list.html
     return render(request, 'team2_Lessons_list.html', context)
+
+
+@require_http_methods(["GET"])
+def lesson_details_view(request, lesson_id):
+
+    lesson = get_object_or_404(
+        Lesson,
+        id=lesson_id,
+        is_deleted=False,
+        status='published'
+    )
+
+    videos = lesson.videos.filter(is_deleted=False).order_by('-uploaded_at')
+
+    context = {
+        'lesson': lesson,
+        'videos': videos,
+        'total_videos': videos.count(),
+    }
+    # TODO : create team2_lesson_details.html
+    return render(request, 'team2_lesson_details.html', context)

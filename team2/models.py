@@ -48,7 +48,6 @@ class Lesson(models.Model):
     def __str__(self):
         return self.title
 
-
 class VideoFiles(models.Model):
 
     FORMAT_CHOICES = [
