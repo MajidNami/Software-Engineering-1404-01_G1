@@ -11,32 +11,31 @@ from django.http import JsonResponse
 from django.utils import timezone
 from .models import Passage, Question, UserSession, UserAnswer, AntiCheatLog
 import json
-from .models import UserSession, Question, Option, UserAnswer
-
-
+from .models import UserSession, Question, Option, UserAnswer  # این خط تکراری است و می‌تواند حذف شود
 
 TEAM_NAME = "team14"
+
 
 @api_login_required
 def ping(request):
     return JsonResponse({"team": TEAM_NAME, "ok": True})
 
+
 def base(request):
     return render(request, f"{TEAM_NAME}/index.html")
+
 
 def training_levels(request):
     return render(request, 'team14/training_levels.html')
 
 
 def index(request):
-
     last_session = UserSession.objects.filter(
-        user=request.user,
+        user=request.user,  # فرض شده request.user یک User مدل معتبر است.
         mode='exam',
         end_time__isnull=False,
         scaled_score__isnull=False
     ).order_by('-end_time').first()
-
 
     context = {
         'last_score': last_session.scaled_score if last_session else None,
@@ -46,7 +45,8 @@ def index(request):
     return render(request, 'team14/index.html', context)
 
 
-login_required(login_url='auth')
+# این خط باید به decorator بالای هر تابع اضافه شود نه به صورت جداگانه.
+# login_required(login_url='auth')
 
 
 def easy_level(request):
@@ -83,7 +83,6 @@ def easy_level(request):
     return render(request, 'team14/practice_passages.html', context)
 
 
-
 def mid_level(request):
     # گرفتن تمام passage های سطح متوسط
     passages = Passage.objects.filter(
@@ -112,7 +111,6 @@ def mid_level(request):
     }
 
     return render(request, 'team14/practice_passages.html', context)
-
 
 
 def hard_level(request):
@@ -146,19 +144,18 @@ def hard_level(request):
 
 
 def get_topic_icon(topic):
-        icons = {
-            'biology': '🧬',
-            'history': '📜',
-            'astronomy': '🌌',
-            'geology': '🌍',
-            'anthropology': '🗿',
-        }
-        return icons.get(topic, '📚')
+    icons = {
+        'biology': '🧬',
+        'history': '📜',
+        'astronomy': '🌌',
+        'geology': '🌍',
+        'anthropology': '🗿',
+    }
+    return icons.get(topic, '📚')
+
 
 def Exam_Page(request):
     return render(request, 'team14/Exam_Page.html')
-
-
 
 
 def practice_page(request, passage_id):
@@ -186,6 +183,12 @@ def practice_page(request, passage_id):
         })
 
     # ✅ استفاده درست از user_id
+    # در اینجا باید از request.user استفاده کنید نه از request.user.id
+    # چون UserSession دارای ForeignKey به User است، بهتر است نمونه User را پاس دهید.
+    # اگر user_id در مدل UserSession به صورت CharField با max_length=36 ذخیره می‌شود،
+    # و شما قصد دارید شناسه کاربر را به صورت رشته‌ای ذخیره کنید، پس استفاده از request.user.id صحیح است.
+    # اما اگر ForeignKey به مدل User است، باید خود شیء User را پاس دهید.
+    # با توجه به تعریف UserSession که user_id: models.CharField است، request.user.id درست است.
     session, created = UserSession.objects.get_or_create(
         user_id=request.user.id,
         passage=passage,
@@ -224,7 +227,7 @@ def submit_answer(request):
         session = get_object_or_404(
             UserSession,
             id=data['session_id'],
-            user_id=request.user.id   # ✅ خیلی مهم
+            user_id=str(request.user.id)  # ✅ خیلی مهم: اطمینان حاصل کنید که نوع داده یکسان است (Char vs Int)
         )
 
         question = get_object_or_404(
@@ -233,17 +236,24 @@ def submit_answer(request):
             passage=session.passage
         )
 
-        answer, created = UserAnswer.objects.get_or_create(
-            user_id=request.user.id,
+        # در اینجا user_id: request.user.id است
+        # اگر در مدل UserAnswer فیلد user_id ندارید و فقط session است
+        # باید بر اساس session و question ایجاد یا به روز کنید
+        # در مدل UserAnswer فقط session و question دارید، نه user_id مستقیم
+        # بنابراین این خط باید اصلاح شود:
+        user_answer, created = UserAnswer.objects.get_or_create(
             session=session,
             question=question,
             defaults={'selected_option_id': data['option_id']}
         )
 
-        if not created and answer.selected_option_id != data['option_id']:
-            answer.selected_option_id = data['option_id']
-            answer.changed_count += 1
-            answer.save()
+        if not created and user_answer.selected_option_id != data['option_id']:
+            user_answer.selected_option_id = data['option_id']
+            user_answer.changed_count += 1
+            user_answer.save()
+        elif created and data['option_id'] is None:  # اگر برای null کردن گزینه ارسال شده و تازه ساخته شده
+            user_answer.selected_option = None
+            user_answer.save()
 
         return JsonResponse({'success': True})
 
@@ -255,13 +265,15 @@ def finish_practice(request, session_id):
     session = get_object_or_404(
         UserSession,
         id=session_id,
-        user_id=request.user.id
+        user_id=str(request.user.id)  # ✅ باز هم، اطمینان از نوع داده
     )
 
     answers = UserAnswer.objects.filter(session=session)
     correct_count = 0
 
     for answer in answers:
+        # اگر selected_option null باشد، این شرط اجرا نمی‌شود
+        # و is_correct به صورت پیش‌فرض False خواهد ماند یا باید صراحتاً False شود.
         if answer.selected_option and answer.selected_option.is_correct:
             correct_count += 1
             answer.is_correct = True
@@ -271,19 +283,24 @@ def finish_practice(request, session_id):
 
     total_questions = session.passage.questions.count()
 
-    if total_questions > 0:
-        session.total_score = (correct_count / total_questions) * 100
+    # اطمینان از اینکه session.total_score و session.end_time فقط یک بار مقداردهی می‌شوند
+    # و اگر قبلاً اتمام یافته، دوباره تغییر نکند، مگر اینکه منطق خاصی برای re-evaluate باشد.
+    if session.end_time is None:  # فقط اگر هنوز تمام نشده باشد
+        if total_questions > 0:
+            session.total_score = (correct_count / total_questions) * 100
+        else:
+            session.total_score = 0  # اگر سوالی نباشد نمره 0
         session.end_time = timezone.now()
         session.save()
 
-    return redirect('team14:practice_result', session_id=session.id)
+    return redirect('practice_result', session_id=session.id)
 
 
 def practice_result(request, session_id):
     session = get_object_or_404(
         UserSession,
         id=session_id,
-        user_id=request.user.id
+        user_id=str(request.user.id)  # ✅ باز هم، اطمینان از نوع داده (char)
     )
 
     questions = Question.objects.filter(
@@ -312,7 +329,8 @@ def practice_result(request, session_id):
             "correct_option": correct_option.text if correct_option else "—",
             "user_option": (
                 q.options.get(id=user_option_id).text
-                if user_option_id else "بدون پاسخ"
+                if user_option_id and q.options.filter(id=user_option_id).exists()  # اطمینان از وجود گزینه
+                else "بدون پاسخ"
             ),
             "is_correct": is_correct
         })
@@ -322,6 +340,5 @@ def practice_result(request, session_id):
         "total_questions": questions.count(),
         "correct_count": correct_count,
         "results": result_data,
-        "level": session.passage.level
+        "level": session.passage.get_difficulty_level_display()  # ✅ اینجا اصلاح شد
     })
-
