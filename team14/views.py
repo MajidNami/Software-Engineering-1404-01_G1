@@ -1,5 +1,7 @@
 from django.http import JsonResponse
 from django.shortcuts import render
+from django.views.decorators.csrf import csrf_exempt
+
 from core.auth import api_login_required
 from django.contrib.auth.decorators import login_required
 from .models import UserSession, Passage, Question, Option
@@ -156,114 +158,119 @@ def Exam_Page(request):
 
 
 
+
 def practice_page(request, passage_id):
+    if not request.user.is_authenticated:
+        return redirect('login')
+
     passage = get_object_or_404(
         Passage.objects.prefetch_related('questions__options'),
         id=passage_id
     )
 
-    questions = passage.questions.all().order_by('id')
-    total_questions = questions.count()
+    questions_qs = passage.questions.all().order_by('id')
 
-    # ایجاد Session جدید یا بازیابی Session فعلی
+    # ✅ JSON برای JS
+    questions_data = []
+    for q in questions_qs:
+        questions_data.append({
+            "id": q.id,
+            "question_text": q.question_text,
+            "question_type": q.question_type,
+            "options": [
+                {"id": opt.id, "text": opt.text}
+                for opt in q.options.all()
+            ]
+        })
+
+    # ✅ استفاده درست از user_id
     session, created = UserSession.objects.get_or_create(
-        user_id=request.user.id,  # ✅ خیلی مهم
+        user_id=request.user.id,
         passage=passage,
         mode='practice',
-        defaults={
-            'start_time': timezone.now(),
-        }
+        defaults={'start_time': timezone.now()}
     )
 
-    # دریافت پاسخ‌های قبلی کاربر (اگر وجود دارد)
     user_answers = {
-        answer.question_id: answer.selected_option_id
-        for answer in UserAnswer.objects.filter(
-            #user=request.user,
-            question__passage=passage,
-            session=session
-        )
+        ans.question_id: ans.selected_option_id
+        for ans in UserAnswer.objects.filter(session=session)
     }
+
+    elapsed = (timezone.now() - session.start_time).seconds
+    time_left = max(0, 18 * 60 - elapsed)
 
     context = {
         'passage': passage,
-        'questions': questions,
-        'total_questions': total_questions,
+        'questions': json.dumps(questions_data),
+        'total_questions': questions_qs.count(),
         'session': session,
         'user_answers': json.dumps(user_answers),
-        'mode': 'practice',
-        'current_question_index': 0,
+        'time_left': time_left,
     }
 
     return render(request, 'team14/Practice_Page.html', context)
 
 
-
+@csrf_exempt
 def submit_answer(request):
-    """ذخیره پاسخ کاربر (AJAX)"""
+    if request.method != 'POST' or not request.user.is_authenticated:
+        return JsonResponse({'success': False}, status=403)
 
-    if request.method == 'POST':
-        try:
-            data = json.loads(request.body)
-            question_id = data.get('question_id')
-            option_id = data.get('option_id')
-            session_id = data.get('session_id')
+    try:
+        data = json.loads(request.body)
 
-            question = get_object_or_404(Question, id=question_id)
-            session = get_object_or_404(UserSession, id=session_id, user=request.user)
+        session = get_object_or_404(
+            UserSession,
+            id=data['session_id'],
+            user_id=request.user.id   # ✅ خیلی مهم
+        )
 
-            # بررسی آیا قبلاً پاسخ داده شده
-            answer, created = UserAnswer.objects.get_or_create(
-                user=request.user,
-                question=question,
-                session=session,
-                defaults={'selected_option_id': option_id}
-            )
+        question = get_object_or_404(
+            Question,
+            id=data['question_id'],
+            passage=session.passage
+        )
 
-            # اگر پاسخ تغییر کرده، آپدیت کن
-            if not created and answer.selected_option_id != option_id:
-                answer.selected_option_id = option_id
-                answer.changed_count += 1
-                answer.save()
+        answer, created = UserAnswer.objects.get_or_create(
+            user_id=request.user.id,
+            session=session,
+            question=question,
+            defaults={'selected_option_id': data['option_id']}
+        )
 
-            return JsonResponse({
-                'success': True,
-                'message': 'پاسخ ذخیره شد'
-            })
+        if not created and answer.selected_option_id != data['option_id']:
+            answer.selected_option_id = data['option_id']
+            answer.changed_count += 1
+            answer.save()
 
-        except Exception as e:
-            return JsonResponse({
-                'success': False,
-                'error': str(e)
-            }, status=400)
+        return JsonResponse({'success': True})
 
-    return JsonResponse({'success': False}, status=405)
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)}, status=400)
 
 
 
 def finish_practice(request, session_id):
-    """اتمام تمرین و محاسبه نمره"""
+    session = get_object_or_404(
+        UserSession,
+        id=session_id,
+        user_id=request.user.id
+    )
 
-    session = get_object_or_404(UserSession, id=session_id, user=request.user)
-
-    # محاسبه نمره
-    user_answers = UserAnswer.objects.filter(session=session)
-    correct_count = 0
-
-    for answer in user_answers:
-        if answer.selected_option and answer.selected_option.is_correct:
-            correct_count += 1
+    answers = UserAnswer.objects.filter(session=session)
+    correct_count = sum(
+        1 for a in answers
+        if a.selected_option and a.selected_option.is_correct
+    )
 
     total_questions = session.passage.questions.count()
 
-    # محاسبه نمره درصدی
     if total_questions > 0:
-        percentage = (correct_count / total_questions) * 100
-        session.score = percentage
-        session.status = 'completed'
-        session.completed_at = timezone.now()
+        session.total_score = (correct_count / total_questions) * 100
+        session.end_time = timezone.now()
         session.save()
 
     return redirect('team14:practice_result', session_id=session.id)
+
 
 

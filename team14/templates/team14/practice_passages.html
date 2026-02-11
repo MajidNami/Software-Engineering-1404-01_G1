@@ -820,6 +820,11 @@
             transition: opacity 0.4s ease;
             border-radius: 35px;
         }
+        .exercise-card::before,
+        .exercise-card::after {
+        pointer-events: none;
+        }
+
 
         .exercise-card:hover::before {
             opacity: 1;
@@ -1491,6 +1496,7 @@
                    class="start-button">
                     شروع تمرین ←
                 </a>
+
             </div>
         </article>
 
