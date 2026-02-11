@@ -6,7 +6,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>میکروسرویس گروه ۱</title>
 
-  <!-- Team-local shared + team-local page styles -->
   <link rel="stylesheet" href="{% static 'team9/styles/common.css' %}">
   <link rel="stylesheet" href="{% static 'team9/styles/style.css' %}">
 </head>
@@ -15,7 +14,7 @@
   <div class="container">
     <header class="header">
       <div class="header-right">
-        <a href="{% url 'microservices' %}" class="home-btn">میکروسرویس‌ها</a>
+        <a href="#" class="home-btn">میکروسرویس‌ها</a>
       </div>
 
       <div class="header-left">
@@ -31,9 +30,9 @@
 
         <div class="login-container">
           {% if request.user.is_authenticated %}
-            <a href="{% url 'logout' %}" class="login-text">خروج</a>
+            <a href="#" class="login-text">خروج</a>
           {% else %}
-            <a href="{% url 'auth' %}" class="login-text">ورود</a>
+            <a href="#" class="login-text">ورود</a>
           {% endif %}
 
           <div class="user-avatar" aria-hidden="true">

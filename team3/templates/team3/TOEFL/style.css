@@ -1,0 +1,1061 @@
+.exam-page {
+  background-color: #f9f7f7;
+  width: 100%;
+  min-width: 1421px;
+  min-height: 1011px;
+  position: relative;
+}
+
+.exam-page .rectangle {
+  top: 106px;
+  left: 28px;
+  width: 1147px;
+  height: 886px;
+  background-color: #ffffff;
+  position: absolute;
+  border-radius: 40px;
+}
+
+.exam-page .settings {
+  position: absolute;
+  top: 24px;
+  left: 269px;
+  width: 50px;
+  height: 50px;
+  aspect-ratio: 1;
+  object-fit: cover;
+}
+
+.exam-page .iran {
+  position: absolute;
+  top: 24px;
+  left: 209px;
+  width: 50px;
+  height: 50px;
+  aspect-ratio: 1;
+  object-fit: cover;
+}
+
+.exam-page .support {
+  position: absolute;
+  top: 904px;
+  left: 41px;
+  width: 68px;
+  height: 68px;
+  aspect-ratio: 1;
+  object-fit: cover;
+}
+
+.exam-page .div {
+  top: 461px;
+  left: 75px;
+  width: 307px;
+  height: 392px;
+  background-color: #b0cafff5;
+  position: absolute;
+  border-radius: 40px;
+}
+
+.exam-page .rectangle-2 {
+  top: 94px;
+  left: 1195px;
+  width: 226px;
+  height: 84px;
+  background-color: #dde8fe;
+  position: absolute;
+  border-radius: 40px;
+}
+
+.exam-page .rectangle-3 {
+  top: 13px;
+  left: 1013px;
+  width: 161px;
+  height: 69px;
+  background-color: #dde8fe;
+  box-shadow: 0px 4px 4px #00000040;
+  position: absolute;
+  border-radius: 40px;
+}
+
+.exam-page .rectangle-4 {
+  top: 554px;
+  left: 85px;
+  width: 285px;
+  height: 63px;
+  background-color: #dde8fe;
+  box-shadow: 0px 4px 4px #00000040;
+  position: absolute;
+  border-radius: 40px;
+}
+
+.exam-page .rectangle-5 {
+  top: 629px;
+  left: 86px;
+  width: 285px;
+  height: 63px;
+  background-color: #dde8fe;
+  box-shadow: 0px 4px 4px #00000040;
+  position: absolute;
+  border-radius: 40px;
+}
+
+.exam-page .rectangle-6 {
+  top: 704px;
+  left: 86px;
+  width: 285px;
+  height: 63px;
+  background-color: #dde8fe;
+  box-shadow: 0px 4px 4px #00000040;
+  position: absolute;
+  border-radius: 40px;
+}
+
+.exam-page .rectangle-7 {
+  top: 778px;
+  left: 85px;
+  width: 285px;
+  height: 63px;
+  background-color: #dde8fe;
+  box-shadow: 0px 4px 4px #00000040;
+  position: absolute;
+  border-radius: 40px;
+}
+
+.exam-page .rectangle-8 {
+  top: 17px;
+  left: 674px;
+  width: 161px;
+  height: 69px;
+  background-color: #ffffff;
+  position: absolute;
+  border-radius: 40px;
+}
+
+.exam-page .rectangle-9 {
+  top: 13px;
+  left: 844px;
+  width: 161px;
+  height: 69px;
+  background-color: #ffffff;
+  position: absolute;
+  border-radius: 40px;
+}
+
+.exam-page .rectangle-10 {
+  top: 13px;
+  left: 41px;
+  width: 161px;
+  height: 69px;
+  background-color: #ffffff;
+  position: absolute;
+  border-radius: 40px;
+}
+
+.exam-page .profile {
+  position: absolute;
+  top: 19px;
+  left: 43px;
+  width: 60px;
+  height: 60px;
+  aspect-ratio: 1;
+  object-fit: cover;
+}
+
+.exam-page .rectangle-11 {
+  top: 186px;
+  left: 1195px;
+  width: 226px;
+  height: 84px;
+  background-color: #ffffff;
+  position: absolute;
+  border-radius: 40px;
+}
+
+.exam-page .rectangle-12 {
+  top: 278px;
+  left: 1195px;
+  width: 226px;
+  height: 84px;
+  background-color: #ffffff;
+  position: absolute;
+  border-radius: 40px;
+}
+
+.exam-page .rectangle-13 {
+  top: 370px;
+  left: 1195px;
+  width: 226px;
+  height: 84px;
+  background-color: #ffffff;
+  position: absolute;
+  border-radius: 40px;
+}
+
+.exam-page .rectangle-14 {
+  top: 462px;
+  left: 1195px;
+  width: 226px;
+  height: 84px;
+  background-color: #ffffff;
+  position: absolute;
+  border-radius: 40px;
+}
+
+.exam-page .rectangle-15 {
+  top: 554px;
+  left: 1195px;
+  width: 226px;
+  height: 84px;
+  background-color: #ffffff;
+  position: absolute;
+  border-radius: 40px;
+}
+
+.exam-page .rectangle-16 {
+  top: 646px;
+  left: 1195px;
+  width: 226px;
+  height: 84px;
+  background-color: #ffffff;
+  position: absolute;
+  border-radius: 40px;
+}
+
+.exam-page .rectangle-17 {
+  top: 738px;
+  left: 1195px;
+  width: 226px;
+  height: 84px;
+  background-color: #ffffff;
+  position: absolute;
+  border-radius: 40px;
+}
+
+.exam-page .rectangle-18 {
+  top: 830px;
+  left: 1195px;
+  width: 226px;
+  height: 84px;
+  background-color: #ffffff;
+  position: absolute;
+  border-radius: 40px;
+}
+
+.exam-page .rectangle-19 {
+  top: 922px;
+  left: 1195px;
+  width: 226px;
+  height: 84px;
+  background-color: #ffffff;
+  position: absolute;
+  border-radius: 40px;
+}
+
+.exam-page .text-wrapper {
+  top: 94px;
+  left: 1215px;
+  width: 185px;
+  height: 79px;
+  font-family: "Inria Serif-Bold", Helvetica;
+  font-weight: 700;
+  font-size: 20px;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #0b0754;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: normal;
+  direction: rtl;
+}
+
+.exam-page .text-wrapper-2 {
+  top: 14px;
+  left: 846px;
+  width: 160px;
+  height: 64px;
+  font-family: "Inria Serif-Bold", Helvetica;
+  font-weight: 700;
+  font-size: 20px;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #0b0754;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: normal;
+  direction: rtl;
+}
+
+.exam-page .text-wrapper-3 {
+  top: 14px;
+  left: 1015px;
+  width: 160px;
+  height: 64px;
+  font-family: "Inria Serif-Bold", Helvetica;
+  font-weight: 700;
+  font-size: 20px;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #0b0754;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: normal;
+  direction: rtl;
+}
+
+.exam-page .text-wrapper-4 {
+  top: 14px;
+  left: 675px;
+  width: 160px;
+  height: 64px;
+  font-family: "Inria Serif-Bold", Helvetica;
+  font-weight: 700;
+  font-size: 20px;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #0b0754;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: normal;
+  direction: rtl;
+}
+
+.exam-page .text-wrapper-5 {
+  top: 14px;
+  left: 57px;
+  width: 160px;
+  height: 64px;
+  font-family: "Inria Serif-Bold", Helvetica;
+  font-weight: 700;
+  font-size: 20px;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #0b0754;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: normal;
+  direction: rtl;
+}
+
+.exam-page .text-wrapper-6 {
+  top: 186px;
+  left: 1215px;
+  width: 185px;
+  height: 79px;
+  font-family: "Inria Serif-Bold", Helvetica;
+  font-weight: 700;
+  font-size: 20px;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #0b0754;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: normal;
+  direction: rtl;
+}
+
+.exam-page .text-wrapper-7 {
+  top: 278px;
+  left: 1215px;
+  width: 185px;
+  height: 79px;
+  font-family: "Inria Serif-Bold", Helvetica;
+  font-weight: 700;
+  font-size: 20px;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #0b0754;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: normal;
+  direction: rtl;
+}
+
+.exam-page .text-wrapper-8 {
+  top: 369px;
+  left: 1215px;
+  width: 185px;
+  height: 79px;
+  font-family: "Inria Serif-Bold", Helvetica;
+  font-weight: 700;
+  font-size: 20px;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #0b0754;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: normal;
+  direction: rtl;
+}
+
+.exam-page .text-wrapper-9 {
+  top: 465px;
+  left: 1215px;
+  width: 185px;
+  height: 79px;
+  font-family: "Inria Serif-Bold", Helvetica;
+  font-weight: 700;
+  font-size: 20px;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #0b0754;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: normal;
+  direction: rtl;
+}
+
+.exam-page .text-wrapper-10 {
+  top: 556px;
+  left: 1215px;
+  width: 185px;
+  height: 79px;
+  font-family: "Inria Serif-Bold", Helvetica;
+  font-weight: 700;
+  font-size: 20px;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #0b0754;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: normal;
+  direction: rtl;
+}
+
+.exam-page .text-wrapper-11 {
+  top: 643px;
+  left: 1215px;
+  width: 185px;
+  height: 79px;
+  font-family: "Inria Serif-Bold", Helvetica;
+  font-weight: 700;
+  font-size: 20px;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #0b0754;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: normal;
+  direction: rtl;
+}
+
+.exam-page .text-wrapper-12 {
+  top: 738px;
+  left: 1215px;
+  width: 185px;
+  height: 79px;
+  font-family: "Inria Serif-Bold", Helvetica;
+  font-weight: 700;
+  font-size: 20px;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #0b0754;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: normal;
+  direction: rtl;
+}
+
+.exam-page .text-wrapper-13 {
+  top: 835px;
+  left: 1215px;
+  width: 185px;
+  height: 79px;
+  font-family: "Inria Serif-Bold", Helvetica;
+  font-weight: 700;
+  font-size: 20px;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #0b0754;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: normal;
+  direction: rtl;
+}
+
+.exam-page .text-wrapper-14 {
+  top: 917px;
+  left: 1215px;
+  width: 185px;
+  height: 79px;
+  font-family: "Inria Serif-Bold", Helvetica;
+  font-weight: 700;
+  font-size: 20px;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #0b0754;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: normal;
+  direction: rtl;
+}
+
+.exam-page .telegram {
+  position: absolute;
+  top: 928px;
+  left: 560px;
+  width: 40px;
+  height: 40px;
+  aspect-ratio: 1;
+  object-fit: cover;
+}
+
+.exam-page .instagram {
+  position: absolute;
+  top: 928px;
+  left: 630px;
+  width: 40px;
+  height: 40px;
+  aspect-ratio: 1;
+  object-fit: cover;
+}
+
+.exam-page .p {
+  top: 887px;
+  left: 448px;
+  width: 329px;
+  height: 38px;
+  font-family: "Inria Serif-Regular", Helvetica;
+  font-weight: 400;
+  font-size: 20px;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #0b0754;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: normal;
+  direction: rtl;
+}
+
+.exam-page .frame {
+  position: absolute;
+  top: 132px;
+  left: 85px;
+  width: 1058px;
+  height: 316px;
+}
+
+.exam-page .div-2 {
+  top: 34px;
+  left: 15px;
+  width: 561px;
+  height: 248px;
+  font-family: "Inria Serif-Bold", Helvetica;
+  font-weight: 400;
+  font-size: 40px;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #0b0754;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: normal;
+  direction: rtl;
+}
+
+.exam-page .span {
+  font-weight: 700;
+}
+
+.exam-page .text-wrapper-15 {
+  font-weight: 700;
+  font-size: 22px;
+}
+
+.exam-page .text-wrapper-16 {
+  font-family: "Inria Serif-Regular", Helvetica;
+  font-size: 24px;
+}
+
+.exam-page .myic {
+  position: absolute;
+  top: 0;
+  left: 564px;
+  width: 494px;
+  height: 316px;
+  aspect-ratio: 1.5;
+  object-fit: cover;
+}
+
+.exam-page .text-wrapper-17 {
+  top: 462px;
+  left: 114px;
+  width: 238px;
+  height: 95px;
+  font-family: "Inria Serif-Bold", Helvetica;
+  font-weight: 700;
+  font-size: 28px;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #0b0754;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: normal;
+  direction: rtl;
+}
+
+.exam-page .text-wrapper-18 {
+  position: absolute;
+  top: 554px;
+  left: 132px;
+  width: 187px;
+  height: 63px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Inria Serif-Bold", Helvetica;
+  font-weight: 700;
+  color: #000000;
+  font-size: 22px;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.exam-page .text-wrapper-19 {
+  position: absolute;
+  top: 630px;
+  left: 134px;
+  width: 187px;
+  height: 63px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Inria Serif-Bold", Helvetica;
+  font-weight: 700;
+  color: #000000;
+  font-size: 22px;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.exam-page .text-wrapper-20 {
+  position: absolute;
+  top: 702px;
+  left: 134px;
+  width: 187px;
+  height: 63px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Inria Serif-Bold", Helvetica;
+  font-weight: 700;
+  color: #000000;
+  font-size: 22px;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.exam-page .text-wrapper-21 {
+  position: absolute;
+  top: 780px;
+  left: 132px;
+  width: 187px;
+  height: 63px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Inria Serif-Bold", Helvetica;
+  font-weight: 700;
+  color: #000000;
+  font-size: 22px;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.exam-page .rectangle-20 {
+  top: 466px;
+  left: 805px;
+  width: 307px;
+  height: 392px;
+  background-color: #b0cafff5;
+  position: absolute;
+  border-radius: 40px;
+}
+
+.exam-page .rectangle-21 {
+  top: 559px;
+  left: 815px;
+  width: 285px;
+  height: 63px;
+  background-color: #dde8fe;
+  box-shadow: 0px 4px 4px #00000040;
+  position: absolute;
+  border-radius: 40px;
+}
+
+.exam-page .rectangle-22 {
+  top: 634px;
+  left: 816px;
+  width: 285px;
+  height: 63px;
+  background-color: #dde8fe;
+  box-shadow: 0px 4px 4px #00000040;
+  position: absolute;
+  border-radius: 40px;
+}
+
+.exam-page .rectangle-23 {
+  top: 709px;
+  left: 816px;
+  width: 285px;
+  height: 63px;
+  background-color: #dde8fe;
+  box-shadow: 0px 4px 4px #00000040;
+  position: absolute;
+  border-radius: 40px;
+}
+
+.exam-page .rectangle-24 {
+  top: 783px;
+  left: 815px;
+  width: 285px;
+  height: 63px;
+  background-color: #dde8fe;
+  box-shadow: 0px 4px 4px #00000040;
+  position: absolute;
+  border-radius: 40px;
+}
+
+.exam-page .text-wrapper-22 {
+  top: 467px;
+  left: 844px;
+  width: 238px;
+  height: 95px;
+  font-family: "Inria Serif-Bold", Helvetica;
+  font-weight: 700;
+  font-size: 28px;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #0b0754;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: normal;
+  direction: rtl;
+}
+
+.exam-page .text-wrapper-23 {
+  top: 559px;
+  left: 862px;
+  position: absolute;
+  width: 187px;
+  height: 63px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Inria Serif-Bold", Helvetica;
+  font-weight: 700;
+  color: #000000;
+  font-size: 22px;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.exam-page .text-wrapper-24 {
+  top: 635px;
+  left: 864px;
+  position: absolute;
+  width: 187px;
+  height: 63px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Inria Serif-Bold", Helvetica;
+  font-weight: 700;
+  color: #000000;
+  font-size: 22px;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.exam-page .text-wrapper-25 {
+  top: 707px;
+  left: 864px;
+  position: absolute;
+  width: 187px;
+  height: 63px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Inria Serif-Bold", Helvetica;
+  font-weight: 700;
+  color: #000000;
+  font-size: 22px;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.exam-page .text-wrapper-26 {
+  top: 785px;
+  left: 862px;
+  position: absolute;
+  width: 187px;
+  height: 63px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Inria Serif-Bold", Helvetica;
+  font-weight: 700;
+  color: #000000;
+  font-size: 22px;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.exam-page .text-wrapper-27 {
+  top: 554px;
+  left: 533px;
+  position: absolute;
+  width: 187px;
+  height: 63px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Inria Serif-Bold", Helvetica;
+  font-weight: 700;
+  color: #000000;
+  font-size: 22px;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.exam-page .text-wrapper-28 {
+  top: 630px;
+  left: 535px;
+  position: absolute;
+  width: 187px;
+  height: 63px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Inria Serif-Bold", Helvetica;
+  font-weight: 700;
+  color: #000000;
+  font-size: 22px;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.exam-page .text-wrapper-29 {
+  top: 702px;
+  left: 535px;
+  position: absolute;
+  width: 187px;
+  height: 63px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Inria Serif-Bold", Helvetica;
+  font-weight: 700;
+  color: #000000;
+  font-size: 22px;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.exam-page .text-wrapper-30 {
+  top: 780px;
+  left: 533px;
+  position: absolute;
+  width: 187px;
+  height: 63px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Inria Serif-Bold", Helvetica;
+  font-weight: 700;
+  color: #000000;
+  font-size: 22px;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.exam-page .rectangle-25 {
+  top: 467px;
+  left: 440px;
+  width: 307px;
+  height: 392px;
+  background-color: #3a5ba0c9;
+  position: absolute;
+  border-radius: 40px;
+}
+
+.exam-page .rectangle-26 {
+  top: 560px;
+  left: 450px;
+  width: 285px;
+  height: 63px;
+  background-color: #b0caff;
+  box-shadow: 0px 4px 4px #00000040;
+  position: absolute;
+  border-radius: 40px;
+}
+
+.exam-page .rectangle-27 {
+  top: 635px;
+  left: 451px;
+  width: 285px;
+  height: 63px;
+  background-color: #b0caff;
+  box-shadow: 0px 4px 4px #00000040;
+  position: absolute;
+  border-radius: 40px;
+}
+
+.exam-page .rectangle-28 {
+  top: 710px;
+  left: 451px;
+  width: 285px;
+  height: 63px;
+  background-color: #b0caff;
+  box-shadow: 0px 4px 4px #00000040;
+  position: absolute;
+  border-radius: 40px;
+}
+
+.exam-page .rectangle-29 {
+  top: 784px;
+  left: 448px;
+  width: 285px;
+  height: 63px;
+  background-color: #b0caff;
+  box-shadow: 0px 4px 4px #00000040;
+  position: absolute;
+  border-radius: 40px;
+}
+
+.exam-page .text-wrapper-31 {
+  top: 464px;
+  left: 479px;
+  width: 238px;
+  height: 95px;
+  font-family: "Inria Serif-Bold", Helvetica;
+  font-weight: 700;
+  font-size: 28px;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #0b0754;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: normal;
+  direction: rtl;
+}
+
+.exam-page .text-wrapper-32 {
+  top: 560px;
+  left: 497px;
+  position: absolute;
+  width: 187px;
+  height: 63px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Inria Serif-Bold", Helvetica;
+  font-weight: 700;
+  color: #000000;
+  font-size: 22px;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.exam-page .text-wrapper-33 {
+  top: 635px;
+  left: 503px;
+  position: absolute;
+  width: 187px;
+  height: 63px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Inria Serif-Bold", Helvetica;
+  font-weight: 700;
+  color: #000000;
+  font-size: 22px;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.exam-page .text-wrapper-34 {
+  top: 708px;
+  left: 499px;
+  position: absolute;
+  width: 187px;
+  height: 63px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Inria Serif-Bold", Helvetica;
+  font-weight: 700;
+  color: #000000;
+  font-size: 22px;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.exam-page .text-wrapper-35 {
+  top: 786px;
+  left: 497px;
+  position: absolute;
+  width: 187px;
+  height: 63px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Inria Serif-Bold", Helvetica;
+  font-weight: 700;
+  color: #000000;
+  font-size: 22px;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: normal;
+}
