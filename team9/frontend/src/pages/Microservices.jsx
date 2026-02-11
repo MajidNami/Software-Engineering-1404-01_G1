@@ -37,7 +37,7 @@ export default function Microservices() {
       id: newId,
       title: "",
       words: [], 
-      progress: 0,
+      progress_percent: 0,
       isNew: true,
     };
 
@@ -152,7 +152,7 @@ export default function Microservices() {
                 }
                 
                 words={Array.isArray(m.words) ? m.words.length : (m.words || 0)}
-                progress={m.progress}
+                progress={m.progress_percent || 0}
                 onDelete={() => deleteLesson(m.id)}
               />
             );

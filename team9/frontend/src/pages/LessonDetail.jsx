@@ -43,9 +43,8 @@ export default function LessonDetail() {
       });
   }, [id]);
 
-  const learnedCount = rows.filter((r) => r.status === "learned").length;
   const total = rows.length;
-  const progressPct = total === 0 ? 0 : Math.round((learnedCount / total) * 100);
+  const progressPct = lesson?.progress_percent ? Math.round(lesson.progress_percent) : 0;
 
   const mark = (rowId, type) => {
     const today = new Date().toISOString().split('T')[0];
@@ -85,6 +84,7 @@ export default function LessonDetail() {
     })
     .then(res => res.json())
     .then(() => {
+      // Update local state
       setRows((prev) =>
         prev.map((r) => {
           if (r.id !== rowId) return r;
@@ -97,6 +97,11 @@ export default function LessonDetail() {
           };
         })
       );
+      
+      // Refresh lesson to get updated progress_percent
+      fetch(`http://127.0.0.1:8000/team9/api/lessons/${id}/`)
+        .then((res) => res.json())
+        .then((data) => setLesson(data));
     })
     .catch(err => console.error("Update Error:", err));
   };

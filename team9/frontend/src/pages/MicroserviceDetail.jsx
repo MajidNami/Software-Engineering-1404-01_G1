@@ -1,9 +1,31 @@
 import { useParams, Link } from "react-router-dom";
-import { microservices } from "../services/mockMicroservices";
+import { useState, useEffect } from "react";
 
 export default function MicroserviceDetail() {
   const { id } = useParams();
-  const item = microservices.find((m) => String(m.id) === String(id));
+  const [item, setItem] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch(`http://127.0.0.1:8000/team9/api/lessons/${id}/`)
+      .then((res) => res.json())
+      .then((data) => {
+        setItem(data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error("Error fetching lesson:", err);
+        setLoading(false);
+      });
+  }, [id]);
+
+  if (loading) {
+    return (
+      <div className="container" dir="rtl" lang="fa">
+        <h2 style={{ color: "var(--navy)" }}>در حال بارگذاری...</h2>
+      </div>
+    );
+  }
 
   if (!item) {
     return (
@@ -16,6 +38,9 @@ export default function MicroserviceDetail() {
     );
   }
 
+  const wordCount = Array.isArray(item.words) ? item.words.length : 0;
+  const progress = item.progress_percent || 0;
+
   return (
     <div className="container" dir="rtl" lang="fa">
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 24 }}>
@@ -27,8 +52,8 @@ export default function MicroserviceDetail() {
       </div>
 
       <div style={{ marginTop: 16, background: "var(--white)", padding: 16, borderRadius: 16 }}>
-        <p style={{ marginBottom: 8 }}>{item.countLabel}</p>
-        <p>{item.progressLabel}</p>
+        <p style={{ marginBottom: 8 }}>{wordCount} کلمه</p>
+        <p>{progress.toFixed(1)}% پیشرفت</p>
       </div>
     </div>
   );
