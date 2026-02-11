@@ -6,6 +6,7 @@ mysqlclient
 PyMySQL
 gunicorn
 whitenoise
+openai
 djangorestframework
 django-filter
 dj-database-url

@@ -1,0 +1,99 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>انتخاب نوع آزمون</title>
+  <link rel="stylesheet" href="{% static 'team11/styles/common.css' %}">
+  <link rel="stylesheet" href="{% static 'team11/styles/style.css' %}">
+</head>
+
+<body>
+  <div class="container">
+    <header class="header">
+      <div class="header-left">
+        <a href="{% url 'team11_home' %}" class="home-btn">بازگشت</a>
+      </div>
+
+      <div class="header-right">
+        <div class="flag-settings">
+          <div class="iran-flag">
+            <div class="flag-green"></div>
+            <div class="flag-white"></div>
+            <div class="flag-red"></div>
+          </div>
+        </div>
+
+        <div class="login-container">
+          <a href="{% url 'logout' %}" class="login-text">خروج</a>
+          <div class="user-avatar">
+            <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="15" cy="10" r="5" fill="#647eb4" />
+              <path d="M5 25C5 20 9 17 15 17C21 17 25 20 25 25" stroke="#647eb4" stroke-width="2" fill="none" />
+            </svg>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main style="padding: 40px 20px;">
+      <h1 style="text-align: center; color: var(--navy); margin-bottom: 40px;">انتخاب نوع آزمون</h1>
+
+      <div class="exam-types" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 40px; max-width: 1000px; margin: 0 auto;">
+        
+        <!-- Writing Exam Section -->
+        <div class="exam-section" style="background: white; padding: 30px; border-radius: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+          <h2 style="color: var(--navy); margin-bottom: 20px; text-align: center;">آزمون نوشتن</h2>
+          <p style="color: var(--dark-blue); margin-bottom: 30px; text-align: center;">یکی از موضوعات زیر را انتخاب کنید:</p>
+          
+          <div class="topic-list" style="display: flex; flex-direction: column; gap: 15px;">
+            {% for category in writing_categories %}
+            <a href="{% url 'team11_writing_exam' %}?category={{ category.category_id }}" 
+               class="topic-card" 
+               style="background: var(--bg-cream); padding: 20px; border-radius: 10px; text-decoration: none; color: var(--navy); border: 2px solid transparent; transition: all 0.3s;">
+              <div style="font-weight: bold; margin-bottom: 5px; text-align: center;">{{ category.name }}</div>
+              <div style="color: var(--dark-blue); font-size: 0.9em; direction: ltr; text-align: center;">{{ category.description }}</div>
+            </a>
+            {% empty %}
+            <div style="text-align: center; color: var(--dark-blue); padding: 20px;">
+              هیچ دسته‌بندی فعالی وجود ندارد
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+
+        <!-- Speaking Exam Section -->
+        <div class="exam-section" style="background: white; padding: 30px; border-radius: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+          <h2 style="color: var(--navy); margin-bottom: 20px; text-align: center;">آزمون صحبت کردن</h2>
+          <p style="color: var(--dark-blue); margin-bottom: 30px; text-align: center;">یکی از موضوعات زیر را انتخاب کنید:</p>
+          
+          <div class="topic-list" style="display: flex; flex-direction: column; gap: 15px;">
+            {% for category in listening_categories %}
+            <a href="{% url 'team11_listening_exam' %}?category={{ category.category_id }}" 
+               class="topic-card" 
+               style="background: var(--bg-cream); padding: 20px; border-radius: 10px; text-decoration: none; color: var(--navy); border: 2px solid transparent; transition: all 0.3s;">
+              <div style="font-weight: bold; margin-bottom: 5px; text-align: center;">{{ category.name }}</div>
+              <div style="color: var(--dark-blue); font-size: 0.9em; direction: ltr; text-align: center;">{{ category.description }}</div>
+            </a>
+            {% empty %}
+            <div style="text-align: center; color: var(--dark-blue); padding: 20px;">
+              هیچ دسته‌بندی فعالی وجود ندارد
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <style>
+    .topic-card:hover {
+      background: var(--light-blue) !important;
+      border-color: var(--dark-blue) !important;
+      transform: translateY(-2px);
+    }
+  </style>
+</body>
+</html>
