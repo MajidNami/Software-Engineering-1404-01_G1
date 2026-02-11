@@ -1,0 +1,207 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>جزئیات آزمون</title>
+  <link rel="stylesheet" href="{% static 'team11/styles/common.css' %}">
+  <link rel="stylesheet" href="{% static 'team11/styles/style.css' %}">
+</head>
+
+<body>
+  <div class="container">
+    <header class="header">
+      <div class="header-left">
+        <a href="{% url 'team11_dashboard' %}" class="home-btn">بازگشت به داشبورد</a>
+      </div>
+
+      <div class="header-right">
+        <div class="flag-settings">
+          <div class="iran-flag">
+            <div class="flag-green"></div>
+            <div class="flag-white"></div>
+            <div class="flag-red"></div>
+          </div>
+        </div>
+
+        <div class="login-container">
+          <a href="{% url 'logout' %}" class="login-text">خروج</a>
+          <div class="user-avatar">
+            <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="15" cy="10" r="5" fill="#647eb4" />
+              <path d="M5 25C5 20 9 17 15 17C21 17 25 20 25 25" stroke="#647eb4" stroke-width="2" fill="none" />
+            </svg>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main style="padding: 40px 20px; max-width: 1000px; margin: 0 auto;">
+      <h1 style="color: var(--navy); margin-bottom: 30px; text-align: center;">جزئیات آزمون</h1>
+
+      {% if processing %}
+      <div style="background: #e8f4fd; padding: 30px; border-radius: 15px; text-align: center; margin-bottom: 30px;">
+        <h2 style="color: var(--navy); margin-bottom: 10px;">در حال پردازش</h2>
+        <p style="color: var(--dark-blue);">نتیجه این آزمون هنوز آماده نشده است.</p>
+      </div>
+      {% else %}
+      <!-- Overall Score Card -->
+      <div style="background: linear-gradient(135deg, var(--dark-blue), var(--navy)); color: white; padding: 40px; border-radius: 15px; text-align: center; margin-bottom: 30px;">
+        <div style="font-size: 1.2rem; margin-bottom: 10px;">نمره کل</div>
+        <div style="font-size: 4rem; font-weight: bold;">{{ submission.overall_score }}</div>
+        <div style="font-size: 1rem; opacity: 0.9; margin-top: 10px;">
+          {% if submission.submission_type == 'writing' %}آزمون نوشتن{% else %}آزمون صحبت کردن{% endif %}
+        </div>
+        <div style="font-size: 0.9rem; opacity: 0.8; margin-top: 5px;">
+          {{ submission.created_at|date:"Y/m/d - H:i" }}
+        </div>
+      </div>
+      {% endif %}
+
+      <!-- Submission Details -->
+      <div style="background: white; padding: 30px; border-radius: 15px; margin-bottom: 30px;">
+        <h2 style="color: var(--navy); margin-bottom: 20px; border-bottom: 2px solid var(--bg-cream); padding-bottom: 10px;">
+          اطلاعات آزمون
+        </h2>
+        
+        <div style="display: grid; gap: 15px;">
+          <div style="display: grid; grid-template-columns: 150px 1fr; gap: 10px;">
+            <strong style="color: var(--dark-blue);">موضوع:</strong>
+            <span style="color: var(--navy); direction: ltr; text-align: left;">
+              {% if details.question %}
+                {{ details.question.question_text }}
+              {% else %}
+                {{ details.topic|default:"نامشخص" }}
+              {% endif %}
+            </span>
+          </div>
+          
+          {% if submission.submission_type == 'writing' %}
+            <div style="display: grid; grid-template-columns: 150px 1fr; gap: 10px;">
+              <strong style="color: var(--dark-blue);">تعداد کلمات:</strong>
+              <span style="color: var(--navy);">{{ details.word_count }}</span>
+            </div>
+            
+            <div style="margin-top: 20px;">
+              <strong style="color: var(--dark-blue); display: block; margin-bottom: 10px;">متن ارسالی:</strong>
+              <div style="background: var(--bg-cream); padding: 20px; border-radius: 10px; color: var(--navy); line-height: 1.8; white-space: pre-wrap; direction: ltr; text-align: left;">{{ details.text_body }}</div>
+            </div>
+          {% else %}
+            <div style="display: grid; grid-template-columns: 150px 1fr; gap: 10px;">
+              <strong style="color: var(--dark-blue);">مدت زمان:</strong>
+              <span style="color: var(--navy);">{{ details.duration_seconds }} ثانیه</span>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Assessment Results -->
+      {% if result %}
+      <div style="background: white; padding: 30px; border-radius: 15px; margin-bottom: 30px;">
+        <h2 style="color: var(--navy); margin-bottom: 20px; border-bottom: 2px solid var(--bg-cream); padding-bottom: 10px;">
+          نتایج ارزیابی
+        </h2>
+
+        <!-- Sub-scores Grid -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px;">
+          {% if result.grammar_score %}
+          <div style="background: var(--bg-cream); padding: 20px; border-radius: 10px; text-align: center;">
+            <div style="color: var(--dark-blue); margin-bottom: 5px;">گرامر</div>
+            <div style="font-size: 2rem; font-weight: bold; color: var(--navy);">{{ result.grammar_score }}</div>
+          </div>
+          {% endif %}
+          
+          {% if result.vocabulary_score %}
+          <div style="background: var(--bg-cream); padding: 20px; border-radius: 10px; text-align: center;">
+            <div style="color: var(--dark-blue); margin-bottom: 5px;">واژگان</div>
+            <div style="font-size: 2rem; font-weight: bold; color: var(--navy);">{{ result.vocabulary_score }}</div>
+          </div>
+          {% endif %}
+          
+          {% if result.coherence_score %}
+          <div style="background: var(--bg-cream); padding: 20px; border-radius: 10px; text-align: center;">
+            <div style="color: var(--dark-blue); margin-bottom: 5px;">انسجام</div>
+            <div style="font-size: 2rem; font-weight: bold; color: var(--navy);">{{ result.coherence_score }}</div>
+          </div>
+          {% endif %}
+          
+          {% if result.fluency_score %}
+          <div style="background: var(--bg-cream); padding: 20px; border-radius: 10px; text-align: center;">
+            <div style="color: var(--dark-blue); margin-bottom: 5px;">روانی</div>
+            <div style="font-size: 2rem; font-weight: bold; color: var(--navy);">{{ result.fluency_score }}</div>
+          </div>
+          {% endif %}
+          
+          {% if result.pronunciation_score %}
+          <div style="background: var(--bg-cream); padding: 20px; border-radius: 10px; text-align: center;">
+            <div style="color: var(--dark-blue); margin-bottom: 5px;">تلفظ</div>
+            <div style="font-size: 2rem; font-weight: bold; color: var(--navy);">{{ result.pronunciation_score }}</div>
+          </div>
+          {% endif %}
+        </div>
+
+        <!-- Feedback Summary -->
+        <div style="background: #e8f4fd; padding: 20px; border-radius: 10px; border-right: 4px solid var(--dark-blue); margin-bottom: 20px;">
+          <h3 style="color: var(--navy); margin-bottom: 10px;">بازخورد کلی:</h3>
+          <p style="color: var(--dark-blue); line-height: 1.8; direction: auto; text-align: start;">{{ result.feedback_summary }}</p>
+        </div>
+
+        <!-- Suggestions -->
+        {% if result.suggestions %}
+        <div>
+          <h3 style="color: var(--navy); margin-bottom: 15px;">پیشنهادات برای بهبود:</h3>
+          <ul style="list-style: none; padding: 0;">
+            {% for suggestion in result.suggestions %}
+            <li style="background: var(--bg-cream); padding: 15px; border-radius: 10px; margin-bottom: 10px; color: var(--navy); padding-right: 40px; position: relative; direction: auto; text-align: start;">
+              <span style="position: absolute; right: 15px; color: var(--dark-blue);">✓</span>
+              {{ suggestion }}
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+        {% endif %}
+      </div>
+      {% endif %}
+
+      <!-- Action Buttons -->
+      <div style="display: flex; justify-content: center; gap: 20px; margin-top: 40px;">
+        <a href="{% url 'team11_start_exam' %}" class="btn btn-primary" style="text-decoration: none;">آزمون جدید</a>
+        <a href="{% url 'team11_dashboard' %}" class="btn btn-secondary" style="text-decoration: none;">بازگشت به داشبورد</a>
+      </div>
+    </main>
+  </div>
+
+  <style>
+    .btn {
+      padding: 15px 40px;
+      border-radius: 25px;
+      border: none;
+      font-weight: bold;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: inline-block;
+    }
+
+    .btn-primary {
+      background: var(--dark-blue);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--navy);
+      transform: translateY(-2px);
+    }
+
+    .btn-secondary {
+      background: var(--coral);
+      color: white;
+    }
+
+    .btn-secondary:hover {
+      background: #e88f87;
+    }
+  </style>
+</body>
+</html>

@@ -1,0 +1,196 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>آزمون نوشتن</title>
+  <link rel="stylesheet" href="{% static 'team11/styles/common.css' %}">
+  <link rel="stylesheet" href="{% static 'team11/styles/style.css' %}">
+</head>
+
+<body>
+  <div class="container">
+    <header class="header">
+      <div class="header-left">
+        <a href="{% url 'team11_start_exam' %}" class="home-btn">بازگشت</a>
+      </div>
+
+      <div class="header-right">
+        <div class="flag-settings">
+          <div class="iran-flag">
+            <div class="flag-green"></div>
+            <div class="flag-white"></div>
+            <div class="flag-red"></div>
+          </div>
+        </div>
+
+        <div class="login-container">
+          <a href="{% url 'logout' %}" class="login-text">خروج</a>
+          <div class="user-avatar">
+            <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="15" cy="10" r="5" fill="#647eb4" />
+              <path d="M5 25C5 20 9 17 15 17C21 17 25 20 25 25" stroke="#647eb4" stroke-width="2" fill="none" />
+            </svg>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main style="padding: 40px 20px; max-width: 900px; margin: 0 auto;">
+      <h1 style="text-align: center; color: var(--navy); margin-bottom: 30px;">آزمون نوشتن</h1>
+
+      {% if not question %}
+      <div style="background: #f8d7da; color: #721c24; padding: 30px; border-radius: 15px; text-align: center;">
+        <h2>خطا</h2>
+        <p>هیچ سوالی برای این دسته‌بندی وجود ندارد. لطفاً به صفحه انتخاب آزمون بازگردید.</p>
+        <a href="{% url 'team11_start_exam' %}" class="btn btn-primary" style="margin-top: 20px; display: inline-block; text-decoration: none;">بازگشت</a>
+      </div>
+      {% else %}
+      <div class="exam-container" style="background: white; padding: 40px; border-radius: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+        
+        <div class="topic-display" style="background: var(--bg-cream); padding: 20px; border-radius: 10px; margin-bottom: 30px;">
+          <h3 style="color: var(--navy); margin-bottom: 10px;">موضوع:</h3>
+          <p style="color: var(--dark-blue); font-size: 1.1rem; direction: ltr; text-align: left;">{{ question.question_text }}</p>
+        </div>
+
+        <form id="writingForm">
+          <div style="margin-bottom: 20px;">
+            <label style="display: block; color: var(--navy); font-weight: bold; margin-bottom: 10px;">
+              متن خود را بنویسید (حداقل 150 کلمه):
+            </label>
+            <textarea 
+              id="textBody" 
+              name="text_body" 
+              rows="15" 
+              style="width: 100%; padding: 15px; border: 2px solid var(--light-blue); border-radius: 10px; font-size: 1rem; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; resize: vertical; direction: ltr; text-align: left;"
+              placeholder="Write your text here..."
+              required
+            ></textarea>
+            <div style="text-align: left; color: var(--dark-blue); margin-top: 5px;">
+              تعداد کلمات: <span id="wordCount">0</span>
+            </div>
+          </div>
+
+          <div style="display: flex; justify-content: center; gap: 20px; margin-top: 30px;">
+            <button type="submit" class="btn btn-primary" id="submitBtn">ارسال و دریافت نمره</button>
+            <button type="button" class="btn btn-secondary" onclick="document.getElementById('textBody').value = ''; updateWordCount();">پاک کردن</button>
+          </div>
+        </form>
+
+        <div id="resultMessage" style="display: none; margin-top: 30px; padding: 20px; border-radius: 10px; text-align: center;"></div>
+      </div>
+      {% endif %}
+    </main>
+  </div>
+
+  <style>
+    .btn {
+      padding: 15px 40px;
+      border-radius: 25px;
+      border: none;
+      font-weight: bold;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .btn-primary {
+      background: var(--dark-blue);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--navy);
+      transform: translateY(-2px);
+    }
+
+    .btn-secondary {
+      background: var(--coral);
+      color: white;
+    }
+
+    .btn-secondary:hover {
+      background: #e88f87;
+    }
+  </style>
+
+  <script>
+    const textArea = document.getElementById('textBody');
+    const wordCountSpan = document.getElementById('wordCount');
+    const form = document.getElementById('writingForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const resultMessage = document.getElementById('resultMessage');
+
+    function updateWordCount() {
+      const text = textArea.value.trim();
+      const words = text ? text.split(/\s+/).length : 0;
+      wordCountSpan.textContent = words;
+    }
+
+    textArea.addEventListener('input', updateWordCount);
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const text = textArea.value.trim();
+      if (!text) {
+        alert('لطفاً متنی بنویسید');
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'در حال ارسال...';
+      resultMessage.style.display = 'block';
+      resultMessage.style.background = '#e8f4fd';
+      resultMessage.style.color = '#0c5460';
+      resultMessage.style.direction = 'rtl';
+      resultMessage.style.textAlign = 'right';
+      resultMessage.innerHTML = '<p>در حال ارسال... لطفاً صبر کنید.</p>';
+
+      try {
+        const response = await fetch('{% url "team11_submit_writing" %}', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            question_id: '{{ question.question_id }}',
+            topic: '{{ question.question_text|escapejs }}',
+            text_body: text
+          })
+        });
+
+        const data = await response.json();
+
+        if (data.success && data.status === 'processing') {
+          resultMessage.style.display = 'block';
+          resultMessage.style.background = '#d4edda';
+          resultMessage.style.color = '#155724';
+          resultMessage.style.direction = 'rtl';
+          resultMessage.style.textAlign = 'right';
+          resultMessage.innerHTML = `
+            <h3>ارسال شد ✓</h3>
+            <p>نتیجه پس از بررسی در داشبورد نمایش داده می‌شود.</p>
+            <div style="margin-top: 20px;">
+              <a href="{% url 'team11_dashboard' %}" style="color: #155724; font-weight: bold; text-decoration: underline;">مشاهده داشبورد</a>
+            </div>
+          `;
+          form.style.display = 'none';
+        } else {
+          throw new Error(data.error || 'خطا در ارسال');
+        }
+      } catch (error) {
+        resultMessage.style.display = 'block';
+        resultMessage.style.background = '#f8d7da';
+        resultMessage.style.color = '#721c24';
+        resultMessage.style.direction = 'rtl';
+        resultMessage.style.textAlign = 'right';
+        resultMessage.innerHTML = `<p>خطا: ${error.message}</p>`;
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'ارسال و دریافت نمره';
+      }
+    });
+  </script>
+</body>
+</html>

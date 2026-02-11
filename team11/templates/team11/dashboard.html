@@ -1,0 +1,353 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>داشبورد من</title>
+  <link rel="stylesheet" href="{% static 'team11/styles/common.css' %}">
+  <link rel="stylesheet" href="{% static 'team11/styles/style.css' %}">
+</head>
+
+<body>
+  <div class="container">
+    <header class="header">
+      <div class="header-left">
+        <a href="{% url 'team11_home' %}" class="home-btn">صفحه اصلی</a>
+      </div>
+
+      <div class="header-right">
+        <div class="flag-settings">
+          <div class="iran-flag">
+            <div class="flag-green"></div>
+            <div class="flag-white"></div>
+            <div class="flag-red"></div>
+          </div>
+        </div>
+
+        <div class="login-container">
+          <a href="{% url 'logout' %}" class="login-text">خروج</a>
+          <div class="user-avatar">
+            <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="15" cy="10" r="5" fill="#647eb4" />
+              <path d="M5 25C5 20 9 17 15 17C21 17 25 20 25 25" stroke="#647eb4" stroke-width="2" fill="none" />
+            </svg>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main style="padding: 40px 20px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px;">
+        <h1 style="color: var(--navy);">داشبورد و تاریخچه آزمون‌ها</h1>
+        <a href="{% url 'team11_start_exam' %}" class="btn btn-primary">آزمون جدید</a>
+      </div>
+
+      {% if submissions %}
+        <div class="submissions-grid" style="display: grid; gap: 20px;">
+          {% for submission in submissions %}
+          <div class="submission-card" data-submission-id="{{ submission.submission_id }}" data-status="{{ submission.status }}" style="background: white; padding: 25px; border-radius: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); display: grid; grid-template-columns: 1fr auto auto; gap: 20px; align-items: center;">
+            
+            <div>
+              <div style="display: flex; gap: 15px; align-items: center; margin-bottom: 10px;">
+                <span class="exam-type-badge exam-type-{{ submission.submission_type }}">
+                  {% if submission.submission_type == 'writing' %}نوشتن{% else %}صحبت کردن{% endif %}
+                </span>
+                <span class="status-badge status-{{ submission.status }}" data-status-text>
+                  {% if submission.status == 'completed' %}
+                    تکمیل شده
+                  {% elif submission.status == 'pending' %}
+                    در انتظار
+                  {% elif submission.status == 'in_progress' %}
+                    در حال پردازش
+                  {% elif submission.status == 'failed' %}
+                    ناموفق
+                  {% else %}
+                    {{ submission.status }}
+                  {% endif %}
+                </span>
+              </div>
+              
+              <div style="color: var(--dark-blue); margin-bottom: 5px; direction: ltr; text-align: left;">
+                {% if submission.submission_type == 'writing' %}
+                  {% if submission.writing_details.question %}
+                    Question: {{ submission.writing_details.question.question_text|truncatewords:10 }}
+                  {% else %}
+                    Topic: {{ submission.writing_details.topic|default:"Unknown"|truncatewords:10 }}
+                  {% endif %}
+                {% else %}
+                  {% if submission.listening_details.question %}
+                    Question: {{ submission.listening_details.question.question_text|truncatewords:10 }}
+                  {% else %}
+                    Topic: {{ submission.listening_details.topic|default:"Unknown"|truncatewords:10 }}
+                  {% endif %}
+                {% endif %}
+              </div>
+              
+              <div style="color: #999; font-size: 0.9rem;">
+                {{ submission.created_at|date:"Y/m/d - H:i" }}
+              </div>
+            </div>
+
+            <div style="text-align: center;" data-score-container>
+              <div style="background: var(--bg-cream); padding: 15px 25px; border-radius: 10px;">
+                <div style="font-size: 0.9rem; color: var(--dark-blue); margin-bottom: 5px;">نمره کل</div>
+                <div style="font-size: 2rem; font-weight: bold; color: var(--navy);" data-score-value>
+                      {% if submission.overall_score %}
+                        {{ submission.overall_score }}
+                      {% elif submission.status == 'in_progress' or submission.status == 'pending' %}
+                        —
+                      {% else %}
+                        0
+                      {% endif %}
+                </div>
+              </div>
+            </div>
+
+            <div>
+              {% if submission.status == 'completed' or submission.status == 'failed' %}
+                <a href="{% url 'team11_submission_detail' submission.submission_id %}" class="btn btn-secondary" style="text-decoration: none; padding: 10px 25px; display: inline-block;">
+                  جزئیات
+                </a>
+              {% else %}
+                <span style="color: #999;">بازخورد نرسیده</span>
+              {% endif %}
+            </div>
+
+          </div>
+          {% endfor %}
+        </div>
+
+        <!-- Statistics Summary -->
+        <div class="stats-summary" style="margin-top: 50px; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
+          <div style="background: white; padding: 25px; border-radius: 15px; text-align: center;">
+            <div style="font-size: 2rem; color: var(--navy); font-weight: bold;">{{ submissions|length }}</div>
+            <div style="color: var(--dark-blue); margin-top: 5px;">کل آزمون‌ها</div>
+          </div>
+          
+          <div style="background: white; padding: 25px; border-radius: 15px; text-align: center;">
+            <div style="font-size: 2rem; color: var(--navy); font-weight: bold;">
+              {{ completed_count }}
+            </div>
+            <div style="color: var(--dark-blue); margin-top: 5px;">آزمون‌های تکمیل شده</div>
+          </div>
+          
+          <div style="background: white; padding: 25px; border-radius: 15px; text-align: center;">
+            <div style="font-size: 2rem; color: var(--navy); font-weight: bold;">{{ writing_avg }}</div>
+            <div style="color: var(--dark-blue); margin-top: 5px;">میانگین نوشتن</div>
+          </div>
+
+          <div style="background: white; padding: 25px; border-radius: 15px; text-align: center;">
+            <div style="font-size: 2rem; color: var(--navy); font-weight: bold;">{{ speaking_avg }}</div>
+            <div style="color: var(--dark-blue); margin-top: 5px;">میانگین صحبت کردن</div>
+          </div>
+        </div>
+
+        <!-- Progress Charts -->
+        <div style="margin-top: 50px; display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px;">
+          <div style="background: white; padding: 25px; border-radius: 15px;">
+            <h3 style="color: var(--navy); margin-bottom: 15px; text-align: center;">روند نمرات نوشتن</h3>
+            <canvas id="writingChart" height="200"></canvas>
+          </div>
+          <div style="background: white; padding: 25px; border-radius: 15px;">
+            <h3 style="color: var(--navy); margin-bottom: 15px; text-align: center;">روند نمرات صحبت کردن</h3>
+            <canvas id="speakingChart" height="200"></canvas>
+          </div>
+        </div>
+
+      {% else %}
+        <div style="background: white; padding: 60px; border-radius: 15px; text-align: center;">
+          <h2 style="color: var(--navy); margin-bottom: 20px;">هنوز آزمونی ارسال نکرده‌اید</h2>
+          <p style="color: var(--dark-blue); margin-bottom: 30px; font-size: 1.1rem;">با شروع اولین آزمون، مسیر یادگیری خود را آغاز کنید!</p>
+          <a href="{% url 'team11_start_exam' %}" class="btn btn-primary" style="text-decoration: none; display: inline-block;">شروع آزمون اول</a>
+        </div>
+      {% endif %}
+    </main>
+  </div>
+
+  <style>
+    .btn {
+      padding: 12px 30px;
+      border-radius: 25px;
+      border: none;
+      font-weight: bold;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .btn-primary {
+      background: var(--dark-blue);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--navy);
+      transform: translateY(-2px);
+    }
+
+    .btn-secondary {
+      background: var(--coral);
+      color: white;
+    }
+
+    .btn-secondary:hover {
+      background: #e88f87;
+    }
+
+    .exam-type-badge {
+      color: var(--navy);
+      padding: 5px 15px;
+      border-radius: 15px;
+      font-weight: bold;
+    }
+
+    .exam-type-writing {
+      background: #e3f2fd;
+    }
+
+    .exam-type-listening {
+      background: #ffccbc;
+    }
+
+    .status-badge {
+      padding: 5px 15px;
+      border-radius: 15px;
+      font-size: 0.9rem;
+    }
+
+    .status-completed {
+      background: #d4edda;
+      color: #155724;
+    }
+
+    .status-pending {
+      background: #fff3cd;
+      color: #856404;
+    }
+
+    .status-in_progress {
+      background: #cfe2ff;
+      color: #084298;
+    }
+
+    .status-failed {
+      background: #f8d7da;
+      color: #721c24;
+    }
+  </style>
+
+  {{ writing_series|json_script:"writing-series" }}
+  {{ speaking_series|json_script:"speaking-series" }}
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+  <script>
+    function buildChart(canvasId, series, label, color) {
+      const ctx = document.getElementById(canvasId);
+      if (!ctx) return;
+
+      const labels = series.map(item => item.date);
+      const data = series.map(item => item.score);
+
+      new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels,
+          datasets: [{
+            label,
+            data,
+            borderColor: color,
+            backgroundColor: color + '33',
+            tension: 0.3,
+            fill: true,
+            pointRadius: 3,
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { display: false },
+            tooltip: { rtl: true }
+          },
+          scales: {
+            x: { ticks: { maxRotation: 0 }, grid: { display: false } },
+            y: { beginAtZero: true, suggestedMax: 100 }
+          }
+        }
+      });
+    }
+
+    const writingSeries = JSON.parse(document.getElementById('writing-series').textContent || '[]');
+    const speakingSeries = JSON.parse(document.getElementById('speaking-series').textContent || '[]');
+
+    buildChart('writingChart', writingSeries, 'نوشتن', '#3b5fbf');
+    buildChart('speakingChart', speakingSeries, 'صحبت کردن', '#e07a5f');
+
+    function updateCard(card, data) {
+      const statusBadge = card.querySelector('[data-status-text]');
+      const scoreContainer = card.querySelector('[data-score-container]');
+
+      if (data.status === 'completed') {
+        card.dataset.status = 'completed';
+        statusBadge.className = 'status-badge status-completed';
+        statusBadge.textContent = 'تکمیل شده';
+
+        if (data.score !== undefined && data.score !== null) {
+          scoreContainer.innerHTML = `
+            <div style="background: var(--bg-cream); padding: 15px 25px; border-radius: 10px;">
+              <div style="font-size: 0.9rem; color: var(--dark-blue); margin-bottom: 5px;">نمره کل</div>
+              <div style="font-size: 2rem; font-weight: bold; color: var(--navy);">${data.score}</div>
+            </div>
+          `;
+        }
+      } else if (data.status === 'failed') {
+        card.dataset.status = 'failed';
+        statusBadge.className = 'status-badge status-failed';
+        statusBadge.textContent = 'ناموفق';
+        scoreContainer.innerHTML = `
+          <div style="background: var(--bg-cream); padding: 15px 25px; border-radius: 10px;">
+            <div style="font-size: 0.9rem; color: var(--dark-blue); margin-bottom: 5px;">نمره کل</div>
+            <div style="font-size: 2rem; font-weight: bold; color: var(--navy);">0</div>
+          </div>
+        `;
+      } else if (data.status === 'in_progress') {
+        card.dataset.status = 'in_progress';
+        statusBadge.className = 'status-badge status-in_progress';
+        statusBadge.textContent = 'در حال پردازش';
+        scoreContainer.innerHTML = `
+          <div style="background: var(--bg-cream); padding: 15px 25px; border-radius: 10px;">
+            <div style="font-size: 0.9rem; color: var(--dark-blue); margin-bottom: 5px;">نمره کل</div>
+            <div style="font-size: 2rem; font-weight: bold; color: var(--navy);">—</div>
+          </div>
+        `;
+      }
+    }
+
+    async function pollSubmissions() {
+      const cards = Array.from(document.querySelectorAll('.submission-card'));
+      const activeCards = cards.filter(card => {
+        const status = card.dataset.status;
+        return status === 'in_progress' || status === 'pending';
+      });
+
+      if (activeCards.length === 0) return;
+
+      for (const card of activeCards) {
+        const submissionId = card.dataset.submissionId;
+        try {
+          const response = await fetch(`/team11/api/submission-status/${submissionId}/`);
+          if (!response.ok) continue;
+          const data = await response.json();
+          updateCard(card, data);
+        } catch (e) {
+          // ignore
+        }
+      }
+    }
+
+    setInterval(pollSubmissions, 4000);
+    pollSubmissions();
+  </script>
+</body>
+</html>

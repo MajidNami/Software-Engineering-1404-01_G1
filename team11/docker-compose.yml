@@ -9,21 +9,6 @@ services:
       - CORE_BASE_URL=http://core:8000
     networks:
       - app404
-  #   depends_on:
-  #     - frontend
-  #     - backend
-
-  # frontend:
-  #   image: traefik/whoami
-  #   command: ["-port=5173"]
-  #   networks:
-  #     - app404
-
-  # backend:
-  #   image: traefik/whoami
-  #   command: ["-port=3000"]
-  #   networks:
-  #     - app404
 
 networks:
   app404:

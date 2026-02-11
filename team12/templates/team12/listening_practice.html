@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Listening Practice</title>
+  </head>
+  <body>
+    <main class="listening-practice" data-session-id="{{ session_id }}">
+      <header>
+        <h1>Listening Practice</h1>
+      </header>
+
+      {% if not has_active_session %}
+      <div class="start-block">
+        <button type="button" id="start-practice">Start practice</button>
+      </div>
+      {% endif %}
+
+      <section class="audio-block" aria-label="Audio player">
+        <div class="audio-placeholder">Audio player placeholder</div>
+        <button type="button" id="replay-audio">Replay</button>
+      </section>
+
+      <section class="question-block">
+        <p class="question-text">What is the main idea of the audio?</p>
+        <ul class="options">
+          <li><label><input type="radio" name="answer" value="A" /> Option A</label></li>
+          <li><label><input type="radio" name="answer" value="B" /> Option B</label></li>
+          <li><label><input type="radio" name="answer" value="C" /> Option C</label></li>
+          <li><label><input type="radio" name="answer" value="D" /> Option D</label></li>
+        </ul>
+      </section>
+
+      <div class="actions">
+        <button type="button" id="submit-answer">Submit</button>
+      </div>
+    </main>
+
+    <script>
+      const root = document.querySelector(".listening-practice");
+      let sessionId = root.dataset.sessionId || "";
+
+      const getCookie = (name) => {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) {
+          return parts.pop().split(";").shift();
+        }
+        return "";
+      };
+
+      const postJson = async (url, payload) => {
+        const response = await fetch(url, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": getCookie("csrftoken"),
+          },
+          body: JSON.stringify(payload),
+        });
+        return response.json();
+      };
+
+      const startButton = document.getElementById("start-practice");
+      if (startButton) {
+        startButton.addEventListener("click", async () => {
+          const data = await postJson("/team12/listening/practice/start/", {});
+          sessionId = data.session_id;
+          root.dataset.sessionId = sessionId;
+          startButton.disabled = true;
+          startButton.textContent = "Practice started";
+        });
+      }
+
+      const submitButton = document.getElementById("submit-answer");
+      if (submitButton) {
+        submitButton.addEventListener("click", async () => {
+          const selected = document.querySelector('input[name="answer"]:checked');
+          if (!selected || !sessionId) {
+            return;
+          }
+          await postJson("/team12/listening/practice/answer/", {
+            session_id: sessionId,
+            question_number: 1,
+            selected_choice: selected.value,
+            time_spent_seconds: null,
+            is_correct: false,
+          });
+        });
+      }
+
+      const replayButton = document.getElementById("replay-audio");
+      if (replayButton) {
+        replayButton.addEventListener("click", async () => {
+          if (!sessionId) {
+            return;
+          }
+          await postJson("/team12/listening/practice/event/", {
+            session_id: sessionId,
+            event_type: "REPLAY",
+            meta: null,
+          });
+        });
+      }
+    </script>
+  </body>
+</html>
