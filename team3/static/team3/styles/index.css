@@ -419,3 +419,346 @@ body {
         grid-column: 1 / -1;
     }
 }
+
+/* ===== IELTS SIMULATOR STYLES ===== */
+.ielts-main {
+    background-color: white;
+    border-radius: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 60px;
+    margin: 40px 0;
+}
+
+/* Hero Section */
+.ielts-hero {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: white;
+    border-radius: 30px;
+    padding: 10px 10px;
+    margin-bottom: 20px;
+}
+
+.hero-content {
+    flex: 1;
+    text-align: right;
+    padding: 100px 50px;
+}
+
+.hero-content h1 {
+    font-size: 36px;
+    font-weight: bold;
+    color: var(--navy);
+    margin-bottom: 15px;
+}
+
+.hero-content p {
+    font-size: 18px;
+    color: var(--dark-blue);
+    margin-bottom: 30px;
+}
+
+.hero-btn {
+    background-color: var(--navy);
+    color: var(--white);
+    border: none;
+    border-radius: 30px;
+    padding: 14px 40px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.hero-btn:hover {
+    background-color: var(--dark-blue);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(33, 29, 99, 0.2);
+}
+
+.hero-image {
+    flex: 0.8;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.hero-image svg {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Tests Section */
+.tests-section {
+    padding: 20px 0;
+}
+
+.section-title {
+    font-size: 28px;
+    font-weight: bold;
+    color: var(--navy);
+    margin-bottom: 30px;
+    text-align: center;
+    position: relative;
+    padding-bottom: 15px;
+}
+
+.section-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 4px;
+    background: linear-gradient(90deg, var(--light-blue), var(--coral));
+    border-radius: 2px;
+}
+
+.tests-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+}
+
+.ielts-hero-img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 20px;
+}
+
+.test-card {
+    background-color: var(--white);
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    text-align: right;
+    border: 1px solid rgba(176, 202, 255, 0.3);
+}
+
+.test-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(33, 29, 99, 0.1);
+    border-color: var(--light-blue);
+}
+
+.test-title {
+    font-size: 22px;
+    font-weight: bold;
+    color: var(--navy);
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid var(--light-blue);
+}
+
+.test-features {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 25px;
+    flex-grow: 1;
+}
+
+.test-features li {
+    padding: 8px 0;
+    padding-right: 25px;
+    position: relative;
+    color: var(--dark-blue);
+    font-size: 16px;
+}
+
+.test-features li::before {
+    content: '✓';
+    position: absolute;
+    right: 0;
+    color: var(--coral);
+    font-weight: bold;
+}
+
+.test-btn {
+    background-color: var(--light-blue);
+    color: var(--navy);
+    border: none;
+    border-radius: 25px;
+    padding: 12px 25px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: auto;
+    width: 70%;
+}
+
+.test-btn:hover {
+    background-color: var(--navy);
+    color: var(--white);
+}
+
+/* Footer Section */
+.footer {
+    margin-top: 80px;
+    background: linear-gradient(135deg, var(--navy) 0%, #2a2570 100%);
+    border-radius: 30px 30px 0 0;
+    padding: 50px 40px 30px;
+    color: var(--white);
+}
+
+.footer-content {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.footer-social {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.footer-social p {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.social-icons {
+    display: flex;
+    gap: 20px;
+}
+
+.social-icon {
+    width: 45px;
+    height: 45px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.social-icon:hover {
+    background-color: var(--coral);
+    transform: translateY(-3px);
+}
+
+.footer-copyright {
+    text-align: center;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    font-size: 14px;
+    opacity: 0.9;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+    .tests-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .ielts-hero {
+        flex-direction: column;
+        text-align: center;
+        padding: 40px 30px;
+    }
+
+    .hero-content {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .tests-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .footer-social {
+        flex-direction: column;
+        gap: 20px;
+        text-align: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .ielts-hero {
+        padding: 30px 20px;
+    }
+
+    .hero-content h1 {
+        font-size: 28px;
+    }
+
+    .test-card {
+        padding: 25px;
+    }
+}
+
+/* Odd cards - Light Blue with 66% opacity */
+.test-card:nth-child(odd) {
+    background-color: rgba(176, 202, 255, 0.66);  /* B0CAFF with 66% opacity */
+    border: 1px solid var(--light-blue);
+}
+
+/* Even cards - Navy Blue with 79% opacity */
+.test-card:nth-child(even) {
+    background-color: rgba(58, 91, 160, 0.79);  /* 3A5BA0 with 79% opacity */
+    border: 1px solid var(--dark-blue);
+}
+
+/* Adjust text color for even cards to ensure readability */
+.test-card:nth-child(even) .test-title,
+.test-card:nth-child(even) .test-features li,
+.test-card:nth-child(even) .test-btn {
+    color: var(--white);
+}
+
+.test-card:nth-child(even) .test-title {
+    border-bottom-color: rgba(255, 255, 255, 0.3);
+}
+
+.test-card:nth-child(even) .test-features li::before {
+    color: var(--coral);
+}
+
+.test-card:nth-child(even) .test-btn {
+    background-color: var(--white);
+    color: var(--navy);
+}
+
+.test-card:nth-child(even) .test-btn:hover {
+    background-color: var(--navy);
+    color: var(--white);
+}
+.test-card:nth-child(odd) .test-btn {
+    background-color: #DDE8FE;  /* Light blue-white */
+    color: var(--navy);
+    border: 1px solid var(--light-blue);
+}
+
+.test-card:nth-child(odd) .test-btn:hover {
+    background-color: var(--navy);
+    color: var(--white);
+    border-color: var(--navy);
+}
+
+/* Even cards - buttons */
+.test-card:nth-child(even) .test-btn {
+    background-color: #B0CAFF;  /* --light-blue */
+    color: var(--navy);
+    border: 1px solid var(--dark-blue);
+}
+
+.test-card:nth-child(even) .test-btn:hover {
+    background-color: var(--navy);
+    color: var(--white);
+    border-color: var(--navy);
+}

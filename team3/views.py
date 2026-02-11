@@ -11,5 +11,8 @@ def ping(request):
 def base(request):
     return render(request, f"{TEAM_NAME}/index.html")
 
+def exam(request):
+    return render(request, f"{TEAM_NAME}/IELTS/index.html")
+
 def test(request):
     return render(request,f"{TEAM_NAME}/test.html")
