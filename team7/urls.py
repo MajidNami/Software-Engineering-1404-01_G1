@@ -16,7 +16,7 @@ team_patterns = [
     path('api/analytics/', views.get_analytics, name='get_analytics'),
     path('api/ping/', views.ping, name='ping'),
     path('api/health/', views.admin_health, name='admin_health'),
-    path('api/exam-details/', views.get_exam_details, name='get_exam_details'),
+    path('api/exams/', views.list_exams, name='list_exams'),
     path('favicon.ico', views.favicon, name='favicon'),
 ]
 

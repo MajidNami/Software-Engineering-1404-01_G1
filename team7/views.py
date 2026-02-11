@@ -10,7 +10,7 @@ from django.db import connection
 from django.db import models
 from django.utils import timezone
 from datetime import timedelta
-from .models import Question, Evaluation, DetailedScore, APILog
+from .models import Question, Evaluation, DetailedScore, APILog, Exam, TaskType
 from .services import EvaluationService, AnalyticsService
 
 logger = logging.getLogger(__name__)
@@ -376,41 +376,124 @@ def favicon(request):
     return HttpResponse(status=204)
 
 @api_login_required
-def get_exam_details(request):
+@require_http_methods(["GET"])
+def list_exams(request):
+    """
+    Get all exams with their questions.
+    
+    Query params:
+        exam_type: Optional filter for 'writing' or 'speaking'
+        exam_id: Optional filter for a specific exam UUID
+    
+    Returns JSON with list of exams and their questions:
+    {
+        "exams": [
+            {
+                "id": "exam_uuid",
+                "title": "Exam Title",
+                "type": "writing" or "speaking",
+                "totalQuestions": 2,
+                "totalTime": 1200,
+                "difficulty": 1,
+                "questions": [
+                    {
+                        "id": "question_uuid",
+                        "title": "Question Title",
+                        "instruction": "...",
+                        "content": "...",
+                        "requirements": [...],
+                        "tips": [...],
+                        "preparationTime": 45,
+                        "speakingTime": 120 (for speaking exams),
+                        "task_type": "writing" or "speaking",
+                        "mode": "independent" or "integrated",
+                        "resource_url": "..."
+                    },
+                    ...
+                ]
+            },
+            ...
+        ]
+    }
+    """
     try:
-        exam_id = request.GET.get('exam_id', 'general')
-        exam_type = 'speaking' if 'speak' in exam_id else 'writing'
+        exam_type = request.GET.get('exam_type')
+        exam_id = request.GET.get('exam_id')
         
-        questions_qs = Question.objects.filter(task_type=exam_type)
+        # Build query
+        query = Exam.objects.all()
         
-        questions_data = []
-        if questions_qs.exists():
-            for q in questions_qs:
+        if exam_id:
+            # If specific exam requested, return just that one
+            try:
+                import uuid
+                # Convert string to UUID if needed
+                exam_uuid = uuid.UUID(exam_id)
+                query = query.filter(exam_id=exam_uuid)
+            except (ValueError, TypeError) as e:
+                logger.error(f"Invalid exam_id format: {exam_id} - {str(e)}")
+                return JsonResponse({
+                    "error": f"Invalid exam ID format: {str(e)}"
+                }, status=400)
+        elif exam_type:
+            # If filtering by type
+            if exam_type not in [TaskType.WRITING, TaskType.SPEAKING]:
+                return JsonResponse({
+                    "error": f"Invalid exam_type. Must be '{TaskType.WRITING}' or '{TaskType.SPEAKING}'"
+                }, status=400)
+            query = query.filter(exam_type=exam_type)
+        
+        # Build response with exams and their questions
+        exams_data = []
+        for exam in query.order_by('title'):
+            questions_data = []
+            
+            # Determine badge and instruction based on exam type
+            if exam.exam_type == TaskType.WRITING:
+                badge = 'TOEFL Writing Exam'
+                instruction = 'Instructions: Read the topic carefully and write your response in a logical and clear manner.'
+            else:  # SPEAKING
+                badge = 'TOEFL Speaking Exam'
+                instruction = 'Instructions: Read the topic carefully and speak about it with clarity and fluency.'
+            
+            for question in exam.questions.all():
                 questions_data.append({
-                    "id": str(q.question_id),
-                    "title": f"Level {q.difficulty}",
-                    "text": q.prompt_text,
-                    "duration": 120,
-                    "preparation_time": 45
+                    "id": str(question.question_id),
+                    "title": question.title or f"Question {question.question_id}",
+                    "badge": badge,
+                    "instruction": instruction,
+                    "content": question.prompt_text,
+                    "requirements": question.requirements if question.requirements else [],
+                    "tips": question.tips if question.tips else [],
+                    "preparationTime": 45,
+                    "speakingTime": 120 if exam.exam_type == 'speaking' else None,
+                    "task_type": question.task_type,
+                    "mode": question.mode,
+                    "resource_url": question.resource_url
                 })
-        else:
-            questions_data = [{
-                "id": "default-1",
-                "title": "Default Question",
-                "text": "Please describe your favorite teacher and why you like them.",
-                "duration": 120,
-                "preparation_time": 45
-            }]
-
+            
+            exams_data.append({
+                "id": str(exam.exam_id),
+                "title": exam.title,
+                "type": exam.exam_type,
+                "totalQuestions": exam.total_questions,
+                "totalTime": exam.total_time,
+                "difficulty": exam.difficulty,
+                "questions": questions_data
+            })
+        
+        # If specific exam not found
+        if exam_id and not exams_data:
+            return JsonResponse({
+                "error": f"Exam {exam_id} not found"
+            }, status=404)
+        
         return JsonResponse({
-            "id": exam_id,
-            "title": f"{exam_type.capitalize()} Exam",
-            "questions": questions_data
+            "exams": exams_data
         })
     except Exception as e:
-        logger.error(f"Error in exam details: {str(e)}")
+        logger.exception(f"Error in list_exams: {str(e)}")
         return JsonResponse({
-            "id": "error",
-            "title": "Error Loading Exam",
-            "questions": []
-        })
+            "error": "Internal server error",
+            "details": str(e)
+        }, status=500)
