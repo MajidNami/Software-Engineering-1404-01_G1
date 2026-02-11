@@ -4,16 +4,21 @@ from django.http import JsonResponse
 from groq import Groq
 from ..models.ReadingMaterial import ReadingMaterial
 from dotenv import load_dotenv
+from django.contrib.auth.decorators import login_required
+
 
 load_dotenv()
 client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 
+
+@login_required 
 def text_analysis_page(request):
     return render(request, 'team8/text_analysis.html')
-
+@login_required
 def api_get_history(request):
-    user_id = 1 
-    readings = ReadingMaterial.objects.filter(user_id=user_id).order_by('-created_at')
+    print(f"DEBUG: Current User ID is {request.user.id}") # Look at docker logs to see this
+
+    readings = ReadingMaterial.objects.filter(user=request.user).order_by('-created_at')
     
     data = []
     for r in readings:
@@ -24,16 +29,16 @@ def api_get_history(request):
             "date": r.created_at.strftime("%Y/%m/%d")
         })
     return JsonResponse({"history": data})
-
+@login_required
 def api_perform_analysis(request):
     mode = request.GET.get('mode', 'quick')
     user_id = 1 
     
     if mode == 'quick':
-        target_readings = ReadingMaterial.objects.all().order_by('-created_at')[:5]
+        target_readings = ReadingMaterial.objects.filter(user=request.user).order_by('-created_at')[:5]
     else:
         selected_ids = request.GET.getlist('ids[]') # لیست آیدی‌ها از فرانت
-        target_readings = ReadingMaterial.objects.filter(id__in=selected_ids)
+        target_readings = ReadingMaterial.objects.filter(user=request.user, id__in=selected_ids)
 
     combined_text = " ".join([r.content for r in target_readings])
 
