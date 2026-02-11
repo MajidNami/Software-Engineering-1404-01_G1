@@ -1,4 +1,14 @@
-﻿:root {
+﻿.instagram {
+  display: inline-block;
+  vertical-align: middle;
+  margin-inline-end: 16px; /* increased spacing after the image */
+}
+
+.p {
+  display: inline-block;
+  margin: 0; /* reset default margins */
+  vertical-align: middle;
+}:root {
     --coral: #fba199;
     --light-blue: #b0caff;
     --bg-cream: #f9f7f7;

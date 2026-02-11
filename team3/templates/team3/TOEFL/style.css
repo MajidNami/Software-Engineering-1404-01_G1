@@ -1,4 +1,4 @@
-﻿.exam-page {
+.exam-page {
   background-color: #f9f7f7;
   width: 100%;
   min-width: 1421px;
@@ -564,15 +564,6 @@
   height: 316px;
 }
 
-.exam-page .element-f {
-  position: absolute;
-  top: 0;
-  left: 556px;
-  width: 490px;
-  height: 316px;
-  aspect-ratio: 1.55;
-}
-
 .exam-page .div-2 {
   top: 34px;
   left: 15px;
@@ -604,6 +595,16 @@
 .exam-page .text-wrapper-16 {
   font-family: "Inria Serif-Regular", Helvetica;
   font-size: 24px;
+}
+
+.exam-page .myic {
+  position: absolute;
+  top: 0;
+  left: 564px;
+  width: 494px;
+  height: 316px;
+  aspect-ratio: 1.5;
+  object-fit: cover;
 }
 
 .exam-page .text-wrapper-17 {

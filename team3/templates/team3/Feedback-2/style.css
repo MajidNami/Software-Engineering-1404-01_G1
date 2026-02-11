@@ -1,0 +1,653 @@
+.feadback {
+  background-color: #f9f7f7;
+  overflow: hidden;
+  width: 100%;
+  min-width: 1421px;
+  min-height: 1011px;
+  position: relative;
+}
+
+.feadback .rectangle {
+  position: absolute;
+  top: 106px;
+  left: 0;
+  width: 1147px;
+  height: 890px;
+  background-color: #ffffff;
+  border-radius: 40px;
+}
+
+.feadback .img {
+  position: absolute;
+  top: -561px;
+  left: -2107px;
+  width: 285px;
+  height: 63px;
+}
+
+.feadback .div {
+  position: absolute;
+  top: 357px;
+  left: 57px;
+  width: 1055px;
+  height: 297px;
+  background-color: #b0cafff5;
+  border-radius: 40px;
+}
+
+.feadback .rectangle-2 {
+  position: absolute;
+  top: 448px;
+  left: 73px;
+  width: 1033px;
+  height: 189px;
+  background-color: #dde8fe;
+  border-radius: 40px;
+  box-shadow: 0px 4px 4px #00000040;
+}
+
+.feadback .text-wrapper {
+  position: absolute;
+  top: 351px;
+  left: 85px;
+  width: 298px;
+  height: 63px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Inria Serif-Bold", Helvetica;
+  font-weight: 700;
+  color: #000000;
+  font-size: 20px;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.feadback .p {
+  position: absolute;
+  top: 390px;
+  left: 96px;
+  width: 298px;
+  height: 63px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Inria Serif-Bold", Helvetica;
+  font-weight: 700;
+  color: #000000;
+  font-size: 20px;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.feadback .settings {
+  position: absolute;
+  top: 24px;
+  left: 269px;
+  width: 50px;
+  height: 50px;
+  aspect-ratio: 1;
+  object-fit: cover;
+}
+
+.feadback .iran {
+  position: absolute;
+  top: 24px;
+  left: 209px;
+  width: 50px;
+  height: 50px;
+  aspect-ratio: 1;
+  object-fit: cover;
+}
+
+.feadback .rectangle-3 {
+  position: absolute;
+  top: 94px;
+  left: 1195px;
+  width: 226px;
+  height: 84px;
+  background-color: #ffffff;
+  border-radius: 40px;
+}
+
+.feadback .rectangle-4 {
+  position: absolute;
+  top: 13px;
+  left: 1013px;
+  width: 161px;
+  height: 69px;
+  background-color: #dde8fe;
+  border-radius: 40px;
+  box-shadow: 0px 4px 4px #00000040;
+}
+
+.feadback .rectangle-5 {
+  position: absolute;
+  top: 17px;
+  left: 674px;
+  width: 161px;
+  height: 69px;
+  background-color: #ffffff;
+  border-radius: 40px;
+}
+
+.feadback .rectangle-6 {
+  position: absolute;
+  top: 13px;
+  left: 844px;
+  width: 161px;
+  height: 69px;
+  background-color: #ffffff;
+  border-radius: 40px;
+}
+
+.feadback .rectangle-7 {
+  position: absolute;
+  top: 13px;
+  left: 41px;
+  width: 161px;
+  height: 69px;
+  background-color: #ffffff;
+  border-radius: 40px;
+}
+
+.feadback .profile {
+  position: absolute;
+  top: 19px;
+  left: 43px;
+  width: 60px;
+  height: 60px;
+  aspect-ratio: 1;
+  object-fit: cover;
+}
+
+.feadback .rectangle-8 {
+  position: absolute;
+  top: 186px;
+  left: 1195px;
+  width: 226px;
+  height: 84px;
+  background-color: #dde8fe;
+  border-radius: 40px;
+}
+
+.feadback .rectangle-9 {
+  position: absolute;
+  top: 278px;
+  left: 1195px;
+  width: 226px;
+  height: 84px;
+  background-color: #ffffff;
+  border-radius: 40px;
+}
+
+.feadback .rectangle-10 {
+  position: absolute;
+  top: 370px;
+  left: 1195px;
+  width: 226px;
+  height: 84px;
+  background-color: #ffffff;
+  border-radius: 40px;
+}
+
+.feadback .rectangle-11 {
+  position: absolute;
+  top: 462px;
+  left: 1195px;
+  width: 226px;
+  height: 84px;
+  background-color: #ffffff;
+  border-radius: 40px;
+}
+
+.feadback .rectangle-12 {
+  position: absolute;
+  top: 554px;
+  left: 1195px;
+  width: 226px;
+  height: 84px;
+  background-color: #ffffff;
+  border-radius: 40px;
+}
+
+.feadback .rectangle-13 {
+  position: absolute;
+  top: 646px;
+  left: 1195px;
+  width: 226px;
+  height: 84px;
+  background-color: #ffffff;
+  border-radius: 40px;
+}
+
+.feadback .rectangle-14 {
+  position: absolute;
+  top: 738px;
+  left: 1195px;
+  width: 226px;
+  height: 84px;
+  background-color: #ffffff;
+  border-radius: 40px;
+}
+
+.feadback .rectangle-15 {
+  position: absolute;
+  top: 830px;
+  left: 1195px;
+  width: 226px;
+  height: 84px;
+  background-color: #ffffff;
+  border-radius: 40px;
+}
+
+.feadback .rectangle-16 {
+  position: absolute;
+  top: 922px;
+  left: 1195px;
+  width: 226px;
+  height: 84px;
+  background-color: #ffffff;
+  border-radius: 40px;
+}
+
+.feadback .text-wrapper-2 {
+  top: 94px;
+  left: 1215px;
+  width: 185px;
+  height: 79px;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Inria Serif-Bold", Helvetica;
+  font-weight: 700;
+  color: #0b0754;
+  font-size: 20px;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: normal;
+  direction: rtl;
+}
+
+.feadback .text-wrapper-3 {
+  top: 14px;
+  left: 846px;
+  width: 160px;
+  height: 64px;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Inria Serif-Bold", Helvetica;
+  font-weight: 700;
+  color: #0b0754;
+  font-size: 20px;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: normal;
+  direction: rtl;
+}
+
+.feadback .text-wrapper-4 {
+  top: 14px;
+  left: 1015px;
+  width: 160px;
+  height: 64px;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Inria Serif-Bold", Helvetica;
+  font-weight: 700;
+  color: #0b0754;
+  font-size: 20px;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: normal;
+  direction: rtl;
+}
+
+.feadback .text-wrapper-5 {
+  top: 14px;
+  left: 675px;
+  width: 160px;
+  height: 64px;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Inria Serif-Bold", Helvetica;
+  font-weight: 700;
+  color: #0b0754;
+  font-size: 20px;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: normal;
+  direction: rtl;
+}
+
+.feadback .text-wrapper-6 {
+  top: 14px;
+  left: 57px;
+  width: 160px;
+  height: 64px;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Inria Serif-Bold", Helvetica;
+  font-weight: 700;
+  color: #0b0754;
+  font-size: 20px;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: normal;
+  direction: rtl;
+}
+
+.feadback .text-wrapper-7 {
+  top: 186px;
+  left: 1215px;
+  width: 185px;
+  height: 79px;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Inria Serif-Bold", Helvetica;
+  font-weight: 700;
+  color: #0b0754;
+  font-size: 20px;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: normal;
+  direction: rtl;
+}
+
+.feadback .text-wrapper-8 {
+  top: 278px;
+  left: 1215px;
+  width: 185px;
+  height: 79px;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Inria Serif-Bold", Helvetica;
+  font-weight: 700;
+  color: #0b0754;
+  font-size: 20px;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: normal;
+  direction: rtl;
+}
+
+.feadback .text-wrapper-9 {
+  top: 369px;
+  left: 1215px;
+  width: 185px;
+  height: 79px;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Inria Serif-Bold", Helvetica;
+  font-weight: 700;
+  color: #0b0754;
+  font-size: 20px;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: normal;
+  direction: rtl;
+}
+
+.feadback .text-wrapper-10 {
+  top: 465px;
+  left: 1215px;
+  width: 185px;
+  height: 79px;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Inria Serif-Bold", Helvetica;
+  font-weight: 700;
+  color: #0b0754;
+  font-size: 20px;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: normal;
+  direction: rtl;
+}
+
+.feadback .text-wrapper-11 {
+  top: 556px;
+  left: 1215px;
+  width: 185px;
+  height: 79px;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Inria Serif-Bold", Helvetica;
+  font-weight: 700;
+  color: #0b0754;
+  font-size: 20px;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: normal;
+  direction: rtl;
+}
+
+.feadback .text-wrapper-12 {
+  top: 643px;
+  left: 1215px;
+  width: 185px;
+  height: 79px;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Inria Serif-Bold", Helvetica;
+  font-weight: 700;
+  color: #0b0754;
+  font-size: 20px;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: normal;
+  direction: rtl;
+}
+
+.feadback .text-wrapper-13 {
+  top: 738px;
+  left: 1215px;
+  width: 185px;
+  height: 79px;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Inria Serif-Bold", Helvetica;
+  font-weight: 700;
+  color: #0b0754;
+  font-size: 20px;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: normal;
+  direction: rtl;
+}
+
+.feadback .text-wrapper-14 {
+  top: 835px;
+  left: 1215px;
+  width: 185px;
+  height: 79px;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Inria Serif-Bold", Helvetica;
+  font-weight: 700;
+  color: #0b0754;
+  font-size: 20px;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: normal;
+  direction: rtl;
+}
+
+.feadback .text-wrapper-15 {
+  top: 917px;
+  left: 1215px;
+  width: 185px;
+  height: 79px;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Inria Serif-Bold", Helvetica;
+  font-weight: 700;
+  color: #0b0754;
+  font-size: 20px;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: normal;
+  direction: rtl;
+}
+
+.feadback .frame {
+  position: absolute;
+  top: 120px;
+  left: 61px;
+  width: 1051px;
+  height: 249px;
+  display: flex;
+}
+
+.feadback .IELTS-speaking {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1px;
+  width: 561px;
+  height: 248px;
+  margin-left: 247px;
+  font-family: "Inria Serif-Bold", Helvetica;
+  font-weight: 400;
+  color: #0b0754;
+  font-size: 40px;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: normal;
+  direction: rtl;
+}
+
+.feadback .span {
+  font-weight: 700;
+}
+
+.feadback .text-wrapper-16 {
+  font-weight: 700;
+  font-size: 22px;
+}
+
+.feadback .text-wrapper-17 {
+  font-family: "Inria Serif-Regular", Helvetica;
+}
+
+.feadback .text-wrapper-18 {
+  position: absolute;
+  top: 462px;
+  left: calc(50.00% - 614px);
+  width: 955px;
+  height: 154px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Inria Serif-Bold", Helvetica;
+  font-weight: 700;
+  color: #000000;
+  font-size: 20px;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.feadback .rectangle-17 {
+  position: absolute;
+  top: 684px;
+  left: 57px;
+  width: 1055px;
+  height: 297px;
+  background-color: #3a5ba0c2;
+  border-radius: 40px;
+}
+
+.feadback .rectangle-18 {
+  position: absolute;
+  top: 775px;
+  left: 73px;
+  width: 1033px;
+  height: 189px;
+  background-color: #b0caff;
+  border-radius: 40px;
+  box-shadow: 0px 4px 4px #00000040;
+}
+
+.feadback .text-wrapper-19 {
+  position: absolute;
+  top: 678px;
+  left: 85px;
+  width: 298px;
+  height: 63px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Inria Serif-Bold", Helvetica;
+  font-weight: 700;
+  color: #000000;
+  font-size: 20px;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.feadback .text-wrapper-20 {
+  position: absolute;
+  top: 717px;
+  left: 96px;
+  width: 298px;
+  height: 63px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Inria Serif-Bold", Helvetica;
+  font-weight: 700;
+  color: #000000;
+  font-size: 20px;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.feadback .text-wrapper-21 {
+  position: absolute;
+  top: 789px;
+  left: calc(50.00% - 614px);
+  width: 955px;
+  height: 154px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Inria Serif-Bold", Helvetica;
+  font-weight: 700;
+  color: #000000;
+  font-size: 20px;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: normal;
+}
