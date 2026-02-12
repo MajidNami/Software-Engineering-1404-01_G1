@@ -21,6 +21,7 @@ class PrivateChat(models.Model):
     user2 = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='private_chats_2')
 
 
+
 class GroupChat(models.Model):
     chat = models.OneToOneField(ChatRoom, on_delete=models.CASCADE, primary_key=True, related_name='group_info')
     group_name = models.CharField(max_length=255)
