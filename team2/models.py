@@ -84,3 +84,25 @@ class VideoFiles(models.Model):
 
     def __str__(self):
         return f"{self.lesson.title} - {self.file_format}"
+
+
+class UserDetails(models.Model):
+
+    ROLE_CHOICES = (
+        'teacher',
+        'student',
+        'staff',
+    )
+    email = models.EmailField()
+    role = models.CharField(
+        max_length=100,
+        choices=ROLE_CHOICES)
+
+    lesson = models.ForeignKey(
+        Lesson,
+        on_delete=models.CASCADE,
+        related_name='videos',
+    )
+
+    def __str__(self):
+        return f"{self.email} : {self.role}"
