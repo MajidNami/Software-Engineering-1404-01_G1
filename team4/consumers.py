@@ -124,7 +124,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         except: return False
 
     @database_sync_to_async
-    def save_message(self, content, reply_to_id=None, file_id=None):
+    def save_message(self, content, reply_to_id=None, file_id=None):  
         room = ChatRoom.objects.get(chat_id=self.room_id)
         reply_to_obj = Message.objects.get(msg_id=reply_to_id) if reply_to_id else None
         
@@ -134,6 +134,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             content=content,
             reply_to=reply_to_obj
         )
+        
 
         if file_id:
             Attachment.objects.filter(file_id=file_id).update(message=msg)
