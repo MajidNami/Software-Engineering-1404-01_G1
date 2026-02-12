@@ -16,20 +16,23 @@ class PracticeView(View):
         return render(request, self.template_name, {"active_tab": "practice"})
 
     def post(self, request):
+        """API: Generates the 4-step quiz based on the user's last word"""
         user_id = str(request.user.id)
         latest_word = LearningWord.objects.filter(user_id=user_id).order_by('-created_at').first()
         
         if not latest_word:
-            return JsonResponse({"status": "error", "message": "No word found. Generate a card first!"})
+            return JsonResponse({"status": "error", "message": "No words found. Generate a Word Card first!"})
 
         try:
-            raw_data = self.ai_service.generate_adaptive_practice(latest_word.word)
-            return JsonResponse({"status": "success", "data": json.loads(raw_data)})
+            raw_data = self.ai_service.generate_practice_set(latest_word.word)
+            data = json.loads(raw_data)
+            return JsonResponse({"status": "success", "exercises": data['exercises'], "word": latest_word.word})
         except Exception as e:
             return JsonResponse({"status": "error", "message": str(e)}, status=500)
 
 @method_decorator(api_login_required, name='dispatch')
 class SavePracticeResultView(View):
+    """API: Saves the completion to the database"""
     def post(self, request):
         data = json.loads(request.body)
         word_text = data.get('word')

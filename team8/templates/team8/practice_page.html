@@ -2,86 +2,40 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VocabAI | Practice Mode</title>
     <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
     <style>
-        :root {
-            --primary-orange: #ff8a65;
-            --bg-gradient: linear-gradient(180deg, #f8d7da 0%, #d1e7dd 100%);
-            --text-dark: #2d3436;
-            --active-purple: #6c5ce7;
-        }
-
-        body {
-            font-family: 'Vazirmatn', sans-serif;
-            background: var(--bg-gradient);
-            margin: 0; padding: 0;
-            color: var(--text-dark);
-            min-height: 100vh;
-        }
-
-        /* --- Navigation --- */
-        nav {
-            background: white; padding: 10px 5%;
-            display: flex; justify-content: space-between; align-items: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-        }
+        :root { --primary-orange: #ff8a65; --bg-gradient: linear-gradient(180deg, #f8d7da 0%, #d1e7dd 100%); --text-dark: #2d3436; }
+        body { font-family: 'Vazirmatn', sans-serif; background: var(--bg-gradient); margin: 0; min-height: 100vh; }
+        
+        nav { background: white; padding: 10px 5%; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
         .logo-area { font-weight: bold; text-decoration: none; color: var(--text-dark); font-size: 20px; }
         .nav-tabs { display: flex; gap: 15px; list-style: none; margin: 0; padding: 0; }
         .nav-tabs li { padding: 8px 15px; border-radius: 20px; font-size: 14px; cursor: pointer; color: #636e72; }
         .nav-tabs li.active { background: #ff7043; color: white; font-weight: bold; }
 
         .container { max-width: 800px; margin: 30px auto; padding: 0 20px; }
-
-        /* --- Progress Card --- */
-        .practice-info-card {
-            background: white; border-radius: 24px; padding: 25px;
-            margin-bottom: 20px; position: relative;
-        }
+        .info-card { background: white; border-radius: 24px; padding: 25px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
+        
         .progress-bar { height: 8px; background: #eee; border-radius: 10px; margin: 20px 0 5px; overflow: hidden; }
         .progress-fill { width: 0%; height: 100%; background: #2d3436; transition: width 0.5s ease; }
 
-        /* --- Tabs --- */
         .tabs-row { display: flex; gap: 10px; margin-bottom: 20px; }
-        .tab-btn {
-            flex: 1; padding: 12px; border: 1.5px solid #dfe6e9;
-            background: white; border-radius: 15px; text-align: center;
-            font-size: 13px; color: #636e72; transition: 0.3s;
-        }
+        .tab-btn { flex: 1; padding: 12px; border: 1.5px solid #dfe6e9; background: white; border-radius: 15px; text-align: center; font-size: 13px; color: #636e72; transition: 0.3s; }
         .tab-btn.active { border-color: #ff8a65; color: #ff8a65; background: #fff5f2; font-weight: bold; }
 
-        /* --- Quiz Content --- */
-        .quiz-container {
-            background: #f8fafc; border-radius: 24px; padding: 35px;
-            text-align: left; direction: ltr; min-height: 320px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.03);
-        }
-        .quiz-type-tag {
-            background: #fff5f2; color: #ff8a65; padding: 4px 12px;
-            border-radius: 8px; font-size: 12px; font-weight: bold; display: inline-block;
-        }
-        .question-text { font-size: 22px; font-weight: 800; margin: 20px 0 30px; color: #2d3436; }
+        .quiz-container { background: #fff; border-radius: 24px; padding: 40px; text-align: left; direction: ltr; min-height: 350px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); position: relative; }
+        .quiz-type-tag { background: #fff5f2; color: #ff8a65; padding: 5px 14px; border-radius: 10px; font-size: 12px; font-weight: 800; text-transform: uppercase; }
+        .question-text { font-size: 22px; font-weight: 800; margin: 25px 0 30px; color: #2d3436; line-height: 1.4; }
 
-        .options-grid { display: flex; flex-direction: column; gap: 12px; }
-        .option-item {
-            background: white; border: 1.5px solid #dfe6e9;
-            padding: 18px; border-radius: 18px; cursor: pointer;
-            transition: 0.2s; font-size: 16px;
-        }
-        .option-item:hover { border-color: var(--active-purple); background: #f3f0ff; }
-        .option-item.selected { border-color: var(--active-purple); background: #f3f0ff; border-width: 2px; }
+        .option-item { background: white; border: 1.5px solid #f1f2f6; padding: 18px; border-radius: 18px; cursor: pointer; transition: 0.2s; font-size: 16px; margin-bottom: 10px; }
+        .option-item:hover { border-color: #ff8a65; background: #fffdfc; }
+        .option-item.correct { border-color: #2ed573 !important; background: #eafff2 !important; color: #1e8449 !important; font-weight: bold; }
+        .option-item.wrong { border-color: #ff4757 !important; background: #fff2f2 !important; color: #c0392b !important; }
+        .option-item.disabled { pointer-events: none; opacity: 0.7; }
 
-        /* --- Continue Button --- */
-        .continue-btn {
-            width: 100%; padding: 18px; margin-top: 25px;
-            background: linear-gradient(90deg, #ff8a65, #ffb199);
-            color: white; border: none; border-radius: 15px;
-            font-size: 18px; font-weight: bold; cursor: pointer;
-            font-family: 'Vazirmatn'; transition: 0.3s;
-        }
-        .continue-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(255, 138, 101, 0.3); }
-        .continue-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .continue-btn { width: 100%; padding: 18px; margin-top: 20px; background: #f3c6b5; color: white; border: none; border-radius: 15px; font-size: 18px; font-weight: bold; cursor: not-allowed; transition: 0.3s; }
+        .continue-btn.active { background: #ff8a65; cursor: pointer; box-shadow: 0 8px 20px rgba(255, 138, 101, 0.2); }
     </style>
 </head>
 <body>
@@ -89,109 +43,114 @@
     <nav>
         <a href="/team8/" class="logo-area">✦ VocabAI</a>
         <ul class="nav-tabs">
-            <li>Word Cards</li>
+            <li onclick="location.href='/team8/wordcard/'">Word Cards</li>
             <li class="active">Practice</li>
-            <li>Mnemonics</li>
-            <li>Text Analysis</li>
-            <li>Analytics</li>
+            <li onclick="location.href='/team8/mnemonics/'">Mnemonics</li>
+            <li onclick="location.href='/team8/analysis/'">Text Analysis</li>
         </ul>
     </nav>
 
     <div class="container">
-        <div class="practice-info-card">
+        <div class="info-card">
             <h3 style="margin:0">Adaptive Practice</h3>
             <div class="progress-bar"><div id="p-fill" class="progress-fill"></div></div>
             <div style="display:flex; justify-content:space-between; font-size:12px; color:#b2bec3;">
-                <span>Current Step</span><span id="p-text">0/4</span>
+                <span>Current Step</span><span id="p-text">0/4 Steps</span>
             </div>
         </div>
 
         <div class="tabs-row">
-            <div class="tab-btn active" id="tab-0">Meaning</div>
+            <div class="tab-btn" id="tab-0">Meaning</div>
             <div class="tab-btn" id="tab-1">Context</div>
             <div class="tab-btn" id="tab-2">Collocation</div>
             <div class="tab-btn" id="tab-3">Sentence</div>
         </div>
 
-        <div class="quiz-container" id="quizContent">
+        <div class="quiz-container">
             <span class="quiz-type-tag" id="exerciseLabel">Practice</span>
-            <div class="question-text" id="questionText">Fetching AI generated questions...</div>
-            <div class="options-grid" id="optionsGrid"></div>
+            <div id="loading" style="text-align:center; margin-top:50px; color:#a4b0be;">AI is generating exercises...</div>
+            <div id="quizContent" style="display:none;">
+                <div class="question-text" id="questionText"></div>
+                <div class="options-grid" id="optionsGrid"></div>
+            </div>
         </div>
 
         <button class="continue-btn" id="nextBtn" onclick="handleContinue()" disabled>Continue ❯</button>
     </div>
 
     <script>
-        let allExercises = []; // اینجا دیتای واقعی AI ذخیره می‌شود
-        let currentTabIndex = 0;
+        let allExercises = [];
+        let currentIndex = 0;
+        let isSolved = false;
+        let targetWord = "";
 
-        // تابع برای دریافت ۴ سوال از بک‌اِند (بدون هیچ هاردکدی)
-        async function fetchExercises() {
-            const nextBtn = document.getElementById('nextBtn');
-            const qText = document.getElementById('questionText');
-            nextBtn.disabled = true;
-            qText.textContent = "Generating AI questions based on your last word...";
-
+        async function init() {
             try {
-                // این آدرس به بک‌اِند تیم ۸ شما وصل می‌شود
-                const response = await fetch('/team8/api/get-practice-set/');
-                const data = await response.json();
-                
-                if (data.exercises && data.exercises.length === 4) {
+                const res = await fetch('/team8/practice/', { method: 'POST', headers: { 'X-CSRFToken': '{{ csrf_token }}' } });
+                const data = await res.json();
+                if (data.status === "success") {
                     allExercises = data.exercises;
-                    renderCurrentExercise();
-                    nextBtn.disabled = false;
+                    targetWord = data.word;
+                    document.getElementById('loading').style.display = 'none';
+                    document.getElementById('quizContent').style.display = 'block';
+                    renderStep(0);
                 } else {
-                    qText.textContent = "Error: AI failed to generate 4 questions.";
+                    document.getElementById('loading').innerHTML = `<p class="text-danger">${data.message}</p>`;
                 }
-            } catch (error) {
-                console.error("Fetch error:", error);
-                qText.textContent = "Connection error. Please check Docker/Backend.";
-            }
+            } catch (e) { document.getElementById('loading').textContent = "Connection error."; }
         }
 
-        function renderCurrentExercise() {
-            const ex = allExercises[currentTabIndex];
+        function renderStep(idx) {
+            currentIndex = idx; isSolved = false;
+            const ex = allExercises[idx];
             const labels = ["Word Meaning", "Usage Context", "Collocation", "Sentence Building"];
             
-            document.getElementById('exerciseLabel').textContent = labels[currentTabIndex];
+            document.getElementById('exerciseLabel').textContent = labels[idx];
             document.getElementById('questionText').textContent = ex.question;
-            
+            document.getElementById('nextBtn').disabled = true;
+            document.getElementById('nextBtn').classList.remove('active');
+
             const grid = document.getElementById('optionsGrid');
-            grid.innerHTML = ex.options.map(opt => `
-                <div class="option-item" onclick="selectOption(this)">${opt}</div>
-            `).join('');
+            grid.innerHTML = ex.options.map(opt => `<div class="option-item" onclick="checkAnswer(this, '${opt}', '${ex.answer}')">${opt}</div>`).join('');
 
-            // آپدیت هایلایت تب‌ها
-            document.querySelectorAll('.tab-btn').forEach((btn, i) => {
-                btn.classList.toggle('active', i === currentTabIndex);
+            document.querySelectorAll('.tab-btn').forEach((btn, i) => btn.classList.toggle('active', i === idx));
+            document.getElementById('p-fill').style.width = (idx * 25) + "%";
+            document.getElementById('p-text').textContent = idx + "/4 Steps";
+        }
+
+        function checkAnswer(el, selected, correct) {
+            if (isSolved) return;
+            const items = document.querySelectorAll('.option-item');
+            items.forEach(item => {
+                item.classList.add('disabled');
+                if (item.textContent.trim() === correct) item.classList.add('correct');
             });
-
-            // آپدیت نوار پیشرفت
-            const progress = (currentTabIndex + 1) * 25;
-            document.getElementById('p-fill').style.width = progress + "%";
-            document.getElementById('p-text').textContent = (currentTabIndex + 1) + "/4 Steps";
+            if (selected !== correct) el.classList.add('wrong');
+            
+            isSolved = true;
+            document.getElementById('nextBtn').disabled = false;
+            document.getElementById('nextBtn').classList.add('active');
         }
 
         function handleContinue() {
-            if (currentTabIndex < 3) {
-                currentTabIndex++;
-                renderCurrentExercise();
+            if (currentIndex < 3) {
+                renderStep(currentIndex + 1);
             } else {
-                // وقتی ۴ تا تمام شد، دوباره از اول لود کن (یا برو کلمه بعدی)
-                currentTabIndex = 0;
-                fetchExercises();
+                // Finalize
+                document.getElementById('p-fill').style.width = "100%";
+                document.getElementById('p-text').textContent = "4/4 Steps";
+                fetch('/team8/api/save-practice/', {
+                    method: 'POST',
+                    headers: { 'X-CSRFToken': '{{ csrf_token }}', 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ word: targetWord })
+                });
+                document.getElementById('quizContent').innerHTML = `<div style="text-align:center; padding:50px;"><h2>🎉 Session Complete!</h2><p>You mastered <b>${targetWord}</b></p></div>`;
+                const btn = document.getElementById('nextBtn');
+                btn.textContent = "Finish Session";
+                btn.onclick = () => location.href = '/team8/wordcard/';
             }
         }
-
-        function selectOption(el) {
-            document.querySelectorAll('.option-item').forEach(opt => opt.classList.remove('selected'));
-            el.classList.add('selected');
-        }
-
-        // به محض لود شدن صفحه، از AI دیتا بگیر
-        window.onload = fetchExercises;
+        window.onload = init;
     </script>
 </body>
 </html>
