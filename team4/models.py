@@ -29,6 +29,7 @@ class GroupChat(models.Model):
     admin = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, related_name='managed_groups')
 
 
+
 class ChatParticipant(models.Model):
     id = models.AutoField(primary_key=True) 
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='participants')
