@@ -23,7 +23,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     
     # Registration
-    path('api/register/', RegisterView.as_view(), name='register'),
+    path('api/register/', RegisterView.as_view(), name='register'),       
     
     # Login: Send username & password, get Access and Refresh tokens
     path('api/login/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
@@ -44,7 +44,7 @@ urlpatterns = [
     path('api/chat/groups/<int:chat_id>/add-member/', AddMemberToGroupView.as_view(), name='add_member'),
     path('api/chat/upload/', AttachmentUploadView.as_view()),
     path('api/safety/block/', BlockUserView.as_view(), name='block_user'), 
-    
+
     path('api/safety/report/', ReportUserView.as_view(), name='report_user'),
 
 ]
