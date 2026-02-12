@@ -1,198 +1,72 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VocabAI | Word Details</title>
+{% extends 'team8/base.html' %}
+
+{% block title %}Word Details{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Specific styles for Word Card */
+    :root { --bg-gradient: linear-gradient(180deg, #f8d7da 0%, #d1e7dd 100%); }
+    .container { max-width: 850px; margin: 30px auto; padding: 0 20px; }
     
-    <!-- Vazirmatn Font (Required by Project) -->
-    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
-    
-    <style>
-        :root {
-            --primary-orange: #ff9e67;
-            --bg-gradient: linear-gradient(180deg, #f8d7da 0%, #d1e7dd 100%);
-            --text-dark: #2d3436;
-            --text-sub: #636e72;
-            --synonym-bg: #e3f2fd;
-            --synonym-color: #1976d2;
-            --antonym-bg: #ffebee;
-            --antonym-color: #d32f2f;
-        }
+    .ai-header { background: rgba(255, 255, 255, 0.7); padding: 15px 20px; border-radius: 15px; display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+    .icon-star { background: #ff9e67; color: white; padding: 5px; border-radius: 8px; font-size: 12px; }
+    .card { background: white; border-radius: 24px; padding: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); text-align: left; direction: ltr; }
+    .word-title-row { display: flex; align-items: center; gap: 15px; margin-bottom: 5px; }
+    .word-title-row h1 { font-size: 40px; margin: 0; text-transform: lowercase; }
+    .level-badge { border: 2px solid #ffca28; color: #f9a825; padding: 2px 12px; border-radius: 20px; font-weight: bold; font-size: 14px; }
+    .phonetic { color: #636e72; font-size: 18px; margin-bottom: 25px; display: flex; align-items: center; gap: 10px; }
+    .phonetic button { border: none; background: none; cursor: pointer; font-size: 20px; color: #42a5f5; }
+    .definition { color: #30336b; font-size: 18px; line-height: 1.6; margin-bottom: 35px; }
+    .details-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-bottom: 30px; }
+    .section-label { font-size: 13px; color: #b2bec3; font-weight: bold; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 1px; }
+    .tag-list { display: flex; flex-wrap: wrap; gap: 8px; }
+    .tag { padding: 6px 14px; border-radius: 12px; font-size: 13px; font-weight: 500; }
+    .tag-syn { background: #e3f2fd; color: #1976d2; }
+    .tag-ant { background: #ffebee; color: #d32f2f; }
+    .tag-coll { border: 1.5px solid #90caf9; color: #1565c0; }
+    .example-item { background: #f8fafc; border: 1px solid #edf2f7; padding: 15px 20px; border-radius: 12px; margin-bottom: 12px; font-style: italic; color: #4a5568; font-size: 15px; }
+    .btn-next { width: 100%; background: linear-gradient(90deg, #ff8a65, #ffb199); color: white; border: none; padding: 18px; border-radius: 15px; font-size: 18px; font-weight: bold; cursor: pointer; margin-top: 25px; font-family: 'Vazirmatn'; transition: 0.3s; display: flex; justify-content: center; align-items: center; gap: 10px; }
+    .btn-next:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(255, 138, 101, 0.3); }
+    .btn-next:disabled { opacity: 0.7; cursor: wait; }
+</style>
+{% endblock %}
 
-        body {
-            font-family: 'Vazirmatn', sans-serif;
-            background: var(--bg-gradient);
-            margin: 0;
-            padding: 0;
-            color: var(--text-dark);
-            min-height: 100vh;
-        }
-
-        /* --- Navigation --- */
-        nav {
-            background: white;
-            padding: 10px 5%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-        }
-        .logo-area { display: flex; align-items: center; gap: 10px; font-weight: bold; text-decoration: none; color: var(--text-dark); }
-        .nav-tabs { display: flex; gap: 15px; list-style: none; padding: 0; margin: 0; }
-        .nav-tabs li { padding: 8px 15px; border-radius: 20px; font-size: 14px; cursor: pointer; color: var(--text-sub); }
-        .nav-tabs li.active { background: #ff7043; color: white; font-weight: bold; }
-
-        .container { max-width: 850px; margin: 30px auto; padding: 0 20px; }
-
-        /* --- AI Info Header --- */
-        .ai-header {
-            background: rgba(255, 255, 255, 0.7);
-            padding: 15px 20px;
-            border-radius: 15px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-        .icon-star { background: #ff9e67; color: white; padding: 5px; border-radius: 8px; font-size: 12px; }
-
-        /* --- Word Card Body --- */
-        .card {
-            background: white;
-            border-radius: 24px;
-            padding: 40px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-            text-align: left;
-            direction: ltr;
-        }
-
-        .word-title-row { display: flex; align-items: center; gap: 15px; margin-bottom: 5px; }
-        .word-title-row h1 { font-size: 40px; margin: 0; text-transform: lowercase; }
-        .level-badge { border: 2px solid #ffca28; color: #f9a825; padding: 2px 12px; border-radius: 20px; font-weight: bold; font-size: 14px; }
-
-        .phonetic { color: var(--text-sub); font-size: 18px; margin-bottom: 25px; display: flex; align-items: center; gap: 10px; }
-        .phonetic button { border: none; background: none; cursor: pointer; font-size: 20px; color: #42a5f5; }
-
-        .definition { color: #30336b; font-size: 18px; line-height: 1.6; margin-bottom: 35px; }
-
-        /* --- Grid Section (Synonyms & Antonyms) --- */
-        .details-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-bottom: 30px; }
-        .section-label { font-size: 13px; color: #b2bec3; font-weight: bold; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 1px; }
-        
-        .tag-list { display: flex; flex-wrap: wrap; gap: 8px; }
-        .tag { padding: 6px 14px; border-radius: 12px; font-size: 13px; font-weight: 500; }
-        .tag-syn { background: var(--synonym-bg); color: var(--synonym-color); }
-        .tag-ant { background: var(--antonym-bg); color: var(--antonym-color); }
-        .tag-coll { border: 1.5px solid #90caf9; color: #1565c0; }
-
-        /* --- Examples --- */
-        .example-item {
-            background: #f8fafc;
-            border: 1px solid #edf2f7;
-            padding: 15px 20px;
-            border-radius: 12px;
-            margin-bottom: 12px;
-            font-style: italic;
-            color: #4a5568;
-            font-size: 15px;
-        }
-
-        /* --- Action Button --- */
-        .btn-next {
-            width: 100%;
-            background: linear-gradient(90deg, #ff8a65, #ffb199);
-            color: white;
-            border: none;
-            padding: 18px;
-            border-radius: 15px;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
-            margin-top: 25px;
-            font-family: 'Vazirmatn';
-            transition: 0.3s;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-        }
-        .btn-next:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(255, 138, 101, 0.3); }
-        .btn-next:disabled { opacity: 0.7; cursor: wait; }
-
-        /* Empty state styling */
-        .empty-text { color: #ccc; font-style: italic; }
-    </style>
-</head>
-<body>
-
-    <nav>
-        <a href="/team8/" class="logo-area">✦ VocabAI</a>
-        <ul class="nav-tabs">
-            <li class="active">Word Cards</li>
-            <li>Practice</li>
-            <li>Mnemonics</li>
-            <li>Text Analysis</li>
-            <li>Analytics</li>
-        </ul>
-    </nav>
-
-    <div class="container">
-        <!-- AI Info Header -->
-        <div class="ai-header">
-            <div class="icon-star">✦</div>
-            <div style="direction: ltr; text-align: left;">
-                <strong style="font-size: 14px; display: block;">AI-Generated Study</strong>
-                <span style="font-size: 12px; color: var(--text-sub);">Words tailored to your learning level</span>
-            </div>
+{% block content %}
+<div class="container">
+    <div class="ai-header">
+        <div class="icon-star">✦</div>
+        <div style="direction: ltr; text-align: left;">
+            <strong style="font-size: 14px; display: block;">AI-Generated Study</strong>
+            <span style="font-size: 12px; color: #636e72;">Words tailored to your learning level</span>
         </div>
-
-        <div class="card" id="wordCard">
-            <!-- Word and Level -->
-            <div class="word-title-row">
-                <h1 id="word-text">Loading...</h1>
-                <span id="word-level" class="level-badge">--</span>
-            </div>
-
-            <!-- Phonetic & Audio -->
-            <div class="phonetic">
-                <button>🔊</button>
-                <span id="word-phonetic"></span>
-            </div>
-
-            <!-- Meaning -->
-            <div class="definition" id="word-definition">
-                Generating your next personalized word...
-            </div>
-
-            <!-- Synonyms & Antonyms -->
-            <div class="details-grid">
-                <div>
-                    <div class="section-label">Synonyms</div>
-                    <div class="tag-list" id="word-synonyms"></div>
-                </div>
-                <div>
-                    <div class="section-label">Antonyms</div>
-                    <div class="tag-list" id="word-antonyms"></div>
-                </div>
-            </div>
-
-            <!-- Collocations -->
-            <div class="section-label">Collocations</div>
-            <div class="tag-list" style="margin-bottom: 30px;" id="word-collocations"></div>
-
-            <!-- Examples -->
-            <div class="section-label">Example Sentences</div>
-            <div id="word-examples"></div>
-        </div>
-
-        <!-- Action Button -->
-        <button class="btn-next" id="nextBtn" onclick="generateNewWord()">
-            Generate ✨
-        </button>
     </div>
-    <script>
-    // 1. Helper function to get the CSRF token from Django's cookie
+
+    <div class="card" id="wordCard">
+        <div class="word-title-row">
+            <h1 id="word-text">Loading...</h1>
+            <span id="word-level" class="level-badge">--</span>
+        </div>
+        <div class="phonetic">
+            <button>🔊</button>
+            <span id="word-phonetic"></span>
+        </div>
+        <div class="definition" id="word-definition">Generating your next personalized word...</div>
+        <div class="details-grid">
+            <div><div class="section-label">Synonyms</div><div class="tag-list" id="word-synonyms"></div></div>
+            <div><div class="section-label">Antonyms</div><div class="tag-list" id="word-antonyms"></div></div>
+        </div>
+        <div class="section-label">Collocations</div>
+        <div class="tag-list" style="margin-bottom: 30px;" id="word-collocations"></div>
+        <div class="section-label">Example Sentences</div>
+        <div id="word-examples"></div>
+    </div>
+
+    <button class="btn-next" id="nextBtn" onclick="generateNewWord()">Generate ✨</button>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
     function getCookie(name) {
         let cookieValue = null;
         if (document.cookie && document.cookie !== '') {
@@ -208,7 +82,6 @@
         return cookieValue;
     }
 
-    // 2. Function to update the UI with the AI data
     function renderWord(data) {
         document.getElementById('word-text').textContent = data.word;
         document.getElementById('word-level').textContent = "B2"; 
@@ -217,7 +90,6 @@
 
         const renderList = (id, items, className) => {
             const container = document.getElementById(id);
-            // Handles both lists and comma-separated strings
             const list = Array.isArray(items) ? items : (items ? items.split(',') : []);
             container.innerHTML = list.map(item => `<span class="tag ${className}">${item.trim()}</span>`).join('');
         };
@@ -231,25 +103,22 @@
         exContainer.innerHTML = examples.map(ex => `<div class="example-item">${ex}</div>`).join('');
     }
 
-    // 3. The Core Function: Calls your actual Django View
     async function generateNewWord() {
         const btn = document.getElementById('nextBtn');
         btn.disabled = true;
         btn.textContent = "AI is thinking...";
 
         try {
-            // WE CHANGE THIS URL to match your urls.py
             const response = await fetch('/team8/wordcard/', {
                 method: 'POST',
                 headers: {
-                    'X-CSRFToken': getCookie('csrftoken'), // Required by Django
+                    'X-CSRFToken': getCookie('csrftoken'),
                     'Content-Type': 'application/x-www-form-urlencoded',
                 },
-                body: '' // Sending empty body tells backend to generate a random word
+                body: '' 
             });
 
             const result = await response.json();
-
             if (result.status === "success") {
                 renderWord(result.data);
             } else {
@@ -257,16 +126,11 @@
             }
         } catch (error) {
             console.error("Error:", error);
-            alert(error);
         } finally {
             btn.disabled = false;
             btn.textContent = "Generate ✨";
         }
     }
-
-    // Auto-load a word when the page first opens
     window.onload = generateNewWord;
-    </script>
-
-</body>
-</html>
+</script>
+{% endblock %}
