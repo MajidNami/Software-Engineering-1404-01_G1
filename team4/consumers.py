@@ -61,7 +61,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 }
             )
             return
-                        
+
 
         if action == 'message':
             if await self.is_blocked_check():
@@ -122,7 +122,9 @@ class ChatConsumer(AsyncWebsocketConsumer):
                     (Q(blocker=other_user) & Q(blocked=self.user))
                 ).exists()
             return False
-        except: return False
+        except: return False         
+
+        
 
     @database_sync_to_async
     def save_message(self, content, reply_to_id=None, file_id=None):  
