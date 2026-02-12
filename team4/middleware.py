@@ -9,10 +9,8 @@ User = get_user_model()
 @database_sync_to_async
 def get_user(token_key):
     try:
-        # Decode the token
         access_token = AccessToken(token_key)
         user_id = access_token['user_id']
-        # Return the actual user from your database
         return User.objects.get(id=user_id)
     except Exception as e:
         print(f"Middleware JWT Error: {e}")
@@ -26,7 +24,6 @@ class JWTAuthMiddleware:
         self.inner = inner
 
     async def __call__(self, scope, receive, send):
-        # 1. Look at the URL to see if there is a ?token=XXXXXX
         query_params = parse_qs(scope['query_string'].decode())
         token = query_params.get('token')
 
