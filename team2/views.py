@@ -203,3 +203,28 @@ def admin_users_view(request):
         'students_count': users.filter(role='student').count(),
     }
     return render(request, 'team2_admin_users.html', context)
+
+
+
+@api_login_required
+@admin_required
+@require_http_methods(["GET", "POST"])
+def admin_change_role_view(request, user_id):
+    
+    user = get_object_or_404(UserDetails.objects.using('team2'), id=user_id)
+    
+    if request.method == 'POST':
+        new_role = request.POST.get('role')
+        if new_role in ['teacher', 'student']:
+            user.role = new_role
+            user.save(using='team2')
+            messages.success(request, f'نقش کاربر {user.email} به {new_role} تغییر یافت.')
+            return redirect('admin_users')
+        else:
+            messages.error(request, 'نقش معتبر نیست.')
+    
+    context = {
+        'user': user,
+        'roles': [('teacher', 'معلم'), ('student', 'دانش‌جو')],
+    }
+    return render(request, 'team2_admin_change_role.html', context)
