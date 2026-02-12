@@ -53,8 +53,6 @@ class Message(models.Model):
 
 
 
-
-
 class Attachment(models.Model):
     file_id = models.AutoField(primary_key=True)
     message = models.ForeignKey(Message, on_delete=models.CASCADE, related_name='attachments')
