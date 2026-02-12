@@ -16,7 +16,7 @@
 
         body {
             font-family: 'Vazirmatn', sans-serif;
-            background: linear-gradient(135deg, #f0f4ff 0%, #e8f0ff 50%, #f8f9ff 100%);
+            background-color: var(--bg-cream);
             min-height: 100vh;
             position: relative;
             overflow-x: hidden;
@@ -584,51 +584,6 @@
                 opacity: 1;
                 transform: translateY(0) scale(1);
             }
-        }
-
-        .exercise-card::before {
-            content: '';
-            position: absolute;
-            top: -2px;
-            left: -2px;
-            right: -2px;
-            bottom: -2px;
-            background: linear-gradient(135deg, #80CAFF, #587CE6, #FFB02D);
-            border-radius: 35px;
-            opacity: 0;
-            transition: opacity 0.4s ease;
-            z-index: -1;
-        }
-
-        .exercise-card::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, rgba(128, 202, 255, 0.08), rgba(88, 124, 230, 0.08));
-            opacity: 0;
-            transition: opacity 0.4s ease;
-            border-radius: 35px;
-        }
-        .exercise-card::before,
-        .exercise-card::after {
-        pointer-events: none;
-        }
-
-
-        .exercise-card:hover::before {
-            opacity: 1;
-        }
-
-        .exercise-card:hover::after {
-            opacity: 1;
-        }
-
-        .exercise-card:hover {
-            transform: translateY(-12px) scale(1.02);
-            box-shadow: 0 25px 70px rgba(11, 7, 84, 0.2);
         }
 
         .card-badge {
@@ -1239,10 +1194,7 @@
 {% include 'team14/public/social-section.html' %}
 
     <!-- Floating Action Buttons -->
-    <div class="fab-container">
-        <div class="fab-button fab-headphone" data-tooltip="پشتیبانی آنلاین">🎧</div>
-        <div class="fab-button fab-help" data-tooltip="راهنما">❓</div>
-    </div>
+
 </div>
 </body>
 </html>
