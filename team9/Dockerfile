@@ -1,4 +1,15 @@
-# Teams must replace this with a real Dockerfile for their chosen stack.
+# Build team9 frontend
+FROM node:20-alpine AS frontend-build
+WORKDIR /app
+COPY frontend/package*.json ./
+RUN npm install
+COPY frontend/ ./
+RUN npm run build
 
-FROM alpine:3.20
-CMD ["sh", "-c", "echo 'Replace this Dockerfile with your service'; sleep infinity"]
+# Serve frontend with nginx reverse proxy
+FROM nginx:alpine
+COPY gateway.conf /etc/nginx/conf.d/default.conf
+COPY --from=frontend-build /app/dist /usr/share/nginx/html/team9/
+
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]

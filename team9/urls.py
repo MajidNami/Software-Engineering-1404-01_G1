@@ -12,6 +12,9 @@ urlpatterns = [
     path("", views.base, name="base"),
     path("ping/", views.ping, name="ping"),
     
+    # Dashboard endpoint
+    path("api/dashboard/", views.dashboard_stats, name="dashboard_stats"),
+    
     # Vocabulary API endpoints
     path("api/", include(router.urls)),
 ]

@@ -4,12 +4,13 @@ import AddWord from "./pages/AddWord";
 import LessonDetail from "./pages/LessonDetail";
 import ReviewLesson from "./pages/ReviewLesson";
 import Home from "./pages/Home";
+import Dashboard from "./pages/Dashboard";
 
 export default function App() {
   return (
     <Routes>
 
-      <Route path="/" element={<Home />} />
+      <Route path="/" element={<Microservices />} />
 
 
       <Route path="/microservices" element={<Microservices />} />
@@ -22,6 +23,9 @@ export default function App() {
 
       
       <Route path="/add-word" element={<AddWord />} />
+
+      
+      <Route path="/dashboard" element={<Dashboard />} />
 
       
       <Route path="*" element={<Navigate to="/microservices" replace />} />
