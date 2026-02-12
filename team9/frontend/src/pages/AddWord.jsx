@@ -2,6 +2,22 @@ import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import config from "../config";
 
+function getCsrfToken() {
+  const name = 'csrftoken';
+  let cookieValue = null;
+  if (document.cookie && document.cookie !== '') {
+    const cookies = document.cookie.split(';');
+    for (let i = 0; i < cookies.length; i++) {
+      const cookie = cookies[i].trim();
+      if (cookie.substring(0, name.length + 1) === (name + '=')) {
+        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+        break;
+      }
+    }
+  }
+  return cookieValue;
+}
+
 export default function AddWord() {
   const navigate = useNavigate();
 
@@ -24,10 +40,14 @@ export default function AddWord() {
       return;
     }
 
-   
+    const csrfToken = getCsrfToken();
     fetch(config.WORDS_ENDPOINT, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { 
+        "Content-Type": "application/json",
+        "X-CSRFToken": csrfToken
+      },
+      credentials: "include",
       body: JSON.stringify({
         term: word,         
         definition: meaning,  

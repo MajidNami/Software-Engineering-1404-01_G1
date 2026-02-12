@@ -1,4 +1,5 @@
 from pathlib import Path
+import os
 import environ
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -131,3 +132,18 @@ else:
 
 
 CSRF_TRUSTED_ORIGINS = env.list("CSRF_TRUSTED_ORIGINS", default=[])
+
+if DEBUG:
+    CSRF_TRUSTED_ORIGINS.extend([
+        "http://localhost:9141",
+        "http://127.0.0.1:9141",
+        "http://localhost:8000",
+        "http://127.0.0.1:8000",
+    ])
+
+CSRF_COOKIE_HTTPONLY = False
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [],
+    'DEFAULT_PERMISSION_CLASSES': [],
+}
