@@ -166,8 +166,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
         try:
             msg = Message.objects.get(msg_id=msg_id, sender=self.user)
             msg.is_deleted = True
-            msg.save()
-            return True
+            msg.save() 
+            return True 
         except Message.DoesNotExist:
             return False
 
