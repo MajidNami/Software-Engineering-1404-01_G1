@@ -50,9 +50,10 @@
             <span id="word-level" class="level-badge">--</span>
         </div>
         <div class="phonetic">
-            <button>🔊</button>
+            <button id="playAudioBtn" onclick="playPronunciation()" disabled>🔊</button>
             <span id="word-phonetic"></span>
         </div>
+        <audio id="wordAudio" style="display:none"></audio>
         <div class="definition" id="word-definition">Generating your next personalized word...</div>
         <div class="details-grid">
             <div><div class="section-label">Synonyms</div><div class="tag-list" id="word-synonyms"></div></div>
@@ -101,28 +102,67 @@
         return cookieValue;
     }
 
-    function renderWord(data) {
-        document.getElementById('word-text').textContent = data.word;
-        document.getElementById('word-level').textContent = "B2"; 
-        document.getElementById('word-phonetic').textContent = data.ipa;
-        document.getElementById('word-definition').textContent = data.definition;
+function renderWord(data) {
+    // Basic info
+    document.getElementById('word-text').textContent = data.word;
+    document.getElementById('word-level').textContent = data.level || 'B2';
+    document.getElementById('word-phonetic').textContent = data.ipa || '';
+    document.getElementById('word-definition').textContent = data.definition || '';
 
-        const renderList = (id, items, className) => {
-            const container = document.getElementById(id);
-            const list = Array.isArray(items) ? items : (items ? items.split(',') : []);
-            container.innerHTML = list.map(item => `<span class="tag ${className}">${item.trim()}</span>`).join('');
-        };
+    // --- Synonyms ---
+    const synContainer = document.getElementById('word-synonyms');
+    const synonyms = Array.isArray(data.synonyms) ? data.synonyms : [];
+    synContainer.innerHTML = synonyms.map(s => `<span class="tag tag-syn">${s}</span>`).join('');
 
-        renderList('word-synonyms', data.synonyms, 'tag-syn');
-        renderList('word-antonyms', data.antonyms, 'tag-ant');
-        renderList('word-collocations', data.collocations, 'tag-coll');
+    // --- Antonyms ---
+    const antContainer = document.getElementById('word-antonyms');
+    const antonyms = Array.isArray(data.antonyms) ? data.antonyms : [];
+    antContainer.innerHTML = antonyms.map(a => `<span class="tag tag-ant">${a}</span>`).join('');
 
-        const exContainer = document.getElementById('word-examples');
-        const examples = Array.isArray(data.examples) ? data.examples : [];
-        exContainer.innerHTML = examples.map(ex => `<div class="example-item">${ex}</div>`).join('');
-        const mnemonicBtn = document.getElementById('mnemonicBtn');
-        if (mnemonicBtn) mnemonicBtn.disabled = false;
+    // --- Collocations ---
+    const colContainer = document.getElementById('word-collocations');
+    const collocations = Array.isArray(data.collocations) ? data.collocations : [];
+    colContainer.innerHTML = collocations.map(c => `<span class="tag tag-coll">${c}</span>`).join('');
+
+    // --- Examples ---
+    const exContainer = document.getElementById('word-examples');
+    const examples = Array.isArray(data.examples) ? data.examples : [];
+    exContainer.innerHTML = examples.map(ex => `<div class="example-item">${ex}</div>`).join('');
+
+    // --- Pronunciation audio (your existing code) ---
+    const word = data.word;
+    const audioElement = document.getElementById('wordAudio');
+    const playBtn = document.getElementById('playAudioBtn');
+    playBtn.disabled = true;
+    playBtn.textContent = "⏳";
+    
+    fetch(`/team8/api/tts/?text=${encodeURIComponent(word)}&lang=en`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.audio_url) {
+                audioElement.src = data.audio_url;
+                playBtn.disabled = false;
+                playBtn.textContent = "🔊";
+            }
+        })
+        .catch(error => {
+            console.error("TTS failed:", error);
+            playBtn.disabled = false;
+            playBtn.textContent = "🔇";
+        });
+
+    // --- Enable Mnemonic button ---
+    document.getElementById('mnemonicBtn').disabled = false;
+}
+
+function playPronunciation() {
+    const audio = document.getElementById('wordAudio');
+    if (audio.src) {
+        audio.play();
+    } else {
+        alert("Audio not ready yet.");
     }
+}
 
     async function generateNewWord() {
         const btn = document.getElementById('nextBtn');

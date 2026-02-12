@@ -9,7 +9,7 @@ class AIService:
         urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
         self.model = "llama-3.1-8b-instant" 
 
-    def fetch_word_info(self, word=None, level="B2"):
+    def fetch_word_info(self, word=None, level="A1"):
         target = f"the word '{word}'" if word else f"a random useful {level} level English vocabulary word"
         
         system_prompt = (
@@ -22,7 +22,7 @@ class AIService:
             "model": self.model,
             "messages": [{"role": "system", "content": system_prompt}],
             "response_format": {"type": "json_object"},
-            "temperature": 0.7
+            "temperature": 0.5
         }
 
         headers = {"Authorization": f"Bearer {self.api_key}", "Content-Type": "application/json"}
