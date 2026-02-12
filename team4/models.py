@@ -72,7 +72,6 @@ class BlockList(models.Model):
 class UserReport(models.Model):
     report_id = models.AutoField(primary_key=True)
     reporter = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='reports_submitted')
-
     reported_user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='reports_against')
     reason = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
