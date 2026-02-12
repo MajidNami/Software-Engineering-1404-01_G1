@@ -51,7 +51,7 @@ class UserSearchAPIView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        query = self.request.query_params.get('search', '')
+        query = self.request.query_params.get('search', '')   
         user = self.request.user
         
         # 1. Users I have blocked 
