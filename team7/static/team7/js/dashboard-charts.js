@@ -48,6 +48,77 @@ async function initializeDashboardCharts() {
 }
 
 /**
+ * Merge attempts by exam_id and timestamp to group multi-question exams
+ * Groups questions from the same exam taken at approximately the same time
+ * This ensures multi-question exams are counted as one attempt with average score
+ */
+function mergeAttemptsByExam(attempts) {
+    if (!attempts || attempts.length === 0) return [];
+    
+    // Sort by created_at first
+    const sortedAttempts = [...attempts].sort((a, b) => 
+        new Date(a.created_at) - new Date(b.created_at)
+    );
+    
+    const examGroups = {};
+    
+    sortedAttempts.forEach(attempt => {
+        const examId = attempt.exam_id;
+        const createdTime = new Date(attempt.created_at);
+        
+        // Create a key combining exam_id and a time window (same minute)
+        // This groups all questions from the same exam taken within the same minute
+        const timeKey = Math.floor(createdTime.getTime() / 60000); // Round to minute
+        const groupKey = `${examId}_${timeKey}`;
+        
+        if (!examGroups[groupKey]) {
+            examGroups[groupKey] = {
+                ...attempt,
+                scores: [attempt.overall_score || 0],
+                allCriteria: attempt.criteria || [],
+                evaluationIds: [attempt.evaluation_id],
+                dates: [attempt.created_at],
+                taskTypes: [attempt.task_type]  // Preserve task_type
+            };
+        } else {
+            // Add to existing group
+            examGroups[groupKey].scores.push(attempt.overall_score || 0);
+            examGroups[groupKey].evaluationIds.push(attempt.evaluation_id);
+            examGroups[groupKey].dates.push(attempt.created_at);
+            examGroups[groupKey].taskTypes.push(attempt.task_type);
+            // Merge criteria (keep the latest)
+            if (attempt.criteria && attempt.criteria.length > 0) {
+                examGroups[groupKey].allCriteria = attempt.criteria;
+            }
+        }
+    });
+    
+    // Convert groups back to array and calculate averages
+    return Object.values(examGroups).map(group => {
+        // Calculate average score
+        const averageScore = group.scores.length > 0 
+            ? (group.scores.reduce((a, b) => a + b, 0) / group.scores.length)
+            : 0;
+        
+        // Use the most recent date
+        const mostRecentDate = group.dates.sort((a, b) => 
+            new Date(b) - new Date(a)
+        )[0];
+        
+        // Use the most common task_type or the first one if mixed
+        const taskType = group.taskTypes[0];
+        
+        return {
+            ...group,
+            task_type: taskType,  // Explicitly preserve task_type
+            overall_score: parseFloat(averageScore.toFixed(1)),
+            question_count: group.scores.length,
+            created_at: mostRecentDate
+        };
+    }).sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+}
+
+/**
  * Fetch analytics data from API
  */
 async function fetchAnalyticsData() {
@@ -66,6 +137,12 @@ async function fetchAnalyticsData() {
         
         const data = await response.json();
         console.log('Analytics data fetched:', data);
+        
+        // Merge attempts by exam_id to group multi-question exams
+        if (data.attempts) {
+            data.attempts = mergeAttemptsByExam(data.attempts);
+        }
+        
         return data;
     } catch (error) {
         console.error('Error fetching analytics:', error);
@@ -131,7 +208,7 @@ function renderLatestExams(attempts) {
     
     examsGrid.innerHTML = '';
     
-    if (attempts.length === 0) {
+    if (!attempts || attempts.length === 0) {
         const emptyMessage = document.createElement('div');
         emptyMessage.style.cssText = 'grid-column: 1 / -1; text-align: center; padding: 40px; color: #a7bccc;';
         emptyMessage.innerHTML = '<p>No exams taken yet. Start your first exam!</p>';
@@ -139,7 +216,7 @@ function renderLatestExams(attempts) {
         return;
     }
     
-    attempts.forEach(attempt => {
+    attempts.forEach((attempt, index) => {
         const card = document.createElement('div');
         card.className = 'exam-card';
         
@@ -160,14 +237,25 @@ function renderLatestExams(attempts) {
             dateText = `${daysDiff} روز پیش`;
         }
         
+        const examName = attempt.exam_name || `Exam ${index + 1}`;
+        const score = (attempt.overall_score || 0).toFixed(1);
+        
+        // Determine if this is the best score
+        let isBestScore = false;
+        if (attempts.length > 0) {
+            const maxScore = Math.max(...attempts.map(a => a.overall_score || 0));
+            isBestScore = score == maxScore;
+        }
+        
         card.innerHTML = `
             <div class="exam-badge ${badgeClass}">${badgeText}</div>
             <p class="exam-date">${dateText}</p>
-            <p class="exam-title">${attempt.exam_name || 'Unnamed Exam'}</p>
+            <p class="exam-title">${examName}</p>
             <div class="exam-score">
                 <span class="score-label">Score:</span>
-                <span class="score-value">${(attempt.overall_score || 0).toFixed(1)}</span>
+                <span class="score-value">${score}</span>
             </div>
+            ${isBestScore ? '<div class="best-badge">بهترین نتیجه</div>' : ''}
         `;
         
         examsGrid.appendChild(card);
@@ -183,14 +271,17 @@ function initializeScoresChart(analyticsData) {
     
     const attempts = analyticsData.attempts || [];
     
-    // Prepare data - reverse to show chronological order (oldest to newest)
-    const labels = attempts.reverse().map((attempt, index) => {
+    // Create a copy to avoid mutating the original array
+    const attemptsForChart = [...attempts].reverse();
+    
+    // Prepare data - show chronological order (oldest to newest)
+    const labels = attemptsForChart.map((attempt, index) => {
         const date = new Date(attempt.created_at);
         return `${date.getDate()}/${date.getMonth() + 1}`;
     }).slice(-10); // Last 10 attempts
     
-    const scores = attempts.slice(-10).map(a => a.overall_score || 0);
-    const taskTypes = attempts.slice(-10).map(a => a.task_type);
+    const scores = attemptsForChart.slice(-10).map(a => a.overall_score || 0);
+    const taskTypes = attemptsForChart.slice(-10).map(a => a.task_type);
     
     // Color each point based on task type
     const pointColors = taskTypes.map(type => 
@@ -264,6 +355,7 @@ function initializeScoresChart(analyticsData) {
             scales: {
                 y: {
                     beginAtZero: true,
+                    min: 0,
                     max: 5,
                     ticks: {
                         color: themeColors.light,
@@ -274,6 +366,7 @@ function initializeScoresChart(analyticsData) {
                         callback: function(value) {
                             return value.toFixed(1);
                         },
+                        stepSize: 0.5,
                         padding: 10
                     },
                     grid: {
@@ -425,6 +518,7 @@ function initializeCriteriaChart(analyticsData) {
                         },
                         backdropColor: 'transparent',
                         padding: 8,
+                        stepSize: 0.5,
                         callback: function(value) {
                             return value.toFixed(1);
                         }

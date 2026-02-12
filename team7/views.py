@@ -77,9 +77,11 @@ def submit_writing(request):
         question_id = data.get('question_id')
         text = data.get('text', '').strip()
 
+        logger.info(f"submit_writing received: user_id={user_id}, question_id={question_id}, text_length={len(text)}")
+
         # Input validation
         if not all([user_id, question_id, text]):
-            logger.warning(f"Missing required fields in writing submission")
+            logger.warning(f"Missing required fields in writing submission. user_id={user_id}, question_id={question_id}, has_text={bool(text)}")
             return JsonResponse({
                 "error": "INVALID_INPUT",
                 "message": "Missing user_id, question_id, or text"
@@ -89,6 +91,7 @@ def submit_writing(request):
         service = EvaluationService()
         result, status_code = service.evaluate_writing(user_id, question_id, text)
 
+        logger.info(f"submit_writing result: status_code={status_code}")
         return JsonResponse(result, status=status_code)
 
     except json.JSONDecodeError:
@@ -117,9 +120,13 @@ def get_history(request, user_id=None):
         if not user_id:
             user_id = request.GET.get('user_id') or str(request.user.id)
 
+        logger.info(f"get_history called for user_id: {user_id}, request.user.id: {request.user.id}")
+        
         service = EvaluationService()
         limit = int(request.GET.get('limit', 50))
         result, status_code = service.get_user_history(user_id, limit)
+        
+        logger.info(f"get_history result for user_id {user_id}: {len(result.get('attempts', []))} attempts found")
 
         return JsonResponse(result, status=status_code)
 

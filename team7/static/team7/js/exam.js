@@ -976,7 +976,7 @@ async function generateHistoryDataFromAPI() {
         }
         
         // Convert API history to display format
-        historyData = data.attempts.map((attempt, index) => {
+        const rawHistory = data.attempts.map((attempt) => {
             const date = new Date(attempt.created_at);
             const year = date.getFullYear();
             const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -984,7 +984,8 @@ async function generateHistoryDataFromAPI() {
             
             return {
                 evaluation_id: attempt.evaluation_id,
-                title: attempt.exam_name || `Evaluation ${index + 1}`,
+                exam_id: attempt.exam_id,  // Include exam_id for grouping
+                title: attempt.exam_name || `Evaluation`,
                 type: attempt.task_type === 'writing' ? 'نوشتاری' : 'گفتاری',
                 task_type: attempt.task_type,  // Keep the original task_type (writing or speaking) for detection
                 score: attempt.overall_score || 0,
@@ -995,6 +996,68 @@ async function generateHistoryDataFromAPI() {
                 created_at: attempt.created_at
             };
         });
+        
+        // Group attempts by exam_id and timestamp to group multi-question exams
+        const examGroups = {};
+        rawHistory.forEach(attempt => {
+            const examId = attempt.exam_id;
+            const createdTime = new Date(attempt.created_at);
+            
+            // Create a key combining exam_id and a time window (same minute)
+            // This groups all questions from the same exam taken within the same minute
+            const timeKey = Math.floor(createdTime.getTime() / 60000); // Round to minute
+            const groupKey = `${examId}_${timeKey}`;
+            
+            if (!examGroups[groupKey]) {
+                examGroups[groupKey] = {
+                    ...attempt,
+                    scores: [attempt.score],
+                    allCriteria: attempt.criteria || [],
+                    evaluationIds: [attempt.evaluation_id],
+                    dates: [attempt.created_at]
+                };
+            } else {
+                // Add to existing group
+                examGroups[groupKey].scores.push(attempt.score);
+                examGroups[groupKey].evaluationIds.push(attempt.evaluation_id);
+                examGroups[groupKey].dates.push(attempt.created_at);
+                // Merge criteria
+                if (attempt.criteria && attempt.criteria.length > 0) {
+                    examGroups[groupKey].allCriteria = attempt.criteria;
+                }
+            }
+        });
+        
+        // Convert groups back to array and calculate averages
+        historyData = Object.values(examGroups).map(group => {
+            // Calculate average score
+            const averageScore = group.scores.length > 0 
+                ? (group.scores.reduce((a, b) => a + b, 0) / group.scores.length)
+                : 0;
+            
+            // Use the most recent date
+            const mostRecentDate = group.dates.sort((a, b) => 
+                new Date(b) - new Date(a)
+            )[0];
+            const date = new Date(mostRecentDate);
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            
+            return {
+                evaluation_id: group.evaluationIds[0],  // Use first evaluation ID
+                exam_id: group.exam_id,
+                title: group.title,
+                type: group.type,
+                task_type: group.task_type,
+                score: parseFloat(averageScore.toFixed(1)),  // Round to 1 decimal
+                duration: group.duration,
+                date: `${year}/${month}/${day}`,
+                criteria: group.allCriteria,
+                question_count: group.scores.length,  // Number of questions in exam
+                created_at: mostRecentDate
+            };
+        }).sort((a, b) => new Date(b.created_at) - new Date(a.created_at));  // Sort by most recent first
         
         console.log('Loaded history from API:', historyData);
     } catch (error) {

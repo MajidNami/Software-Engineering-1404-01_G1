@@ -412,7 +412,7 @@ function updateNavigationButtons() {
  * @returns {Object} {isValid: boolean, message: string}
  */
 function validateAllAnswers() {
-    const MIN_WORDS = 50;
+    const MIN_WORDS = 150;
     
     for (let i = 0; i < examState.totalQuestions; i++) {
         const question = examState.currentExam.questions[i];

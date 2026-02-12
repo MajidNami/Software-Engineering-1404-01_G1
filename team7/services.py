@@ -19,7 +19,7 @@ class WritingEvaluator:
 
     RUBRIC_VERSION = "ETS_iBT_2024_v1"
     MIN_WORDS = 50
-    MAX_WORDS = 1000
+    MAX_WORDS = 150
 
     def __init__(self):
         """Initialize LLM client from Django settings."""
@@ -269,9 +269,11 @@ class EvaluationService:
         Returns:
             tuple: (response_dict, http_status_code)
         """
+        logger.info(f"evaluate_writing called with user_id: {user_id}, question_id: {question_id}")
+        
         # 1. Fetch Question
         try:
-            question = Question.objects.get(question_id=question_id)
+            question = Question.objects.using('team7').get(question_id=question_id)
         except Question.DoesNotExist:
             logger.warning(f"Question not found: {question_id}")
             return {"error": "QUESTION_NOT_FOUND", "message": "Invalid question ID"}, 404
@@ -295,9 +297,11 @@ class EvaluationService:
 
         # 4. Data Persistence (Layer 3)
         try:
-            eval_obj = Evaluation.objects.create(
+            # Use explicit 'team7' database to ensure data is saved to team's database
+            eval_obj = Evaluation.objects.using('team7').create(
                 user_id=user_id,
                 question=question,
+                exam=question.exam,  # Save exam reference for history tracking
                 task_type="writing",
                 submitted_text=text,
                 overall_score=result.get('overall_score'),
@@ -305,9 +309,11 @@ class EvaluationService:
                 rubric_version_id=WritingEvaluator.RUBRIC_VERSION
             )
 
+            logger.info(f"Created evaluation with user_id: {eval_obj.user_id} (type: {type(eval_obj.user_id)})")
+            
             # Save detailed criterion scores
             for crit in result.get('criteria', []):
-                DetailedScore.objects.create(
+                DetailedScore.objects.using('team7').create(
                     evaluation=eval_obj,
                     criterion=crit.get('name'),
                     score_value=crit.get('score'),
@@ -354,7 +360,7 @@ class EvaluationService:
         """
         # 1. Fetch Question
         try:
-            question = Question.objects.get(question_id=question_id)
+            question = Question.objects.using('team7').get(question_id=question_id)
         except Question.DoesNotExist:
             logger.warning(f"Question not found: {question_id}")
             return {"error": "QUESTION_NOT_FOUND", "message": "Invalid question ID"}, 404
@@ -408,9 +414,11 @@ class EvaluationService:
 
         # 6. Data Persistence (Layer 3)
         try:
-            eval_obj = Evaluation.objects.create(
+            # Use explicit 'team7' database to ensure data is saved to team's database
+            eval_obj = Evaluation.objects.using('team7').create(
                 user_id=user_id,
                 question=question,
+                exam=question.exam,  # Save exam reference for history tracking
                 task_type="speaking",
                 audio_path=audio_path,
                 transcript_text=transcript_text,
@@ -421,7 +429,7 @@ class EvaluationService:
 
             # Save detailed criterion scores
             for crit in result.get('criteria', []):
-                DetailedScore.objects.create(
+                DetailedScore.objects.using('team7').create(
                     evaluation=eval_obj,
                     criterion=crit.get('name'),
                     score_value=crit.get('score'),
@@ -466,7 +474,7 @@ class EvaluationService:
             tuple: (response_dict, http_status_code)
         """
         try:
-            evaluations = Evaluation.objects.filter(
+            evaluations = Evaluation.objects.using('team7').filter(
                 user_id=user_id
             ).select_related('question', 'exam').prefetch_related('detailed_scores').order_by('-created_at')[:limit]
 
