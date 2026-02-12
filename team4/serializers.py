@@ -74,6 +74,8 @@ class ChatRoomSerializer(serializers.ModelSerializer):
             'last_message'
         ]
 
+
+
     def get_last_message(self, obj):
         # We use .chat_messages because that's the related_name we set in models.py
         last_msg = obj.chat_messages.order_by('-timestamp').first()
