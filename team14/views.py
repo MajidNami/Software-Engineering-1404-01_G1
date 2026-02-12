@@ -1,27 +1,20 @@
-from django.http import JsonResponse
-from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
-from django.db.models import Count
 import random
-from django.utils import timezone
-
 from core.auth import api_login_required
 from django.contrib.auth.decorators import login_required
-
-from core.urls import urlpatterns
-from .models import UserSession, Passage, Question, Option
-from django.shortcuts import get_object_or_404
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import JsonResponse
 from django.utils import timezone
-from .models import Passage, Question, UserSession, UserAnswer, AntiCheatLog
+from .models import Passage
 import json
-from .models import UserSession, Question, Option, UserAnswer  # این خط تکراری است و می‌تواند حذف شود
+from .models import UserSession, Question, UserAnswer
 from django.db.models import Q, Count
 
 TEAM_NAME = "team14"
 
 PRACTICE_TIME_MINUTES = 30
+
+
 @api_login_required
 def ping(request):
     return JsonResponse({"team": TEAM_NAME, "ok": True})
@@ -48,10 +41,6 @@ def index(request):
     }
 
     return render(request, 'team14/index.html', context)
-
-
-# این خط باید به decorator بالای هر تابع اضافه شود نه به صورت جداگانه.
-# login_required(login_url='auth')
 
 
 def get_filtered_passages(difficulty_level, topic=None, text_length=None, search=None):
@@ -218,7 +207,8 @@ def get_topic_icon(topic):
 
 
 def Exam_Page(request):
-    return render(request, 'team14/Exam_Page.html')
+    return render(request, 'team14/exam_page.html')
+
 
 @login_required(login_url='/auth/')
 def practice_page(request, passage_id):
@@ -280,9 +270,7 @@ def practice_page(request, passage_id):
         'IS_EXAM': False,  # ✅ اضافه شد
     }
 
-    return render(request, 'team14/Practice_Page.html', context)
-
-
+    return render(request, 'team14/practice_page.html', context)
 
 
 @csrf_exempt
@@ -319,8 +307,8 @@ def submit_answer(request):
             question=question,
             defaults={
                 'selected_option_id': data['option_id'],
-                'is_correct': False,        # ✅ مهم
-                'response_time': 0          # ✅ مهم
+                'is_correct': False,  # ✅ مهم
+                'response_time': 0  # ✅ مهم
             }
         )
 
@@ -334,7 +322,6 @@ def submit_answer(request):
 
     except Exception as e:
         return JsonResponse({'success': False, 'error': str(e)}, status=400)
-
 
 
 def finish_practice(request, session_id):
@@ -423,20 +410,17 @@ def practice_result(request, session_id):
 @login_required(login_url='/auth/')
 def start_exam(request):
     passages = Passage.objects.prefetch_related('questions__options').all()
-    IS_EXAM = True
+
     if not passages.exists():
         return redirect('index')
 
     passage = random.choice(list(passages))
+    exam_duration = 30 * 60  # 1800 ثانیه
 
-    passage_count = 3
-    exam_duration = 30 * 60
-
-    # ✅ ساخت session آزمون
     session = UserSession.objects.create(
         user_id=str(request.user.id),
         passage=passage,
-        mode='exam',  # ✅ حتماً exam
+        mode='exam',
         start_time=timezone.now(),
         exam_duration=exam_duration
     )
@@ -460,14 +444,19 @@ def start_exam(request):
         for ans in UserAnswer.objects.filter(session=session)
     }
 
+    # محاسبه زمان باقی‌مانده (اگر session از قبل شروع شده)
+    elapsed = (timezone.now() - session.start_time).total_seconds()
+    time_left = max(0, exam_duration - int(elapsed))
+
     context = {
         'passage': passage,
         'questions': json.dumps(questions_data),
         'total_questions': questions_qs.count(),
         'session': session,
+        'session_id': session.id,  # ✅ اضافه شد
         'user_answers': json.dumps(user_answers),
-        'time_left': exam_duration,
-        'IS_EXAM': True,  # ✅ اضافه شد
+        'time_left': time_left,  # ✅ زمان دقیق
+        'IS_EXAM': True,
     }
 
     return render(request, 'team14/exam.html', context)
@@ -593,8 +582,10 @@ def finish_exam(request, session_id):
 
     return redirect('exam_result', session_id=session.id)
 
+
 def about(request):
     return None
+
+
 def start_learning(request):
     return None
-

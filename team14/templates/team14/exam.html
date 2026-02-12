@@ -474,69 +474,76 @@
     <!-- Modal -->
     <div class="modal-overlay" id="finish-modal">
         <div class="modal-box">
-            <h3>اتمام تمرین</h3>
-            <p>آیا مطمئن هستید که می‌خواهید تمرین را به پایان برسانید؟</p>
+            <h3>اتمام آزمون</h3>
+            <p>آیا مطمئن هستید که می‌خواهید آزمون را به پایان برسانید؟</p>
 
             <div class="modal-actions">
                 <button class="btn btn-cancel" id="cancel-finish">
-                    ادامه تمرین
+                    ادامه
                 </button>
                 <button class="btn btn-confirm" id="confirm-finish">
-                    بله، اتمام تمرین
+                    بله، اتمام آزمون
                 </button>
             </div>
         </div>
     </div>
-   <script>
-        const IS_EXAM = {{ is_exam|yesno:"true,false" }};
-        let timeLeft =  1800 ; // 1800 = 30 دقیقه
-   </script>
 
-    <script>
-               function startExamTimer() {
-                        const timerEl = document.getElementById("exam-timer");
-                        if (!timerEl) {
-                            console.error("❌ تایمر پیدا نشد!");
-                            return;
-                        }
+<script>
+    // ✅ فقط یک بار تعریف می‌شود
+    const IS_EXAM = {{ IS_EXAM|yesno:"true,false" }};
+    const sessionId = {{ session.id }};
+    let timeLeft = {{ time_left }};
 
-                        console.log("✅ تایمر شروع شد:", timeLeft, "ثانیه");
+    function startExamTimer() {
+        const timerEl = document.getElementById("exam-timer");
+        if (!timerEl) {
+            console.error("❌ تایمر پیدا نشد!");
+            return;
+        }
 
-                        const interval = setInterval(() => {
-                            if (timeLeft <= 0) {
-                                clearInterval(interval);
-                                finishExam();
-                                return;
-                            }
+        console.log("✅ تایمر شروع شد:", timeLeft, "ثانیه");
+        updateTimerDisplay(timerEl, timeLeft);
 
-                            const minutes = Math.floor(timeLeft / 60);
-                            const seconds = timeLeft % 60;
+        const interval = setInterval(() => {
+            timeLeft--;
 
-                            timerEl.textContent =
-                                minutes.toString().padStart(2, '0') + ":" +
-                                seconds.toString().padStart(2, '0');
+            if (timeLeft <= 0) {
+                clearInterval(interval);
+                updateTimerDisplay(timerEl, 0);
+                finishExamByTimer();
+                return;
+            }
 
-                            // هشدار ۵ دقیقه آخر
-                            if (timeLeft <= 300 && !timerEl.classList.contains('warning')) {
-                                timerEl.classList.add('warning');
-                            }
+            updateTimerDisplay(timerEl, timeLeft);
 
-                            timeLeft--;
-                        }, 1000);
-                    }
+            if (timeLeft <= 300 && !timerEl.classList.contains('warning')) {
+                timerEl.classList.add('warning');
+            }
+        }, 1000);
+    }
+
+    function updateTimerDisplay(timerEl, seconds) {
+        const minutes = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        timerEl.textContent =
+            minutes.toString().padStart(2, '0') + ":" +
+            secs.toString().padStart(2, '0');
+    }
+
+    function finishExamByTimer() {
+        alert("⏰ زمان آزمون به پایان رسید");
+        const finishUrl = `{% url 'finish_exam' 0 %}`.replace('/0/', `/${sessionId}/`);
+        window.location.href = finishUrl;
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (IS_EXAM) {
+            startExamTimer();
+        }
+    });
+</script>
 
 
-               function finishExam() {
-                        alert("⏰ زمان آزمون به پایان رسید");
-                        const finishUrl = `{% url 'finish_exam' 0 %}`.replace('/0/', `/${sessionId}/`);
-                        window.location.href = finishUrl;
-                    }
-
-
-<!--                if (IS_EXAM) {-->
-<!--                    startExamTimer();-->
-<!--                }-->
-    </script>
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
@@ -671,7 +678,7 @@
             function updateNavigationButtons() {
                 document.getElementById('btn-previous').disabled = currentQuestionIndex === 0;
                 document.getElementById('btn-next').textContent =
-                    currentQuestionIndex === questions.length - 1 ? 'اتمام تمرین ←' : 'سوال بعدی ←';
+                    currentQuestionIndex === questions.length - 1 ? 'اتمام آزمون ←' : 'سوال بعدی ←';
             }
 
             // آپدیت شمارنده پاسخ‌ها
