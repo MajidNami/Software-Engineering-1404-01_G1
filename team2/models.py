@@ -66,6 +66,7 @@ class VideoFiles(models.Model):
         on_delete=models.CASCADE,
         related_name='videos',
     )
+    file_path = models.CharField(max_length=500, null=True, blank=True)
     file_size = models.BigIntegerField()
     file_format = models.CharField(
         max_length=20,
@@ -108,6 +109,9 @@ class UserDetails(models.Model):
         related_name='user_details_set',
         blank=True
     )
+
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
 
     def __str__(self):
         return f"{self.email} : {self.role}"
