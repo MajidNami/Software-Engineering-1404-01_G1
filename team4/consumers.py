@@ -143,7 +143,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         return msg
 
     @database_sync_to_async
-    def delete_message_db(self, msg_id):
+    def delete_message_db(self, msg_id):       
         try:
             msg = Message.objects.get(msg_id=msg_id, sender=self.user)
             msg.is_deleted = True
