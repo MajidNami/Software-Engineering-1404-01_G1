@@ -14,6 +14,7 @@ class ChatRoom(models.Model):
         return f"Chat {self.chat_id} ({self.chat_type})"
 
 
+
 class PrivateChat(models.Model):
     chat = models.OneToOneField(ChatRoom, on_delete=models.CASCADE, primary_key=True, related_name='private_info')
     user1 = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='private_chats_1')
