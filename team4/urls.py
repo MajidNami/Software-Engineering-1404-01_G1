@@ -43,7 +43,8 @@ urlpatterns = [
     path('api/chat/groups/create/', CreateGroupChatView.as_view(), name='create_group'),
     path('api/chat/groups/<int:chat_id>/add-member/', AddMemberToGroupView.as_view(), name='add_member'),
     path('api/chat/upload/', AttachmentUploadView.as_view()),
-    path('api/safety/block/', BlockUserView.as_view(), name='block_user'),
+    path('api/safety/block/', BlockUserView.as_view(), name='block_user'), 
+    
     path('api/safety/report/', ReportUserView.as_view(), name='report_user'),
 
 ]
