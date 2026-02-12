@@ -132,8 +132,6 @@ def _process_listening_assessment(submission_id, listening_detail_pk, audio_file
             submission.save()
         except Exception:
             pass
-    # Note: We do NOT delete the file if it's in MEDIA_ROOT (persistence), 
-    # only if it was a temp file passed in (which we avoided in the fix).
 
 
 @api_login_required
@@ -262,7 +260,8 @@ def listening_exam(request):
         'question': question,
         'has_question': question is not None,
     }
-    return render(request, f"{TEAM_NAME}/listening_exam.html", context)
+    # FIXED: The template file is named speaking_exam.html, NOT listening_exam.html
+    return render(request, f"{TEAM_NAME}/speaking_exam.html", context)
 
 
 @csrf_exempt
@@ -394,7 +393,12 @@ def submit_listening(request):
                 relative_path = os.path.join('team11', 'audio', filename)
                 
                 # Absolute path for OS
-                full_path = os.path.join(settings.MEDIA_ROOT, relative_path)
+                # FIXED: Manually use BASE_DIR/media because app404 settings.py cannot be changed
+                media_root = getattr(settings, 'MEDIA_ROOT', None)
+                if not media_root:
+                    media_root = os.path.join(settings.BASE_DIR, 'media')
+                
+                full_path = os.path.join(media_root, relative_path)
                 
                 # Ensure directory exists
                 os.makedirs(os.path.dirname(full_path), exist_ok=True)
@@ -410,11 +414,15 @@ def submit_listening(request):
             elif audio_url.startswith('http'):
                 # Remote URL (keep as is)
                 saved_db_path = audio_url
-                audio_file_path = audio_url # TODO: Implement download if needed for AI
+                audio_file_path = audio_url 
             else:
                 # Assuming it's already a path
                 saved_db_path = audio_url
-                audio_file_path = os.path.join(settings.MEDIA_ROOT, audio_url)
+                # Manually build path if settings.MEDIA_ROOT is missing
+                media_root = getattr(settings, 'MEDIA_ROOT', None)
+                if not media_root:
+                    media_root = os.path.join(settings.BASE_DIR, 'media')
+                audio_file_path = os.path.join(media_root, audio_url)
                 
         except Exception as file_error:
             logger.error(f"File saving error: {file_error}")
@@ -427,12 +435,12 @@ def submit_listening(request):
             status=AnalysisStatus.IN_PROGRESS
         )
         
-        # Create listening details with the SAFE path, not the base64 string
+        # Create listening details
         listening_detail = ListeningSubmission.objects.using('team11').create(
             submission=submission,
             question=question,
             topic=topic,
-            audio_file_url=saved_db_path, # Now safe!
+            audio_file_url=saved_db_path,
             duration_seconds=duration
         )
         
