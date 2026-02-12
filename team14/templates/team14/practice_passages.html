@@ -1085,7 +1085,6 @@
     <div class="container">
         <div class="content-wrapper">
             <!-- Sidebar -->
-            <aside class="sidebar">
                 <div class="filter-card">
                     <div class="filter-header">
                         <div class="filter-header-icon">🔍</div>
@@ -1100,7 +1099,7 @@
                             <span class="filter-icon">🔍</span>
                             <span>جستجو</span>
                         </div>
-                        <input type="text" class="search-input" placeholder="جستجوی عنوان تمرین...">
+                        <input type="text" class="search-input" placeholder="جستجوی عنوان تمرین..." value="{{ search_query }}">
                     </div>
 
                     <div class="filter-item">
@@ -1108,13 +1107,13 @@
                             <span class="filter-icon">📚</span>
                             <span>موضوع</span>
                         </div>
-                        <select class="filter-select">
-                            <option>همه موضوعات</option>
-                            <option>زیست‌شناسی</option>
-                            <option>تکنولوژی</option>
-                            <option>سلامت</option>
-                            <option>تاریخ</option>
-                            <option>هنر</option>
+                        <select class="filter-select" id="topic-filter">
+                            <option value="all" {% if selected_topic == 'all' %}selected{% endif %}>همه موضوعات</option>
+                            {% for topic in topic_choices %}
+                                <option value="{{ topic.value }}" {% if selected_topic == topic.value %}selected{% endif %}>
+                                    {{ topic.label }}
+                                </option>
+                            {% endfor %}
                         </select>
                     </div>
 
@@ -1123,15 +1122,20 @@
                             <span class="filter-icon">📏</span>
                             <span>طول متن</span>
                         </div>
-                        <select class="filter-select">
-                            <option>همه طول‌ها</option>
-                            <option>کوتاه (زیر 500 کلمه)</option>
-                            <option selected>متوسط (500-700 کلمه)</option>
-                            <option>بلند (بالای 700 کلمه)</option>
+                        <select class="filter-select" id="length-filter">
+                            <option value="all" {% if selected_text_length == 'all' %}selected{% endif %}>همه طول‌ها</option>
+                            <option value="short" {% if selected_text_length == 'short' %}selected{% endif %}>کوتاه (زیر 500 کلمه)</option>
+                            <option value="medium" {% if selected_text_length == 'medium' %}selected{% endif %}>متوسط (500-700 کلمه)</option>
+                            <option value="long" {% if selected_text_length == 'long' %}selected{% endif %}>بلند (بالای 700 کلمه)</option>
                         </select>
                     </div>
+
+                    <button class="back-button" onclick="window.location.href='{% url 'training_levels' %}'">
+                        ← بازگشت به سطوح
+                    </button>
                 </div>
             </aside>
+
 
             <!-- Exercise Cards -->
     <main class="exercises-grid">
@@ -1173,7 +1177,7 @@
                         <span>{{ passage.question_count }} سوال</span>
                     </div>
                 </div>
-        <a href="{% url 'practice_page' passage_id=1 %}" class="start-button" style="text-decoration: none; display: inline-block;">
+        <a href="{% url 'practice_page' passage_id=passage.id %}" class="start-button">
             شروع تمرین ←
         </a>
 
@@ -1181,10 +1185,12 @@
         </article>
 
         {% empty %}
-        <div style="text-align: center; padding: 60px;">
-            <p>😔 هنوز تمرینی ثبت نشده است</p>
+        <div class="no-data-message">
+            <p>😔 با فیلترهای انتخابی شما تمرینی یافت نشد.</p>
+            <p style="margin-top: 15px; font-size: 15px; color: #587CE6;">لطفاً فیلترهای دیگری را امتحان کنید.</p>
         </div>
         {% endfor %}
+
     </main>
 
         </div>
@@ -1196,5 +1202,64 @@
     <!-- Floating Action Buttons -->
 
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.querySelector('.search-input');
+    const topicSelect = document.querySelectorAll('.filter-select')[0];
+    const lengthSelect = document.querySelectorAll('.filter-select')[1];
+
+    let filterTimeout = null;
+
+    // تابع اعمال فیلتر
+    function applyFilters() {
+        const searchValue = searchInput.value.trim();
+        const topicValue = topicSelect.value;
+        const lengthValue = lengthSelect.value;
+
+        // ساخت URL با پارامترهای فیلتر
+        const params = new URLSearchParams();
+
+        if (searchValue) {
+            params.append('search', searchValue);
+        }
+        if (topicValue && topicValue !== 'all') {
+            params.append('topic', topicValue);
+        }
+        if (lengthValue && lengthValue !== 'all') {
+            params.append('text_length', lengthValue);
+        }
+
+        // ریلود صفحه با پارامترهای جدید
+        const newUrl = window.location.pathname + (params.toString() ? '?' + params.toString() : '');
+        window.location.href = newUrl;
+    }
+
+    // رویداد تغییر در search input (با تاخیر برای جلوگیری از درخواست‌های زیاد)
+    searchInput.addEventListener('input', function() {
+        clearTimeout(filterTimeout);
+        filterTimeout = setTimeout(applyFilters, 800); // 800ms تاخیر
+    });
+
+    // رویداد تغییر در selectها
+    topicSelect.addEventListener('change', applyFilters);
+    lengthSelect.addEventListener('change', applyFilters);
+
+    // مقداردهی اولیه به فیلترها از URL
+    const urlParams = new URLSearchParams(window.location.search);
+
+    if (urlParams.has('search')) {
+        searchInput.value = urlParams.get('search');
+    }
+    if (urlParams.has('topic')) {
+        topicSelect.value = urlParams.get('topic');
+    }
+    if (urlParams.has('text_length')) {
+        lengthSelect.value = urlParams.get('text_length');
+    }
+});
+</script>
+
+
 </body>
 </html>

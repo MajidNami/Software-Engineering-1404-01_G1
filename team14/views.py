@@ -17,6 +17,7 @@ from django.utils import timezone
 from .models import Passage, Question, UserSession, UserAnswer, AntiCheatLog
 import json
 from .models import UserSession, Question, Option, UserAnswer  # این خط تکراری است و می‌تواند حذف شود
+from django.db.models import Q, Count
 
 TEAM_NAME = "team14"
 
@@ -54,95 +55,153 @@ def index(request):
 # login_required(login_url='auth')
 
 
-def easy_level(request):
-    # گرفتن تمام passage های سطح آسان
-    passages = Passage.objects.filter(
-        difficulty_level='easy'
-    ).prefetch_related('questions__options').order_by('-created_at')
+def get_filtered_passages(difficulty_level, topic=None, text_length=None, search=None):
+    """
+    تابع کمکی برای فیلتر کردن passage ها
+    """
+    queryset = Passage.objects.filter(
+        difficulty_level=difficulty_level
+    ).prefetch_related('questions__options').annotate(
+        question_count=Count('questions')
+    )
 
-    # آماده کردن داده‌ها برای ارسال به template
+    # فیلتر موضوع
+    if topic and topic != 'all':
+        queryset = queryset.filter(topic=topic)
+
+    # فیلتر طول متن
+    if text_length == 'short':
+        queryset = queryset.filter(text_length__lt=500)
+    elif text_length == 'medium':
+        queryset = queryset.filter(text_length__gte=500, text_length__lte=700)
+    elif text_length == 'long':
+        queryset = queryset.filter(text_length__gt=700)
+
+    # جستجو در عنوان
+    if search:
+        queryset = queryset.filter(
+            Q(title__icontains=search) | Q(text__icontains=search)
+        )
+
+    return queryset.order_by('-created_at')
+
+
+def prepare_passages_data(passages):
+    """
+    آماده‌سازی داده‌های passage برای template
+    """
     passages_data = []
     for passage in passages:
-        # شمارش تعداد سوالات
-        question_count = passage.questions.count()
-
-        # محاسبه زمان تخمینی (حدود 1 دقیقه برای هر 75 کلمه + 1 دقیقه برای هر سوال)
+        question_count = passage.question_count if hasattr(passage, 'question_count') else passage.questions.count()
         estimated_time = (passage.text_length // 75) + question_count
 
         passages_data.append({
             'id': passage.id,
             'title': passage.title,
-            'topic': passage.get_topic_display(),  # نمایش نام فارسی topic
+            'topic': passage.get_topic_display(),
+            'topic_en': passage.topic,  # برای فیلتر
             'text_length': passage.text_length,
             'question_count': question_count,
             'estimated_time': estimated_time,
-            'icon': get_topic_icon(passage.topic),  # تابع کمکی برای آیکون
+            'icon': get_topic_icon(passage.topic),
+            'difficulty_level': passage.difficulty_level,
         })
+
+    return passages_data
+
+
+@login_required(login_url='/auth/')
+def easy_level(request):
+    # دریافت پارامترهای فیلتر از URL
+    topic = request.GET.get('topic', 'all')
+    text_length = request.GET.get('text_length', 'all')
+    search = request.GET.get('search', '')
+
+    # فیلتر کردن passages
+    passages = get_filtered_passages(
+        difficulty_level='easy',
+        topic=topic if topic != 'all' else None,
+        text_length=text_length if text_length != 'all' else None,
+        search=search if search else None
+    )
+
+    passages_data = prepare_passages_data(passages)
+
+    # آماده‌سازی لیست موضوعات از مدل
+    topic_choices = [{'value': choice[0], 'label': choice[1]} for choice in Passage.TOPIC_CHOICES]
 
     context = {
         'passages': passages_data,
         'difficulty': 'آسان',
+        'difficulty_level': 'easy',
+        'difficulty_persian': 'آسان',
         'total_passages': len(passages_data),
+        'topic_choices': topic_choices,
+        'selected_topic': topic,
+        'selected_text_length': text_length,
+        'search_query': search,
     }
 
     return render(request, 'team14/practice_passages.html', context)
 
 
+@login_required(login_url='/auth/')
 def mid_level(request):
-    # گرفتن تمام passage های سطح متوسط
-    passages = Passage.objects.filter(
-        difficulty_level='medium'
-    ).prefetch_related('questions__options').order_by('-created_at')
+    topic = request.GET.get('topic', 'all')
+    text_length = request.GET.get('text_length', 'all')
+    search = request.GET.get('search', '')
 
-    passages_data = []
-    for passage in passages:
-        question_count = passage.questions.count()
-        estimated_time = (passage.text_length // 75) + question_count
+    passages = get_filtered_passages(
+        difficulty_level='medium',
+        topic=topic if topic != 'all' else None,
+        text_length=text_length if text_length != 'all' else None,
+        search=search if search else None
+    )
 
-        passages_data.append({
-            'id': passage.id,
-            'title': passage.title,
-            'topic': passage.get_topic_display(),
-            'text_length': passage.text_length,
-            'question_count': question_count,
-            'estimated_time': estimated_time,
-            'icon': get_topic_icon(passage.topic),
-        })
+    passages_data = prepare_passages_data(passages)
+    topic_choices = [{'value': choice[0], 'label': choice[1]} for choice in Passage.TOPIC_CHOICES]
 
     context = {
         'passages': passages_data,
         'difficulty': 'متوسط',
+        'difficulty_level': 'medium',
+        'difficulty_persian': 'متوسط',
         'total_passages': len(passages_data),
+        'topic_choices': topic_choices,
+        'selected_topic': topic,
+        'selected_text_length': text_length,
+        'search_query': search,
     }
 
     return render(request, 'team14/practice_passages.html', context)
 
 
+@login_required(login_url='/auth/')
 def hard_level(request):
-    # گرفتن تمام passage های سطح سخت
-    passages = Passage.objects.filter(
-        difficulty_level='hard'
-    ).prefetch_related('questions__options').order_by('-created_at')
+    topic = request.GET.get('topic', 'all')
+    text_length = request.GET.get('text_length', 'all')
+    search = request.GET.get('search', '')
 
-    passages_data = []
-    for passage in passages:
-        question_count = passage.questions.count()
-        estimated_time = (passage.text_length // 75) + question_count
+    passages = get_filtered_passages(
+        difficulty_level='hard',
+        topic=topic if topic != 'all' else None,
+        text_length=text_length if text_length != 'all' else None,
+        search=search if search else None
+    )
 
-        passages_data.append({
-            'id': passage.id,
-            'title': passage.title,
-            'topic': passage.get_topic_display(),
-            'text_length': passage.text_length,
-            'question_count': question_count,
-            'estimated_time': estimated_time,
-            'icon': get_topic_icon(passage.topic),
-        })
+    passages_data = prepare_passages_data(passages)
+    topic_choices = [{'value': choice[0], 'label': choice[1]} for choice in Passage.TOPIC_CHOICES]
 
     context = {
         'passages': passages_data,
         'difficulty': 'سخت',
+        'difficulty_level': 'hard',
+        'difficulty_persian': 'سخت',
         'total_passages': len(passages_data),
+        'topic_choices': topic_choices,
+        'selected_topic': topic,
+        'selected_text_length': text_length,
+        'search_query': search,
     }
 
     return render(request, 'team14/practice_passages.html', context)
