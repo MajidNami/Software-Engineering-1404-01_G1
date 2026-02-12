@@ -3,6 +3,7 @@ import os
 import logging
 import random
 import threading
+import re
 from django.db import close_old_connections
 from django.db.models import Avg
 from django.http import JsonResponse
@@ -21,6 +22,7 @@ from .services import assess_writing, assess_speaking
 logger = logging.getLogger(__name__)
 
 TEAM_NAME = "team11"
+PERSIAN_ARABIC_PATTERN = re.compile(r"[\u0600-\u06FF]")
 
 
 def _process_writing_assessment(submission_id, topic, text_body, word_count):
@@ -277,6 +279,10 @@ def submit_writing(request):
         
         if not text_body:
             return JsonResponse({'error': 'متن ارسالی نمی‌تواند خالی باشد.'}, status=400)
+
+        # Writing submissions are expected to be English-only text.
+        if PERSIAN_ARABIC_PATTERN.search(text_body):
+            return JsonResponse({'error': 'فقط متن انگلیسی قابل قبول است.'}, status=400)
         
         word_count = len(text_body.split())
         
