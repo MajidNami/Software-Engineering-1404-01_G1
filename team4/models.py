@@ -71,7 +71,7 @@ class UserReport(models.Model):
     reason = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
 
-
+ 
 
 class User(AbstractUser):
     # AbstractUser already includes username, email, password
