@@ -1,5 +1,5 @@
-from .Word import Word
-from .Word import DifficultyLevel
+from .word import Word
+from .word import DifficultyLevel
 from .menemonic import WordStory
 from .ReadingMaterial import ReadingMaterial
 
