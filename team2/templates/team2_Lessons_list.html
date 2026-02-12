@@ -1,0 +1,342 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>درس‌های من - تیم 2</title>
+    <link rel="stylesheet" href="{% static 'styles/style.css' %}">
+    <style>
+        .lessons-container {
+            padding: 40px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .lessons-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .lessons-header h1 {
+            font-size: 2.5rem;
+            color: #333;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .lessons-header p {
+            font-size: 1.1rem;
+            color: #666;
+        }
+
+        .lessons-count {
+            display: inline-block;
+            background-color: #647eb4;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin-top: 10px;
+        }
+
+        .lessons-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+
+        .lesson-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .lesson-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .lesson-card-header {
+            background: linear-gradient(135deg, #647eb4 0%, #4a5f8f 100%);
+            padding: 20px;
+            color: white;
+            min-height: 80px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .lesson-level {
+            display: inline-block;
+            background-color: rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            width: fit-content;
+            margin-bottom: 10px;
+        }
+
+        .lesson-level.beginner {
+            background-color: rgba(76, 175, 80, 0.4);
+        }
+
+        .lesson-level.intermediate {
+            background-color: rgba(255, 193, 7, 0.4);
+        }
+
+        .lesson-level.advanced {
+            background-color: rgba(244, 67, 54, 0.4);
+        }
+
+        .lesson-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: white;
+            margin: 0;
+        }
+
+        .lesson-card-body {
+            padding: 20px;
+        }
+
+        .lesson-meta {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .lesson-subject {
+            font-size: 0.9rem;
+            color: #647eb4;
+            font-weight: 600;
+        }
+
+        .lesson-skill {
+            font-size: 0.9rem;
+            color: #666;
+            background-color: #f0f0f0;
+            padding: 4px 10px;
+            border-radius: 10px;
+        }
+
+        .lesson-description {
+            color: #555;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .lesson-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+
+        .lesson-duration {
+            font-size: 0.85rem;
+            color: #999;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .lesson-videos {
+            font-size: 0.85rem;
+            color: #647eb4;
+            font-weight: 600;
+        }
+
+        .lesson-link {
+            display: inline-block;
+            background-color: #647eb4;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: background-color 0.3s ease;
+            margin-top: 15px;
+            text-align: center;
+            width: 100%;
+        }
+
+        .lesson-link:hover {
+            background-color: #4a5f8f;
+            text-decoration: none;
+            color: white;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+        }
+
+        .empty-state-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+
+        .empty-state h2 {
+            font-size: 1.5rem;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .empty-state p {
+            font-size: 1rem;
+            margin-bottom: 20px;
+        }
+
+        .back-link {
+            display: inline-block;
+            color: #647eb4;
+            text-decoration: none;
+            font-weight: 600;
+            margin-top: 20px;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .lessons-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .lessons-header h1 {
+                font-size: 1.8rem;
+            }
+
+            .lesson-card-header {
+                min-height: 70px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <a href="{% url 'microservices' %}" class="home-btn">میکروسرویس ها</a>
+                <div class="nav-item">درباره ما</div>
+                <div class="nav-item">شروع یادگیری</div>
+            </div>
+            <div class="header-right">
+                <div class="flag-settings">
+                    <img src="{% static 'public/images/settings.png' %}" alt="" class="settings-icon">
+                    <div class="iran-flag">
+                        <div class="flag-green"></div>
+                        <div class="flag-white"></div>
+                        <div class="flag-red"></div>
+                    </div>
+                </div>
+                <div class="login-container">
+                    {% if request.user.is_authenticated %}
+                        <span style="color: #333; margin-right: 15px;">{{ request.user.email }}</span>
+                        <a href="{% url 'logout' %}" class="login-text">خروج</a>
+                    {% else %}
+                        <a href="{% url 'auth' %}" class="login-text">ورود</a>
+                        <a href="{% url 'signup' %}" class="login-text">ثبت نام</a>
+                    {% endif %}
+
+                    <div class="user-avatar">
+                        <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="15" cy="10" r="5" fill="#647eb4" />
+                            <path d="M5 25C5 20 9 17 15 17C21 17 25 20 25 25" stroke="#647eb4" stroke-width="2"
+                                fill="none" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Lessons Section -->
+        <section class="lessons-container">
+            <div class="lessons-header">
+                <h1>درس‌های آموزشی</h1>
+                <p>شروع یادگیری و بهبود مهارت‌های خود</p>
+                {% if total_lessons > 0 %}
+                    <div class="lessons-count">
+                        {{ total_lessons }} درس برای شما
+                    </div>
+                {% endif %}
+            </div>
+
+            {% if lessons %}
+                <div class="lessons-grid">
+                    {% for lesson in lessons %}
+                        <div class="lesson-card">
+                            <div class="lesson-card-header">
+                                <span class="lesson-level {{ lesson.level|lower }}">
+                                    {% if lesson.level == 'beginner' %}
+                                        مبتدی
+                                    {% elif lesson.level == 'intermediate' %}
+                                        متوسط
+                                    {% else %}
+                                        پیشرفته
+                                    {% endif %}
+                                </span>
+                                <h3 class="lesson-title">{{ lesson.title }}</h3>
+                            </div>
+                            <div class="lesson-card-body">
+                                <div class="lesson-meta">
+                                    <span class="lesson-subject">{{ lesson.subject }}</span>
+                                    <span class="lesson-skill">🎯 {{ lesson.skill }}</span>
+                                </div>
+                                <p class="lesson-description">{{ lesson.description }}</p>
+                                <div class="lesson-info">
+                                    <div class="lesson-duration">
+                                        ⏱️ 
+                                        {% with duration=lesson.duration_seconds %}
+                                            {% if duration >= 3600 %}
+                                                {{ duration|add:0|stringformat:"d" }} ساعت
+                                            {% elif duration >= 60 %}
+                                                {{ duration|divisibleby:"60" }} دقیقه
+                                            {% else %}
+                                                {{ duration }} ثانیه
+                                            {% endif %}
+                                        {% endwith %}
+                                    </div>
+                                    <div class="lesson-videos">
+                                        📹 {{ lesson.videos.count }} ویدیو
+                                    </div>
+                                </div>
+                                <a href="{% url 'team2_lesson_details' lesson.id %}" class="lesson-link">
+                                    مشاهده درس
+                                </a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="empty-state">
+                    <div class="empty-state-icon">📚</div>
+                    <h2>درسی برای شما تخصیص داده نشده است</h2>
+                    <p>مدیر سیستم می‌تواند درس‌های مختلفی را برای شما تعیین کند.</p>
+                    <a href="{% url 'microservices' %}" class="back-link">← بازگشت به صفحه اصلی</a>
+                </div>
+            {% endif %}
+        </section>
+    </div>
+</body>
+
+</html>
