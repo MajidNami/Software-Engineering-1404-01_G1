@@ -61,6 +61,7 @@ class Attachment(models.Model):
     file_type = models.CharField(max_length=50)
     file_size = models.FloatField()
 
+
 class BlockList(models.Model):
     id = models.AutoField(primary_key=True)
     blocker = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='blocking_users')
