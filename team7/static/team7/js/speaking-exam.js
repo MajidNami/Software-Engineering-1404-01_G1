@@ -89,6 +89,7 @@ async function initializeSpeakingExam(examId) {
     speakingExamState.totalQuestions = exam.totalQuestions || exam.questions.length;
     speakingExamState.currentQuestionIndex = 0;
     speakingExamState.timeRemaining = exam.totalTime;
+    speakingExamState.startTime = Date.now();
     
     console.log('Speaking exam initialized:', exam);
     
@@ -290,7 +291,19 @@ function formatTime(seconds) {
 async function startRecording() {
     try {
         const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        speakingExamState.mediaRecorder = new MediaRecorder(stream);
+        
+        // Determine the best supported audio codec
+        const options = { mimeType: 'audio/webm' };
+        if (MediaRecorder.isTypeSupported('audio/webm;codecs=opus')) {
+            options.mimeType = 'audio/webm;codecs=opus';
+        } else if (MediaRecorder.isTypeSupported('audio/webm')) {
+            options.mimeType = 'audio/webm';
+        } else if (MediaRecorder.isTypeSupported('audio/mp4')) {
+            options.mimeType = 'audio/mp4';
+        }
+        
+        console.log('Recording with mime type:', options.mimeType);
+        speakingExamState.mediaRecorder = new MediaRecorder(stream, options);
         speakingExamState.audioChunks = [];
         speakingExamState.isRecording = true;
         speakingExamState.isPaused = false;
@@ -397,7 +410,16 @@ function stopRecording() {
     
     speakingExamState.mediaRecorder.stop();
     speakingExamState.mediaRecorder.onstop = function() {
-        const audioBlob = new Blob(speakingExamState.audioChunks, { type: 'audio/wav' });
+        // Validate we have audio chunks
+        if (speakingExamState.audioChunks.length === 0) {
+            alert('خطا: هیچ صدایی ثبت نشد. لطفاً دوباره تلاش کنید.');
+            resetRecordingState();
+            return;
+        }
+        
+        // Create blob with the actual mime type used by mediaRecorder
+        const mimeType = speakingExamState.mediaRecorder.mimeType || 'audio/webm';
+        const audioBlob = new Blob(speakingExamState.audioChunks, { type: mimeType });
         const questionId = speakingExamState.currentExam.questions[speakingExamState.currentQuestionIndex].id;
         
         // Initialize recordings array for this question if it doesn't exist
@@ -476,18 +498,20 @@ function addPlaybackItem(questionId, duration) {
     const playbackList = document.getElementById('playbackList');
     if (!playbackList) return;
     
+    const recordingIndex = (speakingExamState.recordings[questionId] || []).length - 1;
+    
     const playbackHTML = `
-        <div class="playback-item" data-question-id="${questionId}">
+        <div class="playback-item" data-question-id="${questionId}" data-recording-index="${recordingIndex}" onclick="selectRecording('${questionId}', ${recordingIndex})">
             <div class="playback-item-inner">
                 <!-- Playback Actions -->
                 <div class="playback-actions">
-                    <div class="playback-action-btn download-btn" onclick="downloadRecording('${questionId}')">
+                    <div class="playback-action-btn download-btn" onclick="event.stopPropagation(); downloadRecording('${questionId}', ${recordingIndex})">
                         <svg viewBox="0 0 40 40" fill="none">
                             <rect width="40" height="40" rx="8" fill="white"/>
                             <path d="M20 14V26M20 26L16 22M20 26L24 22" stroke="#0B0754" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
                     </div>
-                    <div class="playback-action-btn play-btn" onclick="playRecording('${questionId}')">
+                    <div class="playback-action-btn play-btn" onclick="event.stopPropagation(); playRecording('${questionId}', ${recordingIndex})">
                         <svg viewBox="0 0 40 40" fill="none">
                             <rect x="1" y="1" width="38" height="38" rx="7" fill="white" stroke="#4CAF50" stroke-width="2"/>
                             <path d="M17 14L26 20L17 26V14Z" fill="#4CAF50"/>
@@ -498,7 +522,7 @@ function addPlaybackItem(questionId, duration) {
                 <!-- Playback Left -->
                 <div class="playback-left">
                     <div class="playback-info">
-                        <p class="playback-name">ضبط ${speakingExamState.currentAttempt} - تلاش ${speakingExamState.currentAttempt}</p>
+                        <p class="playback-name">ضبط ${recordingIndex + 1} - تلاش ${recordingIndex + 1}</p>
                         <p class="playback-duration">مدت زمان: ${formatTime(duration)}</p>
                     </div>
                     <div class="playback-sound-wave">
@@ -549,6 +573,54 @@ function selectRecording(questionId, recordingIndex) {
     // Store which recording is selected for this question
     speakingExamState.selectedRecordings[questionId] = recordingIndex;
     console.log(`Selected recording ${recordingIndex + 1} for question ${questionId}`);
+    
+    // Update UI to show which recording is selected
+    const playbackList = document.getElementById('playbackList');
+    if (playbackList) {
+        const items = playbackList.querySelectorAll('.playback-item');
+        items.forEach((item, index) => {
+            if (index === recordingIndex) {
+                item.classList.add('selected');
+            } else {
+                item.classList.remove('selected');
+            }
+        });
+    }
+}
+
+/**
+ * Validate that all questions have selected recordings
+ * @returns {Object} {isValid: boolean, message: string}
+ */
+function validateAllRecordingsSelected() {
+    for (let i = 0; i < speakingExamState.totalQuestions; i++) {
+        const question = speakingExamState.currentExam.questions[i];
+        const questionId = question.id;
+        
+        // Check if recording is selected for this question
+        if (!(questionId in speakingExamState.selectedRecordings)) {
+            return {
+                isValid: false,
+                message: `سوال ${i + 1}: لطفاً یکی از ضبط‌های خود را انتخاب کنید`
+            };
+        }
+        
+        // Check if that recording exists
+        const recordingIndex = speakingExamState.selectedRecordings[questionId];
+        const recordings = speakingExamState.recordings[questionId];
+        
+        if (!recordings || !recordings[recordingIndex]) {
+            return {
+                isValid: false,
+                message: `سوال ${i + 1}: ضبط انتخاب شده موجود نیست`
+            };
+        }
+    }
+    
+    return {
+        isValid: true,
+        message: 'OK'
+    };
 }
 
 // ==================== NAVIGATION ====================
@@ -565,57 +637,229 @@ function nextQuestion() {
 }
 
 // ==================== SUBMIT EXAM ====================
-function submitExam() {
+async function submitExam() {
+    // Validate that user has selected a recording for each question
+    const validation = validateAllRecordingsSelected();
+    if (!validation.isValid) {
+        alert(validation.message);
+        return;
+    }
+
     // Show submit confirmation popup
-    showSubmitExamPopup(() => {
+    showSubmitExamPopup(async () => {
         // Stop all timers
         if (speakingExamState.timerInterval) clearInterval(speakingExamState.timerInterval);
         if (speakingExamState.recordingTimer) clearInterval(speakingExamState.recordingTimer);
         if (speakingExamState.isRecording) stopRecording();
-        
-        // Prepare submission data
-        const submissionData = {
-            examId: speakingExamState.currentExamId,
-            recordings: Object.keys(speakingExamState.recordings).map(qId => ({
-                questionId: qId,
-                duration: speakingExamState.recordingTime
-            })),
-            timeElapsed: speakingExamState.currentExam.totalTime - speakingExamState.timeRemaining
-        };
-        
-        console.log('Submitting exam:', submissionData);
-        
-        // TODO: Send to server via AJAX
-        // fetch('/api/v1/evaluate/speaking/', {
-        //     method: 'POST',
-        //     headers: {
-        //         'Content-Type': 'application/json',
-        //         'X-CSRFToken': getCookie('csrftoken')
-        //     },
-        //     body: JSON.stringify(submissionData)
-        // })
-        // .then(response => response.json())
-        // .then(data => {
-        //     window.location.href = '/team7/';
-        // })
-        // .catch(error => console.error('Error:', error));
-        
-        // Show result popup
-        const resultData = {
-            score: 7.8,
-            answeredQuestions: speakingExamState.totalQuestions,
-            totalQuestions: speakingExamState.totalQuestions,
-            timeSpent: speakingExamState.currentExam.totalTime - speakingExamState.timeRemaining,
-            type: speakingExamState.currentExam.title,
-            message: 'عملکرد خوبی در آزمون گفتاری داشتید. برای بهبود تلفظ، تمرین بیشتری انجام دهید.'
-        };
-        showExamResultPopup(resultData);
+
+        // Show loading indicator
+        showLoadingPopup();
+
+        try {
+            const scores = [];
+            const evaluations = [];
+
+            // Get user ID from authManager
+            const currentUser = window.authManager?.getCurrentUser();
+            if (!currentUser || !currentUser.id) {
+                throw new Error('Unable to get current user ID');
+            }
+            const userId = currentUser.id;
+
+            // Evaluate each selected recording via API
+            for (let i = 0; i < speakingExamState.totalQuestions; i++) {
+                const question = speakingExamState.currentExam.questions[i];
+                const recordingIndex = speakingExamState.selectedRecordings[question.id];
+
+                if (recordingIndex === undefined) {
+                    continue; // Should not happen if validation passed
+                }
+
+                const recording = speakingExamState.recordings[question.id][recordingIndex];
+                if (!recording || !recording.blob) {
+                    throw new Error(`No recording found for question ${i + 1}`);
+                }
+
+                try {
+                    // Convert audio blob to WAV format for compatibility
+                    let audioBlob = recording.blob;
+                    if (!audioBlob.type.includes('wav')) {
+                        console.log(`Converting ${audioBlob.type} to WAV format...`);
+                        audioBlob = await convertToWAV(audioBlob);
+                    }
+                    
+                    // Prepare FormData for multipart file upload
+                    const formData = new FormData();
+                    formData.append('user_id', userId);
+                    formData.append('question_id', question.id);
+                    formData.append('audio_file', audioBlob, `recording-q${i + 1}.wav`);
+
+                    console.log(`Submitting question ${i + 1}: user_id=${userId}, question_id=${question.id}, blob_size=${recording.blob.size}, type=${recording.blob.type}`);
+
+                    const response = await fetch('/team7/api/submit-speaking/', {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    if (!response.ok) {
+                        const errorText = await response.text();
+                        console.error(`API error response: ${errorText}`);
+                        throw new Error(`API error: ${response.status} - ${errorText}`);
+                    }
+
+                    const result = await response.json();
+
+                    if (result.status === 'success') {
+                        scores.push(result.overall_score);
+                        evaluations.push({
+                            questionIndex: i + 1,
+                            score: result.overall_score,
+                            feedback: result.feedback,
+                            transcript: result.transcript,
+                            criteria: result.criteria
+                        });
+                        console.log(`Question ${i + 1} evaluated: ${result.overall_score}`);
+                    } else {
+                        throw new Error(result.error || 'Evaluation failed');
+                    }
+                } catch (error) {
+                    console.error(`Error evaluating question ${i + 1}:`, error);
+                    // On first error, close popup and show error message
+                    if (i === 0) {
+                        PopupManager.closePopup();
+                        alert(error.message || 'خطا در ارزیابی آزمون. لطفاً دوباره تلاش کنید.');
+                        return;
+                    }
+                    // Continue with other questions even if one fails
+                    evaluations.push({
+                        questionIndex: i + 1,
+                        score: 0,
+                        feedback: error.message || 'خطا در ارزیابی این سوال',
+                        transcript: '',
+                        criteria: []
+                    });
+                }
+            }
+
+            // Calculate average score
+            const averageScore = scores.length > 0
+                ? (scores.reduce((a, b) => a + b, 0) / scores.length).toFixed(1)
+                : 0;
+
+            // Prepare result data
+            const timeUsed = Math.floor((Date.now() - speakingExamState.startTime) / 1000);
+            const resultData = {
+                score: parseFloat(averageScore),
+                totalScore: 4.0,
+                answeredQuestions: speakingExamState.totalQuestions,
+                totalQuestions: speakingExamState.totalQuestions,
+                timeSpent: timeUsed,
+                type: speakingExamState.currentExam.title,
+                message: 'از تلاش شما سپاسگزاریم. نتایج تفصیلی هر سوال را در زیر مشاهده کنید.',
+                evaluations: evaluations // Add per-question details
+            };
+
+            console.log('Result data:', resultData);
+
+            // Close loading popup and show result
+            PopupManager.closePopup();
+            setTimeout(() => {
+                showExamResultPopupWithDetails(resultData);
+            }, 300);
+
+        } catch (error) {
+            console.error('Error during exam submission:', error);
+            PopupManager.closePopup();
+            alert('خطا در ارسال آزمون. لطفاً دوباره تلاش کنید.');
+        }
     });
 }
 
-function saveRecording() {
-    console.log('Saving recording...');
-    alert('ضبط ذخیره شد.');
+// ==================== AUDIO CONVERSION ====================
+/**
+ * Convert audio blob to WAV format
+ * Since we're recording in WebM/MP4, we need to convert to WAV for the API
+ * @param {Blob} inputBlob - The audio blob to convert
+ * @returns {Promise<Blob>} WAV format blob
+ */
+async function convertToWAV(inputBlob) {
+    try {
+        // For now, we'll just wrap the blob with a WAV header
+        // This is a simple conversion that works for most browsers
+        
+        // Read the blob as ArrayBuffer
+        const arrayBuffer = await inputBlob.arrayBuffer();
+        
+        // Create WAV header
+        const sampleRate = 16000; // Standard sample rate for speech
+        const channels = 1; // Mono for speech
+        const bitsPerSample = 16;
+        
+        // WAV header structure
+        const wavHeader = new ArrayBuffer(44);
+        const view = new DataView(wavHeader);
+        
+        // RIFF identifier "RIFF"
+        view.setUint8(0, 0x52);
+        view.setUint8(1, 0x49);
+        view.setUint8(2, 0x46);
+        view.setUint8(3, 0x46);
+        
+        // File length - 8
+        view.setUint32(4, arrayBuffer.byteLength + 36, true);
+        
+        // RIFF type "WAVE"
+        view.setUint8(8, 0x57);
+        view.setUint8(9, 0x41);
+        view.setUint8(10, 0x56);
+        view.setUint8(11, 0x45);
+        
+        // Format chunk identifier "fmt "
+        view.setUint8(12, 0x66);
+        view.setUint8(13, 0x6D);
+        view.setUint8(14, 0x74);
+        view.setUint8(15, 0x20);
+        
+        // Format chunk length
+        view.setUint32(16, 16, true);
+        
+        // Audio format (1 = PCM)
+        view.setUint16(20, 1, true);
+        
+        // Number of channels
+        view.setUint16(22, channels, true);
+        
+        // Sample rate
+        view.setUint32(24, sampleRate, true);
+        
+        // Byte rate
+        view.setUint32(28, sampleRate * channels * bitsPerSample / 8, true);
+        
+        // Block align
+        view.setUint16(32, channels * bitsPerSample / 8, true);
+        
+        // Bits per sample
+        view.setUint16(34, bitsPerSample, true);
+        
+        // Data chunk identifier "data"
+        view.setUint8(36, 0x64);
+        view.setUint8(37, 0x61);
+        view.setUint8(38, 0x74);
+        view.setUint8(39, 0x61);
+        
+        // Data chunk length
+        view.setUint32(40, arrayBuffer.byteLength, true);
+        
+        // Combine header and audio data
+        const wavBlob = new Blob([wavHeader, arrayBuffer], { type: 'audio/wav' });
+        console.log(`Converted audio to WAV: original=${inputBlob.size} bytes, converted=${wavBlob.size} bytes`);
+        
+        return wavBlob;
+    } catch (error) {
+        console.error('Error converting to WAV:', error);
+        // If conversion fails, return original blob and let server handle it
+        return inputBlob;
+    }
 }
 
 // ==================== EVENT LISTENERS ====================
@@ -644,10 +888,7 @@ function attachEventListeners() {
     const stopBtn = document.getElementById('stopBtn');
     if (stopBtn) stopBtn.addEventListener('click', stopRecording);
     
-    // Submit and save buttons
+    // Submit button
     const submitBtn = document.getElementById('submitBtn');
     if (submitBtn) submitBtn.addEventListener('click', submitExam);
-    
-    const saveBtn = document.getElementById('saveBtn');
-    if (saveBtn) saveBtn.addEventListener('click', saveRecording);
 }

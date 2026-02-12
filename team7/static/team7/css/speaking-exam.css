@@ -935,6 +935,15 @@ body {
     border-radius: 12px;
     flex-shrink: 0;
     width: 100%;
+    border: 2px solid transparent;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.playback-item.selected {
+    background: #f0f4ff;
+    border: 2px solid #0b0754;
+    box-shadow: 0 2px 8px rgba(11, 7, 84, 0.1);
 }
 
 .playback-item-inner {

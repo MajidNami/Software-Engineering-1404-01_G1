@@ -418,10 +418,20 @@ function showExamResultPopupWithDetails(resultData) {
                 <div style="background: #f8f8fc; border-right: 4px solid ${qScoreColor}; padding: 12px; margin-bottom: 12px; border-radius: 4px;">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
                         <span style="font-weight: 600; color: #0b0754;">سوال ${eval_item.questionIndex}</span>
-                        <span style="background: ${qScoreColor}; color: white; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600;">${qScore.toFixed(1)}/5</span>
+                        <span style="background: ${qScoreColor}; color: white; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600;">${qScore.toFixed(1)}/${maxScore}</span>
                     </div>
                     <p style="font-size: 12px; color: #4a4a6a; line-height: 1.5; margin-bottom: 8px;">${eval_item.feedback || 'بازخورد در دسترس نیست'}</p>
             `;
+            
+            // Add transcript if available (for speaking exams)
+            if (eval_item.transcript) {
+                questionsDetailsHTML += `
+                    <div style="font-size: 11px; color: #555; margin: 8px 0; padding: 8px; background: white; border-left: 3px solid #3aa0ca; border-radius: 2px;">
+                        <strong style="display: block; margin-bottom: 4px;">متن گفتاری:</strong>
+                        <p style="margin: 0; line-height: 1.4;">${eval_item.transcript}</p>
+                    </div>
+                `;
+            }
             
             // Add criteria if available
             if (eval_item.criteria && eval_item.criteria.length > 0) {
@@ -431,7 +441,7 @@ function showExamResultPopupWithDetails(resultData) {
                 `;
                 eval_item.criteria.forEach((criterion) => {
                     questionsDetailsHTML += `
-                        <div style="margin-bottom: 4px;">• <strong>${criterion.name}:</strong> ${criterion.score.toFixed(1)}/5 - ${criterion.comment || ''}</div>
+                        <div style="margin-bottom: 4px;">• <strong>${criterion.name}:</strong> ${criterion.score.toFixed(1)}/${maxScore} - ${criterion.comment || ''}</div>
                     `;
                 });
                 questionsDetailsHTML += `
@@ -487,7 +497,7 @@ function showExamResultPopupWithDetails(resultData) {
                         </div>
                         <div class="result-badge-content">
                             <p class="result-badge-label">نمره نهایی</p>
-                            <p class="result-badge-value">${resultData.score.toFixed(1)}/5</p>
+                            <p class="result-badge-value">${resultData.score.toFixed(1)}/${maxScore}</p>
                         </div>
                     </div>
                 </div>

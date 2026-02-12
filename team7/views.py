@@ -162,9 +162,11 @@ def submit_speaking(request):
         user_id = request.POST.get('user_id')
         question_id = request.POST.get('question_id')
         
+        logger.info(f"submit_speaking POST data: user_id={user_id}, question_id={question_id}, POST keys={list(request.POST.keys())}")
+        
         # Input validation
         if not all([user_id, question_id]):
-            logger.warning(f"Missing required fields in speaking submission")
+            logger.warning(f"Missing required fields in speaking submission. user_id={user_id}, question_id={question_id}")
             return JsonResponse({
                 "error": "INVALID_INPUT",
                 "message": "Missing user_id or question_id"
@@ -172,7 +174,7 @@ def submit_speaking(request):
 
         # Check for audio file in request.FILES
         if 'audio_file' not in request.FILES:
-            logger.warning(f"No audio file in request")
+            logger.warning(f"No audio file in request. FILES keys: {list(request.FILES.keys())}")
             return JsonResponse({
                 "error": "INVALID_INPUT",
                 "message": "Missing audio_file in request"
