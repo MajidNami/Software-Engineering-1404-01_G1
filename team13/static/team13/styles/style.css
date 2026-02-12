@@ -1,1 +1,691 @@
-﻿/* استایل اختصاصی گروه 13 */
+﻿:root {
+  --coral: #F79F98;
+  --light-blue: #B5CBF8;
+  --dark-blue: #637AB4;
+  --navy-brand: #0E0C3F;
+  --cream: #FEF4E6;
+  --white-fixed: #FFFFFF;
+
+  --bg-page: #f7f1e4;
+  --bg-card: #fffbf2;
+  --text-main: #0E0C3F;
+  --shadow-color: rgba(14, 12, 63, 0.12);
+  --header-icon-bg: #fffbf2;
+}
+
+.dark-mode {
+  --bg-page: #0B1024;
+  --bg-card: #121A33;
+  --text-main: #E9ECF7;
+  --shadow-color: rgba(0, 0, 0, 0.55);
+  --header-icon-bg: #121A33;
+
+  --navy-brand: #5D7CFF;
+  --dark-blue: #6F8CFF;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Vazirmatn', 'Segoe UI', sans-serif;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+body {
+  background-color: var(--bg-page);
+  color: var(--text-main);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+}
+
+/* Header */
+.main-header {
+  width: 90%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.header-title {
+  font-size: 24px;
+  font-weight: 800;
+}
+
+.header-icon,
+.header-back {
+  font-size: 24px;
+  cursor: pointer;
+  color: var(--text-main);
+  background: var(--header-icon-bg);
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 10px var(--shadow-color);
+  transition: all 0.3s;
+  user-select: none;
+  border: none;
+  text-decoration: none;
+}
+
+.header-icon:hover {
+  background-color: var(--light-blue);
+  color: var(--white-fixed);
+}
+.header-back:hover {
+  background-color: var(--coral);
+  color: var(--white-fixed);
+}
+
+/* Exit as pill */
+.header-back.header-exit {
+  width: auto;
+  padding: 0 18px;
+  border-radius: 14px;
+  font-size: 18px;
+}
+
+/* Layout */
+.container {
+  width: 90%;
+  max-width: 1200px;
+  display: flex;
+  justify-content: center;
+  margin: 20px auto 30px auto;
+}
+
+/* Card (used in landing) */
+.card {
+  background: var(--bg-card);
+  border-radius: 30px;
+  box-shadow: 0 10px 40px var(--shadow-color);
+  display: flex;
+  width: 100%;
+  overflow: hidden;
+  min-height: 500px;
+}
+
+/* Landing content */
+.card-content {
+  flex: 1.7;
+  padding: 60px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: right;
+}
+
+.card-content h3 {
+  color: var(--coral);
+  font-size: 26px;
+  margin-bottom: 15px;
+  font-weight: 800;
+  user-select: none;
+}
+
+.card-content h1 {
+  font-size: 3rem;
+  margin-bottom: 25px;
+  line-height: 1.2;
+  user-select: none;
+}
+
+.description-text {
+  margin-bottom: 30px;
+  font-size: 18px;
+  opacity: 0.8;
+}
+
+/* CTA button */
+@keyframes attention-pulse {
+  0% { background-color: var(--dark-blue); box-shadow: 0 0 0 0 rgba(100, 126, 180, 0.7); }
+  70% { background-color: var(--navy-brand); box-shadow: 0 0 0 15px rgba(100, 126, 180, 0); }
+  100% { background-color: var(--dark-blue); box-shadow: 0 0 0 0 rgba(100, 126, 180, 0); }
+}
+
+.btn-start {
+  background-color: var(--dark-blue);
+  color: var(--white-fixed);
+  padding: 16px 50px;
+  border: none;
+  border-radius: 50px;
+  font-size: 20px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  width: fit-content;
+  animation: attention-pulse 2s infinite;
+
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-start:hover {
+  animation: none;
+  background-color: var(--navy-brand);
+  transform: scale(1.08);
+  box-shadow: 0 10px 20px rgba(33, 29, 99, 0.4);
+}
+
+/* Landing image */
+.card-image {
+  flex: 1;
+  position: relative;
+  background-color: var(--light-blue);
+}
+
+.card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+  display: block;
+}
+
+/* =======================
+   Exam page (islands)
+   ======================= */
+.exam-card {
+  background: transparent;
+  box-shadow: none;
+  border-radius: 0;
+  overflow: visible;
+  padding: 0;
+  flex-direction: column;
+  gap: 18px;
+  min-height: 580px;
+  margin-top: 20px;
+}
+
+.exam-question {
+  background: var(--bg-card);
+  border-radius: 18px;
+  box-shadow: 0 8px 24px var(--shadow-color);
+  padding: 22px;
+  min-height: 140px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
+  position: relative;
+}
+
+.exam-question-title {
+  text-align: center;
+  font-size: 22px;
+  font-weight: 900;
+}
+
+.exam-question-source {
+  position: absolute;
+  left: 18px;
+  bottom: 14px;
+  font-size: 13px;
+  opacity: 0.7;
+  text-align: left;
+}
+
+.exam-bottom {
+  display: grid;
+  grid-template-areas: "textarea actions";
+  grid-template-columns: 1fr 260px;
+  gap: 18px;
+  flex: 1;
+}
+
+.exam-actions { grid-area: actions; }
+.exam-textarea { grid-area: textarea; }
+
+.exam-textarea {
+  background: var(--bg-card);
+  border-radius: 18px;
+  box-shadow: 0 8px 24px var(--shadow-color);
+  padding: 18px;
+  border: 2px solid transparent;
+  outline: none;
+  resize: none;
+  height: 100%;
+  align-self: stretch;
+  min-height: 260px;
+  font-size: 18px;
+  line-height: 1.8;
+  color: var(--text-main);
+}
+
+.exam-textarea:focus {
+  border-color: var(--light-blue);
+}
+
+.exam-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.exam-action-btn {
+  background: var(--bg-card);
+  color: var(--text-main);
+  border: none;
+  border-radius: 18px;
+  box-shadow: 0 8px 24px var(--shadow-color);
+  font-size: 18px;
+  font-weight: 900;
+  cursor: pointer;
+  padding: 18px;
+  transition: transform 0.2s, background-color 0.2s, color 0.2s;
+  flex: 1;
+}
+
+.exam-action-btn:hover {
+  transform: scale(1.04);
+  background-color: var(--bg-page);
+}
+
+.exam-action-btn.primary {
+  flex: 2;
+  background: var(--dark-blue);
+  color: var(--white-fixed);
+}
+
+.exam-action-btn.primary:hover {
+  background: var(--navy-brand);
+}
+
+.exam-action-btn:not(.primary):hover {
+  background-color: var(--coral);
+  color: var(--white-fixed);
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .card {
+    flex-direction: column-reverse;
+    border-radius: 20px;
+  }
+
+  .card-image {
+    width: 100%;
+    height: 300px;
+    flex: none;
+  }
+
+  .card-content {
+    padding: 30px;
+    align-items: center;
+    text-align: center;
+  }
+
+  .btn-start {
+    width: 100%;
+  }
+
+  /* Exam: Question -> Answer -> Submit -> Report */
+  .exam-bottom {
+    grid-template-areas:
+      "textarea"
+      "actions";
+    grid-template-columns: 1fr;
+  }
+
+  .exam-textarea {
+    height: auto;
+    min-height: 220px;
+    font-size: 16px;
+  }
+
+  .exam-action-btn {
+    min-height: 70px;
+    flex: unset;
+  }
+}
+
+/* Header buttons hover animation */
+.header-icon,
+.header-back {
+  transition: transform 0.25s ease,
+              box-shadow 0.25s ease,
+              background-color 0.25s ease,
+              color 0.25s ease;
+}
+
+.header-icon:hover,
+.header-back:hover {
+  transform: scale(1.12);
+  box-shadow: 0 12px 25px var(--shadow-color);
+}
+
+/* Micro-interaction: press effect (visible) */
+.header-icon,
+.header-back,
+.btn-start,
+.exam-action-btn{
+  transition: transform 180ms ease, box-shadow 180ms ease, background-color 180ms ease, color 180ms ease;
+  will-change: transform;
+}
+
+.header-icon:active,
+.header-back:active,
+.btn-start:active,
+.exam-action-btn:active{
+  transform: translateY(1px) scale(0.94);
+}
+
+/* Page transition */
+body{
+  opacity: 1;
+}
+
+body.page-enter{
+  animation: pageIn 220ms ease-out both;
+}
+
+body.page-exit{
+  animation: pageOut 180ms ease-in both;
+}
+
+@keyframes pageIn{
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes pageOut{
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
+
+/* Disable UI while waiting for backend */
+.ui-disabled{
+  pointer-events: none;
+  opacity: 0.55;
+  transform: none !important;
+}
+
+/* Submit button states */
+.exam-action-btn.loading{
+  cursor: wait;
+  opacity: 0.9;
+}
+
+.exam-action-btn.error{
+  background-color: var(--coral) !important;
+  color: var(--white-fixed) !important;
+}
+
+/* smooth transitions for exam buttons (including error) */
+.exam-action-btn{
+  transition: transform 220ms ease, box-shadow 220ms ease, background-color 220ms ease, color 220ms ease;
+}
+
+/* Coral pulse: animate shadow only (keeps bg stable => smooth return) */
+@keyframes coral-pulse {
+  0%   { box-shadow: 0 0 0 0 rgba(247, 159, 152, 0.75); }
+  70%  { box-shadow: 0 0 0 16px rgba(247, 159, 152, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(247, 159, 152, 0); }
+}
+
+.exam-action-btn.error{
+  background-color: var(--coral) !important;
+  color: var(--white-fixed) !important;
+  animation: coral-pulse 1.4s infinite;
+}
+
+/* keep hover scale even in error state */
+.exam-action-btn.error:hover{
+  transform: scale(1.06);
+}
+
+/* (اختیاری) روی hover پالس قطع نشه */
+.exam-action-btn.error:hover{
+  animation-play-state: running;
+}
+
+.exam-action-btn.error{
+  background-color: var(--coral) !important;
+  color: var(--white-fixed) !important;
+  animation: coral-pulse 1.4s infinite;
+}
+
+/* =======================
+   Speaking recorder
+   ======================= */
+.exam-recorder{
+  grid-area: textarea; /* share layout with writing textarea */
+  width: 100%;
+  display: grid;
+  grid-template-rows: var(--rec-stage-h, 220px) var(--rec-controls-h, 110px);
+  gap: 14px;
+  background: transparent;
+  padding: 0;
+  box-shadow: none;
+  border-radius: 0;
+}
+
+/* Stage island */
+.recorder-stage{
+  background: var(--coral);
+  border-radius: 18px;
+  box-shadow: 0 8px 24px var(--shadow-color);
+  padding: 16px 18px;
+  height: var(--rec-stage-h, 220px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.recorder-hint{
+  opacity: 0.9;
+  font-size: 16px;
+  text-align: center;
+  line-height: 1.9;
+}
+
+.recorder-wave{
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* Controls row (centered, no box) */
+.recorder-controls{
+  height: var(--rec-controls-h, 110px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+
+  background: transparent;
+  box-shadow: none;
+  padding: 0;
+  border-radius: 0;
+}
+
+.recorder-controls > *{ flex: 0 0 auto; }
+
+.recorder-main-btn{
+  width: 66px;
+  height: 66px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  font-size: 28px;
+  font-weight: 900;
+  background: var(--dark-blue);
+  color: var(--white-fixed);
+  box-shadow: 0 10px 24px var(--shadow-color);
+  transition: transform 220ms ease, box-shadow 220ms ease, background-color 220ms ease;
+}
+.recorder-main-btn:hover{ transform: scale(1.10); }
+.recorder-main-btn:active{ transform: scale(0.94); }
+.recorder-main-btn.is-stop{ background: var(--coral); }
+.recorder-main-btn.is-play{ background: var(--navy-brand); }
+
+.recorder-pill{
+  background: transparent;
+  color: var(--text-main);
+  border: 2px solid rgba(255,255,255,0.12);
+  border-radius: 16px;
+  padding: 12px 18px;
+  font-size: 15px;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: none;
+  transition: transform 220ms ease, background-color 220ms ease, color 220ms ease, border-color 220ms ease;
+}
+.light-mode .recorder-pill{ border-color: rgba(0,0,0,0.12); }
+.recorder-pill:hover{ transform: scale(1.06); }
+.recorder-pill:active{ transform: scale(0.96); }
+.recorder-pill-lg{ min-width: 160px; }
+
+/* Recording indicator */
+.exam-recorder.is-recording .recorder-stage{
+  box-shadow: 0 0 0 6px rgba(247,159,152,0.18), 0 8px 24px var(--shadow-color);
+}
+
+/* Red blinking dot */
+.rec-dot{
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--coral);
+  display: inline-block;
+  margin-left: 8px;
+  animation: recBlink 1s infinite;
+  vertical-align: middle;
+}
+@keyframes recBlink{
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.2; }
+}
+
+.hidden{ display: none !important; }
+
+/* make exam layout stable even in RTL */
+.exam-bottom{
+  direction: ltr;                 /* فقط برای چیدمان ستون‌ها */
+  display: grid;
+  grid-template-columns: 2fr 1fr; /* چپ بزرگ، راست کوچک */
+  grid-template-areas: "textarea actions";
+  gap: 24px;
+  align-items: start;
+}
+
+/* keep content RTL */
+.exam-recorder,
+.exam-actions{
+  direction: rtl;
+}
+
+.exam-recorder{ grid-area: textarea; }
+.exam-actions{ grid-area: actions; }
+
+/* keep the layout stable in RTL but preserve the tall action buttons */
+.exam-bottom{
+  direction: ltr;
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  grid-template-areas: "textarea actions";
+  gap: 24px;
+  align-items: start;
+}
+
+.exam-recorder{ grid-area: textarea; direction: rtl; }
+.exam-actions{ grid-area: actions; direction: rtl; }
+
+/* actions column: two rows with 1:2 ratio (report smaller, submit bigger) */
+.exam-actions{
+  display: grid;
+  grid-template-rows: 1fr 2fr;
+  gap: 16px;
+  height: 100%;              /* مهم: هم‌قد ستون چپ */
+  align-content: start;
+}
+
+/* buttons fill their grid cells */
+.exam-action-btn{
+  height: 100%;
+  min-height: 110px;         /* گزارش */
+}
+
+.exam-action-btn.primary{
+  min-height: 220px;         /* ثبت پاسخ */
+}
+
+.recorder-stage,
+.recorder-stage *{
+  color: white;
+}
+
+
+/* =======================
+   Choose exam (home) page
+   ======================= */
+.choose-card{
+  flex-direction: row-reverse; /* keep image on the left in RTL */
+}
+
+.exam-buttons{
+  display: flex;
+  gap: 24px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.btn-start.btn-choice{
+  animation: none;           /* no pulsing on choice buttons */
+  width: 100%;
+  justify-content: center;
+  padding: 16px 22px;
+  border-radius: 18px;       /* closer to island buttons */
+  font-size: 18px;
+}
+
+.exam-buttons .btn-start.btn-choice{
+  flex: 1 1 220px;
+}
+
+/* match existing async states */
+.btn-start.loading{
+  cursor: wait;
+  opacity: 0.9;
+}
+
+.btn-start.error{
+  background-color: var(--coral) !important;
+  color: var(--white-fixed) !important;
+  animation: coral-pulse 1.4s infinite;
+}
+
+/* keep hover scale in error too (same physics) */
+.btn-start.error:hover{
+  transform: scale(1.08);
+}
+
+/* Responsive: stack buttons */
+@media (max-width: 900px){
+  .exam-buttons{
+    flex-direction: column;
+    width: 100%;
+  }
+  .exam-buttons .btn-start.btn-choice{
+    width: 100%;
+  }
+}
+
