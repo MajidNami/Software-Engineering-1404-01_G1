@@ -339,6 +339,9 @@
             <div class="progress-header">
                 <div class="passage-info">
                     سطح: {{ passage.get_difficulty_level_display }}
+                     {% if is_exam %}
+                        <div id="exam-timer" class="exam-timer"></div>
+                     {% endif %}
                 </div>
                 <div class="question-counter">
                     سوالات پاسخ داده شده:
@@ -399,6 +402,42 @@
             </div>
         </div>
     </div>
+    <script>
+        const IS_EXAM = {{ is_exam|yesno:"true,false" }};
+        let timeLeft = {{ time_left }};
+    </script>
+    <script>
+                function startExamTimer() {
+                    const timerEl = document.getElementById("exam-timer");
+                    if (!timerEl) return;
+
+                    const interval = setInterval(() => {
+                        if (timeLeft <= 0) {
+                            clearInterval(interval);
+                            finishExam();
+                            return;
+                        }
+
+                        const minutes = Math.floor(timeLeft / 60);
+                        const seconds = timeLeft % 60;
+
+                        timerEl.innerText =
+                            minutes.toString().padStart(2, '0') + ":" +
+                            seconds.toString().padStart(2, '0');
+
+                        timeLeft--;
+                    }, 1000);
+                }
+
+                function finishExam() {
+                    alert("⏰ زمان آزمون به پایان رسید");
+                    window.location.href = "/team14/exam/finish/";
+                }
+
+                if (IS_EXAM) {
+                    startExamTimer();
+                }
+    </script>
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {

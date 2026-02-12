@@ -5,7 +5,7 @@ __pycache__/
 *.pyd
 .venv/
 .env
-.env.*
+.env
 *.sqlite3
 *.log
 node_modules/

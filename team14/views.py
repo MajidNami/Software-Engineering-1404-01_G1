@@ -1,6 +1,9 @@
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
+from django.db.models import Count
+import random
+from django.utils import timezone
 
 from core.auth import api_login_required
 from django.contrib.auth.decorators import login_required
@@ -17,7 +20,7 @@ from .models import UserSession, Question, Option, UserAnswer  # این خط ت�
 
 TEAM_NAME = "team14"
 
-
+PRACTICE_TIME_MINUTES = 30
 @api_login_required
 def ping(request):
     return JsonResponse({"team": TEAM_NAME, "ok": True})
@@ -184,18 +187,23 @@ def practice_page(request, passage_id):
             ]
         })
 
-    # ✅ استفاده درست از user_id
-    # در اینجا باید از request.user استفاده کنید نه از request.user.id
-    # چون UserSession دارای ForeignKey به User است، بهتر است نمونه User را پاس دهید.
-    # اگر user_id در مدل UserSession به صورت CharField با max_length=36 ذخیره می‌شود،
-    # و شما قصد دارید شناسه کاربر را به صورت رشته‌ای ذخیره کنید، پس استفاده از request.user.id صحیح است.
-    # اما اگر ForeignKey به مدل User است، باید خود شیء User را پاس دهید.
-    # با توجه به تعریف UserSession که user_id: models.CharField است، request.user.id درست است.
-    session, created = UserSession.objects.get_or_create(
+    # ✅ بستن session های تمام نشده قبلی
+    UserSession.objects.filter(
         user_id=request.user.id,
         passage=passage,
         mode='practice',
-        defaults={'start_time': timezone.now()}
+        end_time__isnull=True
+    ).update(
+        end_time=timezone.now(),
+        total_score=0
+    )
+
+    # ✅ ساخت session جدید
+    session = UserSession.objects.create(
+        user_id=request.user.id,
+        passage=passage,
+        mode='practice',
+        start_time=timezone.now()
     )
 
     user_answers = {
@@ -203,8 +211,8 @@ def practice_page(request, passage_id):
         for ans in UserAnswer.objects.filter(session=session)
     }
 
-    elapsed = (timezone.now() - session.start_time).seconds
-    time_left = max(0, 18 * 60 - elapsed)
+    # ✅ زمان کامل تمرین
+    time_left = PRACTICE_TIME_MINUTES * 60
 
     context = {
         'passage': passage,
@@ -216,6 +224,7 @@ def practice_page(request, passage_id):
     }
 
     return render(request, 'team14/Practice_Page.html', context)
+
 
 
 @csrf_exempt
@@ -232,31 +241,42 @@ def submit_answer(request):
             user_id=str(request.user.id)
         )
 
+        # ✅ بررسی زمان
+        if session.start_time:
+            elapsed = (timezone.now() - session.start_time).total_seconds()
+            if elapsed > PRACTICE_TIME_MINUTES * 60:
+                return JsonResponse({
+                    'success': False,
+                    'error': 'زمان تمرین به پایان رسیده است'
+                }, status=400)
+
         question = get_object_or_404(
             Question,
             id=data['question_id'],
             passage=session.passage
         )
 
-        option_id = data.get('option_id')  # ✅ ممکن است None باشد
-
-        # ✅ استفاده از update_or_create برای کد تمیزتر
-        user_answer, created = UserAnswer.objects.update_or_create(
+        user_answer, created = UserAnswer.objects.get_or_create(
             session=session,
             question=question,
-            defaults={'selected_option_id': option_id}
+            defaults={
+                'selected_option_id': data['option_id'],
+                'is_correct': False,        # ✅ مهم
+                'response_time': 0          # ✅ مهم
+            }
         )
 
-        # ✅ شمارش تغییرات (فقط اگر تغییر کرده باشد)
-        if not created:
+        # اگر قبلاً وجود داشته و جواب عوض شده
+        if not created and user_answer.selected_option_id != data['option_id']:
+            user_answer.selected_option_id = data['option_id']
             user_answer.changed_count += 1
-            user_answer.save(update_fields=['changed_count'])
+            user_answer.save()
 
         return JsonResponse({'success': True})
 
     except Exception as e:
-        print(f"❌ Error in submit_answer: {e}")  # ✅ لاگ خطا
         return JsonResponse({'success': False, 'error': str(e)}, status=400)
+
 
 
 def finish_practice(request, session_id):
@@ -298,22 +318,16 @@ def practice_result(request, session_id):
     session = get_object_or_404(
         UserSession,
         id=session_id,
-        user_id=str(request.user.id)
+        user_id=str(request.user.id)  # ✅ باز هم، اطمینان از نوع داده (char)
     )
 
     questions = Question.objects.filter(
         passage=session.passage
-    ).prefetch_related('options').order_by('id')
+    ).prefetch_related('options')
 
-    # ✅ گرفتن تمام پاسخ‌های کاربر به صورت QuerySet
-    user_answers = UserAnswer.objects.filter(
-        session=session
-    ).select_related('selected_option', 'question')
-
-    # ✅ ساخت دیکشنری از پاسخ‌ها (برای دسترسی سریع‌تر)
-    answers_dict = {
-        ua.question_id: ua
-        for ua in user_answers
+    answers = {
+        ua.question_id: ua.selected_option_id
+        for ua in UserAnswer.objects.filter(session=session)
     }
 
     result_data = []
@@ -321,18 +335,9 @@ def practice_result(request, session_id):
 
     for q in questions:
         correct_option = q.options.filter(is_correct=True).first()
+        user_option_id = answers.get(q.id)
 
-        # ✅ گرفتن شیء UserAnswer (نه فقط ID)
-        user_answer = answers_dict.get(q.id)
-
-        # ✅ بررسی وجود پاسخ و selected_option
-        if user_answer and user_answer.selected_option:
-            user_option_text = user_answer.selected_option.text
-            is_correct = user_answer.selected_option.is_correct
-        else:
-            user_option_text = "بدون پاسخ"
-            is_correct = False
-
+        is_correct = user_option_id == (correct_option.id if correct_option else None)
         if is_correct:
             correct_count += 1
 
@@ -340,7 +345,11 @@ def practice_result(request, session_id):
             "question_id": q.id,
             "question_text": q.question_text,
             "correct_option": correct_option.text if correct_option else "—",
-            "user_option": user_option_text,
+            "user_option": (
+                q.options.get(id=user_option_id).text
+                if user_option_id and q.options.filter(id=user_option_id).exists()  # اطمینان از وجود گزینه
+                else "بدون پاسخ"
+            ),
             "is_correct": is_correct
         })
 
@@ -349,9 +358,34 @@ def practice_result(request, session_id):
         "total_questions": questions.count(),
         "correct_count": correct_count,
         "results": result_data,
-        "level": session.passage.get_difficulty_level_display()
+        "level": session.passage.get_difficulty_level_display()  # ✅ اینجا اصلاح شد
     })
 
+
+@login_required
+def start_exam(request):
+    # ✅ انتخاب تصادفی passage
+    passages = Passage.objects.prefetch_related('questions__options').all()
+    if not passages.exists():
+        return redirect('index')
+
+    passage = random.choice(list(passages))
+
+    # ✅ مدت زمان ETS (3 یا 4 passage)
+    passage_count = 3  # فعلاً ثابت، بعداً می‌تونی random یا تنظیمی کنی
+    exam_duration = 54 * 60 if passage_count == 3 else 72 * 60
+
+    # ✅ ساخت session آزمون
+    session = UserSession.objects.create(
+        user_id=str(request.user.id),
+        passage=passage,
+        mode='exam',
+        start_time=timezone.now(),
+        exam_duration=exam_duration
+    )
+
+    # ✅ رفتن به Practice_Page (reuse)
+    return redirect('practice_page', passage_id=passage.id)
 
 def about(request):
     return None

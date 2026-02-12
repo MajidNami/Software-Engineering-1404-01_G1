@@ -25,6 +25,11 @@ class UserSession(models.Model):
     total_score = models.IntegerField(null=True, blank=True)
     scaled_score = models.FloatField(null=True, blank=True)
     exam_version = models.CharField(max_length=50)
+    exam_duration = models.IntegerField(
+        null=True,
+        blank=True,
+        help_text="Exam duration in seconds"
+    )
 
     def __str__(self):
         return f"{self.user} - {self.mode}"

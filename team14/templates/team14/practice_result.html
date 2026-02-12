@@ -98,6 +98,19 @@
             ✅ شما <span>{{ correct_count }}</span> پاسخ صحیح از
             <span>{{ total_questions }}</span> سؤال داشتید
         </div>
+        {% if is_exam %}
+        <div class="exam-score-box">
+            <div class="exam-score-title">
+                🎯 نتیجه
+            </div>
+            <div class="exam-score-value">
+                {{ exam_percent }}%
+            </div>
+            <div class="exam-score-sub">
+                درصد پاسخ‌های صحیح
+            </div>
+        </div>
+        {% endif %}
     </div>
 
     <!-- Answer Sheet -->
@@ -120,8 +133,8 @@
 
     <!-- Back Button -->
     <div class="card" style="text-align:center">
-        <a href="{% url 'training_levels' %}" class="btn-back">
-            بازگشت به لیست تمرین‌ها
+        <a href="{% url 'base' %}" class="btn-back">
+            بازگشت به صفحه ریدینگ
         </a>
     </div>
 {% include 'team14/public/social-section.html' %}
