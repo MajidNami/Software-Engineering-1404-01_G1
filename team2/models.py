@@ -5,15 +5,15 @@ import core.models
 
 class Lesson(models.Model):
     LEVEL_CHOICES = [
-        'beginner',
-        'intermediate',
-        'advanced',
+        ('beginner', 'Beginner'),
+        ('intermediate', 'Intermediate'),
+        ('advanced', 'Advanced'),
     ]
 
     STATUS_CHOICES = [
-        'draft',
-        'published',
-        'archived',
+        ('draft', 'Draft'),
+        ('published', 'Published'),
+        ('archived', 'Archived'),
     ]
 
     id = models.BigAutoField(primary_key=True)
@@ -95,11 +95,7 @@ class UserDetails(models.Model):
         ('student', 'Student'),
     )
 
-    user = models.OneToOneField(
-        core.models.User,
-        on_delete=models.CASCADE,
-        related_name='user_details'
-    )
+    user_id = models.UUIDField(unique=True, db_index=True, null=True, blank=True)  # Reference to core.User.id بدون ForeignKey
     email = models.EmailField(unique=True)
     role = models.CharField(
         max_length=100,
