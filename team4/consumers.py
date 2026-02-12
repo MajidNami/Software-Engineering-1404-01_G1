@@ -92,7 +92,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             )
 
     async def chat_message(self, event):
-        await self.send(text_data=json.dumps(event))
+        await self.send(text_data=json.dumps(event))  
 
     async def message_deleted(self, event):
         await self.send(text_data=json.dumps(event))
@@ -124,7 +124,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             return False
         except: return False         
 
-        
+
 
     @database_sync_to_async
     def save_message(self, content, reply_to_id=None, file_id=None):  
