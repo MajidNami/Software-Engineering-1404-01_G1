@@ -68,6 +68,7 @@ class BlockList(models.Model):
     blocked = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='blocked_users')
     created_at = models.DateTimeField(auto_now_add=True)
 
+
 class UserReport(models.Model):
     report_id = models.AutoField(primary_key=True)
     reporter = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='reports_submitted')
