@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>داشبورد کاربری</title>
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" />
+    <style>
+        :root { --primary: #4F46E5; --bg: #F9FAFB; --white: #fff; --text: #111827; --gray: #6B7280; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Vazirmatn', sans-serif; }
+        body { background: var(--bg); color: var(--text); display: flex; min-height: 100vh; }
+        
+        /* Sidebar */
+        .sidebar { width: 260px; background: var(--white); padding: 2rem; display: flex; flex-direction: column; gap: 1rem; border-left: 1px solid #E5E7EB; position: fixed; right: 0; height: 100%; z-index: 10; }
+        .sidebar h2 { color: var(--primary); margin-bottom: 2rem; font-size: 1.5rem; }
+        .nav-item { padding: 0.75rem 1rem; border-radius: 0.5rem; color: var(--gray); display: flex; align-items: center; gap: 0.5rem; text-decoration: none; transition: 0.2s; }
+        .nav-item:hover, .nav-item.active { background: #EEF2FF; color: var(--primary); }
+        
+        /* Main Content */
+        .main-content { margin-right: 260px; flex: 1; padding: 2rem; width: calc(100% - 260px); }
+        
+        /* Header */
+        .dashboard-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
+        .btn-new { background: var(--primary); color: white; padding: 0.75rem 1.5rem; border-radius: 0.5rem; text-decoration: none; font-weight: bold; box-shadow: 0 4px 6px rgba(79, 70, 229, 0.3); transition: 0.2s; }
+        .btn-new:hover { background: #4338ca; transform: translateY(-2px); }
+
+        /* Stats Cards */
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
+        .stat-card { background: var(--white); padding: 1.5rem; border-radius: 1rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border-top: 4px solid var(--primary); }
+        .stat-value { font-size: 2rem; font-weight: 800; color: var(--text); margin-top: 0.5rem; }
+        .stat-label { color: var(--gray); font-size: 0.9rem; }
+
+        /* Lists */
+        .submissions-list { background: var(--white); border-radius: 1rem; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .list-header { background: #F3F4F6; padding: 1rem 2rem; font-weight: bold; display: grid; grid-template-columns: 1fr 2fr 1.5fr 1fr 1fr 1fr; gap: 1rem; color: var(--gray); font-size: 0.9rem; }
+        .list-item { padding: 1rem 2rem; border-bottom: 1px solid #E5E7EB; display: grid; grid-template-columns: 1fr 2fr 1.5fr 1fr 1fr 1fr; gap: 1rem; align-items: center; transition: 0.2s; }
+        .list-item:hover { background: #F9FAFB; }
+        .list-item:last-child { border-bottom: none; }
+
+        /* Status Badges */
+        .badge { padding: 0.25rem 0.75rem; border-radius: 99px; font-size: 0.8rem; font-weight: 500; display: inline-block; text-align: center; width: fit-content; }
+        .badge.completed { background: #D1FAE5; color: #065F46; }
+        .badge.pending { background: #FEF3C7; color: #92400E; }
+        .badge.in_progress { background: #DBEAFE; color: #1E40AF; }
+        .badge.failed { background: #FEE2E2; color: #991B1B; }
+
+        /* Empty State */
+        .empty-state { text-align: center; padding: 4rem; background: var(--white); border-radius: 1rem; }
+        
+        @media (max-width: 900px) {
+            .sidebar { width: 70px; padding: 2rem 0.5rem; }
+            .sidebar h2, .sidebar span { display: none; }
+            .main-content { margin-right: 70px; width: calc(100% - 70px); }
+            .list-header, .list-item { grid-template-columns: 1fr; gap: 0.5rem; border-bottom: 2px solid #f3f3f3; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <h2>داشبورد من</h2>
+        <a href="{% url 'team11_home' %}" class="nav-item">🏠 <span>صفحه اصلی</span></a>
+        <a href="{% url 'team11_dashboard' %}" class="nav-item active">📊 <span>آمار و گزارشات</span></a>
+        <a href="{% url 'team11_start_exam' %}" class="nav-item">📝 <span>آزمون جدید</span></a>
+        <div style="flex-grow: 1;"></div>
+        <a href="{% url 'logout' %}" class="nav-item" style="color: #EF4444;">🚪 <span>خروج</span></a>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="dashboard-header">
+            <div>
+                <h1>خوش آمدید</h1>
+                <p style="color: var(--gray);">وضعیت کلی عملکرد شما</p>
+            </div>
+            <a href="{% url 'team11_start_exam' %}" class="btn-new">شروع آزمون +</a>
+        </div>
+
+        {% if submissions %}
+            <!-- Stats Row -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">کل آزمون‌ها</div>
+                    <div class="stat-value">{{ submissions|length }}</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">تکمیل شده</div>
+                    <div class="stat-value">{{ completed_count }}</div>
+                </div>
+                <div class="stat-card" style="border-top-color: #3B82F6;">
+                    <div class="stat-label">میانگین نوشتن</div>
+                    <div class="stat-value">{{ writing_avg|default:"-" }}</div>
+                </div>
+                <div class="stat-card" style="border-top-color: #10B981;">
+                    <div class="stat-label">میانگین صحبت کردن</div>
+                    <div class="stat-value">{{ speaking_avg|default:"-" }}</div>
+                </div>
+            </div>
+
+            <!-- Charts Area (Placeholder for structure) -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem;">
+                <div style="background: white; padding: 1.5rem; border-radius: 1rem; height: 300px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                    <h3>روند نمرات نوشتن</h3>
+                    <canvas id="writingChart"></canvas>
+                </div>
+                <div style="background: white; padding: 1.5rem; border-radius: 1rem; height: 300px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                    <h3>روند نمرات صحبت کردن</h3>
+                    <canvas id="speakingChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Submissions List -->
+            <h3>آخرین آزمون‌ها</h3>
+            <div class="submissions-list">
+                <div class="list-header">
+                    <div>نوع</div>
+                    <div>موضوع / سوال</div>
+                    <div>تاریخ</div>
+                    <div>وضعیت</div>
+                    <div>نمره</div>
+                    <div>عملیات</div>
+                </div>
+
+                {% for submission in submissions %}
+                <div class="list-item">
+                    <div style="font-weight: bold; color: {% if submission.submission_type == 'writing' %}#3B82F6{% else %}#10B981{% endif %};">
+                        {% if submission.submission_type == 'writing' %}نوشتن{% else %}صحبت کردن{% endif %}
+                    </div>
+                    
+                    <div style="font-size: 0.9rem; color: #4B5563;">
+                        {% if submission.submission_type == 'writing' %}
+                            {% if submission.writing_details.question %}
+                                {{ submission.writing_details.question.question_text|truncatewords:8 }}
+                            {% else %}
+                                {{ submission.writing_details.topic|default:"Unknown"|truncatewords:8 }}
+                            {% endif %}
+                        {% else %}
+                            {% if submission.listening_details.question %}
+                                {{ submission.listening_details.question.question_text|truncatewords:8 }}
+                            {% else %}
+                                {{ submission.listening_details.topic|default:"Unknown"|truncatewords:8 }}
+                            {% endif %}
+                        {% endif %}
+                    </div>
+
+                    <div style="font-size: 0.85rem;">{{ submission.created_at|date:"Y/m/d - H:i" }}</div>
+
+                    <div>
+                        <span class="badge {{ submission.status }}">
+                            {% if submission.status == 'completed' %}تکمیل شده
+                            {% elif submission.status == 'pending' %}در انتظار
+                            {% elif submission.status == 'in_progress' %}پردازش
+                            {% elif submission.status == 'failed' %}ناموفق
+                            {% else %}{{ submission.status }}{% endif %}
+                        </span>
+                    </div>
+
+                    <div style="font-weight: bold;">
+                        {% if submission.overall_score %}{{ submission.overall_score }}{% else %}-{% endif %}
+                    </div>
+
+                    <div>
+                        {% if submission.status == 'completed' or submission.status == 'failed' %}
+                            <a href="{% url 'team11_submission_detail' submission.submission_id %}" style="color: var(--primary); font-size: 0.9rem;">مشاهده</a>
+                        {% else %}
+                            <span style="color: #9CA3AF; font-size: 0.8rem;">در حال آنالیز</span>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+        {% else %}
+            <div class="empty-state">
+                <img src="https://cdn-icons-png.flaticon.com/512/7486/7486747.png" width="150" alt="Empty" style="opacity: 0.5; margin-bottom: 1rem;">
+                <h2>هنوز آزمونی ثبت نکرده‌اید!</h2>
+                <p style="color: var(--gray); margin-bottom: 1.5rem;">برای دیدن پیشرفت خود، اولین آزمون را شروع کنید.</p>
+                <a href="{% url 'team11_start_exam' %}" class="btn-new">شروع اولین آزمون</a>
+            </div>
+        {% endif %}
+    </main>
+
+    {{ writing_series|json_script:"writing-series" }}
+    {{ speaking_series|json_script:"speaking-series" }}
+
+    <!-- Chart.js Script (Placeholder logic included) -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Simple logic to render charts if data exists
+        // (You can enhance this part based on actual data structure)
+    </script>
+</body>
+</html>
