@@ -3,7 +3,9 @@ import os
 import logging
 import random
 import threading
+import base64
 import re
+import uuid
 from django.db import close_old_connections
 from django.db.models import Avg
 from django.http import JsonResponse
@@ -11,6 +13,8 @@ from django.shortcuts import render, get_object_or_404
 from django.views.decorators.http import require_POST, require_http_methods
 from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
+from django.core.files.base import ContentFile
+from django.utils import timezone
 from core.auth import api_login_required
 from .models import (
     Submission, WritingSubmission, ListeningSubmission, 
@@ -128,13 +132,6 @@ def _process_listening_assessment(submission_id, listening_detail_pk, audio_file
             submission.save()
         except Exception:
             pass
-    finally:
-        if temp_file_path and os.path.exists(temp_file_path):
-            try:
-                os.unlink(temp_file_path)
-                logger.info(f"Cleaned up temp file: {temp_file_path}")
-            except Exception as e:
-                logger.warning(f"Failed to cleanup temp file: {e}")
 
 
 @api_login_required
@@ -263,7 +260,8 @@ def listening_exam(request):
         'question': question,
         'has_question': question is not None,
     }
-    return render(request, f"{TEAM_NAME}/listening_exam.html", context)
+    # FIXED: The template file is named speaking_exam.html, NOT listening_exam.html
+    return render(request, f"{TEAM_NAME}/speaking_exam.html", context)
 
 
 @csrf_exempt
@@ -291,6 +289,14 @@ def submit_writing(request):
         if question_id:
             try:
                 question = Question.objects.using('team11').get(question_id=question_id)
+                
+                # VALIDATION: Check min word count
+                if question.min_word_count and word_count < question.min_word_count:
+                    return JsonResponse({
+                        'error': f'متن شما کوتاه‌تر از حد مجاز است. حداقل {question.min_word_count} کلمه بنویسید.',
+                        'current_count': word_count
+                    }, status=400)
+                    
             except Question.DoesNotExist:
                 pass
         
@@ -350,7 +356,7 @@ def submit_listening(request):
         question_id = data.get('question_id', '')
         topic = data.get('topic', '')
         audio_data = data.get('audio_data', '')
-        audio_url = data.get('audio_url', audio_data)  # Support both old and new format
+        audio_url = data.get('audio_url', audio_data)
         duration = data.get('duration_seconds', 0)
         
         if not audio_url and not audio_data:
@@ -366,99 +372,97 @@ def submit_listening(request):
             except Question.DoesNotExist:
                 pass
         
-        # Create submission with pending status
+        # 1. Handle Audio File Saving FIRST (to get a valid path for DB)
+        audio_file_path = None
+        saved_db_path = "" # What we store in the DB (max 500 chars)
+
+        try:
+            if audio_url.startswith('data:audio'):
+                # Handle Base64
+                header, encoded = audio_url.split(',', 1)
+                audio_bytes = base64.b64decode(encoded)
+                
+                # Determine extension
+                ext = '.webm' if 'webm' in header else '.wav'
+                
+                # Create persistent filename: team11/audio/<user_id>_<timestamp><ext>
+                timestamp = int(timezone.now().timestamp())
+                filename = f"{user_id}_{timestamp}{ext}"
+                
+                # Relative path for DB (e.g., team11/audio/filename.webm)
+                relative_path = os.path.join('team11', 'audio', filename)
+                
+                # Absolute path for OS
+                # FIXED: Manually use BASE_DIR/media because app404 settings.py cannot be changed
+                media_root = getattr(settings, 'MEDIA_ROOT', None)
+                if not media_root:
+                    media_root = os.path.join(settings.BASE_DIR, 'media')
+                
+                full_path = os.path.join(media_root, relative_path)
+                
+                # Ensure directory exists
+                os.makedirs(os.path.dirname(full_path), exist_ok=True)
+                
+                # Save file persistently
+                with open(full_path, 'wb') as f:
+                    f.write(audio_bytes)
+                
+                audio_file_path = full_path
+                saved_db_path = relative_path # Store relative path in DB
+                logger.info(f"Saved audio to {full_path}")
+                
+            elif audio_url.startswith('http'):
+                # Remote URL (keep as is)
+                saved_db_path = audio_url
+                audio_file_path = audio_url 
+            else:
+                # Assuming it's already a path
+                saved_db_path = audio_url
+                # Manually build path if settings.MEDIA_ROOT is missing
+                media_root = getattr(settings, 'MEDIA_ROOT', None)
+                if not media_root:
+                    media_root = os.path.join(settings.BASE_DIR, 'media')
+                audio_file_path = os.path.join(media_root, audio_url)
+                
+        except Exception as file_error:
+            logger.error(f"File saving error: {file_error}")
+            return JsonResponse({'error': 'خطا در ذخیره فایل صوتی'}, status=500)
+
+        # 2. Create DB Records
         submission = Submission.objects.using('team11').create(
             user_id=user_id,
             submission_type=SubmissionType.LISTENING,
             status=AnalysisStatus.IN_PROGRESS
         )
         
-        # Create listening details (without transcription initially)
+        # Create listening details
         listening_detail = ListeningSubmission.objects.using('team11').create(
             submission=submission,
             question=question,
             topic=topic,
-            audio_file_url=audio_url,
+            audio_file_url=saved_db_path,
             duration_seconds=duration
         )
         
-        logger.info(f"Processing listening submission {submission.submission_id} for user {request.user.id}")
-        
-        # Handle base64 audio data
-        audio_file_path = None
-        temp_file = None
-        
-        try:
-            if audio_url.startswith('data:audio'):
-                # It's a base64 data URL - decode and save to temp file
-                import base64
-                import tempfile
-                
-                logger.info(f"Processing base64 audio data, length: {len(audio_url)}")
-                
-                # Extract the base64 data (remove the data URL prefix)
-                try:
-                    header, encoded = audio_url.split(',', 1)
-                    audio_bytes = base64.b64decode(encoded)
-                    logger.info(f"Decoded audio bytes: {len(audio_bytes)} bytes")
-                except Exception as decode_error:
-                    raise ValueError(f"Failed to decode base64 audio: {decode_error}")
-                
-                # Create temp file with appropriate extension
-                suffix = '.webm' if 'webm' in header else '.wav'
-                temp_file = tempfile.NamedTemporaryFile(delete=False, suffix=suffix)
-                temp_file.write(audio_bytes)
-                temp_file.close()
-                audio_file_path = temp_file.name
-                
-                logger.info(f"Saved base64 audio to temp file: {audio_file_path} (size: {len(audio_bytes)} bytes)")
-                
-                # Verify file exists
-                if not os.path.exists(audio_file_path):
-                    raise ValueError(f"Temp file was not created: {audio_file_path}")
-                
-            elif audio_url.startswith('http://') or audio_url.startswith('https://'):
-                # For remote URLs, you would need to download the file first
-                logger.warning(f"Remote audio URL provided: {audio_url}. Download logic needed.")
-                audio_file_path = audio_url  # Placeholder - needs implementation
-            else:
-                # Local file path (relative to MEDIA_ROOT or absolute)
-                if not audio_url.startswith('/') and not audio_url[1:3] == ':\\':
-                    # Relative path - join with MEDIA_ROOT
-                    audio_file_path = os.path.join(settings.MEDIA_ROOT, audio_url)
-                else:
-                    audio_file_path = audio_url
-            
-            if not audio_file_path or not os.path.exists(audio_file_path):
-                raise ValueError(f"Audio file not found or could not be created: {audio_file_path}")
+        logger.info(f"Processing listening submission {submission.submission_id}")
 
-            logger.info(f"Queueing AI assessment for audio file: {audio_file_path}")
+        # 3. Start Background Process
+        if audio_file_path and os.path.exists(audio_file_path):
             thread = threading.Thread(
                 target=_process_listening_assessment,
-                args=(submission.submission_id, listening_detail.pk, audio_file_path, topic, duration, temp_file.name if temp_file else None),
+                args=(submission.submission_id, listening_detail.pk, audio_file_path, topic, duration, None),
                 daemon=True
             )
             thread.start()
+        else:
+             logger.warning(f"Audio file path invalid, skipping AI: {audio_file_path}")
 
-            return JsonResponse({
-                'success': True,
-                'submission_id': str(submission.submission_id),
-                'status': 'processing',
-                'message': 'در حال پردازش... لطفاً صبر کنید.'
-            }, status=202)
-            
-        except Exception as audio_error:
-            logger.error(f"Error processing audio file: {audio_error}", exc_info=True)
-            # Mark as failed
-            submission.status = AnalysisStatus.FAILED
-            submission.save()
-            
-            return JsonResponse({
-                'success': False,
-                'submission_id': str(submission.submission_id),
-                'error': f'پردازش صوت با خطا مواجه شد: {str(audio_error)}',
-                'message': 'ارسال ذخیره شد اما پردازش صوت ناموفق بود. لطفاً دوباره تلاش کنید.'
-            }, status=500)
+        return JsonResponse({
+            'success': True,
+            'submission_id': str(submission.submission_id),
+            'status': 'processing',
+            'message': 'در حال پردازش... لطفاً صبر کنید.'
+        }, status=202)
         
     except Exception as e:
         logger.error(f"Error in submit_listening: {e}", exc_info=True)

@@ -7,6 +7,8 @@ using AI APIs (Deepseek for text analysis, Whisper for audio transcription).
 
 import json
 import logging
+import os
+import re
 from typing import Dict, Any, Optional
 from openai import OpenAI, APIError, APIConnectionError, RateLimitError
 
@@ -21,7 +23,8 @@ logger = logging.getLogger(__name__)
 
 # API Configuration
 API_BASE_URL = "https://api.gapgpt.app/v1"
-API_KEY = "sk-NQIf9DDM88vlR7to5iys8BFQYwlHTvbtKZeVlwMawdEMOk61"
+# Security: Load key from env, fallback for dev only
+API_KEY = os.getenv("TEAM11_AI_API_KEY", "sk-NQIf9DDM88vlR7to5iys8BFQYwlHTvbtKZeVlwMawdEMOk61")
 
 # Initialize OpenAI client with a timeout to avoid hanging requests
 client = OpenAI(base_url=API_BASE_URL, api_key=API_KEY, timeout=300.0)
@@ -34,23 +37,6 @@ WHISPER_MODEL = "whisper-1"
 def assess_writing(topic: str, text_body: str, word_count: int) -> Dict[str, Any]:
     """
     Assess a writing submission using Deepseek AI.
-    
-    Args:
-        topic: The writing prompt/topic
-        text_body: The submitted text
-        word_count: Number of words in the submission
-        
-    Returns:
-        Dict containing assessment results with keys:
-            - overall_score: float (0-100)
-            - grammar_score: float (0-100)
-            - vocabulary_score: float (0-100)
-            - coherence_score: float (0-100)
-            - fluency_score: float (0-100)
-            - feedback_summary: str
-            - suggestions: list of str
-            - success: bool
-            - error: str (if success=False)
     """
     try:
         # Prepare the user prompt with actual data
@@ -76,23 +62,27 @@ def assess_writing(topic: str, text_body: str, word_count: int) -> Dict[str, Any
         # Extract the response content
         content = response.choices[0].message.content.strip()
         
-        # Parse JSON response
+        # Parse JSON response (Improved)
         try:
+            # 1. Try direct parse
             assessment = json.loads(content)
         except json.JSONDecodeError:
-            # Try to extract JSON from markdown code blocks if present
-            if "```json" in content:
-                json_start = content.find("```json") + 7
-                json_end = content.find("```", json_start)
-                content = content[json_start:json_end].strip()
-                assessment = json.loads(content)
-            elif "```" in content:
-                json_start = content.find("```") + 3
-                json_end = content.find("```", json_start)
-                content = content[json_start:json_end].strip()
-                assessment = json.loads(content)
+            # 2. Regex to find the first '{' and last '}' (greedy)
+            match = re.search(r'\{.*\}', content, re.DOTALL)
+            if match:
+                json_str = match.group(0)
+                try:
+                    assessment = json.loads(json_str)
+                except json.JSONDecodeError:
+                    # 3. Fallback: try markdown code blocks
+                    if "```json" in content:
+                        json_start = content.find("```json") + 7
+                        json_end = content.find("```", json_start)
+                        assessment = json.loads(content[json_start:json_end].strip())
+                    else:
+                        raise ValueError(f"Failed to parse JSON from AI response: {content[:100]}...")
             else:
-                raise
+                raise ValueError(f"No JSON object found in AI response: {content[:100]}...")
         
         # Validate required fields
         required_fields = [
@@ -151,15 +141,6 @@ def assess_writing(topic: str, text_body: str, word_count: int) -> Dict[str, Any
 def transcribe_audio(audio_file_path: str) -> Dict[str, Any]:
     """
     Transcribe audio file using Whisper API.
-    
-    Args:
-        audio_file_path: Path to the audio file
-        
-    Returns:
-        Dict containing:
-            - transcription: str (the transcribed text)
-            - success: bool
-            - error: str (if success=False)
     """
     try:
         logger.info(f"Transcribing audio file: {audio_file_path}")
@@ -220,29 +201,6 @@ def transcribe_audio(audio_file_path: str) -> Dict[str, Any]:
 def assess_speaking(topic: str, audio_file_path: str, duration_seconds: int) -> Dict[str, Any]:
     """
     Assess a speaking submission using Whisper (transcription) + Deepseek (assessment).
-    
-    This is a two-step process:
-    1. Transcribe the audio using Whisper
-    2. Assess the transcription using Deepseek
-    
-    Args:
-        topic: The speaking prompt/topic
-        audio_file_path: Path to the audio file
-        duration_seconds: Duration of the recording
-        
-    Returns:
-        Dict containing assessment results with keys:
-            - overall_score: float (0-100)
-            - pronunciation_score: float (0-100)
-            - fluency_score: float (0-100)
-            - vocabulary_score: float (0-100)
-            - grammar_score: float (0-100)
-            - coherence_score: float (0-100)
-            - feedback_summary: str
-            - suggestions: list of str
-            - transcription: str (the transcribed text)
-            - success: bool
-            - error: str (if success=False)
     """
     try:
         # Step 1: Transcribe the audio
@@ -279,23 +237,26 @@ def assess_speaking(topic: str, audio_file_path: str, duration_seconds: int) -> 
         
         content = response.choices[0].message.content.strip()
         
-        # Parse JSON response
+        # Parse JSON response (Improved)
         try:
+            # 1. Try direct parse
             assessment = json.loads(content)
         except json.JSONDecodeError:
-            # Try to extract JSON from markdown code blocks
-            if "```json" in content:
-                json_start = content.find("```json") + 7
-                json_end = content.find("```", json_start)
-                content = content[json_start:json_end].strip()
-                assessment = json.loads(content)
-            elif "```" in content:
-                json_start = content.find("```") + 3
-                json_end = content.find("```", json_start)
-                content = content[json_start:json_end].strip()
-                assessment = json.loads(content)
+            # 2. Regex to find the first '{' and last '}'
+            match = re.search(r'\{.*\}', content, re.DOTALL)
+            if match:
+                json_str = match.group(0)
+                try:
+                    assessment = json.loads(json_str)
+                except json.JSONDecodeError:
+                    if "```json" in content:
+                        json_start = content.find("```json") + 7
+                        json_end = content.find("```", json_start)
+                        assessment = json.loads(content[json_start:json_end].strip())
+                    else:
+                        raise ValueError(f"Failed to parse JSON: {content[:100]}...")
             else:
-                raise
+                raise ValueError(f"No JSON object found: {content[:100]}...")
         
         # Validate required fields
         required_fields = [
