@@ -1,9 +1,9 @@
 from django.contrib import admin
 
-from team13.models import Prompt
+from team13.models import prompt
 
 
-@admin.register(Prompt)
+@admin.register(prompt.Prompt)
 class PromptAdmin(admin.ModelAdmin):
     list_display = ['name', 'is_active', 'prompt_text', 'created', 'modified']
     search_fields = ['name']

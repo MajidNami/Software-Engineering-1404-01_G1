@@ -1,10 +1,10 @@
 import json
+
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.shortcuts import get_object_or_404
 from django.views.decorators.http import require_GET, require_POST
 from django.db import models
-
 from rest_framework.response import Response
 from rest_framework import status
 
@@ -12,8 +12,7 @@ from core.auth import api_login_required
 from team13.models.question import Question
 from team13.models.prompt import Prompt
 from team13.models.report import ViewedQuestion, WritingGradeResult, SpeakingGradeResult
-from team13.services.ollama_service import ollama_client
-from team13.services.whisper_service import whisper_client
+from team13.services import ollama_service, whisper_service
 
 TEAM_NAME = "team13"
 
@@ -67,7 +66,7 @@ def submit_response(request):
             return Response({'error': 'audio_file is required for speaking questions'},
                 status=status.HTTP_400_BAD_REQUEST)
         try:
-            student_response = whisper_client.transcribe(audio_file)
+            student_response = whisper_service.transcribe(audio_file)
         except Exception as e:
             return Response({'error': f'Transcription failed: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     if not student_response:
@@ -79,7 +78,7 @@ def submit_response(request):
         return Response({'error': 'No active prompt was found'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     full_prompt = prompt.get_prompt(question, student_response) # Build prompt and get evaluation
     try:
-        result_text = ollama_client.grade(full_prompt)
+        result_text = ollama_service.grade(full_prompt)
         result_json = json.loads(result_text)
     except Exception as e:
         return Response({'error': f'Grading failed: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
