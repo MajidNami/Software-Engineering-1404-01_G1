@@ -1,0 +1,31 @@
+@startuml
+left to right direction
+
+node "Student Web App" as WebApp
+node "API Gateway" as Gateway
+
+node "Listening Microservice" as Service {
+    component "ListeningController" as Controller
+    component "AntiCheatModule" as AntiCheat
+    component "ListeningService" as LService
+    component "ScoringEngine" as Scoring
+}
+
+node "Auth Service" as Auth
+node "Listening DB" as DB
+node "Audio Storage\n(Object Storage)" as Storage
+node "KPI / Analytics\nService" as Analytics
+
+WebApp <--> Gateway : HTTPS / REST
+Gateway --> Controller : REST API
+
+Controller ..> LService
+LService ..> AntiCheat
+LService ..> Scoring
+
+Service <--> DB : JDBC / SQL
+Service --> Analytics : REST
+Service --> Storage : HTTP / S3 API
+Service <-- Auth : OAuth / JWT
+
+@enduml

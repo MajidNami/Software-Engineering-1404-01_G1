@@ -1,0 +1,52 @@
+@startuml
+|Student|
+start
+:Click Start\nExam;
+
+|ListeningPage (UI)|
+:Send startExam(userId,\ntestId);
+
+|ListeningService|
+:Load ListeningTest;
+:Create ListeningSession;
+
+|ListeningPage (UI)|
+:Show Question;
+
+|Student|
+:Answer\nquestion;
+
+|ListeningPage (UI)|
+:Send submitAnswer;
+
+|ListeningService|
+:Store Answer;
+
+if (more questions) then
+  ->
+  |ListeningPage (UI)|
+  :Show Question;
+else
+  |ListeningService|
+  if () then
+  else
+    |Student|
+    :Click Finish\nExam;
+    |ListeningPage (UI)|
+    :no more questions;
+    |ListeningService|
+  endif
+
+  :Finish Session;
+  :Calculate Score;
+
+  |Session & Score|
+  :Update Session State;
+  :Generate ScoreReport;
+
+  |ListeningPage (UI)|
+  :Show Score Report;
+  stop
+endif
+
+@enduml

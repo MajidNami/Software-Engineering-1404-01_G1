@@ -1,0 +1,135 @@
+
+@startuml
+skinparam classAttributeIconSize 0
+
+class User {
+  - email: string
+  - fullName: string
+  - role: string
+  - userid: int
+  + login(): void
+  + logout(): void
+}
+
+class ListeningTest {
+  - mode: int
+  - testId: int
+  - title: int
+  - totalItems: int
+  - versionId: int
+  + activate(): void
+  + archive(): void
+}
+
+class ListeningItem {
+  - audioUrl: string
+  - difficulty: string
+  - itemId: int
+  - testId: int
+  - topicTag: string
+  - transcript: string
+  + lockControls(): void
+  + playAudio(): void
+  + unlockControls(): void
+}
+
+class Question {
+  - itemId: int
+  - questionId: int
+  - scoreWeight: int
+  - text: string
+  + addOption(option : ChoiceOption)(): void
+  + getCorrectOption() : ChoiceOption(): void
+}
+
+class ChoiceOption {
+  - isCorrect: boolean
+  - label: string
+  - optionId: int
+  - questionId: int
+  - text: string
+}
+
+class ListeningSession {
+  - endTime: datetime
+  - mode: string
+  - sessionId: int
+  - startTime: datetime
+  - status: string
+  - testId: int
+  - userId: int
+  + addAnswer(a : UserAnswer)(): void
+  + finish(): void
+  + start(): void
+}
+
+class UserAnswer {
+  - answerId: int
+  - isCorrect: boolean
+  - questionId: int
+  - responseTime: int
+  - selectedOptionId: int
+  - sessionId: int
+}
+
+class AntiCheatEvent {
+  - count: int
+  - eventId: int
+  - eventType: int
+  - occurredAt: datetime
+  - sessionId: int
+}
+
+class QuestionBankService {
+  + addListeningItem(testId : int, item : listening item): void
+  + addOption(questionId : int, )(): void
+  + addQuestion(itemId : int, question: Question(): void
+  + archiveTest(testId : int) : void(): void
+  + createTest(test : ListeningTest) : ListeningTest(): void
+  + getItems(testId : int) : List<ListeningItem>(): void
+  + getTests() : List<ListeningTest>(): void
+  + updateListeningItem(item : ListeningItem) : void(): void
+  + updateTest(test : ListeningTest) : void(): void
+}
+
+class ListeningService {
+  + exportKpiData(sessionId : int) : void(): void
+  + finishSession(sessionId : int) : ScoreReport(): void
+  + getScoreReport(sessionId : int) : ScoreReport(): void
+  + logFocusLoss(sessionId : int) : void(): void
+  + logReplay(sessionId : int) : void(): void
+  + startExam(userId : int, testId : int) : ListeningSession(): void
+  + startPractice(userId : int, testId : int) : ListeningSession(): void
+  + submitAnswer(sessionId : int, questionId : int, optionId : int, ): void
+}
+
+class ScoreReport {
+  - detail: int
+  - inference: int
+  - mainIdea: int
+  - organization: int
+  - pragmatic: int
+  - reportId: int
+  - sessionId: int
+  - totalScore: int
+  + calculateTotals(): void
+}
+
+User "1" -- "+*" ListeningSession
+ListeningTest "1" *-- "+*" ListeningItem
+ListeningItem "1" *-- "+*" Question
+Question "1" *-- "+*" ChoiceOption
+
+ListeningSession "+1" -- "+1" ListeningTest
+ListeningSession "1" *-- "+*" UserAnswer
+ListeningSession "+1" -- "+*" AntiCheatEvent
+ListeningSession "+1" -- "+0..1" ScoreReport
+
+ListeningService ..> ListeningSession
+ListeningService ..> ListeningTest
+ListeningService ..> UserAnswer
+ListeningService ..> AntiCheatEvent
+ListeningService ..> ScoreReport
+ListeningService ..> QuestionBankService
+
+@enduml

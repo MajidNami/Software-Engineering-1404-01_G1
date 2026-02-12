@@ -1,0 +1,39 @@
+@startuml
+left to right direction
+
+actor "Test Taker" as Student
+actor "Admin" as Admin
+actor "KPI" as KPI
+
+usecase "Start Listening Exam" as StartExam
+usecase "Select Exam/Practice\nMode" as SelectMode
+usecase "View Progress & KPIs" as ViewProgress
+usecase "Consume Test &\nPractice KPIs" as ConsumeKPIs
+usecase "Answer Listening\nQuestions" as AnswerQuestions
+usecase "Start Listening Practice" as StartPractice
+usecase "View Exam Score &\nSubscores" as ViewScore
+usecase "View Practice\nFeedback &\nExplanation" as ViewFeedback
+
+usecase "Manage Listening\nTests" as ManageTests
+usecase "Manage Listening\nItems & Questions" as ManageItems
+usecase "View Anti-cheat Logs" as ViewLogs
+
+Student -- SelectMode
+Student -- StartExam
+Student -- ViewScore
+Student -- ViewProgress
+
+KPI -- ConsumeKPIs
+
+StartExam ..> AnswerQuestions : <<include>>
+StartExam ..> ViewScore : <<extend>>
+StartPractice ..> AnswerQuestions : <<include>>
+StartPractice ..> ViewFeedback : <<extend>>
+ViewScore ..> ViewFeedback : <<include>>
+ViewProgress ..> ConsumeKPIs : <<include>>
+
+Admin -- ManageTests
+Admin -- ManageItems
+Admin -- ViewLogs
+
+@enduml

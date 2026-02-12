@@ -1,0 +1,23 @@
+@startuml
+actor "Test Taker" as User
+participant ListeningPage
+participant "service :\nListeningService" as Service
+participant "test : ListeningTest" as Test
+participant "session :\nListeningSession" as Session
+participant "report : ScoreReport" as Report
+
+User -> ListeningPage : click start massage()
+ListeningPage -> Service : startExam(userId, testId)
+Service -> Test : load(testId)
+Service -> Session : createSession(userId, testId)
+Session -> Report : showFirstQuestion(test)
+
+User -> ListeningPage : selectAnswer()
+ListeningPage -> Service : submitAnswer(sessionId, questionId, optionId)
+Service -> Session : addAnswer(answer)
+
+loop loop [for each question]
+    note right of User: [loop [for each question]]
+end
+
+@enduml
