@@ -14,7 +14,7 @@ def get_user(token_key):
         return User.objects.get(id=user_id)
     except Exception as e:
         print(f"Middleware JWT Error: {e}")
-        return AnonymousUser()
+        return AnonymousUser()      
 
 class JWTAuthMiddleware:
     """
