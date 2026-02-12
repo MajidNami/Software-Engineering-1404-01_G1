@@ -54,7 +54,7 @@ urlpatterns = [
 
     # path('api/search-users/', UserSearchView.as_view(), name='search_users'),
     # path('api/my-chats/', MyChatRoomsView.as_view(), name='my_chats'),
-    # path('api/chat-history/<int:chat_id>/', ChatHistoryView.as_view(), name='chat_history'),
+    # path('api/chat-history/<int:chat_id>/', ChatHistoryView.as_view(), name='chat_history'), 
     path('api/users/search/', UserSearchAPIView.as_view(), name='user_search'),
     path('api/chat/start/', StartPrivateChatAPIView.as_view(), name='start_chat'),
     path('api/chat/inbox/', MyChatRoomsView.as_view(), name='inbox'),
