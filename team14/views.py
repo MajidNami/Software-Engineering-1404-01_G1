@@ -38,12 +38,11 @@ def index(request):
     last_session = UserSession.objects.filter(
         user=request.user,  # فرض شده request.user یک User مدل معتبر است.
         mode='exam',
-        end_time__isnull=False,
-        scaled_score__isnull=False
+        end_time__isnull=False
     ).order_by('-end_time').first()
 
     context = {
-        'last_score': last_session.scaled_score if last_session else None,
+        'last_score': last_session.total_score if last_session else None,
         'has_taken_exam': last_session is not None
     }
 
