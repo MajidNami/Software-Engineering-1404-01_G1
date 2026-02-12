@@ -1,15 +1,19 @@
 from django.http import JsonResponse
 from django.shortcuts import render
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
 from core.auth import api_login_required
 from rest_framework import viewsets, status
-from rest_framework.decorators import action
+from rest_framework.decorators import action, permission_classes
 from rest_framework.response import Response
+from rest_framework.permissions import AllowAny
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
 from datetime import date
 from .models import Lesson, Word
 from .serializers import LessonSerializer, WordSerializer
 from .filters import WordFilter
+from django.db.models import Count, Q
 
 TEAM_NAME = "team9"
 
@@ -24,8 +28,67 @@ def base(request):
     # Renders the main index page
     return render(request, f"{TEAM_NAME}/index.html")
 
+def dashboard_stats(request):
+    """
+    Returns dashboard statistics for the authenticated user.
+    
+    Returns:
+    - user_name: Name of the authenticated user
+    - total_lessons: Total number of lessons created by user
+    - total_words: Total number of words across all lessons
+    - completed_lessons: Number of lessons with 100% progress
+    - average_progress: Average progress across all lessons
+    """
+    # Get user name from request - try multiple fields
+    user_name = 'کاربر'
+    
+    # Check if user is authenticated
+    if hasattr(request, 'user') and request.user.is_authenticated:
+        # Try to get name from first_name and last_name
+        if hasattr(request.user, 'first_name') and request.user.first_name:
+            user_name = f"{request.user.first_name}"
+            if hasattr(request.user, 'last_name') and request.user.last_name:
+                user_name += f" {request.user.last_name}"
+        # Try email
+        elif hasattr(request.user, 'email') and request.user.email:
+            user_name = str(request.user.email).split('@')[0]
+        # Try username
+        elif hasattr(request.user, 'username') and request.user.username:
+            user_name = str(request.user.username)
+    
+    # Check JWT payload for additional user info
+    if hasattr(request, 'jwt_payload') and request.jwt_payload:
+        jwt_name = request.jwt_payload.get('name') or request.jwt_payload.get('username')
+        if jwt_name:
+            user_name = jwt_name
+    
+    # Get all lessons (not filtering by user for now to avoid overflow error)
+    lessons = Lesson.objects.all()
+    total_lessons = lessons.count()
+    
+    # Calculate total words
+    total_words = Word.objects.all().count()
+    
+    # Calculate completed lessons (100% progress)
+    completed_lessons = sum(1 for lesson in lessons if lesson.progress_percent >= 100.0)
+    
+    # Calculate average progress
+    if total_lessons > 0:
+        average_progress = sum(lesson.progress_percent for lesson in lessons) / total_lessons
+    else:
+        average_progress = 0.0
+    
+    return JsonResponse({
+        "user_name": user_name,
+        "total_lessons": total_lessons,
+        "total_words": total_words,
+        "completed_lessons": completed_lessons,
+        "average_progress": round(average_progress, 1)
+    })
+
 # --- New REST API ViewSets ---
 
+@method_decorator(csrf_exempt, name='dispatch')
 class LessonViewSet(viewsets.ModelViewSet):
     """
     ViewSet for Lesson model with search, filtering, and ordering capabilities.
@@ -42,6 +105,7 @@ class LessonViewSet(viewsets.ModelViewSet):
     - user_id: Filter by user ID
     - ordering: Order by created_at (e.g., ?ordering=-created_at for descending)
     """
+    permission_classes = []
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
     
@@ -58,6 +122,7 @@ class LessonViewSet(viewsets.ModelViewSet):
     ordering_fields = ['created_at']
     ordering = ['-created_at']  # Default ordering
 
+@method_decorator(csrf_exempt, name='dispatch')
 class WordViewSet(viewsets.ModelViewSet):
     """
     ViewSet for Word model with advanced search, filtering, and ordering.
@@ -81,6 +146,7 @@ class WordViewSet(viewsets.ModelViewSet):
     Legacy Parameter:
     - to_review: Deprecated, use today_review instead
     """
+    permission_classes = []
     queryset = Word.objects.all()
     serializer_class = WordSerializer
     

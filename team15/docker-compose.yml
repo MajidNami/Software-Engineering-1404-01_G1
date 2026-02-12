@@ -7,19 +7,6 @@ services:
       - ./gateway.conf:/etc/nginx/conf.d/default.conf:ro
     environment:
       - CORE_BASE_URL=http://core:8000
-    depends_on:
-      - backend
-    networks:
-      - app404
-
-  backend:
-    build:
-      context: ..
-      dockerfile: team15/Dockerfile
-    env_file:
-      - ../.env.example
-    environment:
-      - CORE_BASE_URL=http://core:8000
     networks:
       - app404
 

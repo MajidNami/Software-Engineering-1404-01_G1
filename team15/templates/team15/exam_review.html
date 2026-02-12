@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+{% load static %}
+<html class="light" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>Question Review</title>
+  <script src="{% static 'team15/vendor/js/tailwindcdn.forms.container-queries.js' %}"></script>
+  <link href="{% static 'team15/vendor/css/lexend.css' %}" rel="stylesheet" />
+  <style type="text/tailwindcss">
+    :root {
+      --primary-500: #FA1167;
+      --text-main: #0F0B4A;
+      --text-secondary: #3A3CA0;
+      --neutral-border: #D9DCE9;
+      --background-light: #F0F3FA;
+    }
+  </style>
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "var(--primary-500)",
+            "text-main": "var(--text-main)",
+            "text-secondary": "var(--text-secondary)",
+            "neutral-border": "var(--neutral-border)",
+            "background-light": "var(--background-light)",
+          },
+          fontFamily: {
+            "display": ["Lexend", "sans-serif"]
+          },
+        },
+      },
+    }
+  </script>
+</head>
+<body class="font-display bg-background-light text-text-main">
+  <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="mb-6">
+      <a href="{{ review_back_url }}" class="text-primary font-bold text-sm">Back to Result</a>
+    </div>
+    {% if review_found %}
+    <div class="space-y-6">
+      <section class="bg-white border border-neutral-border rounded-xl p-6">
+        <h1 class="text-2xl font-black tracking-[-0.02em]">{{ review_passage_title }}</h1>
+        <p class="mt-4 text-base leading-relaxed text-text-secondary whitespace-pre-line">{{ review_passage_text }}</p>
+      </section>
+      <section class="bg-white border border-neutral-border rounded-xl p-6 space-y-4">
+        <p class="text-sm font-bold text-text-secondary">{{ review_question_type }}</p>
+        <h2 class="text-xl font-bold">{{ review_question_text }}</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="rounded-lg border border-neutral-border p-4">
+            <p class="text-xs uppercase text-text-secondary">Your Answer</p>
+            <p class="mt-2 text-base font-bold">{{ review_selected_answer }}</p>
+          </div>
+          <div class="rounded-lg border border-neutral-border p-4">
+            <p class="text-xs uppercase text-text-secondary">Correct Answer</p>
+            <p class="mt-2 text-base font-bold">{{ review_correct_answer }}</p>
+          </div>
+        </div>
+      </section>
+    </div>
+    {% else %}
+    <section class="bg-white border border-neutral-border rounded-xl p-6">
+      <p class="text-base text-text-secondary">{{ review_error_message }}</p>
+    </section>
+    {% endif %}
+  </main>
+</body>
+</html>
