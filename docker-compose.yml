@@ -9,8 +9,6 @@ services:
       - "8000:8000"
     networks:
       - app404
-    volumes:
-      - .:/app
 
 networks:
   app404:
