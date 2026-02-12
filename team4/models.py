@@ -38,6 +38,7 @@ class ChatParticipant(models.Model):
     is_admin = models.BooleanField(default=False)
 
 
+
 class Message(models.Model):
     msg_id = models.AutoField(primary_key=True)
     sender = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='sent_messages')
