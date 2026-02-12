@@ -61,6 +61,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 }
             )
             return
+                        
 
         if action == 'message':
             if await self.is_blocked_check():
@@ -134,7 +135,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             content=content,
             reply_to=reply_to_obj
         )
-        
+
 
         if file_id:
             Attachment.objects.filter(file_id=file_id).update(message=msg)
