@@ -1,0 +1,1 @@
+docker exec -it team11-backend-1 python manage.py createsuperuser

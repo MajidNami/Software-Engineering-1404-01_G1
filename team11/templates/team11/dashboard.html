@@ -76,10 +76,10 @@
                     Topic: {{ submission.writing_details.topic|default:"Unknown"|truncatewords:10 }}
                   {% endif %}
                 {% else %}
-                  {% if submission.listening_details.question %}
-                    Question: {{ submission.listening_details.question.question_text|truncatewords:10 }}
+                  {% if submission.speaking_details.question %}
+                    Question: {{ submission.speaking_details.question.question_text|truncatewords:10 }}
                   {% else %}
-                    Topic: {{ submission.listening_details.topic|default:"Unknown"|truncatewords:10 }}
+                    Topic: {{ submission.speaking_details.topic|default:"Unknown"|truncatewords:10 }}
                   {% endif %}
                 {% endif %}
               </div>
@@ -206,7 +206,7 @@
       background: #e3f2fd;
     }
 
-    .exam-type-listening {
+    .exam-type-speaking {
       background: #ffccbc;
     }
 

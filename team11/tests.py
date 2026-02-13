@@ -1,4 +1,5 @@
 from pathlib import Path
+from unittest.mock import patch
 
 from django.test import TestCase
 from openai import OpenAI, APIError, APIConnectionError, RateLimitError
@@ -92,3 +93,4 @@ class Team11AISmokeTests(TestCase):
 
         self.assertTrue(result.get("success"), msg=result.get("error"))
         self.assertIsNotNone(result.get("overall_score"))
+

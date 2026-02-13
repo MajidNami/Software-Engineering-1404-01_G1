@@ -7,6 +7,8 @@ using AI APIs (Deepseek for text analysis, Whisper for audio transcription).
 
 import json
 import logging
+import os
+import re
 from typing import Dict, Any, Optional
 from openai import OpenAI, APIError, APIConnectionError, RateLimitError
 
@@ -21,7 +23,8 @@ logger = logging.getLogger(__name__)
 
 # API Configuration
 API_BASE_URL = "https://api.gapgpt.app/v1"
-API_KEY = "sk-NQIf9DDM88vlR7to5iys8BFQYwlHTvbtKZeVlwMawdEMOk61"
+# Security: Load key from env, fallback for dev only
+API_KEY = os.getenv("TEAM11_AI_API_KEY", "sk-NQIf9DDM88vlR7to5iys8BFQYwlHTvbtKZeVlwMawdEMOk61")
 
 # Initialize OpenAI client with a timeout to avoid hanging requests
 client = OpenAI(base_url=API_BASE_URL, api_key=API_KEY, timeout=300.0)
@@ -34,132 +37,117 @@ WHISPER_MODEL = "whisper-1"
 def assess_writing(topic: str, text_body: str, word_count: int) -> Dict[str, Any]:
     """
     Assess a writing submission using Deepseek AI.
-    
-    Args:
-        topic: The writing prompt/topic
-        text_body: The submitted text
-        word_count: Number of words in the submission
-        
-    Returns:
-        Dict containing assessment results with keys:
-            - overall_score: float (0-100)
-            - grammar_score: float (0-100)
-            - vocabulary_score: float (0-100)
-            - coherence_score: float (0-100)
-            - fluency_score: float (0-100)
-            - feedback_summary: str
-            - suggestions: list of str
-            - success: bool
-            - error: str (if success=False)
     """
     try:
-        # Prepare the user prompt with actual data
         user_prompt = WRITING_USER_PROMPT_TEMPLATE.format(
             topic=topic,
             text_body=text_body,
-            word_count=word_count
+            word_count=word_count,
         )
-        
+
         logger.info(f"Assessing writing submission: {word_count} words")
-        
-        # Make API call with system and user prompts
+
         response = client.chat.completions.create(
             model=DEEPSEEK_MODEL,
             messages=[
                 {"role": "system", "content": WRITING_SYSTEM_PROMPT},
-                {"role": "user", "content": user_prompt}
+                {"role": "user", "content": user_prompt},
             ],
-            temperature=0.2,  # Low temperature for consistent scoring
+            temperature=0.2,
             max_tokens=1000,
         )
-        
-        # Extract the response content
+
         content = response.choices[0].message.content.strip()
-        
-        # Parse JSON response
+
         try:
             assessment = json.loads(content)
         except json.JSONDecodeError:
-            # Try to extract JSON from markdown code blocks if present
-            if "```json" in content:
+            match = re.search(r"\{.*\}", content, re.DOTALL)
+            if match:
+                assessment = json.loads(match.group(0))
+            elif "```json" in content:
                 json_start = content.find("```json") + 7
                 json_end = content.find("```", json_start)
-                content = content[json_start:json_end].strip()
-                assessment = json.loads(content)
+                assessment = json.loads(content[json_start:json_end].strip())
             elif "```" in content:
                 json_start = content.find("```") + 3
                 json_end = content.find("```", json_start)
-                content = content[json_start:json_end].strip()
-                assessment = json.loads(content)
+                assessment = json.loads(content[json_start:json_end].strip())
             else:
-                raise
-        
-        # Validate required fields
+                json_start = content.find("{")
+                json_end = content.rfind("}") + 1
+                if json_start != -1 and json_end != -1 and json_end > json_start:
+                    assessment = json.loads(content[json_start:json_end])
+                else:
+                    raise
+
         required_fields = [
             'overall_score', 'grammar_score', 'vocabulary_score',
             'coherence_score', 'fluency_score', 'feedback_summary', 'suggestions'
         ]
-        
+
         for field in required_fields:
             if field not in assessment:
                 raise ValueError(f"Missing required field: {field}")
-        
-        # Ensure scores are floats
-        for score_field in ['overall_score', 'grammar_score', 'vocabulary_score', 
-                           'coherence_score', 'fluency_score']:
+
+        for score_field in [
+            'overall_score', 'grammar_score', 'vocabulary_score',
+            'coherence_score', 'fluency_score'
+        ]:
             assessment[score_field] = float(assessment[score_field])
-        
-        # Ensure suggestions is a list
-        if not isinstance(assessment['suggestions'], list):
-            assessment['suggestions'] = [assessment['suggestions']]
-        
+
+        if not isinstance(assessment.get('suggestions'), list):
+            assessment['suggestions'] = [assessment.get('suggestions')]
+
         assessment['success'] = True
         logger.info(f"Writing assessment completed: overall_score={assessment['overall_score']}")
-        
         return assessment
-        
+
     except APIConnectionError as e:
         logger.error(f"API Connection Error: {e}")
         return {
             'success': False,
             'error': 'Failed to connect to AI service. Please try again later.',
-            'overall_score': None
+            'error_type': 'connection',
+            'overall_score': None,
         }
     except RateLimitError as e:
         logger.error(f"Rate Limit Error: {e}")
         return {
             'success': False,
             'error': 'Too many requests. Please wait a moment and try again.',
-            'overall_score': None
+            'error_type': 'rate_limit',
+            'overall_score': None,
         }
     except APIError as e:
         logger.error(f"API Error: {e}")
         return {
             'success': False,
             'error': f'AI service error: {str(e)}',
-            'overall_score': None
+            'error_type': 'api',
+            'overall_score': None,
+        }
+    except json.JSONDecodeError as e:
+        logger.error(f"JSON parse error in assess_writing: {e}")
+        return {
+            'success': False,
+            'error': 'AI response was not valid JSON.',
+            'error_type': 'parse',
+            'overall_score': None,
         }
     except Exception as e:
         logger.error(f"Unexpected error in assess_writing: {e}", exc_info=True)
         return {
             'success': False,
             'error': f'Assessment failed: {str(e)}',
-            'overall_score': None
+            'error_type': 'unknown',
+            'overall_score': None,
         }
 
 
 def transcribe_audio(audio_file_path: str) -> Dict[str, Any]:
     """
     Transcribe audio file using Whisper API.
-    
-    Args:
-        audio_file_path: Path to the audio file
-        
-    Returns:
-        Dict containing:
-            - transcription: str (the transcribed text)
-            - success: bool
-            - error: str (if success=False)
     """
     try:
         logger.info(f"Transcribing audio file: {audio_file_path}")
@@ -220,29 +208,6 @@ def transcribe_audio(audio_file_path: str) -> Dict[str, Any]:
 def assess_speaking(topic: str, audio_file_path: str, duration_seconds: int) -> Dict[str, Any]:
     """
     Assess a speaking submission using Whisper (transcription) + Deepseek (assessment).
-    
-    This is a two-step process:
-    1. Transcribe the audio using Whisper
-    2. Assess the transcription using Deepseek
-    
-    Args:
-        topic: The speaking prompt/topic
-        audio_file_path: Path to the audio file
-        duration_seconds: Duration of the recording
-        
-    Returns:
-        Dict containing assessment results with keys:
-            - overall_score: float (0-100)
-            - pronunciation_score: float (0-100)
-            - fluency_score: float (0-100)
-            - vocabulary_score: float (0-100)
-            - grammar_score: float (0-100)
-            - coherence_score: float (0-100)
-            - feedback_summary: str
-            - suggestions: list of str
-            - transcription: str (the transcribed text)
-            - success: bool
-            - error: str (if success=False)
     """
     try:
         # Step 1: Transcribe the audio
@@ -279,23 +244,26 @@ def assess_speaking(topic: str, audio_file_path: str, duration_seconds: int) -> 
         
         content = response.choices[0].message.content.strip()
         
-        # Parse JSON response
+        # Parse JSON response (Improved)
         try:
+            # 1. Try direct parse
             assessment = json.loads(content)
         except json.JSONDecodeError:
-            # Try to extract JSON from markdown code blocks
-            if "```json" in content:
-                json_start = content.find("```json") + 7
-                json_end = content.find("```", json_start)
-                content = content[json_start:json_end].strip()
-                assessment = json.loads(content)
-            elif "```" in content:
-                json_start = content.find("```") + 3
-                json_end = content.find("```", json_start)
-                content = content[json_start:json_end].strip()
-                assessment = json.loads(content)
+            # 2. Regex to find the first '{' and last '}'
+            match = re.search(r'\{.*\}', content, re.DOTALL)
+            if match:
+                json_str = match.group(0)
+                try:
+                    assessment = json.loads(json_str)
+                except json.JSONDecodeError:
+                    if "```json" in content:
+                        json_start = content.find("```json") + 7
+                        json_end = content.find("```", json_start)
+                        assessment = json.loads(content[json_start:json_end].strip())
+                    else:
+                        raise ValueError(f"Failed to parse JSON: {content[:100]}...")
             else:
-                raise
+                raise ValueError(f"No JSON object found: {content[:100]}...")
         
         # Validate required fields
         required_fields = [

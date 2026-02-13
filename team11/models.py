@@ -13,7 +13,7 @@ class AnalysisStatus(models.TextChoices):
 
 class SubmissionType(models.TextChoices):
     WRITING = 'writing', 'Writing'
-    LISTENING = 'listening', 'Listening'
+    SPEAKING = 'speaking', 'Speaking'
 
 
 class QuestionCategory(models.Model):
@@ -107,13 +107,13 @@ class WritingSubmission(models.Model):
         return f"Writing: {self.topic[:50]}"
 
 
-class ListeningSubmission(models.Model):
-    """Model for listening (speaking) task submissions"""
+class SpeakingSubmission(models.Model):
+    """Model for speaking (speaking) task submissions"""
     submission = models.OneToOneField(
         Submission,
         on_delete=models.CASCADE,
         primary_key=True,
-        related_name='listening_details'
+        related_name='speaking_details'
     )
     question = models.ForeignKey(Question, on_delete=models.SET_NULL, null=True, blank=True)
     topic = models.CharField(max_length=500)
@@ -122,7 +122,7 @@ class ListeningSubmission(models.Model):
     transcription = models.TextField(blank=True, null=True)
 
     def __str__(self):
-        return f"Listening: {self.topic[:50]}"
+        return f"Speaking: {self.topic[:50]}"
 
 
 class AssessmentResult(models.Model):

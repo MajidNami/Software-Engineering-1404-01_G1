@@ -203,7 +203,7 @@
       resultMessage.innerHTML = '<p>در حال ارسال... لطفاً صبر کنید.</p>';
 
       try {
-        console.log('Starting listening submission');
+        console.log('Starting speaking submission');
         // Convert blob to base64
         const base64Audio = await new Promise((resolve, reject) => {
           const reader = new FileReader();
@@ -225,7 +225,7 @@
           controller.abort();
         }, 30000);
 
-        const response = await fetch('{% url "team11_submit_listening" %}', {
+        const response = await fetch('{% url "team11_submit_speaking" %}', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

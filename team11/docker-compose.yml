@@ -1,14 +1,45 @@
 services:
+  backend:
+    build:
+      context: ../
+      dockerfile: team11/Dockerfile
+    volumes:
+      - ../:/app
+      - team11_static_volume:/app/staticfiles
+      - team11_media_volume:/app/media
+      - ./data/db:/app/team11/db
+      - ./data/media:/app/media
+    environment:
+      - TEAM_APPS=team11
+      - DEBUG=1
+      - DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1,backend,gateway
+      - CSRF_TRUSTED_ORIGINS=http://localhost:9151
+    command: >
+      bash -c "mkdir -p /app/staticfiles /app/media/team11/audio && 
+               python manage.py collectstatic --noinput && 
+               python manage.py migrate && 
+               python manage.py migrate --database=team11 && 
+               python manage.py runserver 0.0.0.0:8000"
+    networks:
+      - app404
+
   gateway:
     image: nginx:alpine
     ports:
       - "${TEAM_PORT}:80"
     volumes:
       - ./gateway.conf:/etc/nginx/conf.d/default.conf:ro
-    environment:
-      - CORE_BASE_URL=http://core:8000
+      - team11_static_volume:/usr/share/nginx/html/static:ro # Read-only access
+      - team11_media_volume:/usr/share/nginx/html/media:ro   # Read-only access
+    depends_on:
+      - backend
     networks:
       - app404
+
+# Define named volumes so they persist and can be shared between containers
+volumes:
+  team11_static_volume:
+  team11_media_volume:
 
 networks:
   app404:

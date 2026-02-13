@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import (
-    Submission, WritingSubmission, ListeningSubmission, 
+    Submission, WritingSubmission, SpeakingSubmission, 
     AssessmentResult, QuestionCategory, Question
 )
 
@@ -21,8 +21,8 @@ class WritingSubmissionAdmin(admin.ModelAdmin):
     readonly_fields = ['submission']
 
 
-@admin.register(ListeningSubmission)
-class ListeningSubmissionAdmin(admin.ModelAdmin):
+@admin.register(SpeakingSubmission)
+class SpeakingSubmissionAdmin(admin.ModelAdmin):
     list_display = ['submission', 'topic', 'duration_seconds']
     search_fields = ['topic']
     readonly_fields = ['submission']

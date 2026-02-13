@@ -7,9 +7,9 @@ urlpatterns = [
     path("dashboard/", views.dashboard, name="team11_dashboard"),
     path("start-exam/", views.start_exam, name="team11_start_exam"),
     path("writing-exam/", views.writing_exam, name="team11_writing_exam"),
-    path("listening-exam/", views.listening_exam, name="team11_listening_exam"),
+    path("speaking-exam/", views.speaking_exam, name="team11_speaking_exam"),
     path("api/submit-writing/", views.submit_writing, name="team11_submit_writing"),
-    path("api/submit-listening/", views.submit_listening, name="team11_submit_listening"),
+    path("api/submit-speaking/", views.submit_speaking, name="team11_submit_speaking"),
     path("api/submission-status/<uuid:submission_id>/", views.submission_status, name="team11_submission_status"),
     path("submission/<uuid:submission_id>/", views.submission_detail, name="team11_submission_detail"),
 ]

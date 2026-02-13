@@ -1,4 +1,4 @@
-# Team 11 - TOEFL Listening & Writing Assessment
+# Team 11 - TOEFL Speaking & Writing Assessment
 
 AI-powered English exam microservice with dynamic question system and TOEFL iBT-standard assessment.
 
@@ -22,7 +22,7 @@ AI-powered English exam microservice with dynamic question system and TOEFL iBT-
 **Database Models**
 - `QuestionCategory` & `Question`: Dynamic question management
 - `Submission`: Base model with status tracking
-- `WritingSubmission` & `ListeningSubmission`: Exam details with question linking
+- `WritingSubmission` & `SpeakingSubmission`: Exam details with question linking
 - `AssessmentResult`: Detailed TOEFL-standard scores and feedback
 
 ## Quick Start
@@ -110,7 +110,7 @@ team11/
 ## API Endpoints
 
 - `POST /team11/api/submit-writing/` - Submit writing with question_id
-- `POST /team11/api/submit-listening/` - Submit speaking with question_id
+- `POST /team11/api/submit-speaking/` - Submit speaking with question_id
 - `GET /team11/dashboard/` - Submission history
 - `GET /team11/submission/<uuid>/` - Detailed results
 

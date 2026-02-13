@@ -48,31 +48,31 @@ def create_sample_data(apps, schema_editor):
             'category': academic_writing,
             'text': 'Do you agree or disagree with the following statement? Technology has made the world a better place to live. Use specific reasons and examples to support your answer.',
             'difficulty': 'intermediate',
-            'min_words': 300
+            'min_words': 150
         },
         {
             'category': academic_writing,
             'text': 'Some people prefer to work for a large company. Others prefer to work for a small company. Which would you prefer? Use specific reasons and details to support your answer.',
             'difficulty': 'intermediate',
-            'min_words': 300
+            'min_words': 150
         },
         {
             'category': academic_writing,
             'text': 'Do you agree or disagree with the following statement? It is more important for students to study history and literature than it is for them to study science and mathematics. Use specific reasons and examples to support your opinion.',
             'difficulty': 'advanced',
-            'min_words': 300
+            'min_words': 150
         },
         {
             'category': personal_writing,
             'text': 'Describe a person who has had a significant influence on your life. Explain why this person has been important to you.',
             'difficulty': 'beginner',
-            'min_words': 250
+            'min_words': 150
         },
         {
             'category': personal_writing,
             'text': 'If you could change one important thing about your hometown, what would you change? Use reasons and specific examples to support your answer.',
             'difficulty': 'intermediate',
-            'min_words': 300
+            'min_words': 150
         },
     ]
     
