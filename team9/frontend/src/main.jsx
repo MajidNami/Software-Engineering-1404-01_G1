@@ -8,7 +8,7 @@ import "./assets/team9/styles/style.css";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <BrowserRouter>
+    <BrowserRouter basename="/team9">
       <App />
     </BrowserRouter>
   </StrictMode>

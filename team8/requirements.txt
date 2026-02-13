@@ -1,0 +1,14 @@
+Django==4.2.27
+PyJWT
+django-environ
+django-cors-headers
+mysqlclient
+PyMySQL
+gunicorn
+whitenoise
+requests
+groq
+python-dotenv
+Pillow
+huggingface_hub
+gtts

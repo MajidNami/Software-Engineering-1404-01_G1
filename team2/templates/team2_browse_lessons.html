@@ -1,0 +1,362 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مرور درس‌ها</title>
+    <link rel="stylesheet" href="{% static 'styles/style.css' %}">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .header h1 {
+            color: #333;
+            margin: 0;
+            font-size: 2rem;
+        }
+
+        .header p {
+            color: #666;
+            margin: 5px 0 0 0;
+        }
+
+        .header-right {
+            text-align: right;
+        }
+
+        .login-container {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .login-text {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .login-text:hover {
+            color: #764ba2;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: #667eea;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .lessons-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .lesson-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+        }
+
+        .lesson-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+        }
+
+        .lesson-card-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+        }
+
+        .lesson-card-header h3 {
+            margin: 0 0 10px 0;
+            font-size: 1.3rem;
+        }
+
+        .lesson-subject {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin: 5px 0;
+        }
+
+        .lesson-card-body {
+            padding: 20px;
+        }
+
+        .lesson-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .stat {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            margin-top: 5px;
+        }
+
+        .lesson-description {
+            color: #666;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-bottom: 15px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .lesson-level {
+            display: inline-block;
+            background: #f0f0f0;
+            color: #667eea;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            margin-bottom: 15px;
+        }
+
+        .enroll-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: opacity 0.3s ease;
+        }
+
+        .enroll-btn:hover {
+            opacity: 0.9;
+        }
+
+        .enroll-btn:active {
+            opacity: 0.8;
+        }
+
+        .messages {
+            margin-bottom: 20px;
+        }
+
+        .message {
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .message.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .message.info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: white;
+        }
+
+        .empty-state-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+
+        .empty-state h2 {
+            margin: 0 0 10px 0;
+        }
+
+        .empty-state p {
+            opacity: 0.9;
+            margin: 0;
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                text-align: right;
+            }
+
+            .header h1 {
+                font-size: 1.5rem;
+            }
+
+            .lessons-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-left">
+                <a href="{% url 'team2_index' %}" style="color: #667eea; text-decoration: none; font-weight: 600; margin-left: 15px;">
+                    🏠 صفحه اصلی
+                </a>
+                <a href="{% url 'microservices' %}" style="color: #667eea; text-decoration: none; font-weight: 600;">
+                    ← برگشت
+                </a>
+            </div>
+            <div class="header-right">
+                <div class="login-container">
+                    {% if request.user.is_authenticated %}
+                        <span style="color: #333;">{{ request.user.email }}</span>
+                        <a href="{% url 'logout' %}" class="login-text">خروج</a>
+                    {% else %}
+                        <a href="{% url 'auth' %}" class="login-text">ورود</a>
+                    {% endif %}
+
+                    <div class="user-avatar">
+                        <svg width="24" height="24" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="15" cy="10" r="5" fill="white" />
+                            <path d="M5 25C5 20 9 17 15 17C21 17 25 20 25 25" stroke="white" stroke-width="2"
+                                fill="none" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                    <div class="message {% if message.tags %}{{ message.tags }}{% else %}info{% endif %}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <div style="background: white; padding: 30px; border-radius: 12px; margin-bottom: 30px;">
+            <h1 style="color: #333; margin: 0 0 10px 0;">📚 مرور درس‌های آنلاین</h1>
+            <p style="color: #666; margin: 0;">درس‌های منتشرشده را مرور کنید و به کلاس‌های خود اضافه کنید</p>
+        </div>
+
+        {% if lessons %}
+            <div class="lessons-grid">
+                {% for lesson in lessons %}
+                    <div class="lesson-card">
+                        <div class="lesson-card-header">
+                            <h3>{{ lesson.title }}</h3>
+                            <div class="lesson-subject">📖 {{ lesson.subject }}</div>
+                        </div>
+                        <div class="lesson-card-body">
+                            <div class="lesson-stats">
+                                <div class="stat">
+                                    <div class="stat-value">{{ lesson.videos.count }}</div>
+                                    <div class="stat-label">ویدیو</div>
+                                </div>
+                                <div class="stat">
+                                    <div class="stat-value">{{ lesson.duration_seconds }}د</div>
+                                    <div class="stat-label">مدت</div>
+                                </div>
+                            </div>
+
+                            <span class="lesson-level">
+                                {% if lesson.level == 'beginner' %}
+                                    🟢 مبتدی
+                                {% elif lesson.level == 'intermediate' %}
+                                    🟡 متوسط
+                                {% else %}
+                                    🔴 پیشرفته
+                                {% endif %}
+                            </span>
+
+                            <div class="lesson-description">
+                                {{ lesson.description }}
+                            </div>
+
+                            <form method="post" action="{% url 'enroll_lesson' lesson.id %}" style="margin: 0;">
+                                {% csrf_token %}
+                                <button type="submit" class="enroll-btn">
+                                    ✓ افزودن به کلاس‌های من
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <div class="empty-state-icon">📚</div>
+                <h2>هیچ درسی موجود نیست</h2>
+                <p>درس‌های جدید به زودی منتشر می‌شوند</p>
+            </div>
+        {% endif %}
+    </div>
+</body>
+
+</html>

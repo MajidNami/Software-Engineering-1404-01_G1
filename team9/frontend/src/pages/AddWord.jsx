@@ -1,5 +1,22 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+import config from "../config";
+
+function getCsrfToken() {
+  const name = 'csrftoken';
+  let cookieValue = null;
+  if (document.cookie && document.cookie !== '') {
+    const cookies = document.cookie.split(';');
+    for (let i = 0; i < cookies.length; i++) {
+      const cookie = cookies[i].trim();
+      if (cookie.substring(0, name.length + 1) === (name + '=')) {
+        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+        break;
+      }
+    }
+  }
+  return cookieValue;
+}
 
 export default function AddWord() {
   const navigate = useNavigate();
@@ -11,7 +28,7 @@ export default function AddWord() {
 
  
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/team9/api/lessons/")
+    fetch(config.LESSONS_ENDPOINT)
       .then((res) => res.json())
       .then((data) => setLessons(data))
       .catch((err) => console.error("Error fetching lessons:", err));
@@ -23,10 +40,14 @@ export default function AddWord() {
       return;
     }
 
-   
-    fetch("http://127.0.0.1:8000/team9/api/words/", {
+    const csrfToken = getCsrfToken();
+    fetch(config.WORDS_ENDPOINT, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { 
+        "Content-Type": "application/json",
+        "X-CSRFToken": csrfToken
+      },
+      credentials: "include",
       body: JSON.stringify({
         term: word,         
         definition: meaning,  
@@ -50,17 +71,15 @@ export default function AddWord() {
   return (
     <div className="t9-page" dir="rtl" lang="fa">
       <header className="t9-topbar">
-        <button className="t9-pillBtn">حساب کاربری</button>
+        <button className="t9-pillBtn" onClick={() => window.location.href = "http://localhost:8000"}>خانه</button>
         <h1 className="t9-title">یادگیری مستمر با Tick 8</h1>
-        <button className="t9-pillBtn" onClick={() => navigate("/microservices")}>
-          خانه
-        </button>
+        <Link to="/dashboard" className="t9-pillBtn" style={{textDecoration: 'none'}}>حساب کاربری</Link>
       </header>
 
       <section className="t9-panel t9-addword">
         <div className="t9-form">
           <label className="t9-label">
-            <span>Enter Word:</span>
+            <span>واژه را وارد کنید:</span>
             <input
               className="t9-input"
               value={word}
@@ -77,9 +96,10 @@ export default function AddWord() {
             />
           </label>
 
-          <div className="t9-label">
+          <label className="t9-label">
             <span>انتخاب درس مورد نظر:</span>
-          </div>
+            <div className="t9-line"></div>
+          </label>
 
           <div className="t9-lessonBox">
             {lessons.map((l) => (
@@ -95,16 +115,12 @@ export default function AddWord() {
           </div>
 
           <div className="t9-addwordActions">
+            <button className="t9-actionBtn" type="button" onClick={handleAddWord}>
+              افزودن واژه
+            </button>
+            
             <button className="t9-actionBtn" type="button" onClick={() => navigate(-1)}>
               بازگشت
-            </button>
-
-            <button
-              className="t9-actionBtn"
-              type="button"
-              onClick={handleAddWord}
-            >
-              افزودن واژه
             </button>
           </div>
         </div>

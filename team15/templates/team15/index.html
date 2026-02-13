@@ -1,53 +1,40 @@
-﻿{% load static %}
+{% load static %}
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>میکروسرویس گروه ۱</title>
-
-  <!-- Team-local shared + team-local page styles -->
+  <title>Team15 - TOEFL Reading</title>
   <link rel="stylesheet" href="{% static 'team15/styles/common.css' %}">
   <link rel="stylesheet" href="{% static 'team15/styles/style.css' %}">
 </head>
-
 <body>
   <div class="container">
     <header class="header">
       <div class="header-right">
         <a href="{% url 'microservices' %}" class="home-btn">میکروسرویس‌ها</a>
       </div>
-
       <div class="header-left">
-        <div class="flag-settings">
-          <img src="{% static 'team15/public/images/settings.png' %}" alt="" class="settings-icon">
-
-          <div class="iran-flag">
-            <div class="flag-green"></div>
-            <div class="flag-white"></div>
-            <div class="flag-red"></div>
-          </div>
-        </div>
-
         <div class="login-container">
           {% if request.user.is_authenticated %}
             <a href="{% url 'logout' %}" class="login-text">خروج</a>
           {% else %}
             <a href="{% url 'auth' %}" class="login-text">ورود</a>
           {% endif %}
-
-          <div class="user-avatar" aria-hidden="true">
-            <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="15" cy="10" r="5" fill="#647eb4" />
-              <path d="M5 25C5 20 9 17 15 17C21 17 25 20 25 25" stroke="#647eb4" stroke-width="2" fill="none" />
-            </svg>
-          </div>
         </div>
       </div>
     </header>
 
-    <main class="welcome-section">
-      <h1 style="font-size: 3rem; color: var(--navy);">به میکروسرویس گروه 15 خوش آمدید</h1>
+    <main class="welcome-section" style="text-align:center; padding-top: 3rem;">
+      <h1 style="font-size: 2.2rem; color: var(--navy);">میکروسرویس Team15</h1>
+      <p style="font-size:1.1rem; margin-top: .75rem; color:#444;">TOEFL Reading - Exam & Practice</p>
+
+      <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin-top: 2rem;">
+        <a href="/team15/dashboard/" class="home-btn">Dashboard</a>
+        <a href="/team15/exam-setup/" class="home-btn">Exam Setup</a>
+        <a href="/team15/practice-reading/" class="home-btn">Practice Mode</a>
+        <a href="/team15/progress/" class="home-btn">Progress Tracking</a>
+      </div>
     </main>
   </div>
 </body>

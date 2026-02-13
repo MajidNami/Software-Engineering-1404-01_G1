@@ -1,0 +1,452 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ video.lesson.title }} - تماشای ویدیو</title>
+    <link rel="stylesheet" href="{% static 'styles/style.css' %}">
+    <style>
+        body {
+            background: #f5f7fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .header-left a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .login-container {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .login-text {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: #667eea;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .video-container {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .video-player-section {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .video-player-wrapper {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+            background: #000;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .video-player-wrapper video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .video-info-section {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .lesson-title {
+            font-size: 1.5rem;
+            color: #333;
+            margin: 0 0 15px 0;
+            font-weight: 600;
+        }
+
+        .video-meta-info {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+        }
+
+        .video-meta-info div {
+            margin-bottom: 8px;
+        }
+
+        .video-format-badge {
+            display: inline-block;
+            background: #f0f0f0;
+            color: #667eea;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .videos-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .video-list-item {
+            padding: 12px;
+            margin-bottom: 8px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s ease;
+            border: 2px solid transparent;
+        }
+
+        .video-list-item:hover {
+            background: #f5f7fa;
+        }
+
+        .video-list-item.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .video-list-item.active .video-format-badge {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+
+        .video-list-item-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .video-list-item-meta {
+            font-size: 0.85rem;
+            opacity: 0.8;
+        }
+
+        .navigation-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .nav-btn {
+            flex: 1;
+            padding: 12px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            text-decoration: none;
+            text-align: center;
+            transition: opacity 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            opacity: 0.9;
+        }
+
+        .nav-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+
+        .error-message {
+            background: #fee;
+            color: #c33;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        @media (max-width: 1024px) {
+            .video-container {
+                grid-template-columns: 1fr;
+            }
+
+            .video-info-section {
+                order: -1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-left">
+                <a href="{% url 'team2_index' %}" style="margin-left: 15px;">🏠 صفحه اصلی</a>
+                <a href="{% url 'student_lesson_videos' lesson.id %}">← بازگشت به ویدیوها</a>
+            </div>
+            <div class="login-container">
+                {% if request.user.is_authenticated %}
+                    <span style="color: #333;">{{ request.user.email }}</span>
+                    <a href="{% url 'logout' %}" class="login-text">خروج</a>
+                {% else %}
+                    <a href="{% url 'auth' %}" class="login-text">ورود</a>
+                {% endif %}
+
+                <div class="user-avatar">
+                    <svg width="24" height="24" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="15" cy="10" r="5" fill="white" />
+                        <path d="M5 25C5 20 9 17 15 17C21 17 25 20 25 25" stroke="white" stroke-width="2"
+                            fill="none" />
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <div class="video-container">
+            <div class="video-player-section">
+                <h1 class="lesson-title">{{ lesson.title }}</h1>
+                <div class="video-player-wrapper">
+                    {% if video.file_path %}
+                        <video id="videoPlayer" controls preload="metadata" style="width: 100%; height: 100%;">
+                            <source src="/media/{{ video.file_path }}" type="{{ video_mime_type }}">
+                            مرورگر شما از پخش ویدیو پشتیبانی نمی‌کند.
+                            <a href="/media/{{ video.file_path }}">دانلود ویدیو</a>
+                        </video>
+                    {% else %}
+                        <div class="error-message">
+                            ❌ فایل ویدیو یافت نشد
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="navigation-buttons">
+                    {% if previous_video %}
+                        <a href="{% url 'watch_video' lesson.id previous_video.id %}" class="nav-btn">
+                            ← ویدیو قبلی
+                        </a>
+                    {% else %}
+                        <span class="nav-btn" style="background: #ccc; cursor: not-allowed; opacity: 0.5;">
+                            ← ویدیو قبلی
+                        </span>
+                    {% endif %}
+                    
+                    <span style="flex: 0; padding: 12px; color: #666;">
+                        {{ current_video_index }} / {{ total_videos }}
+                    </span>
+                    
+                    {% if next_video %}
+                        <a href="{% url 'watch_video' lesson.id next_video.id %}" class="nav-btn">
+                            ویدیو بعدی →
+                        </a>
+                    {% else %}
+                        <span class="nav-btn" style="background: #ccc; cursor: not-allowed; opacity: 0.5;">
+                            ویدیو بعدی →
+                        </span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="video-info-section">
+                <h2 style="margin-top: 0; color: #333;">ویدیوهای این درس</h2>
+                <ul class="videos-list">
+                    {% for v in all_videos %}
+                        <li class="video-list-item {% if v.id == video.id %}active{% endif %}">
+                            <a href="{% url 'watch_video' lesson.id v.id %}" style="text-decoration: none; color: inherit; display: block;">
+                                <div class="video-list-item-title">
+                                    ویدیو {{ forloop.counter }}
+                                    <span class="video-format-badge">{{ v.file_format|upper }}</span>
+                                </div>
+                                <div class="video-list-item-meta">
+                                    📅 {{ v.uploaded_at|date:"Y-m-d" }}
+                                </div>
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const lessonId = {{ lesson.id }};
+        let watchStartTime = null;
+        let totalWatchTime = 0; // in seconds
+        let isTracking = false;
+        let trackingInterval = null;
+        let hasCompletedVideo = false;
+
+        // مدیریت خطاهای پخش ویدیو
+        const videoPlayer = document.getElementById('videoPlayer');
+        if (videoPlayer) {
+            videoPlayer.addEventListener('error', function(e) {
+                console.error('خطا در پخش ویدیو:', e);
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'error-message';
+                errorDiv.innerHTML = '❌ خطا در پخش ویدیو. لطفا فرمت ویدیو را بررسی کنید یا فایل را دانلود کنید.';
+                videoPlayer.parentElement.appendChild(errorDiv);
+            });
+
+            videoPlayer.addEventListener('loadedmetadata', function() {
+                console.log('ویدیو با موفقیت لود شد');
+            });
+
+            // Track when video starts playing
+            videoPlayer.addEventListener('play', function() {
+                if (!isTracking) {
+                    watchStartTime = Date.now();
+                    isTracking = true;
+                    console.log('شروع ردیابی زمان تماشا');
+                }
+            });
+
+            // Track when video pauses
+            videoPlayer.addEventListener('pause', function() {
+                if (isTracking && watchStartTime) {
+                    const watchDuration = Math.floor((Date.now() - watchStartTime) / 1000);
+                    totalWatchTime += watchDuration;
+                    isTracking = false;
+                    watchStartTime = null;
+                    console.log('زمان تماشا:', totalWatchTime, 'ثانیه');
+                    sendViewTracking(false);
+                }
+            });
+
+            // Track when video ends
+            videoPlayer.addEventListener('ended', function() {
+                if (isTracking && watchStartTime) {
+                    const watchDuration = Math.floor((Date.now() - watchStartTime) / 1000);
+                    totalWatchTime += watchDuration;
+                    isTracking = false;
+                    watchStartTime = null;
+                }
+                hasCompletedVideo = true;
+                console.log('ویدیو به پایان رسید. کل زمان تماشا:', totalWatchTime, 'ثانیه');
+                sendViewTracking(true);
+            });
+
+            // Periodic tracking every 30 seconds
+            trackingInterval = setInterval(function() {
+                if (isTracking && watchStartTime) {
+                    const currentWatchDuration = Math.floor((Date.now() - watchStartTime) / 1000);
+                    const totalForNow = totalWatchTime + currentWatchDuration;
+
+                    // Check if video is mostly watched (>80%)
+                    const videoProgress = videoPlayer.currentTime / videoPlayer.duration;
+                    const isCompleted = videoProgress > 0.8 || hasCompletedVideo;
+
+                    console.log('به‌روزرسانی دوره‌ای: زمان =', totalForNow, 'ثانیه، پیشرفت =', Math.round(videoProgress * 100) + '%');
+                    sendViewTracking(isCompleted, totalForNow);
+                }
+            }, 30000); // Every 30 seconds
+
+            // Send final tracking when page unloads
+            window.addEventListener('beforeunload', function() {
+                if (isTracking && watchStartTime) {
+                    const watchDuration = Math.floor((Date.now() - watchStartTime) / 1000);
+                    totalWatchTime += watchDuration;
+                }
+                if (totalWatchTime > 0) {
+                    // Use sendBeacon for reliable sending on page unload
+                    const data = JSON.stringify({
+                        watch_duration_seconds: totalWatchTime,
+                        completed: hasCompletedVideo
+                    });
+                    navigator.sendBeacon(
+                        `/team2/api/lessons/${lessonId}/track-view/`,
+                        new Blob([data], { type: 'application/json' })
+                    );
+                }
+            });
+        }
+
+        async function sendViewTracking(completed, customWatchTime = null) {
+            const watchTime = customWatchTime !== null ? customWatchTime : totalWatchTime;
+
+            if (watchTime === 0) {
+                return; // Don't send if no watch time
+            }
+
+            try {
+                const response = await fetch(`/team2/api/lessons/${lessonId}/track-view/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCookie('csrftoken')
+                    },
+                    body: JSON.stringify({
+                        watch_duration_seconds: watchTime,
+                        completed: completed
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    console.log('ردیابی با موفقیت ثبت شد:', data);
+                } else {
+                    console.error('خطا در ثبت ردیابی:', data);
+                }
+            } catch (error) {
+                console.error('خطا در ارسال ردیابی:', error);
+            }
+        }
+
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+    </script>
+</body>
+
+</html>
+

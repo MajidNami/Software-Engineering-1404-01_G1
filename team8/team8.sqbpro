@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?><sqlb_project><db path="team8.sqlite3" readonly="0" foreign_keys="0" case_sensitive_like="0" temp_store="0" wal_autocheckpoint="1000" synchronous="2"/><attached/><window><main_tabs open="structure browser pragmas query" current="1"/></window><tab_structure><column_width id="0" width="300"/><column_width id="1" width="0"/><column_width id="2" width="100"/><column_width id="3" width="3494"/><column_width id="4" width="0"/><expanded_item id="0" parent="1"/><expanded_item id="1" parent="1"/><expanded_item id="2" parent="1"/><expanded_item id="3" parent="1"/></tab_structure><tab_browse><table title="team8_readingmaterial" custom_title="0" dock_id="1" table="4,21:mainteam8_readingmaterial"/><dock_state state="000000ff00000000fd00000001000000020000024900000213fc0100000001fb000000160064006f0063006b00420072006f00770073006500310100000000000002490000011800ffffff000002490000000000000004000000040000000800000008fc00000000"/><default_encoding codec=""/><browse_table_settings><table schema="main" name="django_migrations" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_" freeze_columns="0"><sort/><column_widths><column index="1" value="29"/><column index="2" value="101"/><column index="3" value="300"/><column index="4" value="210"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="team8_readingmaterial" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_" freeze_columns="0"><sort/><column_widths><column index="1" value="29"/><column index="2" value="300"/><column index="3" value="300"/><column index="4" value="85"/><column index="5" value="156"/><column index="6" value="257"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table></browse_table_settings></tab_browse><tab_sql><sql name="SQL 1*">PRAGMA foreign_keys = OFF;
+
+INSERT INTO team8_readingmaterial (user_id, title, category, content, created_at)
+VALUES 
+(
+    '253ebe0c28d04d1db80102417edf0ad1', 
+    'The Ontological Implications of Artificial Intelligence', 
+    'Philosophy', 
+    'The rapid proliferation of generative artificial intelligence has ignited a profound ontological debate regarding the nature of consciousness and intentionality. Scholarly discourse often oscillates between functionalism—the idea that mental states are purely defined by their functional roles—and biological naturalism. As algorithms become increasingly adept at mimicking human heuristics, we must scrutinize the ethical ramifications of autonomous systems. The ubiquitous nature of these technologies necessitates a robust framework for algorithmic transparency to mitigate the potential for systemic bias. Ultimately, the quest for General Artificial Intelligence remains an elusive endeavor, hindered by our incomplete understanding of the subjective experience and the qualitative nuances of human cognition.', 
+    DATETIME('now')
+),
+(
+    '253ebe0c28d04d1db80102417edf0ad1', 
+    'Macroeconomic Volatility and Fiscal Policy', 
+    'Economics', 
+    'In an era of unprecedented global interconnectedness, macroeconomic stability is frequently jeopardized by fiscal inconsistencies and trade disparaties. Policymakers often grapple with the paradox of thrift, where individual saving leads to a decrease in aggregate demand, thereby exacerbating recessionary pressures. To counteract these tendencies, central banks implement idiosyncratic monetary interventions aimed at stabilizing exchange rates and curbing inflationary spirals. However, the efficacy of such measures is often undermined by political polarization and the structural rigidities of labor markets. Sustainable growth requires a holistic approach that balances short-term stimulus with long-term structural reforms, ensuring that economic benefits are disseminated across all echelons of society.', 
+    DATETIME('now')
+),
+(
+    '253ebe0c28d04d1db80102417edf0ad1', 
+    'The Synthesis of Synthetic Biology and Nanotechnology', 
+    'Science', 
+    'The convergence of synthetic biology and nanotechnology has catalyzed a paradigm shift in personalized medicine. By engineering bespoke molecular machines, researchers can now facilitate the targeted delivery of therapeutic agents to malignant cells with surgical precision. This methodology significantly diminishes the deleterious side effects typically associated with conventional chemotherapy. Furthermore, the development of biocompatible scaffolds has accelerated advancements in regenerative medicine, allowing for the potential in vitro cultivation of complex organ tissues. Despite these technological milestones, the field faces significant regulatory hurdles and ethical skepticism regarding the potential for genetic modification and the long-term consequences of altering the human germline.', 
+    DATETIME('now')
+);</sql><current_tab id="0"/></tab_sql></sqlb_project>

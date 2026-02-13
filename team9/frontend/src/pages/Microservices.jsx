@@ -1,8 +1,10 @@
 import { useMemo, useState, useEffect } from "react";
 import MicroserviceCard from "../components/MicroserviceCard";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import config from "../config";
 
 export default function Microservices() {
+  const navigate = useNavigate();
   const [q, setQ] = useState("");
   const [items, setItems] = useState([]);
   const [editingId, setEditingId] = useState(null);
@@ -10,7 +12,7 @@ export default function Microservices() {
 
   // Fetch initial data from Django
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/team9/api/lessons/")
+    fetch(config.LESSONS_ENDPOINT)
       .then((res) => res.json())
       .then((data) => {
         setItems(data);
@@ -36,7 +38,7 @@ export default function Microservices() {
       id: newId,
       title: "",
       words: [], 
-      progress: 0,
+      progress_percent: 0,
       isNew: true,
     };
 
@@ -55,7 +57,7 @@ export default function Microservices() {
     }
 
     if (item?.isNew) {
-      fetch("http://127.0.0.1:8000/team9/api/lessons/", {
+      fetch(config.LESSONS_ENDPOINT, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ 
@@ -71,7 +73,7 @@ export default function Microservices() {
         })
         .catch(err => console.error("POST Error:", err));
     } else {
-      fetch(`http://127.0.0.1:8000/team9/api/lessons/${id}/`, {
+      fetch(`${config.API_BASE_URL}/team9/api/lessons/${id}/`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ title: v }),
@@ -89,7 +91,7 @@ export default function Microservices() {
   };
 
   const deleteLesson = (id) => {
-    fetch(`http://127.0.0.1:8000/team9/api/lessons/${id}/`, {
+    fetch(`${config.API_BASE_URL}/team9/api/lessons/${id}/`, {
       method: "DELETE",
     }).then(() => {
       setItems((prev) => prev.filter((x) => x.id !== id));
@@ -101,16 +103,14 @@ export default function Microservices() {
   return (
     <div className="t9-page" dir="rtl" lang="fa">
       <header className="t9-topbar">
-        <button className="t9-pillBtn">حساب کاربری</button>
+        <button className="t9-pillBtn" onClick={() => window.location.href = "http://localhost:8000"}>خانه</button>
         <h1 className="t9-title">یادگیری مستمر با Tick 8</h1>
-        <button className="t9-pillBtn">خانه</button>
+        <Link to="/dashboard" className="t9-pillBtn" style={{textDecoration: 'none'}}>حساب کاربری</Link>
       </header>
 
-      <section className="t9-panel">
+      <section className="t9-mainpanel">
         <div className="t9-searchRow">
-          <span className="t9-searchIcon" aria-hidden="true">
-            🔍
-          </span>
+            <img className="t9-searchIcon" src="src\assets\team9\images\Icon.png"></img>
           <input
             className="t9-search"
             value={q}
@@ -151,7 +151,7 @@ export default function Microservices() {
                 }
                 
                 words={Array.isArray(m.words) ? m.words.length : (m.words || 0)}
-                progress={m.progress}
+                progress={m.progress_percent || 0}
                 onDelete={() => deleteLesson(m.id)}
               />
             );

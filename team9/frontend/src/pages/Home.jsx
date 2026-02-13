@@ -1,4 +1,5 @@
 import settingsIcon from "../assets/team9/images/settings.png";
+import { Link } from "react-router-dom";
 
 export default function Home() {
   const isLoggedIn = false;
@@ -7,9 +8,9 @@ export default function Home() {
     <div className="container" dir="rtl" lang="fa">
       <header className="header">
         <div className="header-right">
-          <a href="/microservices" className="home-btn">
+          <Link to="/microservices" className="home-btn">
             میکروسرویس‌ها
-          </a>
+          </Link>
         </div>
 
         <div className="header-left">

@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import config from "../config";
 
 export default function ReviewLesson() {
   const { id } = useParams();
@@ -12,7 +13,7 @@ export default function ReviewLesson() {
   const [showMeaning, setShowMeaning] = useState(false);
 
   useEffect(() => {
-    fetch(`http://127.0.0.1:8000/team9/api/lessons/${id}/`)
+    fetch(`${config.API_BASE_URL}/team9/api/lessons/${id}/`)
       .then((res) => res.json())
       .then((data) => {
         setLesson(data);
@@ -64,7 +65,7 @@ export default function ReviewLesson() {
     const isNowLearned = greenCount >= 6;
 
     
-    fetch(`http://127.0.0.1:8000/team9/api/words/${word.id}/`, {
+    fetch(`${config.API_BASE_URL}/team9/api/words/${word.id}/`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -105,7 +106,7 @@ export default function ReviewLesson() {
           بازگشت
         </button>
         <h1 className="t9-title">مرور: {lesson.title}</h1>
-        <button className="t9-pillBtn" onClick={() => navigate("/microservices")}>
+        <button className="t9-pillBtn" onClick={() => window.location.href = "http://localhost:8000"}>
           خانه
         </button>
       </header>

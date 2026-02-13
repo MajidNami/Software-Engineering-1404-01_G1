@@ -1,0 +1,289 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ساخت درس جدید</title>
+    <link rel="stylesheet" href="{% static 'styles/style.css' %}">
+    <style>
+        .form-container {
+            max-width: 700px;
+            margin: 40px auto;
+            padding: 40px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-header {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .form-header h1 {
+            font-size: 1.8rem;
+            color: #333;
+            margin: 0 0 10px 0;
+        }
+
+        .form-header p {
+            color: #666;
+            margin: 0;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            font-family: inherit;
+            box-sizing: border-box;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #647eb4;
+            box-shadow: 0 0 0 3px rgba(100, 126, 180, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .form-row .form-group {
+            margin-bottom: 0;
+        }
+
+        .form-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 12px 24px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-submit {
+            background-color: #647eb4;
+            color: white;
+        }
+
+        .btn-submit:hover {
+            background-color: #4a5f8f;
+        }
+
+        .btn-cancel {
+            background-color: #e8f0fe;
+            color: #647eb4;
+            border: 1px solid #647eb4;
+            text-decoration: none;
+            text-align: center;
+        }
+
+        .btn-cancel:hover {
+            background-color: #d4e3f8;
+            text-decoration: none;
+            color: #647eb4;
+        }
+
+        .messages {
+            margin-bottom: 20px;
+        }
+
+        .message {
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+        }
+
+        .message.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .breadcrumb {
+            margin-bottom: 20px;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .breadcrumb a {
+            color: #647eb4;
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        .help-text {
+            font-size: 0.85rem;
+            color: #999;
+            margin-top: 5px;
+        }
+
+        @media (max-width: 600px) {
+            .form-container {
+                padding: 20px;
+                margin: 20px 10px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .form-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <a href="{% url 'microservices' %}" class="home-btn">میکروسرویس ها</a>
+            </div>
+            <div class="header-right">
+                <div class="flag-settings">
+                    <img src="{% static 'public/images/settings.png' %}" alt="" class="settings-icon">
+                    <div class="iran-flag">
+                        <div class="flag-green"></div>
+                        <div class="flag-white"></div>
+                        <div class="flag-red"></div>
+                    </div>
+                </div>
+                <div class="login-container">
+                    {% if request.user.is_authenticated %}
+                        <span style="color: #333; margin-right: 15px;">{{ request.user.email }}</span>
+                        <a href="{% url 'logout' %}" class="login-text">خروج</a>
+                    {% else %}
+                        <a href="{% url 'auth' %}" class="login-text">ورود</a>
+                    {% endif %}
+
+                    <div class="user-avatar">
+                        <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="15" cy="10" r="5" fill="#647eb4" />
+                            <path d="M5 25C5 20 9 17 15 17C21 17 25 20 25 25" stroke="#647eb4" stroke-width="2"
+                                fill="none" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="form-container">
+            <div class="breadcrumb">
+                <a href="{% url 'team2_index' %}">🏠 صفحه اصلی</a> / 
+                <a href="{% url 'team2_teacher_lessons' %}">درس‌های من</a> / درس جدید
+            </div>
+
+            {% if messages %}
+                <div class="messages">
+                    {% for message in messages %}
+                        <div class="message error">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <div class="form-header">
+                <h1>📚 ساخت درس جدید</h1>
+                <p>درس جدید خود را اضافه کنید و محتوای آموزشی شروع کنید</p>
+            </div>
+
+            <form method="post">
+                {% csrf_token %}
+
+                <div class="form-group">
+                    <label for="title">عنوان درس *</label>
+                    <input type="text" id="title" name="title" placeholder="مثال: English Grammar Basics" required>
+                    <div class="help-text">یک عنوان جذاب برای درس انتخاب کنید</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="description">توضیح درس *</label>
+                    <textarea id="description" name="description" placeholder="در مورد محتوای این درس توضیح دهید..." required></textarea>
+                    <div class="help-text">دانش‌جویان این توضیح را می‌بینند</div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="subject">موضوع *</label>
+                        <input type="text" id="subject" name="subject" placeholder="مثال: Grammar" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="skill">مهارت *</label>
+                        <input type="text" id="skill" name="skill" placeholder="مثال: Writing" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="level">سطح درس *</label>
+                        <select id="level" name="level" required>
+                            <option value="">-- انتخاب کنید --</option>
+                            {% for level_value, level_label in levels %}
+                                <option value="{{ level_value }}">{{ level_label }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="duration">مدت زمان (ثانیه)</label>
+                        <input type="number" id="duration" name="duration" placeholder="3600" min="0" value="0">
+                        <div class="help-text">تعداد ثانیه (اختیاری)</div>
+                    </div>
+                </div>
+
+                <div class="form-buttons">
+                    <a href="{% url 'team2_teacher_lessons' %}" class="btn btn-cancel">
+                        انصراف
+                    </a>
+                    <button type="submit" class="btn btn-submit">
+                        ✓ ساخت درس
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+
+</html>

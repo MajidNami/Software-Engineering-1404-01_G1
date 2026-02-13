@@ -1,0 +1,573 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>انتخاب سطح تمرین - ریدینگ تافل</title>
+
+  <!-- Team-local shared + team-local page styles -->
+  <link rel="stylesheet" href="{% static 'team14/styles/common.css' %}">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      /* Primary Palette */
+      --primary-500: #FA7B6F;
+      --primary-600: #80CAFF;
+      --primary-gradient: linear-gradient(135deg, #4267b2 0%, #80CAFF 100%);
+
+      /* Accent Colors */
+      --accent-orange: #FFB02D;
+      --accent-coral: #FF9876;
+
+      /* Typography */
+      --text-primary: #0B0754;
+      --text-secondary: #a0a1a5;
+      --text-light: #A7B8C4;
+
+      /* Neutral Palette */
+      --border-color: #D71622;
+      --bg-light: #F0F355;
+      --bg-gradient: linear-gradient(135deg, #F0FFFA 0%, #ecf3fd 100%);
+
+      /* States */
+      --success: #4CAF50;
+      --warning: #FFBD2E;
+      --error: #E65050;
+      --info: #587CE6;
+
+      /* Decorative */
+      --blob-top: #FA9A8F;
+      --blob-bottom: #5D98D9;
+
+      --white: #ffffff;
+      --shadow: rgba(11, 7, 84, 0.1);
+      --shadow-hover: rgba(11, 7, 84, 0.2);
+
+            --coral: #fba199;
+    --light-blue: #b0caff;
+    --bg-cream: #f9f7f7;
+    --dark-blue: #647eb4;
+    --navy: #211d63;
+
+    }
+
+    body {
+      font-family: 'Vazirmatn', -apple-system, BlinkMacSystemFont, sans-serif;
+        background-color: var(--bg-cream);
+      min-height: 100vh;
+      color: var(--text-primary);
+      line-height: 1.6;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+
+
+    /* Main Content */
+    .main-content {
+      padding: 60px 20px 100px;
+      max-width: 1200px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 10;
+    }
+
+    .page-header {
+      text-align: center;
+      margin-bottom: 70px;
+      animation: fadeInDown 0.8s ease;
+    }
+
+    @keyframes fadeInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .page-title {
+      font-size: 3rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      margin-bottom: 20px;
+      line-height: 1.3;
+      text-shadow: 2px 2px 4px rgba(11, 7, 84, 0.05);
+    }
+
+    .page-subtitle {
+      font-size: 1.4rem;
+      color: var(--text-secondary);
+      font-weight: 500;
+      line-height: 1.6;
+    }
+
+    /* Difficulty Cards */
+    .difficulty-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 40px;
+      margin-top: 50px;
+    }
+
+    .difficulty-card {
+      background: var(--white);
+      border-radius: 24px;
+      padding: 45px 35px;
+      text-align: center;
+      box-shadow: 0 10px 40px var(--shadow);
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      border: 3px solid transparent;
+    }
+
+    .difficulty-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 8px;
+      transition: height 0.4s ease;
+    }
+
+    .difficulty-card:hover {
+      transform: translateY(-12px) scale(1.02);
+      box-shadow: 0 20px 60px var(--shadow-hover);
+    }
+
+    .difficulty-card:hover::before {
+      height: 100%;
+      opacity: 0.08;
+    }
+
+    /* Easy Level */
+    .difficulty-card.easy::before {
+      background: var(--success);
+    }
+
+    .difficulty-card.easy:hover {
+      border-color: var(--success);
+    }
+
+    .difficulty-card.easy .difficulty-icon {
+      background: linear-gradient(135deg, #4CAF50 0%, #66BB6A 100%);
+    }
+
+    .difficulty-card.easy .start-btn {
+      background: var(--success);
+    }
+
+    .difficulty-card.easy .start-btn:hover {
+      background: #45a049;
+      box-shadow: 0 8px 25px rgba(76, 175, 80, 0.4);
+    }
+
+    /* Medium Level */
+    .difficulty-card.medium::before {
+      background: var(--warning);
+    }
+
+    .difficulty-card.medium:hover {
+      border-color: var(--warning);
+    }
+
+    .difficulty-card.medium .difficulty-icon {
+      background: linear-gradient(135deg, #FFB02D 0%, #FFC657 100%);
+    }
+
+    .difficulty-card.medium .start-btn {
+      background: var(--warning);
+    }
+
+    .difficulty-card.medium .start-btn:hover {
+      background: #f0b429;
+      box-shadow: 0 8px 25px rgba(255, 189, 46, 0.4);
+    }
+
+    /* Hard Level */
+    .difficulty-card.hard::before {
+      background: var(--error);
+    }
+
+    .difficulty-card.hard:hover {
+      border-color: var(--error);
+    }
+
+    .difficulty-card.hard .difficulty-icon {
+      background: linear-gradient(135deg, #E65050 0%, #EF5350 100%);
+    }
+
+    .difficulty-card.hard .start-btn {
+      background: var(--error);
+    }
+
+    .difficulty-card.hard .start-btn:hover {
+      background: #d84848;
+      box-shadow: 0 8px 25px rgba(230, 80, 80, 0.4);
+    }
+
+    .difficulty-icon {
+      width: 100px;
+      height: 100px;
+      margin: 0 auto 25px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+      animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% {
+        transform: translateY(0px);
+      }
+      50% {
+        transform: translateY(-10px);
+      }
+    }
+
+    .difficulty-card:nth-child(1) .difficulty-icon {
+      animation-delay: 0s;
+    }
+
+    .difficulty-card:nth-child(2) .difficulty-icon {
+      animation-delay: 0.2s;
+    }
+
+    .difficulty-card:nth-child(3) .difficulty-icon {
+      animation-delay: 0.4s;
+    }
+
+    .difficulty-icon svg {
+      width: 55px;
+      height: 55px;
+      filter: brightness(0) invert(1);
+    }
+
+    .difficulty-title {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 15px;
+    }
+
+    .difficulty-description {
+      font-size: 1.1rem;
+      color: var(--text-secondary);
+      line-height: 1.8;
+      margin-bottom: 25px;
+      min-height: 80px;
+    }
+
+    .difficulty-features {
+      list-style: none;
+      text-align: right;
+      margin: 25px 0;
+      padding: 0;
+    }
+
+    .difficulty-features li {
+      padding: 10px 0;
+      color: var(--text-secondary);
+      font-size: 1rem;
+      position: relative;
+      padding-right: 25px;
+    }
+
+    .difficulty-features li::before {
+      content: '✓';
+      position: absolute;
+      right: 0;
+      color: var(--success);
+      font-weight: bold;
+      font-size: 1.2rem;
+    }
+
+    .difficulty-card.medium .difficulty-features li::before {
+      color: var(--warning);
+    }
+
+    .difficulty-card.hard .difficulty-features li::before {
+      color: var(--error);
+    }
+
+    .start-btn {
+      display: inline-block;
+      padding: 15px 45px;
+      border-radius: 12px;
+      color: var(--white);
+      font-weight: 700;
+      font-size: 1.1rem;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      margin-top: 20px;
+      border: none;
+      cursor: pointer;
+    }
+
+    .start-btn:hover {
+      transform: translateY(-3px);
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      padding: 50px 20px;
+      position: relative;
+      z-index: 10;
+      animation: fadeIn 0.8s ease 0.6s both;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    .footer-text {
+      font-size: 1.2rem;
+      color: var(--text-primary);
+      margin-bottom: 20px;
+      font-weight: 500;
+    }
+
+    .social-icons {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 25px;
+    }
+
+    .social-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: var(--white);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 5px 15px var(--shadow);
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .social-icon:hover {
+      transform: translateY(-5px) scale(1.1);
+      box-shadow: 0 10px 25px var(--shadow-hover);
+    }
+
+    .social-icon img {
+      width: 28px;
+      height: 28px;
+    }
+
+    /* Decorative Blobs */
+    .blob {
+      position: fixed;
+      border-radius: 50%;
+      opacity: 0.15;
+      pointer-events: none;
+      z-index: 0;
+      filter: blur(60px);
+    }
+
+    .blob-1 {
+      width: 500px;
+      height: 500px;
+      background: var(--blob-top);
+      top: -200px;
+      left: -150px;
+      animation: blobFloat1 20s ease-in-out infinite;
+    }
+
+    .blob-2 {
+      width: 600px;
+      height: 600px;
+      background: var(--blob-bottom);
+      bottom: -250px;
+      right: -200px;
+      animation: blobFloat2 25s ease-in-out infinite;
+    }
+
+    @keyframes blobFloat1 {
+      0%, 100% {
+        transform: translate(0, 0) scale(1);
+      }
+      50% {
+        transform: translate(50px, 30px) scale(1.1);
+      }
+    }
+
+    @keyframes blobFloat2 {
+      0%, 100% {
+        transform: translate(0, 0) scale(1);
+      }
+      50% {
+        transform: translate(-40px, -40px) scale(1.15);
+      }
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .header {
+        padding: 20px;
+        flex-wrap: wrap;
+        gap: 15px;
+      }
+
+      .page-title {
+        font-size: 2rem;
+      }
+
+      .page-subtitle {
+        font-size: 1.1rem;
+      }
+
+      .difficulty-cards {
+        grid-template-columns: 1fr;
+        gap: 30px;
+      }
+
+      .difficulty-card {
+        padding: 35px 25px;
+      }
+
+      .main-content {
+        padding: 40px 20px 80px;
+      }
+    }
+
+    /* Animation on load */
+    .difficulty-card {
+      animation: fadeInUp 0.8s ease both;
+    }
+
+    .difficulty-card:nth-child(1) {
+      animation-delay: 0.2s;
+    }
+
+    .difficulty-card:nth-child(2) {
+      animation-delay: 0.4s;
+    }
+
+    .difficulty-card:nth-child(3) {
+      animation-delay: 0.6s;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+
+<body>
+<div class="container">
+  <!-- Decorative Blobs -->
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+
+  <!-- Header -->
+{% include 'team14/public/header.html' %}
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <div class="page-header">
+      <h1 class="page-title">سطح تمرین خود را انتخاب کنید</h1>
+      <p class="page-subtitle">با توجه به سطح مهارت فعلی خود، یکی از سطوح زیر را انتخاب کنید<br>و مهارت خواندن خود را تقویت کنید</p>
+    </div>
+
+    <!-- Difficulty Cards -->
+    <div class="difficulty-cards">
+      <!-- Easy Level -->
+      <div class="difficulty-card easy">
+        <div class="difficulty-icon">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="white"/>
+          </svg>
+        </div>
+        <h2 class="difficulty-title">آسان</h2>
+        <p class="difficulty-description">مناسب برای مبتدیان و کسانی که می‌خواهند با آرامش شروع کنند</p>
+
+        <ul class="difficulty-features">
+          <li>متن‌های کوتاه و ساده</li>
+          <li>واژگان پایه و متداول</li>
+          <li>سوالات راهنمایی‌دار</li>
+          <li>زمان کافی برای پاسخ</li>
+        </ul>
+
+        <a href="{% url 'easy_level' %}" class="start-btn">شروع تمرین</a>
+      </div>
+
+      <!-- Medium Level -->
+      <div class="difficulty-card medium">
+        <div class="difficulty-icon">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="white"/>
+            <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="white" transform="translate(0, 8) scale(0.7)" opacity="0.5"/>
+          </svg>
+        </div>
+        <h2 class="difficulty-title">متوسط</h2>
+        <p class="difficulty-description">برای کسانی که آمادگی تست‌های واقعی را دارند</p>
+
+        <ul class="difficulty-features">
+          <li>متن‌های استاندارد تافل</li>
+          <li>واژگان آکادمیک</li>
+          <li>سوالات متنوع و چالشی</li>
+          <li>زمان‌بندی استاندارد</li>
+        </ul>
+
+        <a href="{% url 'mid_level' %}" class="start-btn">شروع تمرین</a>
+      </div>
+
+      <!-- Hard Level -->
+      <div class="difficulty-card hard">
+        <div class="difficulty-icon">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M13 2L3 14H12L11 22L21 10H12L13 2Z" fill="white" stroke="white" stroke-width="1"/>
+          </svg>
+        </div>
+        <h2 class="difficulty-title">سخت</h2>
+        <p class="difficulty-description">چالش نهایی برای کسب نمره عالی در تافل</p>
+
+        <ul class="difficulty-features">
+          <li>متن‌های پیچیده و طولانی</li>
+          <li>واژگان پیشرفته</li>
+          <li>سوالات تحلیلی عمیق</li>
+          <li>محدودیت زمانی فشرده</li>
+        </ul>
+
+        <a href="{% url 'hard_level' %}" class="start-btn">شروع تمرین</a>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+{% include 'team14/public/social-section.html' %}
+    </div>
+</body>
+</html>

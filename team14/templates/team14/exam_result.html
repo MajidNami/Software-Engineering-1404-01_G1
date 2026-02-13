@@ -1,0 +1,607 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نتیجه آزمون - ReadingBug</title>
+    <style>
+        :root {
+            --primary-color: #80caff;
+            --success-color: #10b981;
+            --error-color: #ef4444;
+            --warning-color: #f59e0b;
+            --bg-light: #f8fafc;
+            --text-dark: #1e293b;
+            --border-color: #e2e8f0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Vazir', 'Segoe UI', Tahoma, sans-serif;
+            background-color: var(--bg-cream);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .result-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* بخش نمره */
+        .score-section {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+
+        .success-badge {
+            background: #d1fae5;
+            color: #065f46;
+            padding: 15px 20px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            margin-bottom: 30px;
+        }
+
+        .success-badge svg {
+            flex-shrink: 0;
+        }
+
+        .score-card {
+            display: grid;
+            grid-template-columns: 400px 1fr;
+            gap: 40px;
+            align-items: center;
+        }
+
+        /* نمودار دایره‌ای */
+        .score-visual {
+            display: flex;
+            justify-content: center;
+        }
+
+        .circle-chart {
+            position: relative;
+            width: 280px;
+            height: 280px;
+        }
+
+        .circle-chart svg {
+            transform: rotate(-90deg);
+            width: 100%;
+            height: 100%;
+        }
+
+        .circle-bg {
+            fill: none;
+            stroke: #e5e7eb;
+            stroke-width: 12;
+        }
+
+        .circle-progress {
+        fill: none;
+        stroke: var(--primary-color);
+        stroke-width: 12;
+        stroke-linecap: round;
+        stroke-dasharray: 534.07;
+        stroke-dashoffset: calc(534.07 * (1 - var(--percentage) / 100));
+        transition: stroke-dashoffset 2s ease;
+    }
+
+
+        @keyframes fillCircle {
+            from {
+                stroke-dashoffset: 534.07;
+            }
+        }
+
+        .score-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        .score-number {
+            display: block;
+            font-size: 72px;
+            font-weight: 800;
+            color: var(--primary-color);
+            line-height: 1;
+        }
+
+        .score-total {
+            display: block;
+            font-size: 24px;
+            color: #64748b;
+            margin-top: 5px;
+        }
+
+        /* جزئیات نمره */
+        .score-details h2 {
+            font-size: 32px;
+            color: var(--text-dark);
+            margin: 0 0 15px;
+        }
+
+        .percentage-badge {
+            display: inline-block;
+            background: var(--primary-color);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 25px;
+        }
+
+        /* ارزیابی */
+        .evaluation-box {
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            border-right: 4px solid;
+        }
+
+        .evaluation-box h3 {
+            margin: 0 0 10px;
+            font-size: 20px;
+        }
+
+        .evaluation-box p {
+            margin: 0;
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        .evaluation-excellent {
+            background: #d1fae5;
+            border-color: #10b981;
+            color: #065f46;
+        }
+
+        .evaluation-good {
+            background: #dbeafe;
+            border-color: #3b82f6;
+            color: #1e40af;
+        }
+
+        .evaluation-fair {
+            background: #fef3c7;
+            border-color: #f59e0b;
+            color: #92400e;
+        }
+
+        .evaluation-poor {
+            background: #fee2e2;
+            border-color: #ef4444;
+            color: #991b1b;
+        }
+
+        /* آمار */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .stat-item {
+            background: var(--bg-light);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stat-label {
+            display: block;
+            font-size: 13px;
+            color: #64748b;
+            margin-bottom: 5px;
+        }
+
+        .stat-value {
+            display: block;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .stat-value.correct {
+            color: var(--success-color);
+        }
+
+        .stat-value.incorrect {
+            color: var(--error-color);
+        }
+
+        /* پاسخنامه */
+        .answers-section {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+
+        .answers-section h3 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: var(--text-dark);
+        }
+
+        .answers-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .answer-item {
+            background: var(--bg-light);
+            border-radius: 12px;
+            padding: 20px;
+            border-right: 4px solid;
+            transition: transform 0.2s;
+        }
+
+        .answer-item:hover {
+            transform: translateX(-5px);
+        }
+
+        .answer-item.correct {
+            border-color: var(--success-color);
+            background: #f0fdf4;
+        }
+
+        .answer-item.incorrect {
+            border-color: var(--error-color);
+            background: #fef2f2;
+        }
+
+        .answer-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .question-number {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            font-size: 16px;
+            color: var(--text-dark);
+        }
+
+        .question-number .icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            font-size: 18px;
+        }
+
+        .answer-item.correct .icon {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .answer-item.incorrect .icon {
+            background: var(--error-color);
+            color: white;
+        }
+
+        .status-badge {
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .status-badge.correct {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .status-badge.incorrect {
+            background: var(--error-color);
+            color: white;
+        }
+
+        .question-text {
+            color: var(--text-dark);
+            font-size: 15px;
+            line-height: 1.7;
+            margin-bottom: 15px;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+        }
+
+        .answer-details {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .answer-row {
+            display: flex;
+            gap: 10px;
+            align-items: start;
+            padding: 10px;
+            background: white;
+            border-radius: 8px;
+        }
+
+        .answer-row .label {
+            font-weight: 600;
+            color: #64748b;
+            min-width: 100px;
+        }
+
+        .answer-row .value {
+            flex: 1;
+            color: var(--text-dark);
+        }
+
+        .user-answer.wrong {
+            color: var(--error-color);
+            text-decoration: line-through;
+        }
+
+        .correct-answer {
+            color: var(--success-color);
+            font-weight: 600;
+        }
+
+        /* دکمه‌ها */
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .btn-back,
+        .btn-retry {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 15px 30px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .btn-back {
+            background: white;
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+        }
+
+        .btn-back:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-retry {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+        }
+
+        .btn-retry:hover {
+            background: #4f46e5;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(99, 102, 241, 0.3);
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .score-card {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+
+            .score-visual {
+                order: -1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .result-container {
+                padding: 10px;
+            }
+
+            .score-section,
+            .answers-section {
+                padding: 20px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .btn-back,
+            .btn-retry {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .circle-chart {
+                width: 220px;
+                height: 220px;
+            }
+
+            .score-number {
+                font-size: 56px;
+            }
+
+            .score-details h2 {
+                font-size: 24px;
+            }
+
+            .answer-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    {% include 'team14/public/header.html' %}
+
+    <div class="result-container">
+        <!-- بخش نمره و نمودار -->
+        <div class="score-section">
+            <div class="success-badge">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" fill="#4CAF50"/>
+                </svg>
+                شما {{ correct_count }} پاسخ صحیح از {{ total_questions }} سؤال داشتید
+            </div>
+
+            <div class="score-card">
+                <div class="score-visual">
+                    <!-- نمودار دایره‌ای -->
+                    <div class="circle-chart">
+                        <svg viewBox="0 0 200 200">
+                            <circle class="circle-bg" cx="100" cy="100" r="85"/>
+                            <circle class="circle-progress" cx="100" cy="100" r="85"
+                                    style="--percentage: {{ percentage }}"/>
+                        </svg>
+                        <div class="score-text">
+                            <span class="score-number">{{ session.total_score|floatformat:0 }}</span>
+                            <span class="score-total">از 30</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="score-details">
+                    <h2>نمره شما: {{ session.total_score|floatformat:1 }} از 30</h2>
+                    <div class="percentage-badge">{{ percentage|floatformat:0 }}%</div>
+
+                    <!-- ارزیابی براساس نمره -->
+                    <div class="evaluation-box {{ evaluation_class }}">
+                        <h3>{{ evaluation_title }}</h3>
+                        <p>{{ evaluation_message }}</p>
+                    </div>
+
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <span class="stat-label">پاسخ صحیح</span>
+                            <span class="stat-value correct">{{ correct_count }}</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">پاسخ نادرست</span>
+                            <span class="stat-value incorrect">{{ wrong_count }}</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">مدت زمان</span>
+                            <span class="stat-value">{{ duration }}</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">سطح</span>
+                            <span class="stat-value">{{ level }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- بخش پاسخنامه -->
+        <div class="answers-section">
+            <h3>📋 پاسخنامه</h3>
+
+            <div class="answers-list">
+                {% for result in results %}
+                <div class="answer-item {% if result.is_correct %}correct{% else %}incorrect{% endif %}">
+                    <div class="answer-header">
+                        <div class="question-number">
+                            {% if result.is_correct %}
+                                <span class="icon">✓</span>
+                            {% else %}
+                                <span class="icon">✗</span>
+                            {% endif %}
+                            سوال {{ forloop.counter }}
+                        </div>
+                        <div class="answer-status">
+                            {% if result.is_correct %}
+                                <span class="status-badge correct">درست</span>
+                            {% else %}
+                                <span class="status-badge incorrect">نادرست</span>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="answer-content">
+                        <p class="question-text">{{ result.question_text }}</p>
+
+                        <div class="answer-details">
+                            <div class="answer-row">
+                                <span class="label">پاسخ شما:</span>
+                                <span class="value user-answer {% if not result.is_correct %}wrong{% endif %}">
+                                    {{ result.user_option }}
+                                </span>
+                            </div>
+
+                            {% if not result.is_correct %}
+                            <div class="answer-row">
+                                <span class="label">پاسخ صحیح:</span>
+                                <span class="value correct-answer">
+                                    {{ result.correct_option }}
+                                </span>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- دکمه بازگشت -->
+        <div class="action-buttons">
+            <a href="{% url 'base' %}" class="btn-back">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M12 4l-8 8 8 8V4z"/>
+                </svg>
+                بازگشت به صفحه ریدینگ
+            </a>
+            <a href="{% url 'start_exam' %}" class="btn-retry">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M10 3v2c3.866 0 7 3.134 7 7s-3.134 7-7 7-7-3.134-7-7h2c0 2.761 2.239 5 5 5s5-2.239 5-5-2.239-5-5-5v2L6 6l4-3z"/>
+                </svg>
+                آزمون مجدد
+            </a>
+        </div>
+    </div>
+
+    {% include 'team14/public/social-section.html' %}
+</body>
+</html>

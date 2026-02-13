@@ -1,0 +1,371 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>درس‌های من - معلم</title>
+    <link rel="stylesheet" href="{% static 'styles/style.css' %}">
+    <style>
+        .teacher-container {
+            padding: 40px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .teacher-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+
+        .teacher-title h1 {
+            font-size: 2rem;
+            color: #333;
+            margin: 0;
+        }
+
+        .teacher-badge {
+            background-color: #4CAF50;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .lessons-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .lesson-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .lesson-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .lesson-card-header {
+            background: linear-gradient(135deg, #647eb4 0%, #4a5f8f 100%);
+            padding: 20px;
+            color: white;
+        }
+
+        .lesson-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin: 0;
+            margin-bottom: 10px;
+        }
+
+        .lesson-subject {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .lesson-card-body {
+            padding: 20px;
+        }
+
+        .lesson-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #647eb4;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: #999;
+        }
+
+        .lesson-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 10px 16px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            text-decoration: none;
+            text-align: center;
+            display: inline-block;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .btn-primary {
+            background-color: #647eb4;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #4a5f8f;
+            text-decoration: none;
+            color: white;
+        }
+
+        .btn-secondary {
+            background-color: #e8f0fe;
+            color: #647eb4;
+            border: 1px solid #647eb4;
+        }
+
+        .btn-secondary:hover {
+            background-color: #d4e3f8;
+            text-decoration: none;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .empty-state-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+
+        .empty-state h2 {
+            font-size: 1.5rem;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .messages {
+            margin-bottom: 30px;
+        }
+
+        .message {
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+
+        .message.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .message.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .add-lesson-btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .lesson-status {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .lesson-status.draft {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+
+        .lesson-status.published {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .btn-success {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background-color: #218838;
+            text-decoration: none;
+            color: white;
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #c82333;
+            text-decoration: none;
+            color: white;
+        }
+
+            .teacher-header {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .lessons-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <a href="{% url 'team2_index' %}" class="home-btn" style="margin-left: 15px;">🏠 صفحه اصلی</a>
+                <a href="{% url 'microservices' %}" class="home-btn">میکروسرویس ها</a>
+                <div class="nav-item">درباره ما</div>
+            </div>
+            <div class="header-right">
+                <div class="flag-settings">
+                    <img src="{% static 'public/images/settings.png' %}" alt="" class="settings-icon">
+                    <div class="iran-flag">
+                        <div class="flag-green"></div>
+                        <div class="flag-white"></div>
+                        <div class="flag-red"></div>
+                    </div>
+                </div>
+                <div class="login-container">
+                    {% if request.user.is_authenticated %}
+                        <span style="color: #333; margin-right: 15px;">{{ request.user.email }}</span>
+                        <a href="{% url 'logout' %}" class="login-text">خروج</a>
+                    {% else %}
+                        <a href="{% url 'auth' %}" class="login-text">ورود</a>
+                    {% endif %}
+
+                    <div class="user-avatar">
+                        <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="15" cy="10" r="5" fill="#647eb4" />
+                            <path d="M5 25C5 20 9 17 15 17C21 17 25 20 25 25" stroke="#647eb4" stroke-width="2"
+                                fill="none" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Content -->
+        <section class="teacher-container">
+            {% if messages %}
+                <div class="messages">
+                    {% for message in messages %}
+                        <div class="message {% if message.tags %}{{ message.tags }}{% endif %}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <div class="teacher-header">
+                <div class="teacher-title">
+                    <h1>درس‌های من</h1>
+                    <p style="color: #666; margin-top: 5px;">مدیریت و بروزرسانی محتوای آموزشی</p>
+                </div>
+                <div style="display: flex; gap: 15px; align-items: center;">
+                    <div class="teacher-badge">
+                        👨‍🏫 معلم
+                    </div>
+                    <a href="{% url 'teacher_create_lesson' %}" class="add-lesson-btn">
+                        ➕ درس جدید
+                    </a>
+                </div>
+            </div>
+
+            {% if lessons %}
+                <div class="lessons-grid">
+                    {% for lesson in lessons %}
+                        <div class="lesson-card">
+                            <div class="lesson-card-header">
+                                <h3 class="lesson-title">{{ lesson.title }}</h3>
+                                <div class="lesson-subject">{{ lesson.subject }} • {{ lesson.level|upper }}</div>
+                                <div class="lesson-status {% if lesson.status == 'published' %}published{% else %}draft{% endif %}">
+                                    {% if lesson.status == 'published' %}
+                                        ✓ منتشرشده
+                                    {% else %}
+                                        📝 پیش‌نویس
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="lesson-card-body">
+                                <div class="lesson-stats">
+                                    <div class="stat">
+                                        <div class="stat-number">{{ lesson.videos.count }}</div>
+                                        <div class="stat-label">ویدیو</div>
+                                    </div>
+                                    <div class="stat">
+                                        <div class="stat-number">{{ lesson.user_details_set.count }}</div>
+                                        <div class="stat-label">دانش‌جو</div>
+                                    </div>
+                                </div>
+                                <div class="lesson-actions">
+                                    <a href="{% url 'teacher_lesson_videos' lesson.id %}" class="btn btn-primary">
+                                        مشاهده ویدیوها
+                                    </a>
+                                    <a href="{% url 'teacher_add_video' lesson.id %}" class="btn btn-secondary">
+                                        ➕ اضافه کردن ویدیو
+                                    </a>
+                                    {% if lesson.status != 'published' %}
+                                        <form method="POST" action="{% url 'publish_lesson' lesson.id %}" style="margin: 0;">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-success" style="width: 100%;">
+                                                🚀 انتشار درس
+                                            </button>
+                                        </form>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="empty-state">
+                    <div class="empty-state-icon">📚</div>
+                    <h2>درسی برای شما تخصیص داده نشده</h2>
+                    <p style="color: #666; margin-bottom: 20px;">مدیر سیستم می‌تواند درس‌های مختلفی را برای شما تعیین کند.</p>
+                    <a href="{% url 'microservices' %}" style="color: #647eb4; font-weight: 600;">← بازگشت</a>
+                </div>
+            {% endif %}
+        </section>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,4 @@
+You evaluate organization and coherence only.
+Return format:
+SCORE: X
+EXPLANATION: ...

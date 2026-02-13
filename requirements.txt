@@ -1,13 +1,15 @@
-Django==4.2.27
-PyJWT
-django-environ
-django-cors-headers
-mysqlclient
-PyMySQL
-gunicorn
-whitenoise
-openai
-djangorestframework
-django-filter
-dj-database-url
-requests
+-r team1/requirements.txt
+-r team2/requirements.txt
+-r team3/requirements.txt
+-r team4/requirements.txt
+-r team5/requirements.txt
+-r team6/requirements.txt
+-r team7/requirements.txt
+-r team8/requirements.txt
+-r team9/requirements.txt
+-r team10/requirements.txt
+-r team11/requirements.txt
+-r team12/requirements.txt
+-r team13/requirements.txt
+-r team14/requirements.txt
+-r team15/requirements.txt
