@@ -5,7 +5,7 @@ from django.conf import settings
 
 def grade(prompt: str) -> str:
     """Send prompt to Ollama container"""
-    base_url = getattr(settings, 'OLLAMA_HOST', 'http://ollama:11434')
+    base_url = getattr(settings, 'OLLAMA_HOST', 'http://team13-ollama-1:11434')
     response = requests.post(
         f"{base_url}/api/chat",
         json={

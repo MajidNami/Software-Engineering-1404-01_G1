@@ -5,7 +5,7 @@ from django.conf import settings
 
 def transcribe(audio_file) -> dict:
     """Send audio file to whisper container"""
-    base_url = getattr(settings, 'WHISPER_HOST', 'http://whisper:9000')
+    base_url = getattr(settings, 'WHISPER_HOST', 'http://team13-whisper-1:9000')
     files = {'audio_file': (audio_file.name, audio_file.read(), audio_file.content_type)}
     response = requests.post(
         f"{base_url}/asr",
