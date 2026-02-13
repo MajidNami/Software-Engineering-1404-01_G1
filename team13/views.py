@@ -229,4 +229,3 @@ def get_user_report(request):
             'speaking_dates': speaking_agg['dates_list'] or [],
         }
     })
-
