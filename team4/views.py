@@ -749,3 +749,6 @@ class DeleteNotificationView(APIView):
         notification = get_object_or_404(Notification, id=pk, recipient=request.user)
         notification.delete()
         return Response({'message': 'Notification deleted'}, status=status.HTTP_204_NO_CONTENT)
+    
+
+    
