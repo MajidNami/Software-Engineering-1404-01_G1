@@ -35,7 +35,7 @@ OFFICIAL TOEFL iBT SCORING CRITERIA (0-100 scale normalized from 0-5):
    - Score 0-29 (1): Barely addresses task
 
 TOEFL STANDARDS:
-- Minimum expected: 300 words for Independent Writing Task
+- Minimum expected: 150 words for Independent Writing Task
 - Time limit: 30 minutes (info only, not enforced in assessment)
 - Task types: Agree/Disagree, Preference, Advantages/Disadvantages, If/Hypothetical
 

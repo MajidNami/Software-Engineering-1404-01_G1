@@ -6,6 +6,7 @@ import threading
 import base64
 import re
 import uuid
+import time
 from django.db import close_old_connections
 from django.db.models import Avg
 from django.http import JsonResponse
@@ -17,7 +18,7 @@ from django.core.files.base import ContentFile
 from django.utils import timezone
 from core.auth import api_login_required
 from .models import (
-    Submission, WritingSubmission, ListeningSubmission, 
+    Submission, WritingSubmission, SpeakingSubmission, 
     AssessmentResult, SubmissionType, AnalysisStatus,
     QuestionCategory, Question
 )
@@ -34,6 +35,9 @@ def _process_writing_assessment(submission_id, topic, text_body, word_count):
         close_old_connections()
         logger.info(f"Writing background task started: {submission_id}")
         assessment_result = assess_writing(topic, text_body, word_count)
+        if not assessment_result.get('success') and assessment_result.get('error_type') in {'connection', 'rate_limit', 'api'}:
+            time.sleep(2)
+            assessment_result = assess_writing(topic, text_body, word_count)
         submission = Submission.objects.using('team11').get(submission_id=submission_id)
 
         if assessment_result.get('success'):
@@ -55,7 +59,16 @@ def _process_writing_assessment(submission_id, topic, text_body, word_count):
             logger.info(f"Writing assessment completed: {submission.submission_id}, score: {submission.overall_score}")
             return
 
+        error_type = assessment_result.get('error_type')
         error_msg = 'ارزیابی ناموفق بود. لطفاً دوباره تلاش کنید.'
+        if error_type == 'connection':
+            error_msg = 'ارتباط با سرویس ارزیابی برقرار نشد. لطفاً دوباره تلاش کنید.'
+        elif error_type == 'rate_limit':
+            error_msg = 'سرویس ارزیابی شلوغ است. لطفاً چند لحظه دیگر دوباره تلاش کنید.'
+        elif error_type == 'api':
+            error_msg = 'خطای سرویس ارزیابی. لطفاً بعداً دوباره تلاش کنید.'
+        elif error_type == 'parse':
+            error_msg = 'پاسخ سرویس ارزیابی قابل پردازش نبود. لطفاً دوباره تلاش کنید.'
         submission.status = AnalysisStatus.FAILED
         submission.save()
         AssessmentResult.objects.using('team11').update_or_create(
@@ -77,17 +90,17 @@ def _process_writing_assessment(submission_id, topic, text_body, word_count):
             pass
 
 
-def _process_listening_assessment(submission_id, listening_detail_pk, audio_file_path, topic, duration, temp_file_path=None):
+def _process_speaking_assessment(submission_id, speaking_detail_pk, audio_file_path, topic, duration, temp_file_path=None):
     try:
         close_old_connections()
         logger.info(f"Speaking background task started: {submission_id}")
         assessment_result = assess_speaking(topic, audio_file_path, duration)
         submission = Submission.objects.using('team11').get(submission_id=submission_id)
-        listening_detail = ListeningSubmission.objects.using('team11').get(pk=listening_detail_pk)
+        speaking_detail = SpeakingSubmission.objects.using('team11').get(pk=speaking_detail_pk)
 
         if assessment_result.get('success'):
-            listening_detail.transcription = assessment_result.get('transcription', '')
-            listening_detail.save()
+            speaking_detail.transcription = assessment_result.get('transcription', '')
+            speaking_detail.save()
 
             submission.overall_score = assessment_result['overall_score']
             submission.status = AnalysisStatus.COMPLETED
@@ -124,7 +137,7 @@ def _process_listening_assessment(submission_id, listening_detail_pk, audio_file
         )
         logger.error(f"Speaking assessment failed: {submission.submission_id}, error: {raw_error}")
     except Exception as e:
-        logger.error(f"Background listening assessment error: {e}", exc_info=True)
+        logger.error(f"Background speaking assessment error: {e}", exc_info=True)
         try:
             close_old_connections()
             submission = Submission.objects.using('team11').get(submission_id=submission_id)
@@ -153,14 +166,14 @@ def dashboard(request):
     submissions = Submission.objects.using('team11').filter(user_id=user_id).select_related(
         'assessment_result',
         'writing_details',
-        'listening_details'
+        'speaking_details'
     ).order_by('-created_at')
     
     completed_submissions = submissions.filter(status=AnalysisStatus.COMPLETED, overall_score__isnull=False)
     completed_count = completed_submissions.count()
 
     writing_completed = completed_submissions.filter(submission_type=SubmissionType.WRITING).order_by('created_at')
-    speaking_completed = completed_submissions.filter(submission_type=SubmissionType.LISTENING).order_by('created_at')
+    speaking_completed = completed_submissions.filter(submission_type=SubmissionType.SPEAKING).order_by('created_at')
 
     writing_avg = writing_completed.aggregate(avg=Avg('overall_score'))['avg']
     speaking_avg = speaking_completed.aggregate(avg=Avg('overall_score'))['avg']
@@ -199,14 +212,14 @@ def start_exam(request):
         is_active=True
     ).prefetch_related('questions')
     
-    listening_categories = QuestionCategory.objects.using('team11').filter(
-        question_type=SubmissionType.LISTENING,
+    speaking_categories = QuestionCategory.objects.using('team11').filter(
+        question_type=SubmissionType.SPEAKING,
         is_active=True
     ).prefetch_related('questions')
     
     context = {
         'writing_categories': writing_categories,
-        'listening_categories': listening_categories,
+        'speaking_categories': speaking_categories,
     }
     return render(request, f"{TEAM_NAME}/start_exam.html", context)
 
@@ -229,28 +242,33 @@ def writing_exam(request):
         )
     
     question = random.choice(list(questions)) if questions.exists() else None
+
+    min_word_count = 150
+    if question and question.min_word_count:
+        min_word_count = question.min_word_count
     
     context = {
         'question': question,
         'has_question': question is not None,
+        'min_word_count': min_word_count,
     }
     return render(request, f"{TEAM_NAME}/writing_exam.html", context)
 
 
 @api_login_required
-def listening_exam(request):
-    """Page for listening exam - random question from selected category"""
+def speaking_exam(request):
+    """Page for speaking exam - random question from selected category"""
     category_id = request.GET.get('category')
     
     if category_id:
         questions = Question.objects.using('team11').filter(
             category_id=category_id,
-            category__question_type=SubmissionType.LISTENING,
+            category__question_type=SubmissionType.SPEAKING,
             is_active=True
         )
     else:
         questions = Question.objects.using('team11').filter(
-            category__question_type=SubmissionType.LISTENING,
+            category__question_type=SubmissionType.SPEAKING,
             is_active=True
         )
     
@@ -260,7 +278,7 @@ def listening_exam(request):
         'question': question,
         'has_question': question is not None,
     }
-    # FIXED: The template file is named speaking_exam.html, NOT listening_exam.html
+    # FIXED: The template file is named speaking_exam.html, NOT speaking_exam.html
     return render(request, f"{TEAM_NAME}/speaking_exam.html", context)
 
 
@@ -291,9 +309,10 @@ def submit_writing(request):
                 question = Question.objects.using('team11').get(question_id=question_id)
                 
                 # VALIDATION: Check min word count
-                if question.min_word_count and word_count < question.min_word_count:
+                min_word_count = question.min_word_count or 150
+                if word_count < min_word_count:
                     return JsonResponse({
-                        'error': f'متن شما کوتاه‌تر از حد مجاز است. حداقل {question.min_word_count} کلمه بنویسید.',
+                        'error': f'متن شما کوتاه‌تر از حد مجاز است. حداقل {min_word_count} کلمه بنویسید.',
                         'current_count': word_count
                     }, status=400)
                     
@@ -340,10 +359,10 @@ def submit_writing(request):
 @csrf_exempt
 @require_POST
 @api_login_required
-def submit_listening(request):
-    """API endpoint to submit listening (audio) task"""
+def submit_speaking(request):
+    """API endpoint to submit speaking (audio) task"""
     logger.info("=" * 80)
-    logger.info("SUBMIT LISTENING ENDPOINT HIT!")
+    logger.info("SUBMIT SPEAKING ENDPOINT HIT!")
     logger.info(f"Request method: {request.method}")
     logger.info(f"Request path: {request.path}")
     logger.info(f"Content-Type: {request.content_type}")
@@ -431,12 +450,12 @@ def submit_listening(request):
         # 2. Create DB Records
         submission = Submission.objects.using('team11').create(
             user_id=user_id,
-            submission_type=SubmissionType.LISTENING,
+            submission_type=SubmissionType.SPEAKING,
             status=AnalysisStatus.IN_PROGRESS
         )
         
-        # Create listening details
-        listening_detail = ListeningSubmission.objects.using('team11').create(
+        # Create speaking details
+        speaking_detail = SpeakingSubmission.objects.using('team11').create(
             submission=submission,
             question=question,
             topic=topic,
@@ -444,13 +463,13 @@ def submit_listening(request):
             duration_seconds=duration
         )
         
-        logger.info(f"Processing listening submission {submission.submission_id}")
+        logger.info(f"Processing speaking submission {submission.submission_id}")
 
         # 3. Start Background Process
         if audio_file_path and os.path.exists(audio_file_path):
             thread = threading.Thread(
-                target=_process_listening_assessment,
-                args=(submission.submission_id, listening_detail.pk, audio_file_path, topic, duration, None),
+                target=_process_speaking_assessment,
+                args=(submission.submission_id, speaking_detail.pk, audio_file_path, topic, duration, None),
                 daemon=True
             )
             thread.start()
@@ -465,7 +484,7 @@ def submit_listening(request):
         }, status=202)
         
     except Exception as e:
-        logger.error(f"Error in submit_listening: {e}", exc_info=True)
+        logger.error(f"Error in submit_speaking: {e}", exc_info=True)
         return JsonResponse({'error': str(e)}, status=500)
 
 
@@ -495,8 +514,8 @@ def submission_detail(request, submission_id):
             details = None
     else:
         try:
-            details = submission.listening_details
-        except ListeningSubmission.DoesNotExist:
+            details = submission.speaking_details
+        except SpeakingSubmission.DoesNotExist:
             details = None
     
     context = {
