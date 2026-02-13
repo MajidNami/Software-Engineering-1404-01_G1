@@ -1,0 +1,178 @@
+<svg xmlns="http://www.w3.org/2000/svg" contentStyleType="text/css" data-diagram-type="ACTIVITY" height="985px"
+     preserveAspectRatio="none" style="width:366px;height:985px;background:#FFFFFF;" version="1.1" viewBox="0 0 366 985"
+     width="366px" zoomAndPan="magnify">
+    <defs/>
+    <g>
+        <rect fill="none" height="169.2344" style="stroke:#000000;stroke-width:1.5;" width="208.498" x="92.8418"
+              y="11"/>
+        <path d="M170.5449,11 L170.5449,20.2969 L160.5449,30.2969 L92.8418,30.2969" fill="none"
+              style="stroke:#000000;stroke-width:1.5;"/>
+        <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="67.7031"
+              x="95.8418" y="24.9951">Web User
+        </text>
+        <ellipse cx="197.0908" cy="50.2969" fill="#222222" rx="10" ry="10" style="stroke:#222222;stroke-width:1;"/>
+        <rect fill="#F1F1F1" height="33.9688" rx="12.5" ry="12.5" style="stroke:#181818;stroke-width:0.5;"
+              width="105.0313" x="144.5752" y="80.2969"/>
+        <text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="85.0313"
+              x="154.5752" y="101.4355">Select Answer
+        </text>
+        <rect fill="#F1F1F1" height="33.9688" rx="12.5" ry="12.5" style="stroke:#181818;stroke-width:0.5;"
+              width="188.498" x="102.8418" y="134.2656"/>
+        <text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="168.498"
+              x="112.8418" y="155.4043">Submit UserExerciseAnswer
+        </text>
+        <rect fill="none" height="136.2344" style="stroke:#000000;stroke-width:1.5;" width="197.5293" x="98.3262"
+              y="191.0361"/>
+        <path d="M285.8555,191.0361 L285.8555,200.333 L275.8555,210.333 L98.3262,210.333" fill="none"
+              style="stroke:#000000;stroke-width:1.5;"/>
+        <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="177.5293"
+              x="101.3262" y="205.0313">GrammarExerciseService
+        </text>
+        <rect fill="#F1F1F1" height="33.9688" rx="12.5" ry="12.5" style="stroke:#181818;stroke-width:0.5;"
+              width="115.5313" x="139.3252" y="227.333"/>
+        <text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="95.5313"
+              x="149.3252" y="248.4717">Receive Answer
+        </text>
+        <rect fill="#F1F1F1" height="33.9688" rx="12.5" ry="12.5" style="stroke:#181818;stroke-width:0.5;"
+              width="104.1758" x="145.0029" y="281.3018"/>
+        <text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="84.1758"
+              x="155.0029" y="302.4404">Validate Input
+        </text>
+        <rect fill="none" height="190.2031" style="stroke:#000000;stroke-width:1.5;" width="246.0918" x="74.0449"
+              y="337.2705"/>
+        <path d="M268.0273,337.2705 L268.0273,346.5674 L258.0273,356.5674 L74.0449,356.5674" fill="none"
+              style="stroke:#000000;stroke-width:1.5;"/>
+        <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="183.9824"
+              x="77.0449" y="351.2656">GrammarExerciseProvider
+        </text>
+        <rect fill="#F1F1F1" height="33.9688" rx="12.5" ry="12.5" style="stroke:#181818;stroke-width:0.5;"
+              width="200.0703" x="97.0557" y="373.5674"/>
+        <text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="180.0703"
+              x="107.0557" y="394.7061">Compare with Correct Answer
+        </text>
+        <rect fill="#F1F1F1" height="33.9688" rx="12.5" ry="12.5" style="stroke:#181818;stroke-width:0.5;"
+              width="226.0918" x="84.0449" y="427.5361"/>
+        <text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="206.0918"
+              x="94.0449" y="448.6748">Generate Explanation &amp; Examples
+        </text>
+        <rect fill="#F1F1F1" height="33.9688" rx="12.5" ry="12.5" style="stroke:#181818;stroke-width:0.5;"
+              width="216.8867" x="88.6475" y="481.5049"/>
+        <text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="196.8867"
+              x="98.6475" y="502.6436">Create ExerciseAnswerResponse
+        </text>
+        <rect fill="none" height="302.5" style="stroke:#000000;stroke-width:1.5;" width="344.7344" x="11" y="537.4736"/>
+        <path d="M198.5293,537.4736 L198.5293,546.7705 L188.5293,556.7705 L11,556.7705" fill="none"
+              style="stroke:#000000;stroke-width:1.5;"/>
+        <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="177.5293" x="14"
+              y="551.4688">GrammarExerciseService
+        </text>
+        <polygon fill="#F1F1F1"
+                 points="145.6384,573.7705,248.5432,573.7705,260.5432,585.7705,248.5432,597.7705,145.6384,597.7705,133.6384,585.7705,145.6384,573.7705"
+                 style="stroke:#181818;stroke-width:0.5;"/>
+        <text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="102.9048"
+              x="145.6384" y="589.5786">Is Answer Correct?
+        </text>
+        <text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="19.2178"
+              x="114.4207" y="583.1763">Yes
+        </text>
+        <text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="14.9585"
+              x="260.5432" y="583.1763">No
+        </text>
+        <rect fill="none" height="136.2344" style="stroke:#000000;stroke-width:1.5;" width="177.8145" x="23"
+              y="607.7705"/>
+        <path d="M190.8145,607.7705 L190.8145,617.0674 L180.8145,627.0674 L23,627.0674" fill="none"
+              style="stroke:#000000;stroke-width:1.5;"/>
+        <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="157.8145" x="26"
+              y="621.7656">UserProfileDataSource
+        </text>
+        <rect fill="#F1F1F1" height="33.9688" rx="12.5" ry="12.5" style="stroke:#181818;stroke-width:0.5;"
+              width="151.0566" x="36.3789" y="644.0674"/>
+        <text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="131.0566"
+              x="46.3789" y="665.2061">Update Mastery Level
+        </text>
+        <rect fill="#F1F1F1" height="33.9688" rx="12.5" ry="12.5" style="stroke:#181818;stroke-width:0.5;"
+              width="136.7832" x="43.5156" y="698.0361"/>
+        <text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="116.7832"
+              x="53.5156" y="719.1748">updateUserProfile()
+        </text>
+        <rect fill="#F1F1F1" height="33.9688" rx="12.5" ry="12.5" style="stroke:#181818;stroke-width:0.5;"
+              width="122.9199" x="220.8145" y="607.7705"/>
+        <text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="102.9199"
+              x="230.8145" y="628.9092">Log Error Pattern
+        </text>
+        <polygon fill="#F1F1F1"
+                 points="197.0908,750.0049,209.0908,762.0049,197.0908,774.0049,185.0908,762.0049,197.0908,750.0049"
+                 style="stroke:#181818;stroke-width:0.5;"/>
+        <rect fill="#F1F1F1" height="33.9688" rx="12.5" ry="12.5" style="stroke:#181818;stroke-width:0.5;"
+              width="128.8262" x="132.6777" y="794.0049"/>
+        <text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="108.8262"
+              x="142.6777" y="815.1436">Prepare Response
+        </text>
+        <rect fill="none" height="124.2656" style="stroke:#000000;stroke-width:1.5;" width="189.7129" x="102.2344"
+              y="849.9736"/>
+        <path d="M179.9375,849.9736 L179.9375,859.2705 L169.9375,869.2705 L102.2344,869.2705" fill="none"
+              style="stroke:#000000;stroke-width:1.5;"/>
+        <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="67.7031"
+              x="105.2344" y="863.9688">Web User
+        </text>
+        <rect fill="#F1F1F1" height="33.9688" rx="12.5" ry="12.5" style="stroke:#181818;stroke-width:0.5;"
+              width="169.7129" x="112.2344" y="886.2705"/>
+        <text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="149.7129"
+              x="122.2344" y="907.4092">View Result &amp; Correction
+        </text>
+        <ellipse cx="197.0908" cy="951.2393" fill="none" rx="11" ry="11" style="stroke:#222222;stroke-width:1;"/>
+        <ellipse cx="197.0908" cy="951.2393" fill="#222222" rx="6" ry="6" style="stroke:#222222;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="197.0908" x2="197.0908" y1="60.2969" y2="80.2969"/>
+        <polygon fill="#181818" points="193.0908,70.2969,197.0908,80.2969,201.0908,70.2969,197.0908,74.2969"
+                 style="stroke:#181818;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="197.0908" x2="197.0908" y1="114.2656" y2="134.2656"/>
+        <polygon fill="#181818" points="193.0908,124.2656,197.0908,134.2656,201.0908,124.2656,197.0908,128.2656"
+                 style="stroke:#181818;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="197.0908" x2="197.0908" y1="261.3018" y2="281.3018"/>
+        <polygon fill="#181818" points="193.0908,271.3018,197.0908,281.3018,201.0908,271.3018,197.0908,275.3018"
+                 style="stroke:#181818;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="197.0908" x2="197.0908" y1="168.2344" y2="227.333"/>
+        <polygon fill="#181818" points="193.0908,217.333,197.0908,227.333,201.0908,217.333,197.0908,221.333"
+                 style="stroke:#181818;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="197.0908" x2="197.0908" y1="407.5361" y2="427.5361"/>
+        <polygon fill="#181818" points="193.0908,417.5361,197.0908,427.5361,201.0908,417.5361,197.0908,421.5361"
+                 style="stroke:#181818;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="197.0908" x2="197.0908" y1="461.5049" y2="481.5049"/>
+        <polygon fill="#181818" points="193.0908,471.5049,197.0908,481.5049,201.0908,471.5049,197.0908,475.5049"
+                 style="stroke:#181818;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="197.0908" x2="197.0908" y1="315.2705" y2="373.5674"/>
+        <polygon fill="#181818" points="193.0908,363.5674,197.0908,373.5674,201.0908,363.5674,197.0908,367.5674"
+                 style="stroke:#181818;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="111.9072" x2="111.9072" y1="678.0361" y2="698.0361"/>
+        <polygon fill="#181818" points="107.9072,688.0361,111.9072,698.0361,115.9072,688.0361,111.9072,692.0361"
+                 style="stroke:#181818;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="133.6384" x2="111.9072" y1="585.7705" y2="585.7705"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="111.9072" x2="111.9072" y1="585.7705" y2="644.0674"/>
+        <polygon fill="#181818" points="107.9072,634.0674,111.9072,644.0674,115.9072,634.0674,111.9072,638.0674"
+                 style="stroke:#181818;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="260.5432" x2="282.2744" y1="585.7705" y2="585.7705"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="282.2744" x2="282.2744" y1="585.7705" y2="607.7705"/>
+        <polygon fill="#181818" points="278.2744,597.7705,282.2744,607.7705,286.2744,597.7705,282.2744,601.7705"
+                 style="stroke:#181818;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="111.9072" x2="111.9072" y1="732.0049" y2="762.0049"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="111.9072" x2="185.0908" y1="762.0049" y2="762.0049"/>
+        <polygon fill="#181818" points="175.0908,758.0049,185.0908,762.0049,175.0908,766.0049,179.0908,762.0049"
+                 style="stroke:#181818;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="282.2744" x2="282.2744" y1="641.7393" y2="762.0049"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="282.2744" x2="209.0908" y1="762.0049" y2="762.0049"/>
+        <polygon fill="#181818" points="219.0908,758.0049,209.0908,762.0049,219.0908,766.0049,215.0908,762.0049"
+                 style="stroke:#181818;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="197.0908" x2="197.0908" y1="774.0049" y2="794.0049"/>
+        <polygon fill="#181818" points="193.0908,784.0049,197.0908,794.0049,201.0908,784.0049,197.0908,788.0049"
+                 style="stroke:#181818;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="197.0908" x2="197.0908" y1="515.4736" y2="573.7705"/>
+        <polygon fill="#181818" points="193.0908,563.7705,197.0908,573.7705,201.0908,563.7705,197.0908,567.7705"
+                 style="stroke:#181818;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="197.0908" x2="197.0908" y1="920.2393" y2="940.2393"/>
+        <polygon fill="#181818" points="193.0908,930.2393,197.0908,940.2393,201.0908,930.2393,197.0908,934.2393"
+                 style="stroke:#181818;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="197.0908" x2="197.0908" y1="827.9736" y2="886.2705"/>
+        <polygon fill="#181818" points="193.0908,876.2705,197.0908,886.2705,201.0908,876.2705,197.0908,880.2705"
+                 style="stroke:#181818;stroke-width:1;"/><!--SRC=[bP9HIyCm58NV-oikUz3kBtGF8dN8O9EnigcFMNlc0cbIxatRYUo_ctQhL474F3Gqv_3bdaDkAMjrQPI5q5u92dAMNbPBIeqIWKILOg-z3gUJP-nfA-09VKH4ueCIzYI3GUxftaeBdlKdzRxKllVEJ-1S2mRr78s9ZwpAKdsPCd2ZSrpuoGOvT8CnUAUCBfG7BMnL-pzeQtQDBePnazILmGjgjJzIwfX_3Fq82-xOyrCL-b0zyoRygR8oaDwJCYwESQWDf79My9zm-a3nGgxN3zFSJSaVOIb-XKo3YMX4wyeCYGxQu45vbRcQ1rYtactL5xDIui7lj4G3Cnl4kXT7Y7XwqSxX2oEW-CbThaoMxetcp8vfhNnWsSu9M-X3ry2QqRVuM-ZlRoJPQRITjpO-T7dD6Oop_W6vAZf_0W00]-->
+    </g>
+</svg>

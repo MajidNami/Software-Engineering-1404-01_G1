@@ -1,0 +1,185 @@
+<svg xmlns="http://www.w3.org/2000/svg" contentStyleType="text/css" data-diagram-type="SEQUENCE" height="378px"
+     preserveAspectRatio="none" style="width:1239px;height:378px;background:#FFFFFF;" version="1.1"
+     viewBox="0 0 1239 378" width="1239px" zoomAndPan="magnify">
+    <title>Sequence Diagram: Get Grammar Analysis</title>
+    <defs/>
+    <g>
+        <text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacing"
+              textLength="335.4326" x="451.1597" y="27.9951">Sequence Diagram: Get Grammar Analysis
+        </text>
+        <g>
+            <title>GrammarAnalysisService</title>
+            <rect fill="#FFFFFF" height="203.9297" style="stroke:#181818;stroke-width:1;" width="10" x="375.0796"
+                  y="149.7266"/>
+        </g>
+        <g>
+            <title>GrammarAnalysisProvider</title>
+            <rect fill="#FFFFFF" height="29.1328" style="stroke:#181818;stroke-width:1;" width="10" x="718.3076"
+                  y="178.8594"/>
+        </g>
+        <g>
+            <title>GrammarAnalysisDataSource</title>
+            <rect fill="#FFFFFF" height="29.1328" style="stroke:#181818;stroke-width:1;" width="10" x="936.79"
+                  y="237.125"/>
+        </g>
+        <g>
+            <title>UserProfileDataSource</title>
+            <rect fill="#FFFFFF" height="29.1328" style="stroke:#181818;stroke-width:1;" width="10" x="1142.8447"
+                  y="295.3906"/>
+        </g>
+        <g>
+            <title>Web User</title>
+            <rect fill="#000000" fill-opacity="0.00000" height="253.0625" width="8" x="37.8516" y="118.5938"/>
+            <line style="stroke:#181818;stroke-width:0.5;stroke-dasharray:5,5;" x1="41" x2="41" y1="118.5938"
+                  y2="371.6563"/>
+        </g>
+        <g>
+            <title>GrammarAnalysisService</title>
+            <rect fill="#000000" fill-opacity="0.00000" height="253.0625" width="8" x="376.0796" y="118.5938"/>
+            <line style="stroke:#181818;stroke-width:0.5;stroke-dasharray:5,5;" x1="379.9712" x2="379.9712"
+                  y1="118.5938" y2="371.6563"/>
+        </g>
+        <g>
+            <title>GrammarAnalysisProvider</title>
+            <rect fill="#000000" fill-opacity="0.00000" height="253.0625" width="8" x="719.3076" y="118.5938"/>
+            <line style="stroke:#181818;stroke-width:0.5;stroke-dasharray:5,5;" x1="722.9727" x2="722.9727"
+                  y1="118.5938" y2="371.6563"/>
+        </g>
+        <g>
+            <title>GrammarAnalysisDataSource</title>
+            <rect fill="#000000" fill-opacity="0.00000" height="253.0625" width="8" x="937.79" y="118.5938"/>
+            <line style="stroke:#181818;stroke-width:0.5;stroke-dasharray:5,5;" x1="941.6426" x2="941.6426"
+                  y1="118.5938" y2="371.6563"/>
+        </g>
+        <g>
+            <title>UserProfileDataSource</title>
+            <rect fill="#000000" fill-opacity="0.00000" height="253.0625" width="8" x="1143.8447" y="118.5938"/>
+            <line style="stroke:#181818;stroke-width:0.5;stroke-dasharray:5,5;" x1="1146.9375" x2="1146.9375"
+                  y1="118.5938" y2="371.6563"/>
+        </g>
+        <g class="participant participant-head" data-participant="User">
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="67.7031"
+                  x="5" y="115.292">Web User
+            </text>
+            <ellipse cx="41.8516" cy="50.7969" fill="#E2E2F0" rx="8" ry="8" style="stroke:#181818;stroke-width:0.5;"/>
+            <path d="M41.8516,58.7969 L41.8516,85.7969 M28.8516,66.7969 L54.8516,66.7969 M41.8516,85.7969 L28.8516,100.7969 M41.8516,85.7969 L54.8516,100.7969"
+                  fill="none" style="stroke:#181818;stroke-width:0.5;"/>
+        </g>
+        <g class="participant participant-head" data-participant="Service">
+            <rect fill="#E2E2F0" height="30.2969" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;"
+                  width="190.2168" x="284.9712" y="87.2969"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="176.2168"
+                  x="291.9712" y="107.292">GrammarAnalysisService
+            </text>
+        </g>
+        <g class="participant participant-head" data-participant="AI">
+            <rect fill="#E2E2F0" height="30.2969" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;"
+                  width="196.6699" x="624.9727" y="87.2969"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="182.6699"
+                  x="631.9727" y="107.292">GrammarAnalysisProvider
+            </text>
+        </g>
+        <g class="participant participant-head" data-participant="AnalysisDB">
+            <rect fill="#E2E2F0" height="30.2969" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;"
+                  width="220.2949" x="831.6426" y="87.2969"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="206.2949"
+                  x="838.6426" y="107.292">GrammarAnalysisDataSource
+            </text>
+        </g>
+        <g class="participant participant-head" data-participant="ProfileDB">
+            <rect fill="#E2E2F0" height="30.2969" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;"
+                  width="171.8145" x="1061.9375" y="87.2969"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="157.8145"
+                  x="1068.9375" y="107.292">UserProfileDataSource
+            </text>
+        </g>
+        <g>
+            <title>GrammarAnalysisService</title>
+            <rect fill="#FFFFFF" height="203.9297" style="stroke:#181818;stroke-width:1;" width="10" x="375.0796"
+                  y="149.7266"/>
+        </g>
+        <g>
+            <title>GrammarAnalysisProvider</title>
+            <rect fill="#FFFFFF" height="29.1328" style="stroke:#181818;stroke-width:1;" width="10" x="718.3076"
+                  y="178.8594"/>
+        </g>
+        <g>
+            <title>GrammarAnalysisDataSource</title>
+            <rect fill="#FFFFFF" height="29.1328" style="stroke:#181818;stroke-width:1;" width="10" x="936.79"
+                  y="237.125"/>
+        </g>
+        <g>
+            <title>UserProfileDataSource</title>
+            <rect fill="#FFFFFF" height="29.1328" style="stroke:#181818;stroke-width:1;" width="10" x="1142.8447"
+                  y="295.3906"/>
+        </g>
+        <g class="message" data-participant-1="User" data-participant-2="Service">
+            <polygon fill="#181818" points="363.0796,145.7266,373.0796,149.7266,363.0796,153.7266"
+                     style="stroke:#181818;stroke-width:1;"/>
+            <line style="stroke:#181818;stroke-width:1;" x1="41.8516" x2="369.0796" y1="149.7266" y2="149.7266"/>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="314.228"
+                  x="48.8516" y="144.6606">getGrammarAnalysis(grammarAnalysisRequest)
+            </text>
+        </g>
+        <g class="message" data-participant-1="Service" data-participant-2="AI">
+            <polygon fill="#181818" points="706.3076,174.8594,716.3076,178.8594,706.3076,182.8594"
+                     style="stroke:#181818;stroke-width:1;"/>
+            <line style="stroke:#181818;stroke-width:1;" x1="385.0796" x2="712.3076" y1="178.8594" y2="178.8594"/>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="314.228"
+                  x="392.0796" y="173.7935">getGrammarAnalysis(grammarAnalysisRequest)
+            </text>
+        </g>
+        <g class="message" data-participant-1="AI" data-participant-2="Service">
+            <polygon fill="#181818" points="396.0796,203.9922,386.0796,207.9922,396.0796,211.9922"
+                     style="stroke:#181818;stroke-width:1;"/>
+            <line style="stroke:#181818;stroke-width:1;stroke-dasharray:2,2;" x1="390.0796" x2="722.3076" y1="207.9922"
+                  y2="207.9922"/>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="176.7822"
+                  x="402.0796" y="202.9263">grammarAnalysisResponse
+            </text>
+        </g>
+        <g class="message" data-participant-1="Service" data-participant-2="AnalysisDB">
+            <polygon fill="#181818" points="924.79,233.125,934.79,237.125,924.79,241.125"
+                     style="stroke:#181818;stroke-width:1;"/>
+            <line style="stroke:#181818;stroke-width:1;" x1="385.0796" x2="930.79" y1="237.125" y2="237.125"/>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="270.918"
+                  x="392.0796" y="232.0591">saveAnalysis(grammarAnalysisResponse)
+            </text>
+        </g>
+        <g class="message" data-participant-1="AnalysisDB" data-participant-2="Service">
+            <polygon fill="#181818" points="396.0796,262.2578,386.0796,266.2578,396.0796,270.2578"
+                     style="stroke:#181818;stroke-width:1;"/>
+            <line style="stroke:#181818;stroke-width:1;stroke-dasharray:2,2;" x1="390.0796" x2="940.79" y1="266.2578"
+                  y2="266.2578"/>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="27.5107"
+                  x="402.0796" y="261.1919">void
+            </text>
+        </g>
+        <g class="message" data-participant-1="Service" data-participant-2="ProfileDB">
+            <polygon fill="#181818" points="1130.8447,291.3906,1140.8447,295.3906,1130.8447,299.3906"
+                     style="stroke:#181818;stroke-width:1;"/>
+            <line style="stroke:#181818;stroke-width:1;" x1="385.0796" x2="1136.8447" y1="295.3906" y2="295.3906"/>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="195.8062"
+                  x="392.0796" y="290.3247">updateUserProfile(userProfile)
+            </text>
+        </g>
+        <g class="message" data-participant-1="ProfileDB" data-participant-2="Service">
+            <polygon fill="#181818" points="396.0796,320.5234,386.0796,324.5234,396.0796,328.5234"
+                     style="stroke:#181818;stroke-width:1;"/>
+            <line style="stroke:#181818;stroke-width:1;stroke-dasharray:2,2;" x1="390.0796" x2="1146.8447" y1="324.5234"
+                  y2="324.5234"/>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="27.5107"
+                  x="402.0796" y="319.4575">void
+            </text>
+        </g>
+        <g class="message" data-participant-1="Service" data-participant-2="User">
+            <polygon fill="#181818" points="52.8516,349.6563,42.8516,353.6563,52.8516,357.6563"
+                     style="stroke:#181818;stroke-width:1;"/>
+            <line style="stroke:#181818;stroke-width:1;stroke-dasharray:2,2;" x1="46.8516" x2="379.0796" y1="353.6563"
+                  y2="353.6563"/>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="176.7822"
+                  x="58.8516" y="348.5903">grammarAnalysisResponse
+            </text>
+        </g><!--SRC=[dLDDJyCm3BtdLrYxC0uCyNNP0MdJ98J44692S0sjgIAofiHkqVZrk5zfEi64k5Ifu-Vt_EpGkyaBxVKMF5BXSi8r4kaCbsZTvy9xzmdiIrGK4ebt5kNhJSBbrYgb4tOU9i_u2a-4VWAQceEIV3Q9ANJECBaHx5RxHQxjZWnjq5ScmIQvEn_CV_2kCcbNVN5xC7UbMMzSwRlo8RmSesgDKlRDMDn3zD6bKcnOkjtWHubvWh0oEXEoETmWGqSR29GwWhDPqpiGvYc9gO8ZLatevBhl5EQG8U-fdcRZ_ySMUrpxQohD67mIclDPg9LeQsjBeBT8zJT2AE7_SOd5WZqPQzu7jHkZKenXekvYK4Uwmje7AYq3k-0LYBcnpZ0ZuQanlojjIMEfmtoZCcFfbJFfIEU04RsNWzwoIEM-NU1-3s2wIPp7qxKcHhyx5iIzOvp34njhlaoUmO-xLAzI8MLUrdVrUodblNYCkmvx9WfRugZEj1pEKRV3RWxemxr6stm4LpDuHD6HHpDf7ckG9RMQvlyqxmxr3G00]-->
+    </g>
+</svg>

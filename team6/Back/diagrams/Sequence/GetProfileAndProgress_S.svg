@@ -1,0 +1,177 @@
+<svg xmlns="http://www.w3.org/2000/svg" contentStyleType="text/css" data-diagram-type="SEQUENCE" height="440px"
+     preserveAspectRatio="none" style="width:722px;height:440px;background:#FFFFFF;" version="1.1" viewBox="0 0 722 440"
+     width="722px" zoomAndPan="magnify">
+    <title>Sequence Diagram: Get Profile and Progress</title>
+    <defs/>
+    <g>
+        <text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacing"
+              textLength="352.5703" x="186.5176" y="27.9951">Sequence Diagram: Get Profile and Progress
+        </text>
+        <g>
+            <title>UserProfileService</title>
+            <rect fill="#FFFFFF" height="87.3984" style="stroke:#181818;stroke-width:1;" width="10" x="331.2749"
+                  y="173.8594"/>
+        </g>
+        <g>
+            <title>UserProfileService</title>
+            <rect fill="#FFFFFF" height="87.3984" style="stroke:#181818;stroke-width:1;" width="10" x="331.2749"
+                  y="321.5234"/>
+        </g>
+        <g>
+            <title>UserProfileDataSource</title>
+            <rect fill="#FFFFFF" height="29.1328" style="stroke:#181818;stroke-width:1;" width="10" x="615.6982"
+                  y="202.9922"/>
+        </g>
+        <g>
+            <title>UserProfileDataSource</title>
+            <rect fill="#FFFFFF" height="29.1328" style="stroke:#181818;stroke-width:1;" width="10" x="615.6982"
+                  y="350.6563"/>
+        </g>
+        <rect fill="none" height="133.6641" style="stroke:#000000;stroke-width:1.5;" width="706.6055" x="10"
+              y="135.5938"/>
+        <rect fill="none" height="133.6641" style="stroke:#000000;stroke-width:1.5;" width="706.6055" x="10"
+              y="283.2578"/>
+        <g>
+            <title>Web User</title>
+            <rect fill="#000000" fill-opacity="0.00000" height="315.3281" width="8" x="52.8516" y="118.5938"/>
+            <line style="stroke:#181818;stroke-width:0.5;stroke-dasharray:5,5;" x1="56" x2="56" y1="118.5938"
+                  y2="433.9219"/>
+        </g>
+        <g>
+            <title>UserProfileService</title>
+            <rect fill="#000000" fill-opacity="0.00000" height="315.3281" width="8" x="332.2749" y="118.5938"/>
+            <line style="stroke:#181818;stroke-width:0.5;stroke-dasharray:5,5;" x1="335.4067" x2="335.4067"
+                  y1="118.5938" y2="433.9219"/>
+        </g>
+        <g>
+            <title>UserProfileDataSource</title>
+            <rect fill="#000000" fill-opacity="0.00000" height="315.3281" width="8" x="616.6982" y="118.5938"/>
+            <line style="stroke:#181818;stroke-width:0.5;stroke-dasharray:5,5;" x1="619.791" x2="619.791" y1="118.5938"
+                  y2="433.9219"/>
+        </g>
+        <g class="participant participant-head" data-participant="User">
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="67.7031"
+                  x="20" y="115.292">Web User
+            </text>
+            <ellipse cx="56.8516" cy="50.7969" fill="#E2E2F0" rx="8" ry="8" style="stroke:#181818;stroke-width:0.5;"/>
+            <path d="M56.8516,58.7969 L56.8516,85.7969 M43.8516,66.7969 L69.8516,66.7969 M56.8516,85.7969 L43.8516,100.7969 M56.8516,85.7969 L69.8516,100.7969"
+                  fill="none" style="stroke:#181818;stroke-width:0.5;"/>
+        </g>
+        <g class="participant participant-head" data-participant="ProfileService">
+            <rect fill="#E2E2F0" height="30.2969" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;"
+                  width="141.7363" x="265.4067" y="87.2969"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="127.7363"
+                  x="272.4067" y="107.292">UserProfileService
+            </text>
+        </g>
+        <g class="participant participant-head" data-participant="ProfileDB">
+            <rect fill="#E2E2F0" height="30.2969" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;"
+                  width="171.8145" x="534.791" y="87.2969"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="157.8145"
+                  x="541.791" y="107.292">UserProfileDataSource
+            </text>
+        </g>
+        <g>
+            <title>UserProfileService</title>
+            <rect fill="#FFFFFF" height="87.3984" style="stroke:#181818;stroke-width:1;" width="10" x="331.2749"
+                  y="173.8594"/>
+        </g>
+        <g>
+            <title>UserProfileService</title>
+            <rect fill="#FFFFFF" height="87.3984" style="stroke:#181818;stroke-width:1;" width="10" x="331.2749"
+                  y="321.5234"/>
+        </g>
+        <g>
+            <title>UserProfileDataSource</title>
+            <rect fill="#FFFFFF" height="29.1328" style="stroke:#181818;stroke-width:1;" width="10" x="615.6982"
+                  y="202.9922"/>
+        </g>
+        <g>
+            <title>UserProfileDataSource</title>
+            <rect fill="#FFFFFF" height="29.1328" style="stroke:#181818;stroke-width:1;" width="10" x="615.6982"
+                  y="350.6563"/>
+        </g>
+        <path d="M10,135.5938 L258.5376,135.5938 L258.5376,142.7266 L248.5376,152.7266 L10,152.7266 L10,135.5938"
+              fill="#EEEEEE" style="stroke:#000000;stroke-width:1.5;"/>
+        <rect fill="none" height="133.6641" style="stroke:#000000;stroke-width:1.5;" width="706.6055" x="10"
+              y="135.5938"/>
+        <text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthAdjust="spacing"
+              textLength="203.5376" x="25" y="148.6606">Scenario 2: Get User Profile
+        </text>
+        <g class="message" data-participant-1="User" data-participant-2="ProfileService">
+            <polygon fill="#181818" points="319.2749,169.8594,329.2749,173.8594,319.2749,177.8594"
+                     style="stroke:#181818;stroke-width:1;"/>
+            <line style="stroke:#181818;stroke-width:1;" x1="56.8516" x2="325.2749" y1="173.8594" y2="173.8594"/>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="142.4985"
+                  x="63.8516" y="168.7935">getUserProfile(userId)
+            </text>
+        </g>
+        <g class="message" data-participant-1="ProfileService" data-participant-2="ProfileDB">
+            <polygon fill="#181818" points="603.6982,198.9922,613.6982,202.9922,603.6982,206.9922"
+                     style="stroke:#181818;stroke-width:1;"/>
+            <line style="stroke:#181818;stroke-width:1;" x1="341.2749" x2="609.6982" y1="202.9922" y2="202.9922"/>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="142.4985"
+                  x="348.2749" y="197.9263">getUserProfile(userId)
+            </text>
+        </g>
+        <g class="message" data-participant-1="ProfileDB" data-participant-2="ProfileService">
+            <polygon fill="#181818" points="352.2749,228.125,342.2749,232.125,352.2749,236.125"
+                     style="stroke:#181818;stroke-width:1;"/>
+            <line style="stroke:#181818;stroke-width:1;stroke-dasharray:2,2;" x1="346.2749" x2="619.6982" y1="232.125"
+                  y2="232.125"/>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="69.291"
+                  x="358.2749" y="227.0591">userProfile
+            </text>
+        </g>
+        <g class="message" data-participant-1="ProfileService" data-participant-2="User">
+            <polygon fill="#181818" points="67.8516,257.2578,57.8516,261.2578,67.8516,265.2578"
+                     style="stroke:#181818;stroke-width:1;"/>
+            <line style="stroke:#181818;stroke-width:1;stroke-dasharray:2,2;" x1="61.8516" x2="335.2749" y1="261.2578"
+                  y2="261.2578"/>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="69.291"
+                  x="73.8516" y="256.1919">userProfile
+            </text>
+        </g>
+        <path d="M10,283.2578 L275.1621,283.2578 L275.1621,290.3906 L265.1621,300.3906 L10,300.3906 L10,283.2578"
+              fill="#EEEEEE" style="stroke:#000000;stroke-width:1.5;"/>
+        <rect fill="none" height="133.6641" style="stroke:#000000;stroke-width:1.5;" width="706.6055" x="10"
+              y="283.2578"/>
+        <text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthAdjust="spacing"
+              textLength="220.1621" x="25" y="296.3247">Scenario 3: Get User Progress
+        </text>
+        <g class="message" data-participant-1="User" data-participant-2="ProfileService">
+            <polygon fill="#181818" points="319.2749,317.5234,329.2749,321.5234,319.2749,325.5234"
+                     style="stroke:#181818;stroke-width:1;"/>
+            <line style="stroke:#181818;stroke-width:1;" x1="56.8516" x2="325.2749" y1="321.5234" y2="321.5234"/>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="255.4233"
+                  x="63.8516" y="316.4575">getUserProgress(userProgressRequest)
+            </text>
+        </g>
+        <g class="message" data-participant-1="ProfileService" data-participant-2="ProfileDB">
+            <polygon fill="#181818" points="603.6982,346.6563,613.6982,350.6563,603.6982,354.6563"
+                     style="stroke:#181818;stroke-width:1;"/>
+            <line style="stroke:#181818;stroke-width:1;" x1="341.2749" x2="609.6982" y1="350.6563" y2="350.6563"/>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="255.4233"
+                  x="348.2749" y="345.5903">getUserProgress(userProgressRequest)
+            </text>
+        </g>
+        <g class="message" data-participant-1="ProfileDB" data-participant-2="ProfileService">
+            <polygon fill="#181818" points="352.2749,375.7891,342.2749,379.7891,352.2749,383.7891"
+                     style="stroke:#181818;stroke-width:1;"/>
+            <line style="stroke:#181818;stroke-width:1;stroke-dasharray:2,2;" x1="346.2749" x2="619.6982" y1="379.7891"
+                  y2="379.7891"/>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="147.6528"
+                  x="358.2749" y="374.7231">userProgressResponse
+            </text>
+        </g>
+        <g class="message" data-participant-1="ProfileService" data-participant-2="User">
+            <polygon fill="#181818" points="67.8516,404.9219,57.8516,408.9219,67.8516,412.9219"
+                     style="stroke:#181818;stroke-width:1;"/>
+            <line style="stroke:#181818;stroke-width:1;stroke-dasharray:2,2;" x1="61.8516" x2="335.2749" y1="408.9219"
+                  y2="408.9219"/>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="147.6528"
+                  x="73.8516" y="403.856">userProgressResponse
+            </text>
+        </g><!--SRC=[hLEnQiCm4Dtr5OUdTCZIRXaADORI8L1gIkUhV3MYZkIUJWdz-yfotTXk0Wx4WpYVttjwzmxxJsDRPDm1as-TzRGbxx6cd1ftU61s1n0EfFmVqCjtG_5aeoNi6gLGYsF8tkWTNZrn1kXJeI9UZ3OjMe6iwpop-p0DbSHxeoa1fwspb085InTuoYfofSH8j5FILo2h2Gg3TNIvWKUI0GPegwwkuunUgPfTQA7KP96DWziUsrqs41J49pNMzpE7i86QPEHi5MBzLDqaJep2x55eFbRtBHqpiQDyaL-c74SVwKNs-fJLS5HBy8hEw9mq5nLJ24jqXad9LlyIlfictAzXOSG9l0gZbvTkrLwk7FY5zrmK_wzS_tzTOmzB14SB-G40]-->
+    </g>
+</svg>

@@ -1,0 +1,162 @@
+<svg xmlns="http://www.w3.org/2000/svg" contentStyleType="text/css" data-diagram-type="ACTIVITY" height="923px"
+     preserveAspectRatio="none" style="width:541px;height:923px;background:#FFFFFF;" version="1.1" viewBox="0 0 541 923"
+     width="541px" zoomAndPan="magnify">
+    <defs/>
+    <g>
+        <rect fill="none" height="115.2656" style="stroke:#000000;stroke-width:1.5;" width="186.4727" x="177.2832"
+              y="11"/>
+        <path d="M254.9863,11 L254.9863,20.2969 L244.9863,30.2969 L177.2832,30.2969" fill="none"
+              style="stroke:#000000;stroke-width:1.5;"/>
+        <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="67.7031"
+              x="180.2832" y="24.9951">Web User
+        </text>
+        <ellipse cx="270.5195" cy="50.2969" fill="#222222" rx="10" ry="10" style="stroke:#222222;stroke-width:1;"/>
+        <rect fill="#F1F1F1" height="33.9688" rx="12.5" ry="12.5" style="stroke:#181818;stroke-width:0.5;"
+              width="166.4727" x="187.2832" y="80.2969"/>
+        <text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="146.4727"
+              x="197.2832" y="101.4355">Submit Text for Analysis
+        </text>
+        <rect fill="none" height="136.2344" style="stroke:#000000;stroke-width:1.5;" width="245.6289" x="147.7051"
+              y="136.2656"/>
+        <path d="M333.9219,136.2656 L333.9219,145.5625 L323.9219,155.5625 L147.7051,155.5625" fill="none"
+              style="stroke:#000000;stroke-width:1.5;"/>
+        <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="176.2168"
+              x="150.7051" y="150.2607">GrammarAnalysisService
+        </text>
+        <rect fill="#F1F1F1" height="33.9688" rx="12.5" ry="12.5" style="stroke:#181818;stroke-width:0.5;"
+              width="225.6289" x="157.7051" y="172.5625"/>
+        <text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="205.6289"
+              x="167.7051" y="193.7012">Receive grammarAnalysisRequest
+        </text>
+        <rect fill="#F1F1F1" height="33.9688" rx="12.5" ry="12.5" style="stroke:#181818;stroke-width:0.5;"
+              width="122.3867" x="209.3262" y="226.5313"/>
+        <text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="102.3867"
+              x="219.3262" y="247.6699">Validate Request
+        </text>
+        <rect fill="none" height="190.2031" style="stroke:#000000;stroke-width:1.5;" width="248.8164" x="146.1113"
+              y="282.5"/>
+        <path d="M338.7813,282.5 L338.7813,291.7969 L328.7813,301.7969 L146.1113,301.7969" fill="none"
+              style="stroke:#000000;stroke-width:1.5;"/>
+        <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="182.6699"
+              x="149.1113" y="296.4951">GrammarAnalysisProvider
+        </text>
+        <rect fill="#F1F1F1" height="33.9688" rx="12.5" ry="12.5" style="stroke:#181818;stroke-width:0.5;"
+              width="121.2559" x="209.8916" y="318.7969"/>
+        <text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="101.2559"
+              x="219.8916" y="339.9355">Process Text (AI)
+        </text>
+        <rect fill="#F1F1F1" height="33.9688" rx="12.5" ry="12.5" style="stroke:#181818;stroke-width:0.5;"
+              width="191.0938" x="174.9727" y="372.7656"/>
+        <text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="171.0938"
+              x="184.9727" y="393.9043">Identify Errors &amp; Corrections
+        </text>
+        <rect fill="#F1F1F1" height="33.9688" rx="12.5" ry="12.5" style="stroke:#181818;stroke-width:0.5;"
+              width="228.8164" x="156.1113" y="426.7344"/>
+        <text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="208.8164"
+              x="166.1113" y="447.873">Create GrammarAnalysisResponse
+        </text>
+        <rect fill="none" height="295.5" style="stroke:#000000;stroke-width:1.5;" width="519.0391" x="11" y="482.7031"/>
+        <path d="M197.2168,482.7031 L197.2168,492 L187.2168,502 L11,502" fill="none"
+              style="stroke:#000000;stroke-width:1.5;"/>
+        <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="176.2168" x="14"
+              y="496.6982">GrammarAnalysisService
+        </text>
+        <rect fill="#F1F1F1" height="33.9688" rx="12.5" ry="12.5" style="stroke:#181818;stroke-width:0.5;"
+              width="129.5059" x="205.7666" y="519"/>
+        <text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="109.5059"
+              x="215.7666" y="540.1387">Receive Response
+        </text>
+        <rect fill="#555555" height="6" rx="2.5" ry="2.5" style="stroke:#555555;stroke-width:1;" width="499.0391" x="21"
+              y="572.9688"/>
+        <rect fill="none" height="90.2656" style="stroke:#000000;stroke-width:1.5;" width="226.2949" x="33"
+              y="623.4531"/>
+        <path d="M249.2949,623.4531 L249.2949,632.75 L239.2949,642.75 L33,642.75" fill="none"
+              style="stroke:#000000;stroke-width:1.5;"/>
+        <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="206.2949" x="36"
+              y="637.4482">GrammarAnalysisDataSource
+        </text>
+        <rect fill="#F1F1F1" height="33.9688" rx="12.5" ry="12.5" style="stroke:#181818;stroke-width:0.5;"
+              width="161.6621" x="65.3164" y="659.75"/>
+        <text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="141.6621"
+              x="75.3164" y="680.8887">saveAnalysis(response)
+        </text>
+        <rect fill="none" height="151.2344" style="stroke:#000000;stroke-width:1.5;" width="220.7441" x="287.2949"
+              y="588.9688"/>
+        <path d="M455.1094,588.9688 L455.1094,598.2656 L445.1094,608.2656 L287.2949,608.2656" fill="none"
+              style="stroke:#000000;stroke-width:1.5;"/>
+        <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="157.8145"
+              x="290.2949" y="602.9639">UserProfileDataSource
+        </text>
+        <rect fill="#F1F1F1" height="33.9688" rx="12.5" ry="12.5" style="stroke:#181818;stroke-width:0.5;"
+              width="157.9297" x="318.7021" y="625.2656"/>
+        <text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="137.9297"
+              x="328.7021" y="646.4043">Calculate New Mastery
+        </text>
+        <rect fill="#F1F1F1" height="33.9688" rx="12.5" ry="12.5" style="stroke:#181818;stroke-width:0.5;"
+              width="200.7441" x="297.2949" y="694.2344"/>
+        <text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="180.7441"
+              x="307.2949" y="715.373">updateUserProfile(userProfile)
+        </text>
+        <rect fill="#555555" height="6" rx="2.5" ry="2.5" style="stroke:#555555;stroke-width:1;" width="499.0391" x="21"
+              y="760.2031"/>
+        <rect fill="none" height="124.2656" style="stroke:#000000;stroke-width:1.5;" width="237.4199" x="151.8096"
+              y="788.2031"/>
+        <path d="M229.5127,788.2031 L229.5127,797.5 L219.5127,807.5 L151.8096,807.5" fill="none"
+              style="stroke:#000000;stroke-width:1.5;"/>
+        <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="67.7031"
+              x="154.8096" y="802.1982">Web User
+        </text>
+        <rect fill="#F1F1F1" height="33.9688" rx="12.5" ry="12.5" style="stroke:#181818;stroke-width:0.5;"
+              width="217.4199" x="161.8096" y="824.5"/>
+        <text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="197.4199"
+              x="171.8096" y="845.6387">View GrammarAnalysisResponse
+        </text>
+        <ellipse cx="270.5195" cy="889.4688" fill="none" rx="11" ry="11" style="stroke:#222222;stroke-width:1;"/>
+        <ellipse cx="270.5195" cy="889.4688" fill="#222222" rx="6" ry="6" style="stroke:#222222;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="270.5195" x2="270.5195" y1="60.2969" y2="80.2969"/>
+        <polygon fill="#181818" points="266.5195,70.2969,270.5195,80.2969,274.5195,70.2969,270.5195,74.2969"
+                 style="stroke:#181818;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="270.5195" x2="270.5195" y1="206.5313" y2="226.5313"/>
+        <polygon fill="#181818" points="266.5195,216.5313,270.5195,226.5313,274.5195,216.5313,270.5195,220.5313"
+                 style="stroke:#181818;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="270.5195" x2="270.5195" y1="114.2656" y2="172.5625"/>
+        <polygon fill="#181818" points="266.5195,162.5625,270.5195,172.5625,274.5195,162.5625,270.5195,166.5625"
+                 style="stroke:#181818;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="270.5195" x2="270.5195" y1="352.7656" y2="372.7656"/>
+        <polygon fill="#181818" points="266.5195,362.7656,270.5195,372.7656,274.5195,362.7656,270.5195,366.7656"
+                 style="stroke:#181818;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="270.5195" x2="270.5195" y1="406.7344" y2="426.7344"/>
+        <polygon fill="#181818" points="266.5195,416.7344,270.5195,426.7344,274.5195,416.7344,270.5195,420.7344"
+                 style="stroke:#181818;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="270.5195" x2="270.5195" y1="260.5" y2="318.7969"/>
+        <polygon fill="#181818" points="266.5195,308.7969,270.5195,318.7969,274.5195,308.7969,270.5195,312.7969"
+                 style="stroke:#181818;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="397.667" x2="397.667" y1="659.2344" y2="694.2344"/>
+        <polygon fill="#181818" points="393.667,684.2344,397.667,694.2344,401.667,684.2344,397.667,688.2344"
+                 style="stroke:#181818;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="146.1475" x2="146.1475" y1="578.9688" y2="659.75"/>
+        <polygon fill="#181818" points="142.1475,649.75,146.1475,659.75,150.1475,649.75,146.1475,653.75"
+                 style="stroke:#181818;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="397.667" x2="397.667" y1="578.9688" y2="625.2656"/>
+        <polygon fill="#181818" points="393.667,615.2656,397.667,625.2656,401.667,615.2656,397.667,619.2656"
+                 style="stroke:#181818;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="146.1475" x2="146.1475" y1="693.7188" y2="760.2031"/>
+        <polygon fill="#181818" points="142.1475,750.2031,146.1475,760.2031,150.1475,750.2031,146.1475,754.2031"
+                 style="stroke:#181818;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="397.667" x2="397.667" y1="728.2031" y2="760.2031"/>
+        <polygon fill="#181818" points="393.667,750.2031,397.667,760.2031,401.667,750.2031,397.667,754.2031"
+                 style="stroke:#181818;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="270.5195" x2="270.5195" y1="552.9688" y2="572.9688"/>
+        <polygon fill="#181818" points="266.5195,562.9688,270.5195,572.9688,274.5195,562.9688,270.5195,566.9688"
+                 style="stroke:#181818;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="270.5195" x2="270.5195" y1="460.7031" y2="519"/>
+        <polygon fill="#181818" points="266.5195,509,270.5195,519,274.5195,509,270.5195,513"
+                 style="stroke:#181818;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="270.5195" x2="270.5195" y1="858.4688" y2="878.4688"/>
+        <polygon fill="#181818" points="266.5195,868.4688,270.5195,878.4688,274.5195,868.4688,270.5195,872.4688"
+                 style="stroke:#181818;stroke-width:1;"/>
+        <line style="stroke:#181818;stroke-width:1;" x1="270.5195" x2="270.5195" y1="766.2031" y2="824.5"/>
+        <polygon fill="#181818" points="266.5195,814.5,270.5195,824.5,274.5195,814.5,270.5195,818.5"
+                 style="stroke:#181818;stroke-width:1;"/><!--SRC=[dPB9JiCm48RlUOfVFK1vXVHK1LHLeWWrKBXEaqbbuIpCE6aZr7V7QGXTf7B0ikHbVd-UxHRnrkIM2bOKb7CAtb7YR0lA70lQiXQyBnuHML9b3IeIPvmf2upUU8rNPHdXAm3KUOjVmxXUvyRXXNSEMIcO5cHRDJe9zi7fyvbGdfCCvfYbCGdti7392Pk6iJaNBVcpPdMJJh8YQr9oZD_BF_dFKZOc7RmD_J5XrTxDyNH-Ts3EKowSoLeyY9IYk45KYd3I4VMWY8IxFsUNVcdb5Vol68-F0JzzpZxy0bpdt9EZs5TcGFKZL6fua8pbXte83DZ_a44RCiKblokZpqXcB5zXHsIJsdQXF_4M2rBV7UtaQA-hhXOdd75zt9_um4NQHtYUgFDU2bV6Vt8rnrspbLMm_mO0]-->
+    </g>
+</svg>

@@ -1,0 +1,219 @@
+PATH: POST /api/users/login
+
+{
+  "username": "user1",
+  "password": "pass1"
+}
+
+{
+  token: "eyJlbmMiOiJBMTI4Q0JDLUhTMjU2IiwiYWxnIjoiUlNBLU9BRVAtMjU2In0.YvA80idFD3IpKCI6kmIfIG8dmHwKf0Emtll9tgXTYBV4Rq8Ls9lcBkA4cPVe9HjAaQWEWefrOJF--wPiPD90GOmK0F0W0e7NhvWd6k9KkyaptKtDfhHUnT701pB5FyED1x6sfnYv7ldnw6xbFYK9IfkWx5DCQgrW5PYa1XLXP7Gl-uRffKSPJJm1kpxfPl0jRDAkVbJFVXfrstF8aYfiAz3q9Nihd5unFskHTH_QyVamAFIrAvl28mXEzUyS4lYZHFN_wbsHbDAMcfMDJ4tZ2l8vjF6dcNS9oHPPqf3G-n_huEL1MsQlMPxcknN8my7utyYNjdFViye7toEBncJxhg.hWCqyuOwcZ1MGrdE2KnQeQ.o4VyPnVreTswBVj1gtMPIyZTu-iw8dokzzxUzS2rGeVBamSpX3pigB3KLRPcvSVQ9wsRC-IysxqJP8QZQ0yrn7bQOAKlQZ0ry5elQPA2YwKXCI527FNhE8_P68bFZlDVxbshOdVFxG0ODNhJdyIcmKEMfiowbgsPazTkO-AEWNuz4HcRRGKfUeIvaKkGOyGI1rfD6obC0nhgkA_qLngvnNwbipC73Q90KHWOIRn4ca_u6YWCB2_14wgaJdGB6SzGTYPzVmjZmSKaazbWKQWDBJi8CZkXVBH7H2QJRAnPSxl0NDk1KRvOzz0-fMdXM2WbU46cSgM_-4SMDHZJG-8ZNWwKXP78virm1gVYI01i_q8EpS63mPqoIXkJqO_W7F9hMJozCwb-1fshWCmBcDvxsc3XY48aszt5N5aPgnhV0rsKxFhM5uJSx3mmkU9Jo0cecl4OrWEnViEhmK7sfcMmgg.aOXZ24DA4ND9ZrxVVQ29GQ"
+}
+
+Note: all other services require "Bearer " + token. if expired, 401 error code is sent back
+
+
+
+PATH: POST /api/grammar/evaluate
+
+{
+  "sentence": "she go to the store yesterday",
+  "evaluationType": "FULL"
+}
+
+{
+  "isCorrect": false,
+  "evaluation": {
+    "original": "she go to the store yesterday",
+    "corrected": "she went to the store yesterday",
+    "grammarTopic": "PAST_SIMPLE"
+  },
+  "examples": [
+    {
+      "text": "i ate an apple.",
+      "explanation": "use past form 'ate' for completed actions."
+    },
+    {
+      "text": "they played soccer.",
+      "explanation": "regular verbs add -ed."
+    },
+    {
+      "text": "he didn't know the answer.",
+      "explanation": "negative past uses 'did not' + base verb."
+    }
+  ],
+  "exercises": [
+    {
+      "id": 55,
+      "grammarTopic": "TENSE_CHOICE",
+      "grammarLevel": "EASY",
+      "exerciseType": "FILL_BLANK",
+      "question": "i ___ (see) him yesterday",
+      "options": ["see", "saw", "seen"]
+    },
+    {
+      "id": 56,
+      "grammarTopic": "TENSE_CHOICE",
+      "grammarLevel": "MEDIUM",
+      "exerciseType": "MULTIPLE_CHOICE",
+      "question": "which sentence is correct?",
+      "options": ["she goed home", "she went home"]
+    },
+    {
+      "id": 57,
+      "grammarTopic": "TENSE_CHOICE",
+      "grammarLevel": "HARD",
+      "exerciseType": "FULL_SENTENCE",
+      "question": "write the sentence.",
+      "options": ["football", "played", "we", "yesterday"]
+    }
+  ]
+}
+
+
+
+PATH: GET /api/exercises
+
+Query Params: grammarTopic, grammarLevel
+
+{
+  "exercises": [
+    {
+      "id": 55,
+      "grammarTopic": "TENSE_CHOICE",
+      "grammarLevel": "EASY",
+      "exerciseType": "FILL_BLANK",
+      "question": "i ___ (see) him yesterday",
+      "options": ["see", "saw", "seen"]
+    },
+    {
+      "id": 56,
+      "grammarTopic": "TENSE_CHOICE",
+      "grammarLevel": "MEDIUM",
+      "exerciseType": "MULTIPLE_CHOICE",
+      "question": "which sentence is correct?",
+      "options": ["she goed home", "she went home"]
+    },
+    {
+      "id": 57,
+      "grammarTopic": "TENSE_CHOICE",
+      "grammarLevel": "HARD",
+      "exerciseType": "FULL_SENTENCE",
+      "question": "write the sentence.",
+      "options": ["football", "played", "we", "yesterday"]
+    }
+  ]
+}
+
+
+
+PATH: GET /api/examples
+
+Query Params: grammarTopic, grammarLevel
+
+{
+  "examples": [
+    {
+      "text": "i ate an apple.",
+      "explanation": "use past form 'ate' for completed actions."
+    },
+    {
+      "text": "they played soccer.",
+      "explanation": "regular verbs add -ed."
+    },
+    {
+      "text": "he didn't know the answer.",
+      "explanation": "negative past uses 'did not' + base verb."
+    }
+  ]
+}
+
+
+
+PATH: GET /api/users/{userId}/stats
+
+Query Params: grammarTopic, grammarLevel
+
+{
+  "grammarTopic": "PRESENT_PERFECT",
+  "grammarLevel": "MEDIUM",
+  "sentEvaluations": 15,
+  "correctEvaluations": 5,
+  "seenExamples": 12,
+  "attemptedExercises": 20,
+  "correctExercises": 14
+}
+
+
+
+PATH: POST /api/exercises/answer
+
+{
+  "answers": [
+    {
+      "exerciseId": 55,
+      "answer": "i saw him yesterday"
+    },
+    {
+      "exerciseId": 56,
+      "answer": "she goed home"
+    }
+  ]
+}
+
+{
+  "results": [
+    {
+      "exerciseId": 55,
+      "isCorrect": true
+    },
+    {
+      "exerciseId": 56,
+      "isCorrect": false,
+      "correctAnswer": "she went home"
+    }
+  ]
+}
+
+
+
+enums:
+evaluationType: FULL, QUICK
+grammarLevel: EASY, MEDIUM, HARD
+exerciseType: FILL_BLANK, MULTIPLE_CHOICE, FULL_SENTENCE
+grammarTopic: 
+
+// TENSE
+PRESENT_SIMPLE,
+PRESENT_CONTINUOUS,
+PAST_SIMPLE,
+PAST_CONTINUOUS,
+PRESENT_PERFECT,
+PAST_PERFECT,
+TENSE_CHOICE,
+
+// CONDITIONAL
+CONDITIONAL_ZERO,
+CONDITIONAL_FIRST,
+CONDITIONAL_SECOND,
+CONDITIONAL_THIRD,
+CONDITIONAL_MIXED,
+WISH_IF_ONLY,
+
+// MODAL
+MODAL_ABILITY_PERMISSION,
+MODAL_OBLIGATION,
+MODAL_POSSIBILITY,
+MODAL_PERFECT,
+
+// VOICE
+PASSIVE_VOICE,
+CAUSATIVE_HAVE_GET,
+REPORTED_SPEECH,
+
+// VERB_PATTERN
+GERUND_INFINITIVE,
+RELATIVE_CLAUSES,
+
+// COMPARISON
+ARTICLES,
+COMPARISON

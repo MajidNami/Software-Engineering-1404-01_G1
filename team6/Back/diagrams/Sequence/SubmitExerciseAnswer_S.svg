@@ -1,0 +1,157 @@
+<svg xmlns="http://www.w3.org/2000/svg" contentStyleType="text/css" data-diagram-type="SEQUENCE" height="351px"
+     preserveAspectRatio="none" style="width:877px;height:351px;background:#FFFFFF;" version="1.1" viewBox="0 0 877 351"
+     width="877px" zoomAndPan="magnify">
+    <title>Sequence Diagram: Submit Exercise Answer</title>
+    <defs/>
+    <g>
+        <text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacing"
+              textLength="349.2822" x="265.5806" y="27.9951">Sequence Diagram: Submit Exercise Answer
+        </text>
+        <g>
+            <title>GrammarExerciseService</title>
+            <rect fill="#FFFFFF" height="176.7969" style="stroke:#181818;stroke-width:1;" width="10" x="303.7446"
+                  y="149.7266"/>
+        </g>
+        <g>
+            <title>GrammarExerciseProvider</title>
+            <rect fill="#FFFFFF" height="29.1328" style="stroke:#181818;stroke-width:1;" width="10" x="575.6377"
+                  y="178.8594"/>
+        </g>
+        <g>
+            <title>UserProfileDataSource</title>
+            <rect fill="#FFFFFF" height="29.1328" style="stroke:#181818;stroke-width:1;" width="10" x="770.5361"
+                  y="261.2578"/>
+        </g>
+        <rect fill="none" height="75.3984" style="stroke:#000000;stroke-width:1.5;" width="668.4634" x="202.98"
+              y="222.9922"/>
+        <g>
+            <title>Web User</title>
+            <rect fill="#000000" fill-opacity="0.00000" height="225.9297" width="8" x="37.8516" y="118.5938"/>
+            <line style="stroke:#181818;stroke-width:0.5;stroke-dasharray:5,5;" x1="41" x2="41" y1="118.5938"
+                  y2="344.5234"/>
+        </g>
+        <g>
+            <title>GrammarExerciseService</title>
+            <rect fill="#000000" fill-opacity="0.00000" height="225.9297" width="8" x="304.7446" y="118.5938"/>
+            <line style="stroke:#181818;stroke-width:0.5;stroke-dasharray:5,5;" x1="307.98" x2="307.98" y1="118.5938"
+                  y2="344.5234"/>
+        </g>
+        <g>
+            <title>GrammarExerciseProvider</title>
+            <rect fill="#000000" fill-opacity="0.00000" height="225.9297" width="8" x="576.6377" y="118.5938"/>
+            <line style="stroke:#181818;stroke-width:0.5;stroke-dasharray:5,5;" x1="579.6465" x2="579.6465"
+                  y1="118.5938" y2="344.5234"/>
+        </g>
+        <g>
+            <title>UserProfileDataSource</title>
+            <rect fill="#000000" fill-opacity="0.00000" height="225.9297" width="8" x="771.5361" y="118.5938"/>
+            <line style="stroke:#181818;stroke-width:0.5;stroke-dasharray:5,5;" x1="774.6289" x2="774.6289"
+                  y1="118.5938" y2="344.5234"/>
+        </g>
+        <g class="participant participant-head" data-participant="User">
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="67.7031"
+                  x="5" y="115.292">Web User
+            </text>
+            <ellipse cx="41.8516" cy="50.7969" fill="#E2E2F0" rx="8" ry="8" style="stroke:#181818;stroke-width:0.5;"/>
+            <path d="M41.8516,58.7969 L41.8516,85.7969 M28.8516,66.7969 L54.8516,66.7969 M41.8516,85.7969 L28.8516,100.7969 M41.8516,85.7969 L54.8516,100.7969"
+                  fill="none" style="stroke:#181818;stroke-width:0.5;"/>
+        </g>
+        <g class="participant participant-head" data-participant="ExerciseService">
+            <rect fill="#E2E2F0" height="30.2969" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;"
+                  width="191.5293" x="212.98" y="87.2969"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="177.5293"
+                  x="219.98" y="107.292">GrammarExerciseService
+            </text>
+        </g>
+        <g class="participant participant-head" data-participant="AI_Provider">
+            <rect fill="#E2E2F0" height="30.2969" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;"
+                  width="197.9824" x="481.6465" y="87.2969"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="183.9824"
+                  x="488.6465" y="107.292">GrammarExerciseProvider
+            </text>
+        </g>
+        <g class="participant participant-head" data-participant="ProfileDB">
+            <rect fill="#E2E2F0" height="30.2969" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;"
+                  width="171.8145" x="689.6289" y="87.2969"/>
+            <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="157.8145"
+                  x="696.6289" y="107.292">UserProfileDataSource
+            </text>
+        </g>
+        <g>
+            <title>GrammarExerciseService</title>
+            <rect fill="#FFFFFF" height="176.7969" style="stroke:#181818;stroke-width:1;" width="10" x="303.7446"
+                  y="149.7266"/>
+        </g>
+        <g>
+            <title>GrammarExerciseProvider</title>
+            <rect fill="#FFFFFF" height="29.1328" style="stroke:#181818;stroke-width:1;" width="10" x="575.6377"
+                  y="178.8594"/>
+        </g>
+        <g>
+            <title>UserProfileDataSource</title>
+            <rect fill="#FFFFFF" height="29.1328" style="stroke:#181818;stroke-width:1;" width="10" x="770.5361"
+                  y="261.2578"/>
+        </g>
+        <g class="message" data-participant-1="User" data-participant-2="ExerciseService">
+            <polygon fill="#181818" points="291.7446,145.7266,301.7446,149.7266,291.7446,153.7266"
+                     style="stroke:#181818;stroke-width:1;"/>
+            <line style="stroke:#181818;stroke-width:1;" x1="41.8516" x2="297.7446" y1="149.7266" y2="149.7266"/>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="242.8931"
+                  x="48.8516" y="144.6606">answerExercise(userExerciseAnswer)
+            </text>
+        </g>
+        <g class="message" data-participant-1="ExerciseService" data-participant-2="AI_Provider">
+            <polygon fill="#181818" points="563.6377,174.8594,573.6377,178.8594,563.6377,182.8594"
+                     style="stroke:#181818;stroke-width:1;"/>
+            <line style="stroke:#181818;stroke-width:1;" x1="313.7446" x2="569.6377" y1="178.8594" y2="178.8594"/>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="242.8931"
+                  x="320.7446" y="173.7935">answerExercise(userExerciseAnswer)
+            </text>
+        </g>
+        <g class="message" data-participant-1="AI_Provider" data-participant-2="ExerciseService">
+            <polygon fill="#181818" points="324.7446,203.9922,314.7446,207.9922,324.7446,211.9922"
+                     style="stroke:#181818;stroke-width:1;"/>
+            <line style="stroke:#181818;stroke-width:1;stroke-dasharray:2,2;" x1="318.7446" x2="579.6377" y1="207.9922"
+                  y2="207.9922"/>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="165.4644"
+                  x="330.7446" y="202.9263">exerciseAnswerResponse
+            </text>
+        </g>
+        <path d="M202.98,222.9922 L267.4229,222.9922 L267.4229,230.125 L257.4229,240.125 L202.98,240.125 L202.98,222.9922"
+              fill="#EEEEEE" style="stroke:#000000;stroke-width:1.5;"/>
+        <rect fill="none" height="75.3984" style="stroke:#000000;stroke-width:1.5;" width="668.4634" x="202.98"
+              y="222.9922"/>
+        <text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthAdjust="spacing"
+              textLength="19.4429" x="217.98" y="236.0591">alt
+        </text>
+        <text fill="#000000" font-family="sans-serif" font-size="11" font-weight="bold" lengthAdjust="spacing"
+              textLength="117.0469" x="282.4229" y="235.2026">[answer is correct]
+        </text>
+        <g class="message" data-participant-1="ExerciseService" data-participant-2="ProfileDB">
+            <polygon fill="#181818" points="758.5361,257.2578,768.5361,261.2578,758.5361,265.2578"
+                     style="stroke:#181818;stroke-width:1;"/>
+            <line style="stroke:#181818;stroke-width:1;" x1="313.7446" x2="764.5361" y1="261.2578" y2="261.2578"/>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="195.8062"
+                  x="320.7446" y="256.1919">updateUserProfile(userProfile)
+            </text>
+        </g>
+        <g class="message" data-participant-1="ProfileDB" data-participant-2="ExerciseService">
+            <polygon fill="#181818" points="324.7446,286.3906,314.7446,290.3906,324.7446,294.3906"
+                     style="stroke:#181818;stroke-width:1;"/>
+            <line style="stroke:#181818;stroke-width:1;stroke-dasharray:2,2;" x1="318.7446" x2="774.5361" y1="290.3906"
+                  y2="290.3906"/>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="27.5107"
+                  x="330.7446" y="285.3247">void
+            </text>
+        </g>
+        <g class="message" data-participant-1="ExerciseService" data-participant-2="User">
+            <polygon fill="#181818" points="52.8516,322.5234,42.8516,326.5234,52.8516,330.5234"
+                     style="stroke:#181818;stroke-width:1;"/>
+            <line style="stroke:#181818;stroke-width:1;stroke-dasharray:2,2;" x1="46.8516" x2="307.7446" y1="326.5234"
+                  y2="326.5234"/>
+            <text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="165.4644"
+                  x="58.8516" y="321.4575">exerciseAnswerResponse
+            </text>
+        </g><!--SRC=[bLDDRzim3BthLn2vh3qqmDgUSXYG8CCmO2sA1iLs6nIPDOZPaajAplRlIwl-QX8Ccm-6zKI-f_T4oo_oZMLR0wCqmGlUeOWjSODLEAoPmm4Y9pGo5ahyKw6-cLnCTMMCTJ4mBBxZ7fu4UG5MyeVH-aYE6kiZBBveRstvyszaHu8xv9OSvk8ZxAzz3nnQAdgLzTUVm_fzKoUlEyzKuTP6kmk9Uwq1tHWJAQgH7Ruaz0vXIxPKhHNiqhwcE9uArbuEAc0-mCTbDWQIAmJisqx6hZuT-u1LNp3W5qccnHlhPPSUjJRYIGggTxs4WGjRMoKj6qIX9GkZ-MDbFSmic_yyo3pLESlLMOluZkQndo9Ju5a-DNKpcKfDaIrrnu66Gwb3AB2tWWK43oumeujUGUsx3n5Ni4b27G1LACdfrBuaqYxORdgsxeh8br2YHntH7fqD13npgE77tJTZgpYaIJAe6T3dJ9xZuAZd4yuSQFzzcHb6zzF0TV34SZxDDb2H2sVvJGpeYox1soKyOapikvysLV7q-fKx3-M_NCzHyoi0]-->
+    </g>
+</svg>

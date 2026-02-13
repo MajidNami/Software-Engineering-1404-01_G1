@@ -1,0 +1,24 @@
+package com.gramsense.persistence.repository;
+
+import com.gramsense.persistence.entity.Exercise;
+import com.gramsense.persistence.entity.enumeration.GrammarLevel;
+import com.gramsense.persistence.entity.enumeration.GrammarTopic;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
+/**
+ * @author Mehdi Kamali
+ * @since 11/02/2026
+ */
+@Repository
+public interface ExerciseRepository extends JpaRepository<Exercise, Long> {
+
+    @Query(value = "SELECT e FROM Exercise e " +
+            "WHERE e.grammarTopic = :grammarTopic AND e.grammarLevel = :grammarLevel " +
+            "AND e NOT IN (SELECT h.exercise FROM UserExerciseHistory h WHERE h.grammarUser.id = :grammarUserId) " +
+            "ORDER BY e.createdAt LIMIT 2")
+    List<Exercise> findFreshExercises(Long grammarUserId, GrammarTopic grammarTopic, GrammarLevel grammarLevel);
+}
