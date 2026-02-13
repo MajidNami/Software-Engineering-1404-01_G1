@@ -43,12 +43,12 @@ def get_question(request):
     question_type = request.GET.get('type', None)
     if question_type not in (Question.WRITING_QUESTION_TYPE, Question.SPEAKING_QUESTION_TYPE):
         return JsonResponse({'error': f'Invalid question type'}, status=HTTPStatus.NOT_FOUND)
-    question = Question.objects.filter(question_type=question_type).order_by('?').first() # Get a random question
+    question = Question.objects.using("team13").filter(question_type=question_type).order_by('?').first() # Get a random question
     if not question:
         return JsonResponse({'error': 'No questions available'}, status=HTTPStatus.NOT_FOUND)
 
     # Track that user viewed this question
-    ViewedQuestion.objects.create(user_id=request.user.id, question=question)
+    ViewedQuestion.objects.using("team13").create(user_id=request.user.id, question=question)
 
     return JsonResponse({
         'id': question.id,
@@ -83,7 +83,7 @@ def submit_response(request):
         return JsonResponse({'error': 'student response is required'}, status=HTTPStatus.NOT_FOUND)
 
     # Get an active prompt, we assume that there is no difference to use which active prompt.
-    prompt = Prompt.objects.filter(is_active=True).first()
+    prompt = Prompt.objects.using("team13").filter(is_active=True).first()
     if not prompt:
         return JsonResponse({'error': 'No active prompt was found'}, status=HTTPStatus.INTERNAL_SERVER_ERROR)
     full_prompt = prompt.get_prompt(question, student_response) # Build prompt and get evaluation
@@ -96,7 +96,7 @@ def submit_response(request):
     # Save to appropriate grade model
     if question.question_type == Question.WRITING_QUESTION_TYPE:
         category_scores = result_json.get('category_scores', {})
-        grade_result = WritingGradeResult.objects.create(
+        grade_result = WritingGradeResult.objects.using("team13").create(
             user_id=request.user.id,
             question=question,
             score=result_json.get('score', 0),
@@ -108,7 +108,7 @@ def submit_response(request):
         )
     else:
         category_scores = result_json.get('category_scores', {})
-        grade_result = SpeakingGradeResult.objects.create(
+        grade_result = SpeakingGradeResult.objects.using("team13").create(
             user_id=request.user.id,
             question=question,
             score=result_json.get('score', 0),
@@ -130,9 +130,9 @@ def submit_response(request):
 def get_user_report(request):
     """Get user performance reports and history"""
     user_id = request.user.id
-    writing_grades = WritingGradeResult.objects.filter(user_id=user_id).select_related('question')
-    speaking_grades = SpeakingGradeResult.objects.filter(user_id=user_id).select_related('question')
-    viewed_counts = ViewedQuestion.objects.filter(user_id=user_id).aggregate(
+    writing_grades = WritingGradeResult.objects.using("team13").filter(user_id=user_id).select_related('question')
+    speaking_grades = SpeakingGradeResult.objects.using("team13").filter(user_id=user_id).select_related('question')
+    viewed_counts = ViewedQuestion.objects.using("team13").filter(user_id=user_id).aggregate(
         total_writing=models.Count('id', filter=models.Q(question__question_type=Question.WRITING_QUESTION_TYPE)),
         total_speaking=models.Count('id', filter=models.Q(question__question_type=Question.SPEAKING_QUESTION_TYPE))
     )
