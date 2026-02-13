@@ -10,3 +10,5 @@ openai
 djangorestframework
 django-filter
 dj-database-url
+django-simple-history
+requests
