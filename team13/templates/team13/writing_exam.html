@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>صفحه آزمون Writing</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100..900&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/static/team13/styles/style.css">
+
+</head>
+
+<body class="dark-mode">
+
+  <header class="main-header">
+  <div class="header-right">
+    <div class="header-icon" title="خانه"
+     onclick="window.location.href='/team13/'">🏠</div>
+    <div class="header-icon" id="themeBtn" title="تغییر تم">☀️</div>
+  </div>
+
+  <h2 class="header-title">
+    آزمون WRITING - زمان سپری‌شده: <span id="timer">00:00</span>
+  </h2>
+
+  <button class="header-back header-exit" type="button"
+          onclick="window.location.href='/team13/writing/'">خروج</button>
+  </header>
+
+  <main class="container">
+    <div class="card exam-card">
+
+      <!-- Question Box -->
+      <section class="exam-question">
+        <h2 class="exam-question-title" id="qTitle">متن سوال</h2>
+        <p class="exam-question-text" id="qText"></p>
+        <p class="exam-question-source" id="qSource">منبع آزمون</p>
+      </section>
+
+      <!-- Answer Area -->
+      <section class="exam-bottom">
+        <textarea id="answerBox" class="exam-textarea" placeholder="پاسخ خود را اینجا بنویسید..."></textarea>
+
+        <div class="exam-actions">
+          <button id="reportBtn" class="exam-action-btn" type="button">گزارش</button>
+          <button id="submitBtn" class="exam-action-btn primary" type="button">ثبت پاسخ</button>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  {# TODO: change to <scripts src="{% static 'team13/scripts/app.js' %}"></scripts> #}
+  <script src="/static/team13/scripts/app.js"></script>
+
+  <script>
+    // تایمر ساده (نمونه)
+    let seconds = 0;
+    const timerEl = document.getElementById("timer");
+
+    function tick() {
+      seconds++;
+      const m = String(Math.floor(seconds / 60)).padStart(2, "0");
+      const s = String(seconds % 60).padStart(2, "0");
+      timerEl.textContent = `${m}:${s}`;
+    }
+    setInterval(tick, 1000);
+  </script>
+
+  <script>
+    const submitBtn = document.getElementById("submitBtn");
+    const reportBtn = document.getElementById("reportBtn");
+    const answerBox = document.getElementById("answerBox");
+
+    const qTitle = document.getElementById("qTitle");
+    const qText = document.getElementById("qText");
+    const qSource = document.getElementById("qSource");
+
+    const homeBtn = document.querySelector('.header-right .header-icon[title="خانه"]'); // 🏠
+    const exitBtn = document.querySelector('.header-back.header-exit');    // خروج
+
+    let errorResetTimer = null;
+    let isShowingError = false;
+    let isWaiting = false;
+    let questionId = null;
+
+    // --- helpers ---
+    function getCookie(name){
+    const v = document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
+    return v ? v.pop() : "";
+}
+
+    function setWaiting(waiting){
+      isWaiting = waiting;
+
+      [homeBtn].forEach(el => el && el.classList.toggle("ui-disabled", waiting));
+
+      if (exitBtn){
+        exitBtn.disabled = waiting;
+        exitBtn.classList.toggle("ui-disabled", waiting);
+      }
+
+      if (answerBox) answerBox.disabled = waiting;
+      if (reportBtn) reportBtn.disabled = waiting;
+
+      reportBtn.classList.toggle("ui-disabled", waiting);
+      submitBtn.classList.toggle("loading", waiting);
+    }
+
+    function resetSubmitButton(){
+      clearTimeout(errorResetTimer);
+      errorResetTimer = null;
+      isShowingError = false;
+
+      submitBtn.classList.remove("error");
+      submitBtn.textContent = "ثبت پاسخ";
+    }
+
+    function showSubmitError(message){
+      isShowingError = true;
+      submitBtn.classList.add("error");
+      submitBtn.textContent = message || "خطا";
+
+      clearTimeout(errorResetTimer);
+      errorResetTimer = setTimeout(() => {
+        resetSubmitButton();
+      }, 5000);
+    }
+
+    async function apiGetQuestion(){
+      setWaiting(true);
+      submitBtn.disabled = true;
+
+      try{
+        const res = await fetch("/team13/get_question/?type=writing", { method: "GET", credentials: "same-origin", headers: { "Accept": "application/json" } });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(data.error || "خطا در دریافت سوال");
+
+        questionId = data.id;
+        sessionStorage.setItem("team13_question_id", String(questionId));
+        sessionStorage.setItem("team13_question_type", "writing");
+
+        if (qTitle) qTitle.textContent = data.title || "متن سوال";
+        if (qText) qText.textContent = data.text || "";
+        if (qSource) qSource.textContent = `سوال دریافت شده از:  ${data.id}`;
+
+      } finally{
+        submitBtn.disabled = false;
+        setWaiting(false);
+      }
+    }
+
+    async function apiSubmitWriting(answerText){
+      if (!questionId){
+        const sid = sessionStorage.getItem("team13_question_id");
+        if (sid) questionId = Number(sid);
+  }
+      if (!questionId) throw new Error("سوال لود نشده است");
+
+      const csrf = getCookie("csrftoken");
+
+      const res = await fetch("/team13/submit_response/", {
+        method: "POST",
+        credentials: "same-origin",
+            headers: {
+              "Content-Type": "application/json",
+              ...(csrf ? { "X-CSRFToken": csrf } : {}),
+            },
+            body: JSON.stringify({
+              question_id: questionId,
+              response: answerText
+            })
+      });
+
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || "خطا در ثبت پاسخ");
+      return data; // {grade_id, score, category_scores, feedback}
+}
+
+    window.addEventListener("DOMContentLoaded", () => {
+      apiGetQuestion().catch(err => showSubmitError(err.message || "خطا در دریافت سوال"));
+    });
+
+    submitBtn.addEventListener("click", async () => {
+      if (isWaiting) return;
+
+      // اگر الان ارور نمایش داده میشه:
+      // با همین کلیک ریستش کن و ادامه بده (یعنی همین کلیک درخواست جدید بفرسته)
+      if (isShowingError) resetSubmitButton();
+
+      const text = (answerBox.value || "").trim();
+      if (!text){
+        showSubmitError("پاسخ را وارد کنید");
+        return;
+      }
+
+      submitBtn.textContent = "در حال ارسال...";
+      setWaiting(true);
+
+      try {
+        const result = await apiSubmitWriting(text);
+
+        sessionStorage.setItem("team13_last_result", JSON.stringify(result));
+        sessionStorage.setItem("team13_overall_time_seconds", String(seconds));
+        // انتقال به صفحه نتیجه
+        document.body.classList.remove("page-enter");
+        document.body.classList.add("page-exit");
+        setTimeout(() => (window.location.href = "/team13/result/"), 160);
+        return;
+
+        submitBtn.textContent = "ثبت شد!";
+        setTimeout(() => { submitBtn.textContent = "ثبت پاسخ"; }, 900);
+
+      } catch (err) {
+        showSubmitError(err.message || "خطا");
+      } finally {
+        setWaiting(false);
+      }
+    });
+  </script>
+
+
+</body>
+</html>

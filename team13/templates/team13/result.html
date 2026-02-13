@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>نتیجه آزمون</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100..900&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/static/team13/styles/style.css">
+</head>
+
+<body class="dark-mode page-enter">
+<header class="main-header">
+  <div class="header-right">
+    <div class="header-icon" title="خانه" onclick="window.location.href='/team13/'">🏠</div>
+    <button class="header-icon" id="themeBtn" type="button" title="تغییر تم">☀️</button>
+  </div>
+
+  <h2 class="header-title">نام محصول</h2>
+
+  <!-- بدون دکمه بک -->
+  <div style="width:45px;height:45px;"></div>
+</header>
+
+<main class="container">
+
+  <div class="card result-card">
+    <section class="result-grid">
+      <!-- Left: vertical image (like writing intro) -->
+      <aside class="result-left" aria-label="عکس نتیجه">
+        <div class="result-image-box">
+          <img id="resultImage" class="result-image" alt="result image">
+        </div>
+      </aside>
+
+      <!-- Center: time + subscores + back -->
+      <section class="result-center" aria-label="جزئیات نتیجه">
+        <div class="result-center-block">
+          <div class="detail-line">
+            <div class="detail-label">زمان کلی:</div>
+            <div class="detail-value" id="overallTime">00:00</div>
+          </div>
+
+          <div class="detail-block">
+            <div class="detail-title">نمره‌های جزئی:</div>
+            <ul class="subscores" id="subScores"></ul>
+          </div>
+        </div>
+
+        <div class="result-actions">
+          <button class="btn-start btn-choice" id="backToExamsBtn" type="button">بازگشت به آزمون‌ها</button>
+        </div>
+      </section>
+
+      <!-- Right: score on top, chart below -->
+      <aside class="result-right" aria-label="نمره و نمودار">
+        <div class="result-scorebox">
+          <div class="score-big">
+            <span class="score-denom">30/</span>
+            <span id="scoreValue">0</span>
+          </div>
+        </div>
+
+        <div class="result-chartbox">
+          <div class="result-chart-title">نمودار پیشرفت</div>
+          <div class="result-chart-body">
+            <div class="tile-muted">به‌زودی…</div>
+          </div>
+        </div>
+      </aside>
+    </section>
+  </div>
+
+</main>
+
+<script src="/static/team13/scripts/app.js"></script>
+<script>
+  // ----- helpers -----
+  function formatMMSS(totalSeconds){
+    totalSeconds = Math.max(0, Number(totalSeconds) || 0);
+    const m = String(Math.floor(totalSeconds / 60)).padStart(2, "0");
+    const s = String(totalSeconds % 60).padStart(2, "0");
+    return `${m}:${s}`;
+  }
+
+  function setBadge(score){
+    const badge = document.getElementById("scoreBadge");
+    const emoji = document.getElementById("badgeEmoji");
+    const text  = document.getElementById("badgeText");
+    const imgEmoji = document.getElementById("tileEmoji");
+
+    let level = "mid";
+    if (score >= 24) level = "good";
+    else if (score >= 16) level = "mid";
+    else level = "low";
+
+    badge.classList.remove("good","mid","low");
+    badge.classList.add(level);
+
+    if (level === "good"){
+      emoji.textContent = "😄";
+      text.textContent = "عالی";
+      imgEmoji.textContent = "🏆";
+    } else if (level === "mid"){
+      emoji.textContent = "🙂";
+      text.textContent = "متوسط";
+      imgEmoji.textContent = "👍";
+    } else {
+      emoji.textContent = "😕";
+      text.textContent = "نیاز به تمرین";
+      imgEmoji.textContent = "📘";
+    }
+  }
+
+  function renderSubscores(qType, scores){
+    const ul = document.getElementById("subScores");
+    ul.innerHTML = "";
+
+    const maps = {
+      writing: [
+        ["task_achievement","Task Achievement"],
+        ["coherence","Coherence"],
+        ["vocabulary","Vocabulary"],
+        ["grammar","Grammar"],
+        ["mechanics","Mechanics"],
+      ],
+      speaking: [
+        ["delivery","Delivery"],
+        ["language_use","Language Use"],
+        ["topic_development","Topic Development"],
+      ],
+    };
+
+    const items = (maps[qType] || []).filter(([k]) => scores && scores[k] !== undefined && scores[k] !== null);
+
+    if (!items.length){
+      const li = document.createElement("li");
+      li.textContent = "اطلاعاتی موجود نیست.";
+      ul.appendChild(li);
+      return;
+    }
+
+    items.forEach(([key,label]) => {
+      const li = document.createElement("li");
+      li.innerHTML = `<span class="sub-label">${label}</span><span class="sub-val">${scores[key]}</span>`;
+      ul.appendChild(li);
+    });
+  }
+
+  // ----- init -----
+  const raw = sessionStorage.getItem("team13_last_result");
+  const qType = sessionStorage.getItem("team13_question_type") || "writing";
+  const tSec = sessionStorage.getItem("team13_overall_time_seconds");
+
+  let data = {};
+  try{ data = raw ? JSON.parse(raw) : {}; }catch(e){ data = {}; }
+
+  const score = Number(data.score ?? 0);
+
+  document.getElementById("scoreValue").textContent = String(score);
+  document.getElementById("overallTime").textContent = formatMMSS(tSec);
+
+  setBadge(score);
+  renderSubscores(qType, data.category_scores || {});
+
+  document.getElementById("backToExamsBtn").addEventListener("click", () => {
+    // اگر نوع سوال رو داریم، مستقیم به صفحه آزمون‌ها برگردیم
+    const url = qType === "speaking" ? "/team13/speaking/" : "/team13/writing/";
+    document.body.classList.remove("page-enter");
+    document.body.classList.add("page-exit");
+    setTimeout(() => (window.location.href = url), 160);
+  });
+
+  const resultImg = document.getElementById("resultImage");
+
+  let imageName = "result_bad.png";
+  if (score >= 24) imageName = "result_good.png";
+  else if (score >= 16) imageName = "result_mid.png";
+
+  resultImg.src = `/static/team13/public/images/${imageName}`;
+
+
+</script>
+</body>
+</html>

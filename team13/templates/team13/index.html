@@ -1,54 +1,78 @@
-﻿{% load static %}
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>میکروسرویس گروه ۱</title>
+  <title>انتخاب آزمون</title>
 
-  <!-- Team-local shared + team-local page styles -->
-  <link rel="stylesheet" href="{% static 'team13/styles/common.css' %}">
-  <link rel="stylesheet" href="{% static 'team13/styles/style.css' %}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100..900&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/static/team13/styles/style.css">
 </head>
 
-<body>
-  <div class="container">
-    <header class="header">
-      <div class="header-right">
-        <a href="{% url 'microservices' %}" class="home-btn">میکروسرویس‌ها</a>
-      </div>
+<body class="dark-mode page-enter">
 
-      <div class="header-left">
-        <div class="flag-settings">
-          <img src="{% static 'team13/public/images/settings.png' %}" alt="" class="settings-icon">
-
-          <div class="iran-flag">
-            <div class="flag-green"></div>
-            <div class="flag-white"></div>
-            <div class="flag-red"></div>
-          </div>
-        </div>
-
-        <div class="login-container">
-          {% if request.user.is_authenticated %}
-            <a href="{% url 'logout' %}" class="login-text">خروج</a>
-          {% else %}
-            <a href="{% url 'auth' %}" class="login-text">ورود</a>
-          {% endif %}
-
-          <div class="user-avatar" aria-hidden="true">
-            <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="15" cy="10" r="5" fill="#647eb4" />
-              <path d="M5 25C5 20 9 17 15 17C21 17 25 20 25 25" stroke="#647eb4" stroke-width="2" fill="none" />
-            </svg>
-          </div>
-        </div>
-      </div>
-    </header>
-
-    <main class="welcome-section">
-      <h1 style="font-size: 3rem; color: var(--navy);">به میکروسرویس گروه 13 خوش آمدید</h1>
-    </main>
+<header class="main-header">
+  <div class="header-right">
+    <div class="header-icon" title="خانه" onclick="window.location.href=''">🏠</div>
+    <button class="header-icon" id="themeBtn" type="button" title="تغییر تم">☀️</button>
   </div>
+
+  <h2 class="header-title">نام محصول</h2>
+
+  <div class="header-back" title="بازگشت" data-back>❯</div>
+</header>
+
+<main class="container">
+  <div class="card choose-card">
+
+    <!-- تصویر سمت چپ -->
+    <div class="card-image">
+      <img src="../../static/team13/public/images/writing_exam_image.png" alt="انتخاب آزمون">
+    </div>
+
+    <div class="card-content">
+      <h3>انتخاب آزمون</h3>
+      <h1>CHOOSE YOUR EXAM</h1>
+
+      <p class="description-text">
+        لطفاً نوع آزمون را انتخاب کنید. در آزمون رایتینگ پاسخ را تایپ می‌کنید
+        و در آزمون اسپیکینگ پاسخ را با صدای خود ضبط می‌کنید.
+      </p>
+
+      <!-- دکمه ها افقی و هم اندازه -->
+      <div class="exam-buttons">
+        <button class="btn-start btn-choice" id="writingBtn" type="button" data-label="آزمون رایتینگ">آزمون رایتینگ</button>
+        <button class="btn-start btn-choice" id="speakingBtn" type="button" data-label="آزمون اسپیکینگ">آزمون اسپیکینگ</button>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+
+<script src="/static/team13/scripts/app.js"></script>
+
+<script>
+  const writingBtn = document.getElementById("writingBtn");
+  const speakingBtn = document.getElementById("speakingBtn");
+
+  function pageExitThenGo(url){
+    document.body.classList.remove("page-enter");
+    document.body.classList.add("page-exit");
+    setTimeout(() => (window.location.href = url), 160);
+  }
+
+  writingBtn.addEventListener("click", () => {
+    pageExitThenGo("writing/");
+  });
+
+  speakingBtn.addEventListener("click", () => {
+    pageExitThenGo("speaking/");
+  });
+</script>
+
 </body>
 </html>

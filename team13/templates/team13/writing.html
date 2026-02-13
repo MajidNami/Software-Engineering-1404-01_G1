@@ -1,0 +1,177 @@
+﻿<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>آزمون Writing</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100..900&display=swap" rel="stylesheet">
+
+    {# TODO: change to <link rel="stylesheet" href="{% static 'team13/styles/style.css' %}"> #}
+    <link rel="stylesheet" href="/static/team13/styles/style.css">
+
+</head>
+
+<body class="dark-mode"> <header class="main-header">
+        <div class="header-right">
+            <div class="header-icon" title="خانه"
+     onclick="window.location.href='/team13/'">🏠</div>
+            <div class="header-icon" id="themeBtn" title="تغییر تم">☀️</div>
+        </div>
+
+        <h2 class="header-title">نام محصول</h2>
+
+        <div class="header-back" onclick="window.location.href='/team13/'">❯</div>
+    </header>
+
+    <main class="container">
+        <div class="card">
+
+            <div class="card-content">
+                <h3>آزمون نوشتاری</h3>
+                <h1>WRITING EXAM</h1>
+                <p class="description-text">
+                    در این آزمون، توانایی شما در نگارش متون انگلیسی از نظر گرامر، واژگان، انسجام و ساختار جمله ارزیابی می‌شود.
+سؤالات بر اساس استانداردهای بین‌المللی طراحی شده‌اند تا سطح واقعی مهارت شما مشخص شود.
+                </p>
+                <button class="btn-start" id="startBtn" type="button">شروع آزمون</button>
+            </div>
+
+            <div class="card-image">
+                <img src="../../static/team13/public/images/writing_exam_image.png" alt="آزمون رایتینگ">
+            </div>
+        </div>
+    </main>
+
+<script src="/static/team13/scripts/app.js"></script>
+
+<script>
+  const startBtn = document.getElementById("startBtn");
+
+  const headerBtns = [
+    document.querySelector('.header-right .header-icon'),
+    document.getElementById('themeBtn'),
+    document.querySelector('.header-back')
+  ].filter(Boolean);
+
+  let startErrorTimer = null;
+  let startShowingError = false;
+
+  function setFrozen(isFrozen){
+    headerBtns.forEach(el => el.classList.toggle("ui-disabled", isFrozen));
+    startBtn.disabled = isFrozen;
+    startBtn.classList.toggle("loading", isFrozen);
+  }
+
+  function pageExitThenGo(url){
+    // ترنزیشن خروج مثل app.js
+    document.body.classList.remove("page-enter");
+    document.body.classList.add("page-exit");
+    setTimeout(() => (window.location.href = url), 160);
+  }
+
+  function resetStartBtn(){
+    clearTimeout(startErrorTimer);
+    startErrorTimer = null;
+    startShowingError = false;
+
+    startBtn.classList.remove("error");
+    startBtn.textContent = "شروع آزمون";
+  }
+
+  //todo: delete mocks
+  const MOCK_API = true;        // ✅ برای تست فرانت
+  const MOCK_DELAY = 1500;       // تاخیر برای دیدن فریز/لودینگ
+  const MOCK_FAIL = false;      // true = خطا بده، false = موفق
+
+  async function fetchQuestion(){
+  if (MOCK_API){
+    await new Promise(r => setTimeout(r, MOCK_DELAY));
+
+    if (MOCK_FAIL){
+      throw new Error("سرور در دسترس نیست (تست)");
+    }
+
+    return {
+      question_id: 1,
+      title: "Write about your favorite hobby and why you enjoy it.",
+      source: "Mock Source - Test",
+      prompt: "Write at least 120 words."
+    };
+  }
+
+    const res = await fetch("/team13/writing/question");
+    const data = await res.json().catch(()=> ({}));
+    if (!res.ok) throw new Error(data.message || "خطا در دریافت سوال");
+    return data;
+  }
+
+
+  startBtn.addEventListener("click", async () => {
+  if (startShowingError) resetStartBtn();
+
+  setFrozen(true);
+
+  let loadingTimer = null;
+  let loadingShown = false;
+
+  // فقط اگر درخواست طول کشید، متن لودینگ نشان داده شود
+  loadingTimer = setTimeout(() => {
+    startBtn.textContent = "در حال دریافت سوال...";
+    loadingShown = true;
+  }, 150);
+
+  try {
+    const q = await fetchQuestion();
+
+    clearTimeout(loadingTimer);
+
+    sessionStorage.setItem("writing_question", JSON.stringify(q));
+    pageExitThenGo("exam/");
+
+  } catch (e) {
+
+    clearTimeout(loadingTimer);
+
+    startShowingError = true;
+    const msg = e.message || "خطا";
+
+    // اگر متن لودینگ نشان داده نشده بود،
+    // مستقیم از متن قبلی به ارور برو (بدون پرش)
+    startBtn.textContent = msg;
+
+    requestAnimationFrame(() => {
+      startBtn.classList.add("error");
+    });
+
+    startErrorTimer = setTimeout(() => {
+  // 1) اول پالس کورال رو قطع کن
+  startBtn.classList.remove("error");
+
+  // 2) موقتاً همه انیمیشن‌ها رو خاموش کن تا ترنزیشن برگشت دیده بشه
+  startBtn.classList.add("recover");
+
+  // 3) متن رو برگردون
+  startBtn.textContent = "شروع آزمون";
+
+  // 4) بعد از اینکه ترنزیشن انجام شد، recover رو بردار تا attention-pulse دوباره فعال شه
+  setTimeout(() => {
+    startBtn.classList.remove("recover");
+    startShowingError = false;
+  }, 260);
+}, 5000);
+
+
+  } finally {
+    setFrozen(false);
+  }
+});
+
+
+</script>
+
+
+</body>
+</html>

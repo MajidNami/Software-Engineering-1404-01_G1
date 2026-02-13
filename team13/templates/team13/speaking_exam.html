@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>صفحه آزمون Speaking</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100..900&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/static/team13/styles/style.css">
+</head>
+
+<body class="dark-mode page-enter">
+<header class="main-header">
+  <div class="header-right">
+    <div class="header-icon" title="خانه"
+     onclick="window.location.href='/team13/'">🏠</div>
+    <button class="header-icon" id="themeBtn" type="button" title="تغییر تم">☀️</button>
+  </div>
+
+  <h2 class="header-title">
+    آزمون SPEAKING - زمان سپری‌شده: <span id="timer">00:00</span>
+  </h2>
+
+  <button class="header-back header-exit" type="button" data-back>خروج</button>
+</header>
+
+<main class="container">
+  <div class="card exam-card">
+
+    <section class="exam-question">
+      <h2 class="exam-question-title" id="qTitle">متن سوال</h2>
+      <p class="exam-question-text" id="qText"></p>
+      <p class="exam-question-source" id="qSource">منبع آزمون</p>
+    </section>
+
+    <section class="exam-bottom">
+      <!-- جای textarea: Recorder Island -->
+      <div class="exam-recorder" id="recorderBox">
+        <div class="recorder-stage" id="recorderStage">
+          <canvas class="recorder-wave hidden" id="waveCanvas" aria-hidden="true"></canvas>
+          <div class="recorder-hint" id="recorderHint">
+            برای ضبط پاسخ، روی دکمه ضبط بزنید.
+          </div>
+        </div>
+
+        <div class="recorder-controls">
+          <!-- Left: Speed -->
+          <button class="recorder-pill speed-btn hidden" id="speedBtn" type="button">سرعت: 1 برابر</button>
+
+          <!-- Center: Main action (Record/Stop/Play) -->
+          <button class="recorder-main-btn" id="mainBtn" type="button" aria-label="ضبط">●</button>
+
+          <!-- Right: Re-record -->
+          <button class="recorder-pill recorder-pill-lg retry-btn hidden" id="reRecordBtn" type="button">ضبط دوباره</button>
+
+          <audio id="player" class="hidden"></audio>
+        </div>
+      </div>
+
+      <!-- Actions right (مثل رایتینگ) -->
+      <div class="exam-actions">
+        <button class="exam-action-btn" id="reportBtn" type="button">گزارش</button>
+        <button class="exam-action-btn primary" id="submitBtn" type="button">ثبت پاسخ</button>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<script src="/static/team13/scripts/app.js"></script>
+
+<script>
+  // -------- Timer --------
+  let seconds = 0;
+  const timerEl = document.getElementById("timer");
+  setInterval(() => {
+    seconds++;
+    const m = String(Math.floor(seconds / 60)).padStart(2, "0");
+    const s = String(seconds % 60).padStart(2, "0");
+    timerEl.textContent = `${m}:${s}`;
+  }, 1000);
+
+  // -------- Load Question (from sessionStorage or fallback fetch) --------
+  const qTitle = document.getElementById("qTitle");
+  const qText  = document.getElementById("qText");
+  const qSource = document.getElementById("qSource");
+
+  function renderQuestion(q){
+    if (qTitle) qTitle.textContent = q.title || "متن سوال";
+    if (qText)  qText.textContent  = q.text  || "";
+    if (qSource) qSource.textContent = q.source || "منبع آزمون";
+  }
+
+  let questionId = null;
+
+  async function apiGetQuestion(){
+    setWaiting(true);
+    submitBtn.disabled = true;
+    try{
+      const res = await fetch("/team13/get_question/?type=speaking", {
+        method: "GET",
+        credentials: "same-origin",
+        headers: { "Accept": "application/json" }
+      });
+
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || "خطا در دریافت سوال");
+
+      questionId = data.id;
+
+      sessionStorage.setItem("team13_question_id", String(questionId));
+      sessionStorage.setItem("team13_question_type", "speaking");
+
+      renderQuestion({
+        title: data.title || "Speaking Task",
+        text: data.text || "",
+        source: `سوال دریافت شده از:  ${data.id}`
+      });
+    } finally {
+      submitBtn.disabled = false;
+      setWaiting(false);
+    }
+  }
+
+  window.addEventListener("DOMContentLoaded", () => {
+    apiGetQuestion().catch(err => showSubmitError(err.message || "خطا در دریافت سوال"));
+  });
+// -------- Recorder State Machine --------
+  const recorderBox = document.getElementById("recorderBox");
+const mainBtn = document.getElementById("mainBtn");
+const reRecordBtn = document.getElementById("reRecordBtn");
+const speedBtn = document.getElementById("speedBtn");
+const recorderHint = document.getElementById("recorderHint");
+const player = document.getElementById("player");
+const waveCanvas = document.getElementById("waveCanvas");
+
+
+// -------- Actions / UI State --------
+const submitBtn = document.getElementById("submitBtn");
+const reportBtn = document.getElementById("reportBtn");
+const homeBtn = document.querySelector('.header-right .header-icon[title="خانه"]'); // 🏠
+const exitBtn = document.querySelector('.header-back.header-exit');                // خروج
+
+let errorResetTimer = null;
+let isShowingError = false;
+let isWaiting = false;
+
+function getCookie(name){
+  const v = document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
+  return v ? v.pop() : "";
+}
+
+function setWaiting(waiting){
+  isWaiting = waiting;
+
+  [homeBtn].forEach(el => el && el.classList.toggle("ui-disabled", waiting));
+
+  if (exitBtn){
+    exitBtn.disabled = waiting;
+    exitBtn.classList.toggle("ui-disabled", waiting);
+  }
+
+  if (reportBtn) reportBtn.disabled = waiting;
+  if (submitBtn) submitBtn.disabled = waiting;
+
+  // disable recorder interactions
+  recorderBox.classList.toggle("ui-disabled", waiting);
+  recorderBox.style.pointerEvents = waiting ? "none" : "";
+  recorderBox.style.opacity = waiting ? "0.85" : "";
+
+  submitBtn.classList.toggle("loading", waiting);
+}
+
+function resetSubmitButton(){
+  clearTimeout(errorResetTimer);
+  errorResetTimer = null;
+  isShowingError = false;
+
+  submitBtn.classList.remove("error");
+  submitBtn.textContent = "ثبت پاسخ";
+}
+
+function showSubmitError(message){
+  isShowingError = true;
+  submitBtn.classList.add("error");
+  submitBtn.textContent = message || "خطا";
+
+  clearTimeout(errorResetTimer);
+  errorResetTimer = setTimeout(() => {
+    resetSubmitButton();
+  }, 5000);
+}
+
+
+let recorder = null;
+let mediaStream = null;
+let chunks = [];
+let audioBlob = null;
+let audioUrl = null;
+
+let state = "idle"; // idle | recording | ready
+const speeds = [0.5, 1, 2];
+let speedIndex = 1;
+
+let recTimer = null;
+let recSeconds = 0;
+
+function setHint(html){ recorderHint.innerHTML = html; }
+
+
+function showWave(show){
+  if (!waveCanvas) return;
+  waveCanvas.classList.toggle("hidden", !show);
+  if (show){
+    recorderHint.classList.add("hidden");
+  } else {
+    recorderHint.classList.remove("hidden");
+  }
+}
+
+async function renderWaveform(blob){
+  if (!waveCanvas) return;
+  const ctx = waveCanvas.getContext("2d");
+  if (!ctx) return;
+
+  // Fit canvas to container
+  const stage = document.getElementById("recorderStage");
+  const rect = stage.getBoundingClientRect();
+  const dpr = window.devicePixelRatio || 1;
+  waveCanvas.width  = Math.max(1, Math.floor(rect.width * dpr));
+  waveCanvas.height = Math.max(1, Math.floor(rect.height * dpr));
+  waveCanvas.style.width = rect.width + "px";
+  waveCanvas.style.height = rect.height + "px";
+  ctx.setTransform(1,0,0,1,0,0);
+  ctx.scale(dpr, dpr);
+
+  // Background is coral from CSS; we only draw waveform (white)
+  ctx.clearRect(0,0,rect.width,rect.height);
+
+  try{
+    const arrayBuffer = await blob.arrayBuffer();
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    const ac = new AudioCtx();
+    const audioBuffer = await ac.decodeAudioData(arrayBuffer.slice(0));
+
+    const data = audioBuffer.getChannelData(0);
+    const samples = 120; // number of bars
+    const block = Math.floor(data.length / samples) || 1;
+
+    const midY = rect.height / 2;
+    const barW = rect.width / samples;
+
+    ctx.beginPath();
+    for (let i=0;i<samples;i++){
+      let sum = 0;
+      const start = i * block;
+      for (let j=0;j<block;j++){
+        const v = data[start + j] || 0;
+        sum += Math.abs(v);
+      }
+      const amp = sum / block; // 0..~1
+      const h = Math.max(2, amp * rect.height * 0.9);
+      const x = i * barW + barW*0.5;
+      ctx.moveTo(x, midY - h/2);
+      ctx.lineTo(x, midY + h/2);
+    }
+    ctx.lineWidth = 2;
+    ctx.lineCap = "round";
+    ctx.strokeStyle = "#FFFFFF";
+    ctx.stroke();
+    try{ await ac.close(); }catch(e){}
+  }catch(e){
+    // Fallback: simple placeholder wave
+    const midY = rect.height/2;
+    const cols = 80;
+    const barW = rect.width / cols;
+    ctx.beginPath();
+    for(let i=0;i<cols;i++){
+      const h = (Math.sin(i*0.35)*0.35+0.55) * rect.height*0.6;
+      const x = i*barW + barW*0.5;
+      ctx.moveTo(x, midY - h/2);
+      ctx.lineTo(x, midY + h/2);
+    }
+    ctx.lineWidth = 2;
+    ctx.lineCap = "round";
+    ctx.strokeStyle = "#FFFFFF";
+    ctx.stroke();
+  }
+}
+
+
+function cleanupAudio(){
+  showWave(false);
+  if (audioUrl) URL.revokeObjectURL(audioUrl);
+  audioUrl = null;
+  audioBlob = null;
+  player.src = "";
+}
+
+function stopRecTimer(){
+  clearInterval(recTimer);
+  recTimer = null;
+  recSeconds = 0;
+}
+
+function startRecTimer(){
+  stopRecTimer();
+  recTimer = setInterval(() => {
+    recSeconds++;
+    const m = String(Math.floor(recSeconds/60)).padStart(2,'0');
+    const s = String(recSeconds%60).padStart(2,'0');
+    setHint(`<span class="rec-dot"></span> در حال ضبط... ${m}:${s} (برای پایان، توقف را بزنید)`);
+  }, 1000);
+}
+
+function setState(next){
+  state = next;
+
+  if (state === "idle"){
+    showWave(false);
+    recorderBox.classList.remove("is-recording");
+    mainBtn.innerHTML = "●";
+    mainBtn.classList.remove("is-stop","is-play");
+    reRecordBtn.classList.add("hidden");
+    speedBtn.classList.add("hidden");
+    player.classList.add("hidden");
+    speedIndex = 1;
+    speedBtn.textContent = "سرعت: 1 برابر";
+    player.playbackRate = 1;
+    stopRecTimer();
+    setHint("برای ضبط پاسخ، روی دکمه ضبط بزنید.");
+  }
+
+  if (state === "recording"){
+    showWave(false);
+    recorderBox.classList.add("is-recording");
+    mainBtn.innerHTML = "■";
+    mainBtn.classList.add("is-stop");
+    mainBtn.classList.remove("is-play");
+    reRecordBtn.classList.add("hidden");
+    speedBtn.classList.add("hidden");
+    player.classList.add("hidden");
+    startRecTimer();
+  }
+
+  if (state === "ready"){
+    showWave(true);
+    recorderBox.classList.remove("is-recording");
+    mainBtn.innerHTML = "▶";
+    mainBtn.classList.remove("is-stop");
+    mainBtn.classList.add("is-play");
+    reRecordBtn.classList.remove("hidden");
+    speedBtn.classList.remove("hidden");
+    player.classList.remove("hidden");
+    stopRecTimer();
+    setHint("ضبط آماده است. می‌توانید پخش کنید یا دوباره ضبط کنید.");
+  }
+}
+
+async function ensureStream(){
+  if (!navigator.mediaDevices?.getUserMedia){
+    throw new Error("مرورگر شما ضبط صدا را پشتیبانی نمی‌کند.");
+  }
+  if (!window.MediaRecorder){
+    throw new Error("MediaRecorder در این مرورگر پشتیبانی نمی‌شود.");
+  }
+  if (!mediaStream){
+    mediaStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+  }
+  return mediaStream;
+}
+
+async function startRecording(){
+  try{
+    await ensureStream();
+
+    chunks = [];
+    cleanupAudio();
+
+    recorder = new MediaRecorder(mediaStream); // mimeType را به مرورگر بسپاریم (سازگارتر)
+    recorder.onstart = () => setState("recording");
+
+    recorder.ondataavailable = (e) => {
+      if (e.data && e.data.size > 0) chunks.push(e.data);
+    };
+
+    recorder.onerror = () => {
+      setHint("خطا در ضبط. دوباره تلاش کنید.");
+      setState("idle");
+    };
+
+    recorder.onstop = () => {
+      // اگر چیزی ضبط نشده بود
+      if (!chunks.length){
+        setHint("چیزی ضبط نشد. دوباره تلاش کنید.");
+        setState("idle");
+        return;
+      }
+
+      audioBlob = new Blob(chunks, { type: "audio/webm" });
+      audioUrl = URL.createObjectURL(audioBlob);
+      player.src = audioUrl;
+      renderWaveform(audioBlob);
+      setState("ready");
+    };
+
+    recorder.start(250); // هر 250ms دیتا بده (پایدارتر)
+    // state در onstart ست میشه
+
+  } catch (err){
+    setHint(`خطا: ${err.message || "دسترسی میکروفون داده نشد."}`);
+    setState("idle");
+  }
+}
+
+function stopRecording(){
+  try{
+    if (!recorder) return;
+    if (recorder.state === "recording"){
+      recorder.stop();
+      return;
+    }
+    // اگر به هر دلیل state ضبط نبود:
+    setHint("ضبط فعال نیست.");
+  } catch {
+    setHint("مشکلی در توقف ضبط رخ داد.");
+    setState("idle");
+  }
+}
+
+function playAudio(){
+  if (!audioBlob) return;
+  player.playbackRate = speeds[speedIndex];
+  player.play().catch(()=>{});
+}
+
+function isPlaying(){
+  return player && !player.paused && !player.ended;
+}
+function stopPlay(){
+  if (!player) return;
+  player.pause(); // keep currentTime for resume
+}
+
+mainBtn.addEventListener("click", () => {
+  if (state === "idle") {
+    startRecording();
+    return;
+  }
+  if (state === "recording") {
+    stopRecording();
+    return;
+  }
+  // ready
+  if (!audioBlob) return;
+
+  if (isPlaying()){
+    stopPlay();
+    mainBtn.innerHTML = "▶";
+    mainBtn.classList.add("is-play");
+    mainBtn.classList.remove("is-stop");
+  } else {
+    playAudio();
+    mainBtn.innerHTML = "■";
+    mainBtn.classList.add("is-stop");
+    mainBtn.classList.remove("is-play");
+  }
+});
+
+reRecordBtn.addEventListener("click", () => {
+  try { player.pause(); player.currentTime = 0; } catch(e){}
+  cleanupAudio();
+  setState("idle");
+  startRecording();
+});
+
+speedBtn.addEventListener("click", () => {
+  speedIndex = (speedIndex + 1) % speeds.length;
+  const v = speeds[speedIndex];
+  player.playbackRate = v;
+  speedBtn.textContent = `سرعت: ${v} برابر`;
+});
+
+setState("idle");
+
+
+  // وقتی پخش تموم شد، همون حالت ready بمونه
+  player.addEventListener("ended", () => {
+    if (state === "ready"){
+      mainBtn.innerHTML = "▶";
+      mainBtn.classList.add("is-play");
+      mainBtn.classList.remove("is-stop");
+    }
+  });
+
+  // شروع در حالت idle
+  setState("idle");
+
+  // ---- Submit (speaking) ----
+async function apiSubmitSpeaking(blob){
+  if (!questionId){
+    const sid = sessionStorage.getItem("team13_question_id");
+    if (sid) questionId = Number(sid);
+  }
+  if (!questionId) throw new Error("سوال لود نشده است");
+
+  const fd = new FormData();
+  fd.append("question_id", String(questionId));
+  fd.append("audio_file", blob, "answer.webm");
+
+  const csrf = getCookie("csrftoken");
+
+  const res = await fetch("/team13/submit_response/", {
+      method: "POST",
+      credentials: "same-origin",
+      headers: { ...(csrf ? { "X-CSRFToken": csrf } : {}) },
+      body: fd
+    });
+
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data.error || "خطا در ارسال صدا");
+  return data;
+}
+
+submitBtn.addEventListener("click", async () => {
+  if (isWaiting) return;
+
+  if (isShowingError) resetSubmitButton();
+
+  if (!audioBlob){
+    showSubmitError("اول ضبط کن");
+    return;
+  }
+
+  submitBtn.textContent = "در حال ارسال...";
+  setWaiting(true);
+
+  try{
+    const result = await apiSubmitSpeaking(audioBlob);
+    sessionStorage.setItem("team13_last_result", JSON.stringify(result));
+
+    submitBtn.textContent = "ثبت شد!";
+    setTimeout(() => { submitBtn.textContent = "ثبت پاسخ"; }, 900);
+
+  } catch (e){
+    showSubmitError(e.message || "خطا");
+  } finally{
+    setWaiting(false);
+  }
+});
+</script>
+
+</body>
+</html>
