@@ -149,7 +149,7 @@ let isShowingError = false;
 let isWaiting = false;
 
 function getCookie(name){
-  const v = document.cookie.match('(^|;)\s*' + name + '\s*=\s*([^;]+)');
+  const v = document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
   return v ? v.pop() : "";
 }
 
@@ -234,6 +234,7 @@ async function renderWaveform(blob){
   waveCanvas.height = Math.max(1, Math.floor(rect.height * dpr));
   waveCanvas.style.width = rect.width + "px";
   waveCanvas.style.height = rect.height + "px";
+  ctx.setTransform(1,0,0,1,0,0);
   ctx.scale(dpr, dpr);
 
   // Background is coral from CSS; we only draw waveform (white)
@@ -513,12 +514,11 @@ async function apiSubmitSpeaking(blob){
   const csrf = getCookie("csrftoken");
 
   const res = await fetch("/team13/submit_response/", {
-    method: "POST",
-    headers: {
-      ...(csrf ? { "X-CSRFToken": csrf } : {}),
-    },
-    body: fd
-  });
+      method: "POST",
+      credentials: "same-origin",
+      headers: { ...(csrf ? { "X-CSRFToken": csrf } : {}) },
+      body: fd
+    });
 
   const data = await res.json().catch(() => ({}));
   if (!res.ok) throw new Error(data.error || "خطا در ارسال صدا");

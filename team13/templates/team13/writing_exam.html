@@ -90,9 +90,9 @@
 
     // --- helpers ---
     function getCookie(name){
-      const v = document.cookie.match('(^|;)\s*' + name + '\s*=\s*([^;]+)');
-      return v ? v.pop() : "";
-    }
+    const v = document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
+    return v ? v.pop() : "";
+}
 
     function setWaiting(waiting){
       isWaiting = waiting;
@@ -136,16 +136,14 @@
       submitBtn.disabled = true;
 
       try{
-        // const res = await fetch("/team13/get_question/?type=writing", { method: "GET" });
-        // const data = await res.json().catch(() => ({}));
-        const data = {
-  id: 3,
-  title: "Road Trip Memories",
-  text: "Describe your best road trip. Where did you go and what made it memorable?",
-  type: "writing"
-};
+        fetch("/team13/get_question/?type=writing", {
+          method: "GET",
+          credentials: "same-origin",
+          headers: { "Accept": "application/json" }
+        })
 
-        // if (!res.ok) throw new Error(data.error || "خطا در دریافت سوال");
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(data.error || "خطا در دریافت سوال");
 
         questionId = data.id;
         sessionStorage.setItem("team13_question_id", String(questionId));
@@ -170,31 +168,20 @@
 
       const csrf = getCookie("csrftoken");
 
-  //     const res = await fetch("/team13/submit_response/", {
-  //   method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //         ...(csrf ? { "X-CSRFToken": csrf } : {}),
-  //       },
-  //       body: JSON.stringify({
-  //         question_id: questionId,
-  //         response: answerText
-  //       })
-  // });
+      const res = await fetch("/team13/submit_response/", {
+        method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              ...(csrf ? { "X-CSRFToken": csrf } : {}),
+            },
+            body: JSON.stringify({
+              question_id: questionId,
+              response: answerText
+            })
+      });
 
-  // const data = await res.json().catch(() => ({}));
-
-      const data = {
-    'grade_id': 201,
-    'score': 6.0,
-    'category_scores': {
-        'delivery': 6,
-        'language_use': 6,
-        'topic_development': 6,
-    }}
-
-
-  //     if (!res.ok) throw new Error(data.error || "خطا در ثبت پاسخ");
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || "خطا در ثبت پاسخ");
       return data; // {grade_id, score, category_scores, feedback}
 }
 
