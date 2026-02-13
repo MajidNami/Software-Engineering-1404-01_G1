@@ -6,92 +6,93 @@ Complete TOEFL Listening practice application with Angular frontend and FastAPI 
 
 ```
 toefl-listening-project/
-├── Backend/              # FastAPI backend
-│   ├── app/             # Application code
-│   ├── migrations/      # Database migrations
-│   └── tests/           # Unit tests
-├── Front/               # Angular frontend (add your code here)
-├── static/              # Static files
-├── templates/           # Email templates
-├── .env.example         # Environment template
-└── README.md           # This file
+├── Backend/                        # FastAPI backend
+│   ├── app/                       # Application code
+│   │   ├── api/                   # API endpoints
+│   │   ├── core/                  # Core configurations
+│   │   ├── db/                    # Database connection
+│   │   ├── models/                # Data models
+│   │   ├── schemas/               # Pydantic schemas
+│   │   ├── services/              # Business logic
+│   │   └── main.py                # Application entry
+│   ├── migrations/                # Database migrations
+│   ├── tests/                     # Unit tests
+│   ├── Dockerfile                 # Backend container
+│   └── requirements.txt           # Python dependencies
+├── Front/                         # Angular frontend (add your code)
+├── static/                        # Static files (audio)
+│   └── ListeningItems/            # Audio files here
+├── templates/                     # Email templates
+├── docker-compose.yml             # Service orchestration
+├── gateway.conf                   # Nginx configuration
+├── .env.example                   # Environment template
+├── Creating-DataBase-Tables.sql   # Database schema
+├── Inserting-Data.sql             # Sample data
+└── README.md                      # This file
 ```
 
-## 🚀 Quick Start
-
-### 1. Setup Environment
+## 🚀 Quick Start with Docker
 
 ```bash
-# Copy environment template
+# 1. Configure environment
 cp .env.example .env
+# Edit .env with your database password
 
-# Edit .env with your database credentials
+# 2. Add your Angular app to Front/ directory
+
+# 3. Add audio files to static/ListeningItems/
+
+# 4. Start all services
+docker-compose up -d
+
+# 5. Run database migrations
+docker-compose exec backend python migrations/run_migration.py
+
+# 6. Access your app
+# Frontend: http://localhost
+# Backend API: http://localhost/api
+# API Docs: http://localhost:8000/api/docs
 ```
 
-### 2. Backend Setup
+## 📡 API Endpoints
 
-```bash
-cd Backend
+- `POST /api/users/register` - Register
+- `POST /api/users/login` - Login
+- `GET /api/exercises/listening` - Get exercises
+- `POST /api/exercises/listening/submit` - Submit answers
+- Full API docs at: http://localhost:8000/api/docs
 
-# Create virtual environment
-python3 -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-
-# Install dependencies
-pip install -r requirements.txt
-
-# Run the server
-uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
-```
-
-### 3. Frontend Setup
-
-```bash
-cd Front
-
-# Add your Angular application here
-# npm install
-# ng serve
-```
-
-## 🛠️ Technology Stack
+## 🛠️ Local Development
 
 ### Backend
-- FastAPI 0.109.0
-- Python 3.11+
-- SQL Server 2019+
-- PyODBC
-- JWT Authentication
-
-### Frontend
-- Angular (your version)
-- TypeScript
-- RxJS
-
-## 📖 Documentation
-
-- Backend API will be available at: `http://localhost:8000/docs`
-- Health check: `http://localhost:8000/health`
-
-## 🔧 Configuration
-
-Edit `.env` file:
-```env
-DB_SERVER=localhost
-DB_NAME=ToeflListeningDb
-DB_USER=sa
-DB_PASSWORD=YourPassword123
-SECRET_KEY=your-secret-key
+```bash
+cd Backend
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+uvicorn app.main:app --reload
 ```
 
-## 📝 Next Steps
+### Frontend
+```bash
+cd Front
+npm install
+ng serve
+```
 
-1. Configure database connection
-2. Add your Angular frontend to `Front/` directory
-3. Add audio files to `static/ListeningItems/`
-4. Run database migrations
-5. Start both frontend and backend
+## 📝 Configuration
 
-## 📄 License
+Edit `.env`:
+```env
+DB_PASSWORD=YourStrongPassword123!
+SECRET_KEY=your-secret-key-min-32-chars
+```
 
-Private project for TOEFL Listening practice.
+## 🎯 Next Steps
+
+1. Add your Angular app to `Front/`
+2. Add audio files to `static/ListeningItems/`
+3. Run `docker-compose up -d`
+4. Visit http://localhost
+
+See full documentation in this README for details!

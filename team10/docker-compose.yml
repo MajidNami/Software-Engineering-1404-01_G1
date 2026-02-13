@@ -1,31 +1,75 @@
+version: '3.8'
+
 services:
-  gateway:
-    image: nginx:alpine
+  # Angular Frontend
+  frontend:
+    build: ./Front
+    container_name: toefl_frontend
     ports:
-      - "${TEAM_PORT}:80"
+      - "4200:80"
+    depends_on:
+      - backend
+    networks:
+      - toefl_network
+    restart: unless-stopped
+
+  # FastAPI Backend
+  backend:
+    build: ./Backend
+    container_name: toefl_backend
+    ports:
+      - "8000:8000"
+    environment:
+      - DB_SERVER=db
+      - DB_NAME=ToeflListeningDb
+      - DB_USER=${DB_USER:-sa}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - SECRET_KEY=${SECRET_KEY}
+      - ALLOWED_ORIGINS=["http://localhost:4200","http://localhost:80","http://localhost"]
+    volumes:
+      - ./static:/app/static:ro
+      - ./Backend/app:/app/app
+    depends_on:
+      - db
+    networks:
+      - toefl_network
+    restart: unless-stopped
+
+  # SQL Server Database
+  db:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    container_name: toefl_db
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=${DB_PASSWORD}
+      - MSSQL_PID=Express
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqldata:/var/opt/mssql
+    networks:
+      - toefl_network
+    restart: unless-stopped
+
+  # Nginx Gateway
+  nginx:
+    image: nginx:alpine
+    container_name: toefl_nginx
+    ports:
+      - "80:80"
     volumes:
       - ./gateway.conf:/etc/nginx/conf.d/default.conf:ro
-    environment:
-      - CORE_BASE_URL=http://core:8000
+      - ./static:/usr/share/nginx/html/static:ro
+    depends_on:
+      - frontend
+      - backend
     networks:
-      - app404
-  #   depends_on:
-  #     - frontend
-  #     - backend
-
-  # frontend:
-  #   image: traefik/whoami
-  #   command: ["-port=5173"]
-  #   networks:
-  #     - app404
-
-  # backend:
-  #   image: traefik/whoami
-  #   command: ["-port=3000"]
-  #   networks:
-  #     - app404
+      - toefl_network
+    restart: unless-stopped
 
 networks:
-  app404:
-    external: true
-    name: app404_net
+  toefl_network:
+    driver: bridge
+
+volumes:
+  sqldata:
