@@ -1,0 +1,301 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>دروس با امتیازدهی - تیم 2</title>
+    <link rel="stylesheet" href="{% static 'styles/style.css' %}">
+    <style>
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .lesson-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .lesson-title {
+            font-size: 1.5rem;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .lesson-info {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+
+        .rating-section {
+            border-top: 1px solid #eee;
+            padding-top: 15px;
+            margin-top: 15px;
+        }
+
+        .rating-display {
+            margin-bottom: 15px;
+        }
+
+        .avg-rating {
+            font-size: 1.2rem;
+            color: #f39c12;
+            font-weight: bold;
+        }
+
+        .rating-stars {
+            display: inline-flex;
+            gap: 5px;
+            cursor: pointer;
+        }
+
+        .star {
+            font-size: 2rem;
+            color: #ddd;
+            transition: color 0.2s;
+            cursor: pointer;
+        }
+
+        .star.active,
+        .star:hover {
+            color: #f39c12;
+        }
+
+        .rating-form {
+            margin-top: 10px;
+        }
+
+        .rating-message {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            display: none;
+        }
+
+        .rating-message.success {
+            background-color: #d4edda;
+            color: #155724;
+            display: block;
+        }
+
+        .rating-message.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            display: block;
+        }
+
+        .btn-submit {
+            background-color: #647eb4;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            margin-top: 10px;
+        }
+
+        .btn-submit:hover {
+            background-color: #5267a0;
+        }
+
+        .rating-distribution {
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>دروس آموزشی</h1>
+        <p>مجموع: {{ lessons|length }} درس</p>
+
+        {% if lessons %}
+            {% for lesson in lessons %}
+            <div class="lesson-card">
+                <h2 class="lesson-title">{{ lesson.title }}</h2>
+                <p class="lesson-info">
+                    <strong>موضوع:</strong> {{ lesson.subject }} |
+                    <strong>سطح:</strong> {{ lesson.get_level_display }} |
+                    <strong>مهارت:</strong> {{ lesson.skill }}
+                </p>
+                <p>{{ lesson.description }}</p>
+
+                <div class="rating-section">
+                    <div class="rating-display">
+                        <span class="avg-rating" id="avg-rating-{{ lesson.id }}">
+                            ⭐ میانگین: -
+                        </span>
+                        <span class="rating-distribution" id="total-ratings-{{ lesson.id }}">
+                            (تعداد امتیازها: 0)
+                        </span>
+                    </div>
+
+                    <div class="rating-form">
+                        <p><strong>امتیاز شما:</strong></p>
+                        <div class="rating-stars" data-lesson-id="{{ lesson.id }}">
+                            <span class="star" data-score="1">★</span>
+                            <span class="star" data-score="2">★</span>
+                            <span class="star" data-score="3">★</span>
+                            <span class="star" data-score="4">★</span>
+                            <span class="star" data-score="5">★</span>
+                        </div>
+                        <button class="btn-submit" onclick="submitRating({{ lesson.id }})">
+                            ثبت امتیاز
+                        </button>
+                        <div class="rating-message" id="message-{{ lesson.id }}"></div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p>هیچ درسی یافت نشد.</p>
+        {% endif %}
+    </div>
+
+    <script>
+        // Get CSRF token from cookie
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        const csrftoken = getCookie('csrftoken');
+
+        // Selected ratings per lesson
+        const selectedRatings = {};
+
+        // Star hover and click handlers
+        document.querySelectorAll('.rating-stars').forEach(container => {
+            const lessonId = container.dataset.lessonId;
+            const stars = container.querySelectorAll('.star');
+
+            stars.forEach((star, index) => {
+                // Hover effect
+                star.addEventListener('mouseenter', () => {
+                    stars.forEach((s, i) => {
+                        s.classList.toggle('active', i <= index);
+                    });
+                });
+
+                // Click to select
+                star.addEventListener('click', () => {
+                    const score = parseInt(star.dataset.score);
+                    selectedRatings[lessonId] = score;
+
+                    // Keep stars highlighted
+                    stars.forEach((s, i) => {
+                        s.style.color = i < score ? '#f39c12' : '#ddd';
+                    });
+                });
+            });
+
+            // Reset on mouse leave
+            container.addEventListener('mouseleave', () => {
+                const selectedScore = selectedRatings[lessonId] || 0;
+                stars.forEach((s, i) => {
+                    s.style.color = i < selectedScore ? '#f39c12' : '#ddd';
+                });
+            });
+        });
+
+        // Submit rating function
+        async function submitRating(lessonId) {
+            const score = selectedRatings[lessonId];
+            const messageDiv = document.getElementById(`message-${lessonId}`);
+
+            if (!score) {
+                messageDiv.className = 'rating-message error';
+                messageDiv.textContent = 'لطفاً ابتدا امتیاز را انتخاب کنید';
+                return;
+            }
+
+            try {
+                const response = await fetch(`/team2/api/lessons/${lessonId}/rate/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrftoken,
+                    },
+                    body: JSON.stringify({ score })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    messageDiv.className = 'rating-message success';
+                    messageDiv.textContent = data.message;
+
+                    // Update average rating display
+                    document.getElementById(`avg-rating-${lessonId}`).textContent =
+                        `⭐ میانگین: ${data.lesson_avg_rating}`;
+                    document.getElementById(`total-ratings-${lessonId}`).textContent =
+                        `(تعداد امتیازها: ${data.total_ratings})`;
+
+                    // Hide message after 3 seconds
+                    setTimeout(() => {
+                        messageDiv.style.display = 'none';
+                    }, 3000);
+                } else {
+                    messageDiv.className = 'rating-message error';
+                    messageDiv.textContent = data.error || 'خطا در ثبت امتیاز';
+                }
+            } catch (error) {
+                messageDiv.className = 'rating-message error';
+                messageDiv.textContent = 'خطا در برقراری ارتباط با سرور';
+            }
+        }
+
+        // Load existing ratings on page load
+        document.addEventListener('DOMContentLoaded', async () => {
+            const lessonCards = document.querySelectorAll('.lesson-card');
+
+            lessonCards.forEach(async (card) => {
+                const stars = card.querySelector('.rating-stars');
+                if (!stars) return;
+
+                const lessonId = stars.dataset.lessonId;
+
+                try {
+                    const response = await fetch(`/team2/api/lessons/${lessonId}/ratings/`);
+                    const data = await response.json();
+
+                    // Update average rating
+                    document.getElementById(`avg-rating-${lessonId}`).textContent =
+                        `⭐ میانگین: ${data.stats.average}`;
+                    document.getElementById(`total-ratings-${lessonId}`).textContent =
+                        `(تعداد امتیازها: ${data.stats.total})`;
+
+                    // Highlight user's rating if exists
+                    if (data.user_rating) {
+                        selectedRatings[lessonId] = data.user_rating;
+                        const starElements = stars.querySelectorAll('.star');
+                        starElements.forEach((s, i) => {
+                            s.style.color = i < data.user_rating ? '#f39c12' : '#ddd';
+                        });
+                    }
+                } catch (error) {
+                    console.error('Error loading ratings:', error);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
