@@ -36,4 +36,3 @@ urlpatterns = [
 for app in settings.TEAM_APPS:
     urlpatterns.append(path(f"{app}/", include(f"{app}.urls")))
 
-

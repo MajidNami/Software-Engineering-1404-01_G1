@@ -1,9 +1,0 @@
-here are the attached docs (txt files)
-arch.txt provides the  high level architecture 
-deployment.txt provides an explantion about the deployment of the service (we are team7) and how to setup some services like the Cloud DB and etc
-diagrams.txt showcases the Sequence, action, Use case and class diagram that this project (team7) must comply
-tasks.txt provides each of the contributors tasks 
-srs.txt is the SRS Document
-
-
-now make sure that all Back-end related works are done (e.g. the DB has couples of TOEFL questions and ...) and also make sure that the docker files are set correctly based on the project and deployment.txt guides  

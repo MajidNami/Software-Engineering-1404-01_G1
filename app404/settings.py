@@ -131,3 +131,13 @@ else:
 
 
 CSRF_TRUSTED_ORIGINS = env.list("CSRF_TRUSTED_ORIGINS", default=[])
+
+# AI Services Configuration (Team 7)
+AI_GENERATOR_API_KEY = env("AI_GENERATOR_API_KEY", default="")
+AI_GENERATOR_BASE_URL = env("AI_GENERATOR_BASE_URL", default="https://api.gpt4-all.xyz/v1")
+AI_GENERATOR_MODEL = env("AI_GENERATOR_MODEL", default="gemini-3-flash-preview")
+
+# Soniox ASR Configuration (Team 7 - Speaking Evaluation)
+SONIOX_API_KEY = env("SONIOX_API_KEY", default="")
+SONIOX_API_BASE_URL = env("SONIOX_API_BASE_URL", default="https://api.soniox.com")
+SONIOX_MODEL = env("SONIOX_MODEL", default="stt-async-v4")

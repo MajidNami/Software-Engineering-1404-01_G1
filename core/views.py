@@ -186,16 +186,7 @@ def logout_api(request):
 @api_login_required
 def me(request):
     u = request.user
-    return JsonResponse({
-        "ok": True, 
-        "user": {
-            "id": str(u.id),
-            "email": u.email, 
-            "first_name": u.first_name, 
-            "last_name": u.last_name, 
-            "age": u.age
-        }
-    })
+    return JsonResponse({"ok": True, "user": {"email": u.email, "first_name": u.first_name, "last_name": u.last_name, "age": u.age}})
 
 
 @api_login_required
