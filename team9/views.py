@@ -1,12 +1,228 @@
 from django.http import JsonResponse
 from django.shortcuts import render
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
 from core.auth import api_login_required
+from rest_framework import viewsets, status
+from rest_framework.decorators import action, permission_classes
+from rest_framework.response import Response
+from rest_framework.permissions import AllowAny
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import filters
+from datetime import date
+from .models import Lesson, Word
+from .serializers import LessonSerializer, WordSerializer
+from .filters import WordFilter
+from django.db.models import Count, Q
 
 TEAM_NAME = "team9"
 
+
+
 @api_login_required
 def ping(request):
+    # Standard health check for the core system
     return JsonResponse({"team": TEAM_NAME, "ok": True})
 
 def base(request):
+    # Renders the main index page
     return render(request, f"{TEAM_NAME}/index.html")
+
+def dashboard_stats(request):
+    """
+    Returns dashboard statistics for the authenticated user.
+    
+    Returns:
+    - user_name: Name of the authenticated user
+    - total_lessons: Total number of lessons created by user
+    - total_words: Total number of words across all lessons
+    - completed_lessons: Number of lessons with 100% progress
+    - average_progress: Average progress across all lessons
+    """
+    # Get user name from request - try multiple fields
+    user_name = 'کاربر'
+    
+    # Check if user is authenticated
+    if hasattr(request, 'user') and request.user.is_authenticated:
+        # Try to get name from first_name and last_name
+        if hasattr(request.user, 'first_name') and request.user.first_name:
+            user_name = f"{request.user.first_name}"
+            if hasattr(request.user, 'last_name') and request.user.last_name:
+                user_name += f" {request.user.last_name}"
+        # Try email
+        elif hasattr(request.user, 'email') and request.user.email:
+            user_name = str(request.user.email).split('@')[0]
+        # Try username
+        elif hasattr(request.user, 'username') and request.user.username:
+            user_name = str(request.user.username)
+    
+    # Check JWT payload for additional user info
+    if hasattr(request, 'jwt_payload') and request.jwt_payload:
+        jwt_name = request.jwt_payload.get('name') or request.jwt_payload.get('username')
+        if jwt_name:
+            user_name = jwt_name
+    
+    # Get all lessons (not filtering by user for now to avoid overflow error)
+    lessons = Lesson.objects.all()
+    total_lessons = lessons.count()
+    
+    # Calculate total words
+    total_words = Word.objects.all().count()
+    
+    # Calculate completed lessons (100% progress)
+    completed_lessons = sum(1 for lesson in lessons if lesson.progress_percent >= 100.0)
+    
+    # Calculate average progress
+    if total_lessons > 0:
+        average_progress = sum(lesson.progress_percent for lesson in lessons) / total_lessons
+    else:
+        average_progress = 0.0
+    
+    return JsonResponse({
+        "user_name": user_name,
+        "total_lessons": total_lessons,
+        "total_words": total_words,
+        "completed_lessons": completed_lessons,
+        "average_progress": round(average_progress, 1)
+    })
+
+# --- New REST API ViewSets ---
+
+@method_decorator(csrf_exempt, name='dispatch')
+class LessonViewSet(viewsets.ModelViewSet):
+    """
+    ViewSet for Lesson model with search, filtering, and ordering capabilities.
+    
+    Endpoints:
+    - GET /api/lessons/ - List all lessons
+    - POST /api/lessons/ - Create new lesson
+    - GET /api/lessons/{id}/ - Retrieve specific lesson
+    - PUT /api/lessons/{id}/ - Update lesson
+    - DELETE /api/lessons/{id}/ - Delete lesson
+    
+    Query Parameters:
+    - search: Search in title and description
+    - user_id: Filter by user ID
+    - ordering: Order by created_at (e.g., ?ordering=-created_at for descending)
+    """
+    permission_classes = []
+    queryset = Lesson.objects.all()
+    serializer_class = LessonSerializer
+    
+    # Enable filter backends
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    
+    # Search in title and description
+    search_fields = ['title', 'description']
+    
+    # Exact match filtering for user_id
+    filterset_fields = ['user_id']
+    
+    # Allow ordering by created_at
+    ordering_fields = ['created_at']
+    ordering = ['-created_at']  # Default ordering
+
+@method_decorator(csrf_exempt, name='dispatch')
+class WordViewSet(viewsets.ModelViewSet):
+    """
+    ViewSet for Word model with advanced search, filtering, and ordering.
+    
+    Endpoints:
+    - GET /api/words/ - List all words
+    - POST /api/words/ - Create new word
+    - GET /api/words/{id}/ - Retrieve specific word
+    - PUT /api/words/{id}/ - Update word
+    - DELETE /api/words/{id}/ - Delete word
+    - POST /api/words/{id}/review/ - Review a word
+    
+    Query Parameters:
+    - search: Search in term (English) and definition (Persian)
+    - lesson: Filter by lesson ID (exact match)
+    - is_learned: Filter by learned status (true/false)
+    - current_day: Filter by current day (0-8)
+    - today_review: Filter for today's reviews (true) - words due today and not learned
+    - ordering: Order by next_review_date or current_day (e.g., ?ordering=next_review_date)
+    
+    Legacy Parameter:
+    - to_review: Deprecated, use today_review instead
+    """
+    permission_classes = []
+    queryset = Word.objects.all()
+    serializer_class = WordSerializer
+    
+    # Enable filter backends
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    
+    # Search in both term (English) and definition (Persian)
+    search_fields = ['term', 'definition']
+    
+    # Use custom filter class for advanced filtering
+    filterset_class = WordFilter
+    
+    # Allow ordering by next_review_date and current_day
+    ordering_fields = ['next_review_date', 'current_day']
+    ordering = ['next_review_date']  # Default ordering
+    
+    def get_queryset(self):
+        """
+        Optionally filter words based on query parameters.
+        Maintains backward compatibility with legacy 'to_review' parameter.
+        """
+        queryset = super().get_queryset()
+        
+        # Legacy support: Handle old 'to_review' parameter
+        if self.request.query_params.get('to_review') == 'true':
+            # Get user_id from authenticated user (security enhancement)
+            user_id = self.request.user.id
+            today = date.today()
+            
+            # Filter words where next_review_date is today or earlier
+            queryset = queryset.filter(
+                lesson__user_id=user_id,
+                current_day__lt=8,
+                is_learned=False,
+                next_review_date__lte=today
+            )
+        
+        return queryset
+    
+    @action(detail=True, methods=['post'])
+    def review(self, request, pk=None):
+        """
+        Perform a review on a specific word.
+        
+        Expected payload:
+        {
+            "is_correct": true/false
+        }
+        
+        Returns the updated word status.
+        """
+        word = self.get_object()
+        is_correct = request.data.get('is_correct')
+        
+        # Validate input
+        if is_correct is None:
+            return Response(
+                {'error': 'is_correct field is required'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        # Perform the review
+        result = word.perform_review(is_correct)
+        
+        if result['success']:
+            serializer = self.get_serializer(word)
+            return Response({
+                'message': result['message'],
+                'word': serializer.data,
+                'current_day': result['current_day'],
+                'review_history': result['review_history'],
+                'is_learned': result['is_learned'],
+                'next_review_date': result.get('next_review_date')
+            }, status=status.HTTP_200_OK)
+        else:
+            return Response(
+                {'error': result['message']},
+                status=status.HTTP_400_BAD_REQUEST
+            )

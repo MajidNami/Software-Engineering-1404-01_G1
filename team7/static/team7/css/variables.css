@@ -1,0 +1,71 @@
+:root {
+    /* ==================== Color Palette ==================== */
+    --color-primary-dark: #0b0754;
+    --color-primary-light: #a7bccc;
+    --color-white: #ffffff;
+    --color-black: #000000;
+    --color-background-light: #f0f3f5;
+    --color-success: #4caf50;
+    --color-accent-pink: #fa0b67;
+    --color-accent-blue: #3aa0ca;
+    --color-accent-blue-light: #80caff;
+    --color-border: #d1d9de;
+    
+    /* ==================== Gradients ==================== */
+    --gradient-primary: linear-gradient(-45deg, #fa0b67 64.645%, #ffb02d 135.36%);
+    --gradient-secondary: linear-gradient(-64.6319deg, #f0ffff 64.645%, #f0f3f5 135.36%);
+    --gradient-accent: linear-gradient(-14.5652deg, #fa0b67 64.645%, #ffb02d 135.36%);
+    --gradient-accent-light: linear-gradient(to top, rgba(250, 11, 103, 0.1) 50%, rgba(128, 202, 255, 0.1) 150%);
+    --gradient-dashboard-bg: linear-gradient(-53.6816deg, rgb(240, 255, 254) 64.645%, rgb(240, 243, 245) 135.36%);
+    --gradient-avatar: linear-gradient(-45deg, rgb(128, 202, 255) 64.645%, rgb(250, 11, 103) 135.36%);
+    --gradient-chart-placeholder: linear-gradient(-30.2564deg, rgba(128, 202, 255, 0.098) 64.645%, rgba(250, 11, 103, 0.098) 135.36%);
+    
+    /* ==================== Spacing ==================== */
+    --spacing-xs: 4px;
+    --spacing-sm: 8px;
+    --spacing-md: 16px;
+    --spacing-lg: 24px;
+    --spacing-xl: 32px;
+    --spacing-2xl: 48px;
+    --spacing-3xl: 60px;
+    --spacing-4xl: 80px;
+    
+    /* ==================== Border Radius ==================== */
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 24px;
+    --radius-full: 50%;
+    
+    /* ==================== Dimensions ==================== */
+    --header-height: 80px;
+    --sidebar-width: 280px;
+    
+    /* ==================== Typography ==================== */
+    --font-family: 'Inter', 'Noto Sans Arabic', sans-serif;
+    --font-weight-regular: 400;
+    --font-weight-medium: 500;
+    --font-weight-semibold: 600;
+    --font-weight-bold: 700;
+    
+    /* ==================== Transitions ==================== */
+    --transition-fast: 0.2s ease;
+    --transition-normal: 0.3s ease;
+    --transition-slow: 0.6s ease;
+    
+    /* ==================== Shadows ==================== */
+    --shadow-sm: 0px 2px 8px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0px 4px 16px rgba(0, 0, 0, 0.1);
+    --shadow-hover: 0px 6px 16px rgba(0, 0, 0, 0.15);
+    --shadow-header: 0px 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* ==================== RTL Support ==================== */
+[dir="rtl"] {
+    --direction: rtl;
+}
+
+[dir="ltr"] {
+    --direction: ltr;
+}

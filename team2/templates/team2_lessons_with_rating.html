@@ -1,0 +1,482 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>دروس با امتیازدهی - تیم 2</title>
+    <link rel="stylesheet" href="{% static 'styles/style.css' %}">
+    <style>
+        body {
+            background: #f5f7fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .header-left a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            margin-left: 15px;
+        }
+
+        .header-left a:hover {
+            opacity: 0.8;
+        }
+
+        .login-container {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .login-text {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: #667eea;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .page-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .page-header h1 {
+            margin: 0 0 10px 0;
+            font-size: 2rem;
+        }
+
+        .page-header p {
+            margin: 0;
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+
+        .lesson-card {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .lesson-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+        }
+
+        .lesson-title {
+            font-size: 1.5rem;
+            color: #333;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .lesson-info {
+            color: #666;
+            font-size: 0.95rem;
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+
+        .lesson-info strong {
+            color: #667eea;
+        }
+
+        .lesson-description {
+            color: #666;
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+
+        .rating-section {
+            border-top: 2px solid #f0f0f0;
+            padding-top: 25px;
+            margin-top: 25px;
+        }
+
+        .rating-display {
+            background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .avg-rating {
+            font-size: 2rem;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .rating-distribution {
+            font-size: 0.95rem;
+            color: #666;
+        }
+
+        .rating-form {
+            margin-top: 20px;
+        }
+
+        .rating-form-label {
+            font-size: 1.1rem;
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .rating-stars {
+            display: inline-flex;
+            gap: 8px;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+
+        .star {
+            font-size: 2.5rem;
+            color: #e2e8f0;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .star.active,
+        .star:hover {
+            color: #fbbf24;
+            transform: scale(1.1);
+        }
+
+        .rating-message {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 8px;
+            display: none;
+            font-size: 0.95rem;
+        }
+
+        .rating-message.success {
+            background-color: #d1fae5;
+            color: #065f46;
+            border: 1px solid #a7f3d0;
+            display: block;
+        }
+
+        .rating-message.error {
+            background-color: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+            display: block;
+        }
+
+        .btn-submit {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            margin-top: 10px;
+            transition: opacity 0.3s ease;
+        }
+
+        .btn-submit:hover {
+            opacity: 0.9;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            background: white;
+            border-radius: 12px;
+            color: #999;
+        }
+
+        .empty-state-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+
+        .empty-state h2 {
+            color: #666;
+            margin: 0 0 10px 0;
+        }
+
+        @media (max-width: 768px) {
+            .page-header {
+                padding: 25px;
+            }
+
+            .page-header h1 {
+                font-size: 1.5rem;
+            }
+
+            .lesson-card {
+                padding: 20px;
+            }
+
+            .rating-display {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .star {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-left">
+                <a href="{% url 'team2_base' %}">🏠 صفحه اصلی</a>
+                <a href="{% url 'team2_lessons_list' %}">📚 دروس من</a>
+            </div>
+            <div class="login-container">
+                {% if request.user.is_authenticated %}
+                    <span style="color: #333;">{{ request.user.email }}</span>
+                    <a href="{% url 'logout' %}" class="login-text">خروج</a>
+                {% else %}
+                    <a href="{% url 'auth' %}" class="login-text">ورود</a>
+                {% endif %}
+
+                <div class="user-avatar">
+                    <svg width="24" height="24" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="15" cy="10" r="5" fill="white" />
+                        <path d="M5 25C5 20 9 17 15 17C21 17 25 20 25 25" stroke="white" stroke-width="2"
+                            fill="none" />
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <div class="page-header">
+            <h1>⭐ امتیازدهی به دروس</h1>
+            <p>به دروسی که شرکت کرده‌اید امتیاز دهید و نظر خود را با ما به اشتراک بگذارید</p>
+        </div>
+
+        {% if lessons %}
+            {% for lesson in lessons %}
+            <div class="lesson-card">
+                <h2 class="lesson-title">{{ lesson.title }}</h2>
+                <p class="lesson-info">
+                    <strong>موضوع:</strong> {{ lesson.subject }} |
+                    <strong>سطح:</strong> {{ lesson.get_level_display }} |
+                    <strong>مهارت:</strong> {{ lesson.skill }}
+                </p>
+                <p class="lesson-description">{{ lesson.description }}</p>
+
+                <div class="rating-section">
+                    <div class="rating-display">
+                        <span class="avg-rating" id="avg-rating-{{ lesson.id }}">
+                            ⭐ میانگین: -
+                        </span>
+                        <span class="rating-distribution" id="total-ratings-{{ lesson.id }}">
+                            (تعداد امتیازها: 0)
+                        </span>
+                    </div>
+
+                    <div class="rating-form">
+                        <label class="rating-form-label">امتیاز شما:</label>
+                        <div class="rating-stars" data-lesson-id="{{ lesson.id }}">
+                            <span class="star" data-score="1">★</span>
+                            <span class="star" data-score="2">★</span>
+                            <span class="star" data-score="3">★</span>
+                            <span class="star" data-score="4">★</span>
+                            <span class="star" data-score="5">★</span>
+                        </div>
+                        <br>
+                        <button class="btn-submit" onclick="submitRating({{ lesson.id }})">
+                            ثبت امتیاز
+                        </button>
+                        <div class="rating-message" id="message-{{ lesson.id }}"></div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="empty-state">
+                <div class="empty-state-icon">📚</div>
+                <h2>هیچ درسی یافت نشد</h2>
+                <p>ابتدا در یک درس ثبت‌نام کنید تا بتوانید به آن امتیاز دهید</p>
+            </div>
+        {% endif %}
+    </div>
+
+    <script>
+        // Get CSRF token from cookie
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        const csrftoken = getCookie('csrftoken');
+
+        // Selected ratings per lesson
+        const selectedRatings = {};
+
+        // Star hover and click handlers
+        document.querySelectorAll('.rating-stars').forEach(container => {
+            const lessonId = container.dataset.lessonId;
+            const stars = container.querySelectorAll('.star');
+
+            stars.forEach((star, index) => {
+                // Hover effect
+                star.addEventListener('mouseenter', () => {
+                    stars.forEach((s, i) => {
+                        s.classList.toggle('active', i <= index);
+                    });
+                });
+
+                // Click to select
+                star.addEventListener('click', () => {
+                    const score = parseInt(star.dataset.score);
+                    selectedRatings[lessonId] = score;
+
+                    // Keep stars highlighted
+                    stars.forEach((s, i) => {
+                        s.style.color = i < score ? '#f39c12' : '#ddd';
+                    });
+                });
+            });
+
+            // Reset on mouse leave
+            container.addEventListener('mouseleave', () => {
+                const selectedScore = selectedRatings[lessonId] || 0;
+                stars.forEach((s, i) => {
+                    s.style.color = i < selectedScore ? '#f39c12' : '#ddd';
+                });
+            });
+        });
+
+        // Submit rating function
+        async function submitRating(lessonId) {
+            const score = selectedRatings[lessonId];
+            const messageDiv = document.getElementById(`message-${lessonId}`);
+
+            if (!score) {
+                messageDiv.className = 'rating-message error';
+                messageDiv.textContent = 'لطفاً ابتدا امتیاز را انتخاب کنید';
+                return;
+            }
+
+            try {
+                const response = await fetch(`/team2/api/lessons/${lessonId}/rate/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrftoken,
+                    },
+                    body: JSON.stringify({ score })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    messageDiv.className = 'rating-message success';
+                    messageDiv.textContent = data.message;
+
+                    // Update average rating display
+                    document.getElementById(`avg-rating-${lessonId}`).textContent =
+                        `⭐ میانگین: ${data.lesson_avg_rating}`;
+                    document.getElementById(`total-ratings-${lessonId}`).textContent =
+                        `(تعداد امتیازها: ${data.total_ratings})`;
+
+                    // Hide message after 3 seconds
+                    setTimeout(() => {
+                        messageDiv.style.display = 'none';
+                    }, 3000);
+                } else {
+                    messageDiv.className = 'rating-message error';
+                    messageDiv.textContent = data.error || 'خطا در ثبت امتیاز';
+                }
+            } catch (error) {
+                messageDiv.className = 'rating-message error';
+                messageDiv.textContent = 'خطا در برقراری ارتباط با سرور';
+            }
+        }
+
+        // Load existing ratings on page load
+        document.addEventListener('DOMContentLoaded', async () => {
+            const lessonCards = document.querySelectorAll('.lesson-card');
+
+            lessonCards.forEach(async (card) => {
+                const stars = card.querySelector('.rating-stars');
+                if (!stars) return;
+
+                const lessonId = stars.dataset.lessonId;
+
+                try {
+                    const response = await fetch(`/team2/api/lessons/${lessonId}/ratings/`);
+                    const data = await response.json();
+
+                    // Update average rating
+                    document.getElementById(`avg-rating-${lessonId}`).textContent =
+                        `⭐ میانگین: ${data.stats.average}`;
+                    document.getElementById(`total-ratings-${lessonId}`).textContent =
+                        `(تعداد امتیازها: ${data.stats.total})`;
+
+                    // Highlight user's rating if exists
+                    if (data.user_rating) {
+                        selectedRatings[lessonId] = data.user_rating;
+                        const starElements = stars.querySelectorAll('.star');
+                        starElements.forEach((s, i) => {
+                            s.style.color = i < data.user_rating ? '#f39c12' : '#ddd';
+                        });
+                    }
+                } catch (error) {
+                    console.error('Error loading ratings:', error);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

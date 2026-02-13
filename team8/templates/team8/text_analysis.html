@@ -1,0 +1,185 @@
+{% extends 'team8/base.html' %}
+
+{% block title %}Text Analysis{% endblock %}
+
+{% block extra_css %}
+<style>
+    :root { --bg-gradient: linear-gradient(180deg, #fce4ec 0%, #e3f2fd 100%); }
+    .container { max-width: 1000px; margin: 30px auto; padding: 0 20px; }
+    .header-card { background: white; border-radius: 20px; padding: 20px 30px; display: flex; align-items: center; gap: 15px; margin-bottom: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+    .icon-box { background: #ffe0d1; color: #ff8a65; padding: 10px; border-radius: 12px; font-size: 20px; }
+    
+    .card-ui { background: white; border-radius: 24px; padding: 40px; text-align: center; margin-bottom: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+    .btn-main { background: linear-gradient(90deg, #ff8a65, #ffb199); color: white; border: none; padding: 15px 45px; border-radius: 15px; font-size: 18px; font-weight: bold; cursor: pointer; font-family: 'Vazirmatn'; transition: 0.3s; margin: 20px 0; }
+    .btn-main:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(255, 138, 101, 0.3); }
+    
+    .history-list { max-height: 300px; overflow-y: auto; margin: 20px 0; border: 1px solid #eee; border-radius: 15px; text-align: left; }
+    .history-item { display: flex; align-items: center; gap: 15px; padding: 12px 15px; border-bottom: 1px solid #f9f9f9; }
+    
+    /* Results View Styles */
+    #results-view { display: none; }
+    .results-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 25px; margin-top: 30px; }
+    .level-card { background: white; border-radius: 24px; padding: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 1px solid #f1f1f1; animation: slideUp 0.5s ease; display: flex; flex-direction: column; }
+    
+    .level-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 2px solid #f8f9fa; }
+    .level-badge { background: #2d3436; color: white; padding: 5px 12px; border-radius: 10px; font-weight: bold; font-size: 18px; }
+    .word-count { font-size: 13px; color: #ff8a65; font-weight: bold; }
+
+    /* The Scrollable Word List */
+    .word-list-container { max-height: 250px; overflow-y: auto; padding-right: 5px; }
+    .word-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; background: #f8fafc; border-radius: 12px; margin-bottom: 8px; transition: 0.2s; }
+    .word-row:hover { background: #f1f5f9; }
+    .word-name { font-weight: 600; color: #2d3436; font-size: 15px; }
+    
+    .btn-learn { background: #ff8a65; color: white; border: none; padding: 4px 12px; border-radius: 8px; font-size: 12px; font-weight: bold; cursor: pointer; transition: 0.2s; }
+    .btn-learn:hover { background: #e76f51; transform: scale(1.05); }
+
+    /* Loading styles */
+    #loading-overlay { display: none; text-align: center; padding: 80px; }
+    .spinner { width: 50px; height: 50px; border: 5px solid #f3f3f3; border-top: 5px solid #ff8a65; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 20px; }
+    
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="header-card">
+        <div class="icon-box">📄</div>
+        <div style="text-align: left;">
+            <strong style="display: block; font-size: 18px;">Text Analysis</strong>
+            <span style="font-size: 13px; color: #636e72;">Extract difficult words from your reading history</span>
+        </div>
+    </div>
+
+    <!-- SELECTION VIEW -->
+    <div id="selection-view">
+        <div class="card-ui">
+            <div style="font-size: 50px; margin-bottom: 15px;">⚡</div>
+            <h2 style="margin:0">Quick Analysis</h2>
+            <p style="color: #636e72; margin-top: 10px;">Automatically analyze your 5 most recent readings.</p>
+            <button class="btn-main" onclick="startAIAnalysis('quick')">Start Quick Analysis</button>
+        </div>
+
+        <div class="card-ui" style="text-align: left;">
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 5px;">
+                <div style="background: #fff9db; padding: 10px; border-radius: 12px;">📝</div>
+                <strong>Manual Selection</strong>
+            </div>
+            <p style="font-size: 14px; color: #636e72; margin-bottom: 20px;">Select specific readings to analyze vocabulary.</p>
+            
+            <div class="history-list" id="historyList">
+                <div style="padding: 20px; text-align: center; color: #ccc;">Loading your history...</div>
+            </div>
+
+            <button class="btn-main" style="width: 100%;" id="manualBtn" onclick="startAIAnalysis('manual')">
+                Analyze Selected Readings
+            </button>
+        </div>
+    </div>
+
+    <!-- LOADING VIEW -->
+    <div id="loading-overlay">
+        <div class="spinner"></div>
+        <h2 id="loading-text">AI is analyzing your content...</h2>
+        <p style="color: #636e72;">Extraction in progress using Llama 3.3...</p>
+    </div>
+
+    <!-- RESULTS VIEW -->
+    <div id="results-view">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+            <h2 style="margin: 0; color: #30336b;">Extracted Vocabulary</h2>
+            <button onclick="location.reload()" style="background:none; border:none; color:#6c5ce7; cursor:pointer; font-weight:bold;">
+                ← Reset Analysis
+            </button>
+        </div>
+        <div class="results-grid" id="resultsGrid"></div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Load history on page load
+    window.onload = async function() {
+        try {
+            const response = await fetch('/team8/api/reading-history/');
+            const data = await response.json();
+            const historyList = document.getElementById('historyList');
+
+            if (data.history && data.history.length > 0) {
+                historyList.innerHTML = data.history.map(item => `
+                    <div class="history-item">
+                        <input type="checkbox" value="${item.id}" class="reading-checkbox">
+                        <div style="margin-left: 10px;">
+                            <div style="font-weight: 600;">${item.title}</div>
+                            <div style="font-size: 12px; color: #888;">${item.category} • ${item.date}</div>
+                        </div>
+                    </div>
+                `).join('');
+            } else {
+                historyList.innerHTML = '<div style="padding:40px; text-align:center; color:#888;">No reading history found.</div>';
+                document.getElementById('manualBtn').disabled = true;
+            }
+        } catch (error) { console.error(error); }
+    };
+
+    async function startAIAnalysis(mode) {
+        let url = `/team8/api/text-analysis/?mode=${mode}`;
+        if (mode === 'manual') {
+            const selected = Array.from(document.querySelectorAll('.reading-checkbox:checked')).map(cb => cb.value);
+            if (selected.length === 0) { alert("Please select at least one reading."); return; }
+            selected.forEach(id => url += `&ids[]=${id}`);
+        }
+
+        document.getElementById('selection-view').style.display = 'none';
+        document.getElementById('loading-overlay').style.display = 'block';
+
+        try {
+            const response = await fetch(url);
+            const data = await response.json();
+            const resultsGrid = document.getElementById('resultsGrid');
+            resultsGrid.innerHTML = ''; 
+            
+            if (data.results && data.results.length > 0) {
+                data.results.forEach(item => {
+                    const card = document.createElement('div');
+                    card.className = 'level-card';
+                    
+                    // Create the HTML for the word list
+                    const wordHtml = item.words.map(word => `
+                        <div class="word-row">
+                            <span class="word-name">${word}</span>
+                            <button class="btn-learn" onclick="goToLearn('${word}')">Learn ➔</button>
+                        </div>
+                    `).join('');
+
+                    card.innerHTML = `
+                        <div class="level-header">
+                            <div class="level-badge">${item.level}</div>
+                            <div class="word-count">${item.count} words</div>
+                        </div>
+                        <div class="word-list-container">
+                            ${wordHtml}
+                        </div>
+                    `;
+                    resultsGrid.appendChild(card);
+                });
+                document.getElementById('loading-overlay').style.display = 'none';
+                document.getElementById('results-view').style.display = 'block';
+            } else {
+                document.getElementById('loading-text').innerText = "No difficult vocabulary found.";
+            }
+        } catch (error) {
+            alert("AI Analysis failed. Check logs.");
+            location.reload();
+        }
+    }
+
+    function goToLearn(word) {
+        // Redirects to Word Card page with the specific word as a query parameter
+        window.location.href = `/team8/wordcard/?word=${encodeURIComponent(word)}`;
+    }
+</script>
+{% endblock %}

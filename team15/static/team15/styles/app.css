@@ -1,0 +1,40 @@
+:root {
+  --bg: #f0f3fa;
+  --card: #ffffff;
+  --border: #d9deeb;
+  --text: #0b0754;
+  --muted: #4b4b9a;
+  --primary: #fa0b67;
+  --primary-soft: #80caff;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+
+.kpi {
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.badge-btn {
+  background: var(--primary);
+  color: #fff;
+  border-radius: 10px;
+  padding: 0.65rem 1rem;
+  font-weight: 700;
+}
+
+.badge-btn.secondary {
+  background: #fff;
+  color: var(--text);
+  border: 1px solid var(--border);
+}

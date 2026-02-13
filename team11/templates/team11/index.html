@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>میکروسرویس گروه ۱</title>
+  <title>میکروسرویس گروه ۱۱ - صحبت کردن و نوشتن</title>
 
   <!-- Team-local shared + team-local page styles -->
   <link rel="stylesheet" href="{% static 'team11/styles/common.css' %}">
@@ -14,14 +14,12 @@
 <body>
   <div class="container">
     <header class="header">
-      <div class="header-right">
-        <a href="{% url 'microservices' %}" class="home-btn">میکروسرویس‌ها</a>
+      <div class="header-left">
+        <a href="/" class="home-btn">صفحه اصلی</a>
       </div>
 
-      <div class="header-left">
+      <div class="header-right">
         <div class="flag-settings">
-          <img src="{% static 'team11/public/images/settings.png' %}" alt="" class="settings-icon">
-
           <div class="iran-flag">
             <div class="flag-green"></div>
             <div class="flag-white"></div>
@@ -47,7 +45,75 @@
     </header>
 
     <main class="welcome-section">
-      <h1 style="font-size: 3rem; color: var(--navy);">به میکروسرویس گروه 11 خوش آمدید</h1>
+      <h1 style="font-size: 3rem; color: var(--navy); margin-bottom: 20px;">میکروسرویس صحبت کردن و نوشتن</h1>
+      <p style="font-size: 1.5rem; color: var(--dark-blue); margin-bottom: 40px;">
+        مهارت‌های نوشتاری و گفتاری خود را تمرین کنید و نمره بگیرید
+      </p>
+
+      <div class="action-buttons" style="display: flex; gap: 20px; justify-content: center; margin-top: 40px;">
+        {% if request.user.is_authenticated %}
+          <a href="{% url 'team11_start_exam' %}" class="btn btn-primary">شروع آزمون</a>
+          <a href="{% url 'team11_dashboard' %}" class="btn btn-secondary">داشبورد من</a>
+        {% else %}
+          <a href="{% url 'auth' %}" class="btn btn-primary">ورود برای شروع</a>
+        {% endif %}
+      </div>
+
+      <div class="features" style="margin-top: 60px; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px;">
+        <div class="feature-card" style="background: white; padding: 30px; border-radius: 15px; text-align: center;">
+          <h3 style="color: var(--navy); margin-bottom: 15px;">آزمون نوشتن</h3>
+          <p style="color: var(--dark-blue);">متن خود را بنویسید و نمره دریافت کنید</p>
+        </div>
+        <div class="feature-card" style="background: white; padding: 30px; border-radius: 15px; text-align: center;">
+          <h3 style="color: var(--navy); margin-bottom: 15px;">آزمون صحبت کردن</h3>
+          <p style="color: var(--dark-blue);">صدای خود را ضبط کنید و ارزیابی شوید</p>
+        </div>
+        <div class="feature-card" style="background: white; padding: 30px; border-radius: 15px; text-align: center;">
+          <h3 style="color: var(--navy); margin-bottom: 15px;">تاریخچه و نمرات</h3>
+          <p style="color: var(--dark-blue);">پیشرفت خود را دنبال کنید</p>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <style>
+    .welcome-section {
+      text-align: center;
+      padding: 40px 20px;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 15px 40px;
+      border-radius: 25px;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 1.1rem;
+      transition: all 0.3s;
+    }
+
+    .btn-primary {
+      background: var(--dark-blue);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--navy);
+      transform: translateY(-2px);
+    }
+
+    .btn-secondary {
+      background: var(--coral);
+      color: white;
+    }
+
+    .btn-secondary:hover {
+      background: #e88f87;
+      transform: translateY(-2px);
+    }
+  </style>
+</body>
+</html>
     </main>
   </div>
 </body>

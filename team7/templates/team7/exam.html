@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>آزمون‌ها - آکادمی زبان</title>
+    <!-- CSS Files -->
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'team7/css/variables.css' %}">
+    <link rel="stylesheet" href="{% static 'team7/css/common.css' %}">
+    <link rel="stylesheet" href="{% static 'team7/css/exam.css' %}">
+    <link rel="stylesheet" href="{% static 'team7/css/popups.css' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-inner">
+            <div class="logo-section">
+                <a href="{% url 'team7:index' %}" class="logo-link">
+                    <div class="logo-icon">AI</div>
+                    <div class="logo-text">آکادمی زبان</div>
+                </a>
+            </div>
+            <nav class="navigation-menu">
+                <a href="{% url 'team7:index' %}" class="nav-link">خانه</a>
+                <a href="{% url 'team7:exams' %}#speaking" class="nav-link">مکالمه</a>
+                <a href="{% url 'team7:exams' %}#writing" class="nav-link">نوشتن</a>
+                <a href="{% url 'team7:exams' %}" class="nav-link active">آزمون‌ها</a>
+                <a href="{% url 'team7:dashboard' %}" class="nav-link">داشبورد</a>
+            </nav>
+            <div class="header-actions">
+                <div class="user-profile">
+                    {% if user.is_authenticated %}
+                        <p class="user-name">{{ user.first_name }} {{ user.last_name }}{% if not user.first_name %}{{ user.email }}{% endif %}</p>
+                    {% else %}
+                        <p class="user-name">مهمان</p>
+                    {% endif %}
+                    <div class="user-avatar"></div>
+                </div>
+            </div>
+            <button class="menu-toggle" aria-label="Toggle navigation menu">☰</button>
+        </div>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="hero-section" id="hero">
+            <div class="hero-content-wrapper">
+                <div class="hero-image">
+                    <img src="{% static 'team7/images/exam AI.png' %}" alt="AI Learning" />
+                </div>
+                <div class="hero-text">
+                    <div class="hero-badge">هوش مصنوعی پیشرفته</div>
+                    <h1 class="hero-title">آزمون تافل با کمک هوش مصنوعی</h1>
+                    <p class="hero-description">مهارت‌های گفتاری و نوشتاری خود را با آزمون‌های هوشمند تافل تقویت کنید. بازخورد فوری و تحلیل دقیق عملکرد شما</p>
+                    <div class="hero-buttons">
+                        <button class="start-exam-button">شروع آزمون</button>
+                        <button class="learn-more-button">اطلاعات بیشتر</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Exams Section -->
+        <section class="exams-section" id="exams">
+            <div class="exams-container">
+                <!-- Speaking Exams -->
+                <div class="exam-category">
+                    <h2 class="section-title">آزمون‌های گفتاری</h2>
+                    <div class="carousel-wrapper">
+                        <div class="carousel" id="speakingCarousel">
+                            <!-- Rendered by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Writing Exams -->
+                <div class="exam-category">
+                    <h2 class="section-title">آزمون‌های نوشتاری</h2>
+                    <div class="carousel-wrapper">
+                        <div class="carousel" id="writingCarousel">
+                            <!-- Rendered by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- History Section -->
+        <section class="history-section" id="history">
+            <div class="history-container">
+                <div class="history-header">
+                    <h2 class="section-title">تاریخچه آزمون‌ها</h2>
+                    <div class="history-tabs">
+                        <button class="tab-button active">گفتاری</button>
+                        <button class="tab-button">نوشتاری</button>
+                    </div>
+                </div>
+                
+                <div class="history-table">
+                    <div class="table-header">
+                        <div>عنوان آزمون</div>
+                        <div>تاریخ</div>
+                        <div>نام آزمون</div>
+                        <div>نمره</div>
+                        <div>اطلاعات</div>
+                    </div>
+                    <!-- Rendered by JavaScript -->
+                </div>
+
+                <!-- Pagination -->
+                <div class="pagination">
+                    <button class="pagination-button">قبلی</button>
+                    <button class="pagination-button active">1</button>
+                    <button class="pagination-button">2</button>
+                    <button class="pagination-button">3</button>
+                    <span class="pagination-dots">...</span>
+                    <button class="pagination-button">10</button>
+                    <button class="pagination-button">بعدی</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- JavaScript Files -->
+    <script src="{% static 'team7/js/auth.js' %}"></script>
+    <script src="{% static 'team7/js/auth-debug.js' %}"></script>
+    <script src="{% static 'team7/js/shared.js' %}"></script>
+    <script src="{% static 'team7/js/popups.js' %}"></script>
+    <script src="{% static 'team7/js/writing-exam.js' %}"></script>
+    <script src="{% static 'team7/js/speaking-exam.js' %}"></script>
+    <script src="{% static 'team7/js/exam.js' %}"></script>
+</body>
+</html>

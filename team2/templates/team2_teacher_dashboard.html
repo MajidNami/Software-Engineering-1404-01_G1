@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>داشبورد آماری معلم - تیم 2</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #667eea;
+        }
+
+        .header h1 {
+            color: #2d3748;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #718096;
+            font-size: 1.1em;
+        }
+
+        .stats-overview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .stat-card h3 {
+            font-size: 1em;
+            margin-bottom: 15px;
+            opacity: 0.9;
+        }
+
+        .stat-card .number {
+            font-size: 2.5em;
+            font-weight: bold;
+        }
+
+        .lessons-table {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        thead {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        thead th {
+            padding: 15px;
+            text-align: right;
+            font-weight: 600;
+        }
+
+        tbody tr {
+            border-bottom: 1px solid #e2e8f0;
+            transition: background-color 0.3s;
+        }
+
+        tbody tr:hover {
+            background-color: #f7fafc;
+        }
+
+        tbody td {
+            padding: 15px;
+            text-align: right;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+        }
+
+        .badge-draft {
+            background-color: #fef3c7;
+            color: #92400e;
+        }
+
+        .badge-published {
+            background-color: #d1fae5;
+            color: #065f46;
+        }
+
+        .badge-archived {
+            background-color: #fee2e2;
+            color: #991b1b;
+        }
+
+        .rating-display {
+            color: #fbbf24;
+            font-size: 1.2em;
+        }
+
+        .section-title {
+            font-size: 1.8em;
+            color: #2d3748;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            padding: 10px 20px;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: background 0.3s;
+        }
+
+        .back-link:hover {
+            background: #764ba2;
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 60px 20px;
+            color: #718096;
+        }
+
+        .no-data h3 {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="{% url 'team2_teacher_lessons' %}" class="back-link">← بازگشت به دروس من</a>
+
+        <div class="header">
+            <h1>📊 داشبورد آماری معلم</h1>
+            <p>آمار کامل دروس و عملکرد آموزشی شما</p>
+        </div>
+
+        <div class="stats-overview">
+            <div class="stat-card">
+                <h3>تعداد کل دروس</h3>
+                <div class="number">{{ total_lessons }}</div>
+            </div>
+        </div>
+
+        {% if lessons_stats %}
+            <div class="section-title">📚 آمار تفصیلی دروس</div>
+            <div class="lessons-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>عنوان درس</th>
+                            <th>وضعیت</th>
+                            <th>سطح</th>
+                            <th>تعداد بازدید</th>
+                            <th>ساعات تماشا</th>
+                            <th>میانگین امتیاز</th>
+                            <th>تعداد امتیاز</th>
+                            <th>تعداد سؤالات</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for stat in lessons_stats %}
+                        <tr>
+                            <td><strong>{{ stat.lesson.title }}</strong></td>
+                            <td>
+                                {% if stat.lesson.status == 'draft' %}
+                                    <span class="badge badge-draft">پیش‌نویس</span>
+                                {% elif stat.lesson.status == 'published' %}
+                                    <span class="badge badge-published">منتشر شده</span>
+                                {% else %}
+                                    <span class="badge badge-archived">آرشیو شده</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ stat.lesson.get_level_display }}</td>
+                            <td>{{ stat.views_count }} بازدید</td>
+                            <td>{{ stat.total_watch_hours }} ساعت</td>
+                            <td>
+                                <span class="rating-display">
+                                    {% if stat.avg_rating > 0 %}
+                                        ⭐ {{ stat.avg_rating }}
+                                    {% else %}
+                                        بدون امتیاز
+                                    {% endif %}
+                                </span>
+                            </td>
+                            <td>{{ stat.ratings_count }} امتیاز</td>
+                            <td>{{ stat.questions_count }} سؤال</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="no-data">
+                <h3>هنوز درسی ایجاد نکرده‌اید!</h3>
+                <p>برای مشاهده آمار، ابتدا دروس خود را ایجاد کنید.</p>
+                <br>
+                <a href="{% url 'teacher_create_lesson' %}" class="back-link">➕ ایجاد درس جدید</a>
+            </div>
+        {% endif %}
+
+        <div style="margin-top: 40px; padding: 20px; background: #f7fafc; border-radius: 10px;">
+            <h3 style="color: #2d3748; margin-bottom: 15px;">📚 راهنمای API ها</h3>
+            <p style="color: #4a5568; line-height: 1.8;">
+                <strong>سیستم پرسش و پاسخ (Q&A):</strong><br>
+                • زبان‌آموزان می‌توانند سؤال بپرسند: <code>POST /team2/api/lessons/&lt;lesson_id&gt;/ask/</code><br>
+                • معلم می‌تواند پاسخ دهد: <code>POST /team2/api/questions/&lt;question_id&gt;/answer/</code><br>
+                • مشاهده سؤالات و پاسخ‌ها: <code>GET /team2/api/lessons/&lt;lesson_id&gt;/questions/</code><br><br>
+
+                <strong>سیستم آمار و بازدید:</strong><br>
+                • ثبت بازدید: <code>POST /team2/api/lessons/&lt;lesson_id&gt;/track-view/</code><br>
+                • آمار تفصیلی درس: <code>GET /team2/api/teacher/lessons/&lt;lesson_id&gt;/stats/</code><br>
+            </p>
+        </div>
+    </div>
+</body>
+</html>

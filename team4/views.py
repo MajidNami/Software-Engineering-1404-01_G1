@@ -15,6 +15,26 @@ from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 from users.services import NotificationService
 
+from django.conf import settings
+
+from rest_framework import generics, status
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
+from django.db.models import Q
+from django.contrib.auth import get_user_model
+from .models import ChatRoom, PrivateChat, Message , GroupChat , ChatParticipant , BlockList, UserReport
+from django.contrib.auth import get_user_model
+from rest_framework_simplejwt.tokens import RefreshToken
+
+
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.response import Response
+
+
+from .serializers import ChatRoomSerializer, MessageSerializer, UserBasicSerializer
+
 TEAM_NAME = "team4"
 
 @api_login_required

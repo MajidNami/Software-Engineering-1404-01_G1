@@ -1,0 +1,418 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اضافه کردن ویدیو</title>
+    <link rel="stylesheet" href="{% static 'styles/style.css' %}">
+    <style>
+        .form-container {
+            max-width: 600px;
+            margin: 40px auto;
+            padding: 40px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-header {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .form-header h1 {
+            font-size: 1.8rem;
+            color: #333;
+            margin: 0 0 10px 0;
+        }
+
+        .form-header p {
+            color: #666;
+            margin: 0;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            font-family: inherit;
+            box-sizing: border-box;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #647eb4;
+            box-shadow: 0 0 0 3px rgba(100, 126, 180, 0.1);
+        }
+
+        .dropzone {
+            border: 2px dashed #ddd;
+            border-radius: 8px;
+            padding: 40px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background-color: #fafafa;
+        }
+
+        .dropzone:hover {
+            border-color: #647eb4;
+            background-color: #f0f4fb;
+        }
+
+        .dropzone.drag-over {
+            border-color: #647eb4;
+            background-color: #e8f0ff;
+            box-shadow: 0 0 0 3px rgba(100, 126, 180, 0.1);
+        }
+
+        .dropzone-icon {
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
+
+        .dropzone-text {
+            color: #333;
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+
+        .dropzone-hint {
+            color: #999;
+            font-size: 0.85rem;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .file-preview {
+            margin-top: 15px;
+            padding: 12px;
+            background-color: #e8f5e9;
+            border: 1px solid #4caf50;
+            border-radius: 6px;
+            color: #2e7d32;
+        }
+
+        .file-preview-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .file-preview-name {
+            word-break: break-all;
+        }
+
+        .file-preview-remove {
+            cursor: pointer;
+            color: #d32f2f;
+            font-weight: bold;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .lesson-info {
+            background-color: #f0f0f0;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 30px;
+        }
+
+        .lesson-info p {
+            margin: 0;
+            color: #333;
+        }
+
+        .lesson-info strong {
+            color: #647eb4;
+        }
+
+        .form-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 12px 24px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-submit {
+            background-color: #647eb4;
+            color: white;
+        }
+
+        .btn-submit:hover {
+            background-color: #4a5f8f;
+        }
+
+        .btn-cancel {
+            background-color: #e8f0fe;
+            color: #647eb4;
+            border: 1px solid #647eb4;
+            text-decoration: none;
+            text-align: center;
+        }
+
+        .btn-cancel:hover {
+            background-color: #d4e3f8;
+            text-decoration: none;
+            color: #647eb4;
+        }
+
+        .messages {
+            margin-bottom: 20px;
+        }
+
+        .message {
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+        }
+
+        .message.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        @media (max-width: 600px) {
+            .form-container {
+                padding: 20px;
+                margin: 20px 10px;
+            }
+
+            .form-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <a href="{% url 'team2_index' %}" class="home-btn" style="margin-left: 15px;">🏠 صفحه اصلی</a>
+                <a href="{% url 'microservices' %}" class="home-btn">میکروسرویس ها</a>
+            </div>
+            <div class="header-right">
+                <div class="flag-settings">
+                    <img src="{% static 'public/images/settings.png' %}" alt="" class="settings-icon">
+                    <div class="iran-flag">
+                        <div class="flag-green"></div>
+                        <div class="flag-white"></div>
+                        <div class="flag-red"></div>
+                    </div>
+                </div>
+                <div class="login-container">
+                    {% if request.user.is_authenticated %}
+                        <span style="color: #333; margin-right: 15px;">{{ request.user.email }}</span>
+                        <a href="{% url 'logout' %}" class="login-text">خروج</a>
+                    {% else %}
+                        <a href="{% url 'auth' %}" class="login-text">ورود</a>
+                    {% endif %}
+
+                    <div class="user-avatar">
+                        <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="15" cy="10" r="5" fill="#647eb4" />
+                            <path d="M5 25C5 20 9 17 15 17C21 17 25 20 25 25" stroke="#647eb4" stroke-width="2"
+                                fill="none" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="form-container">
+            {% if messages %}
+                <div class="messages">
+                    {% for message in messages %}
+                        <div class="message error">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <div class="form-header">
+                <h1>اضافه کردن ویدیو جدید</h1>
+                <p>ویدیوی جدید را به درس خود اضافه کنید</p>
+            </div>
+
+            <div class="lesson-info">
+                <p>📚 درس: <strong>{{ lesson.title }}</strong></p>
+                <p>📝 موضوع: <strong>{{ lesson.subject }}</strong></p>
+                <p>📊 سطح: <strong>
+                    {% if lesson.level == 'beginner' %}
+                        مبتدی
+                    {% elif lesson.level == 'intermediate' %}
+                        متوسط
+                    {% else %}
+                        پیشرفته
+                    {% endif %}
+                </strong></p>
+            </div>
+
+            <form method="post" enctype="multipart/form-data" id="uploadForm">
+                {% csrf_token %}
+
+                <div class="form-group">
+                    <label for="title">عنوان ویدیو</label>
+                    <input type="text" id="title" name="title" placeholder="عنوان ویدیو را وارد کنید" required>
+                </div>
+
+                <div class="form-group">
+                    <label>فایل ویدیو</label>
+                    <div class="dropzone" id="dropzone">
+                        <div class="dropzone-icon">📹</div>
+                        <div class="dropzone-text">فایل ویدیو را اینجا بکشید و رها کنید</div>
+                        <div class="dropzone-hint">یا برای انتخاب فایل کلیک کنید</div>
+                    </div>
+                    <input type="file" id="video_file" name="video_file" accept="video/*" class="file-input" required>
+                    <div id="filePreview"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="file_format">فرمت فایل</label>
+                    <select id="file_format" name="file_format" required>
+                        <option value="">انتخاب فرمت...</option>
+                        <option value="mp4">MP4</option>
+                        <option value="mkv">MKV</option>
+                        <option value="avi">AVI</option>
+                        <option value="mov">MOV</option>
+                        <option value="webm">WebM</option>
+                    </select>
+                </div>
+
+                <div class="form-buttons">
+                    <a href="{% url 'teacher_lesson_videos' lesson.id %}" class="btn btn-cancel">
+                        انصراف
+                    </a>
+                    <button type="submit" class="btn btn-submit">
+                        ✓ آپلود ویدیو
+                    </button>
+                </div>
+            </form>
+
+            <script>
+                const dropzone = document.getElementById('dropzone');
+                const fileInput = document.getElementById('video_file');
+                const filePreview = document.getElementById('filePreview');
+
+                // کلیک بر dropzone برای انتخاب فایل
+                dropzone.addEventListener('click', () => {
+                    fileInput.click();
+                });
+
+                // پیش‌نمایش فایل انتخاب شده
+                fileInput.addEventListener('change', (e) => {
+                    handleFileSelect(e.target.files);
+                });
+
+                // منع رفتار پیش‌فرض برای drag and drop
+                ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                    dropzone.addEventListener(eventName, preventDefaults, false);
+                    document.body.addEventListener(eventName, preventDefaults, false);
+                });
+
+                function preventDefaults(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
+
+                // نمایش تاثیر drag over
+                ['dragenter', 'dragover'].forEach(eventName => {
+                    dropzone.addEventListener(eventName, () => {
+                        dropzone.classList.add('drag-over');
+                    }, false);
+                });
+
+                ['dragleave', 'drop'].forEach(eventName => {
+                    dropzone.addEventListener(eventName, () => {
+                        dropzone.classList.remove('drag-over');
+                    }, false);
+                });
+
+                // هندل کردن drop شده فایل
+                dropzone.addEventListener('drop', (e) => {
+                    const dt = e.dataTransfer;
+                    const files = dt.files;
+                    fileInput.files = files;
+                    handleFileSelect(files);
+                }, false);
+
+                function handleFileSelect(files) {
+                    if (files.length === 0) {
+                        filePreview.innerHTML = '';
+                        return;
+                    }
+
+                    const file = files[0];
+                    const fileSize = (file.size / (1024 * 1024)).toFixed(2);
+                    const fileExtension = file.name.split('.').pop().toLowerCase();
+
+                    // تعیین خودکار فرمت فایل
+                    const formatSelect = document.getElementById('file_format');
+                    const validFormats = ['mp4', 'mkv', 'avi', 'mov', 'webm'];
+                    if (validFormats.includes(fileExtension)) {
+                        formatSelect.value = fileExtension;
+                    }
+
+                    // نمایش پیش‌نمایش فایل
+                    filePreview.innerHTML = `
+                        <div class="file-preview">
+                            <div class="file-preview-item">
+                                <span class="file-preview-name">
+                                    ✓ ${file.name} (${fileSize} MB)
+                                </span>
+                                <span class="file-preview-remove" onclick="clearFile()">✕</span>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                function clearFile() {
+                    fileInput.value = '';
+                    filePreview.innerHTML = '';
+                    document.getElementById('file_format').value = '';
+                }
+            </script>
+        </div>
+    </div>
+</body>
+
+</html>

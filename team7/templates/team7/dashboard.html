@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>داشبورد - آکادمی زبان</title>
+    <!-- CSS Files -->
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'team7/css/variables.css' %}">
+    <link rel="stylesheet" href="{% static 'team7/css/common.css' %}">
+    <link rel="stylesheet" href="{% static 'team7/css/dashboard.css' %}"
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo-section">
+                    <a href="{% url 'team7:index' %}" class="logo-link">
+                        <div class="logo-icon">AI</div>
+                        <div class="logo-text">آکادمی زبان</div>
+                    </a>
+                </div>
+                <div class="header-actions">
+                    <div class="user-profile">
+                        {% if user.is_authenticated %}
+                            <p class="user-name">{{ user.first_name }} {{ user.last_name }}{% if not user.first_name %}{{ user.email }}{% endif %}</p>
+                        {% else %}
+                            <p class="user-name">مهمان</p>
+                        {% endif %}
+                        <div class="user-avatar"></div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                <a href="{% url 'team7:dashboard' %}" class="menu-item active">
+                    <div class="menu-icon"></div>
+                    <span>داشبورد</span>
+                </a>
+                <a href="{% url 'team7:exams' %}#writing" class="menu-item">
+                    <div class="menu-icon"></div>
+                    <span>آزمون نوشتاری</span>
+                </a>
+                <a href="{% url 'team7:exams' %}#speaking" class="menu-item">
+                    <div class="menu-icon"></div>
+                    <span>آزمون گفتاری</span>
+                </a>
+                <a href="#statistics-section" class="menu-item">
+                    <div class="menu-icon"></div>
+                    <span>آمار و تحلیل عملکرد</span>
+                </a>
+            </aside>
+
+            <!-- Content Wrapper -->
+            <div class="content-wrapper">
+                <h1 class="page-title">داشبورد</h1>
+
+                <!-- Status Section -->
+                <section class="status-section">
+                    <div class="status-card">
+                        <div class="card-header">
+                            <div class="card-icon"></div>
+                            <p class="card-title">آمار فعالیت</p>
+                        </div>
+                        <div class="report-row">
+                            <p class="report-label">کل آزمون‌های انجام شده</p>
+                            <p class="report-value" id="total-attempts">--</p>
+                        </div>
+                        <div class="report-row">
+                            <p class="report-label">بهترین نمره</p>
+                            <p class="report-value" id="best-score">--</p>
+                        </div>
+                        <div class="report-row">
+                            <p class="report-label">میانگین نمرات</p>
+                            <p class="report-value" id="avg-score">--</p>
+                        </div>
+                        <div class="report-row">
+                            <p class="report-label">آخرین آزمون</p>
+                            <p class="report-value" id="last-attempt">--</p>
+                        </div>
+                    </div>
+
+                    <div class="status-card">
+                        <div class="card-header">
+                            <div class="card-icon"></div>
+                            <p class="card-title">آزمون‌های گفتاری</p>
+                        </div>
+                        <p class="card-number" id="speaking-count">0</p>
+                        <p class="card-label">تعداد آزمون‌های انجام شده</p>
+                    </div>
+                    <div class="status-card">
+                        <div class="card-header">
+                            <div class="card-icon"></div>
+                            <p class="card-title">آزمون‌های نوشتاری</p>
+                        </div>
+                        <p class="card-number" id="writing-count">0</p>
+                        <p class="card-label">تعداد آزمون‌های انجام شده</p>
+                    </div>
+                   
+                </section>
+
+                <!-- Charts Section -->
+                <section class="charts-section">
+                    <div class="chart-card">
+                        <h3 class="chart-title">نمودار نمرات در طول زمان</h3>
+                        <div class="chart-placeholder">
+                            <canvas id="scoresChart"></canvas>
+                        </div>
+                    </div>
+                     <div class="chart-card">
+                        <h3 class="chart-title">توزیع نمرات بر اساس معیارها</h3>
+                        <div class="chart-placeholder" style="position: relative; height: 280px;">
+                            <canvas id="criteriaChart"></canvas>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Latest Exams Section -->
+                <section class="exams-section">
+                    <h2 class="section-title">آخرین آزمون‌ها</h2>
+                    <div class="exams-grid">
+                        <div class="exam-card">
+                            <div class="exam-badge writing">نوشتاری</div>
+                            <p class="exam-date">2 روز پیش</p>
+                            <p class="exam-title">Task 2: Technology and Education</p>
+                            <div class="exam-score">
+                                <span class="score-label">نمره:</span>
+                                <span class="score-value">8.5</span>
+                            </div>
+                             <div class="best-badge">بهترین نتیجه</div>
+                        </div>
+
+                        <div class="exam-card">
+                            <div class="exam-badge speaking">گفتاری</div>
+                            <p class="exam-date">3 روز پیش</p>
+                            <p class="exam-title">Part 2: Describe a memorable event</p>
+                            <div class="exam-score">
+                                <span class="score-label">نمره:</span>
+                                <span class="score-value">7.5</span>
+                            </div>
+                            <div class="best-badge">بهترین نتیجه</div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Access Section -->
+                <section class="access-section">
+                    <a href="{% url 'team7:exams' %}#writing" class="access-card">
+                        <h3 class="access-title">آزمون نوشتاری جدید</h3>
+                        <p class="access-description">مهارت نوشتاری خود را با آزمون‌های هوشمند ارتقا دهید</p>
+                        <button class="btn-start">شروع آزمون</button>
+                    </a>
+
+                    <a href="{% url 'team7:exams' %}#speaking" class="access-card">
+                        <h3 class="access-title">آزمون گفتاری جدید</h3>
+                        <p class="access-description">مهارت مکالمه خود را با تمرین‌های صوتی تقویت کنید</p>
+                        <button class="btn-start">شروع آزمون</button>
+                    </a>
+                </section>
+
+                <!-- Statistics Section -->
+                <section class="statistics-section" id="statistics-section">
+                    <h2 class="section-title">آمار و تحلیل عملکرد</h2>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <h3 class="stat-title">دقت گرامری</h3>
+                            <div class="stat-chart" style="position: relative; height: 200px;">
+                                <canvas id="grammarChart"></canvas>
+                            </div>
+                            <div class="stat-info">
+                                <span class="stat-label">میزان دقت</span>
+                                <span class="stat-value" id="grammar-value">--</span>
+                            </div>
+                        </div>
+
+                        <div class="stat-card">
+                            <h3 class="stat-title">دامنه واژگان</h3>
+                            <div class="stat-chart" style="position: relative; height: 200px;">
+                                <canvas id="vocabularyChart"></canvas>
+                            </div>
+                            <div class="stat-info">
+                                <span class="stat-label">سطح واژگان</span>
+                                <span class="stat-value" id="vocabulary-value">--</span>
+                            </div>
+                        </div>
+
+                        <div class="stat-card">
+                            <h3 class="stat-title">روانی گفتار</h3>
+                            <div class="stat-chart" style="position: relative; height: 200px;">
+                                <canvas id="fluencyChart"></canvas>
+                            </div>
+                            <div class="stat-info">
+                                <span class="stat-label">میزان روانی</span>
+                                <span class="stat-value" id="fluency-value">--</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Files - Load auth.js first -->
+    <script src="{% static 'team7/js/auth.js' %}"></script>
+    <script src="{% static 'team7/js/auth-debug.js' %}"></script>
+    <script src="{% static 'team7/js/shared.js' %}" defer></script>
+    <script src="{% static 'team7/js/dashboard-charts.js' %}" defer></script>
+    <script src="{% static 'team7/js/dashboard.js' %}" defer></script>
+</body>
+</html>

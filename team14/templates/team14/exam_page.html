@@ -1,0 +1,434 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>آزمون رسمی ریدینگ تافل</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            background-color: var(--bg-cream);
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* انیمیشن پس‌زمینه */
+        body::before {
+            content: '';
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: moveBackground 20s linear infinite;
+            z-index: 0;
+        }
+
+        @keyframes moveBackground {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* هدر */
+
+
+        /* عنوان اصلی */
+        .main-title {
+            text-align: center;
+            margin-bottom: 15px;
+            animation: fadeInUp 0.8s ease 0.2s both;
+        }
+
+        .main-title h1 {
+            color: #0c1766;
+            font-size: 3em;
+            font-weight: 700;
+            text-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            margin-bottom: 15px;
+        }
+
+        .main-title p {
+            color: rgb(58, 16, 96);
+            font-size: 1.2em;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* محتوای اصلی */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        /* باکس جزئیات آزمون */
+        .details-box {
+            background: linear-gradient(135deg, #587CE6, #80CAFF);
+            backdrop-filter: blur(10px);
+            border-radius: 30px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            animation: fadeInLeft 0.8s ease 0.4s both;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .details-box::before {
+            content: '📚';
+            position: absolute;
+            top: -30px;
+            right: -30px;
+            font-size: 200px;
+            opacity: 0.1;
+            transform: rotate(-15deg);
+        }
+
+        @keyframes fadeInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .details-box h2 {
+            font-size: 1.8em;
+            margin-bottom: 25px;
+            color: #1e3a8a;
+            position: relative;
+            z-index: 1;
+        }
+
+        .detail-item {
+            margin-bottom: 18px;
+            line-height: 1.9;
+            color: #000000;
+            font-size: 1.05em;
+            position: relative;
+            z-index: 1;
+            animation: slideInRight 0.5s ease both;
+        }
+
+        .detail-item:nth-child(2) { animation-delay: 0.5s; }
+        .detail-item:nth-child(3) { animation-delay: 0.6s; }
+        .detail-item:nth-child(4) { animation-delay: 0.7s; }
+        .detail-item:nth-child(5) { animation-delay: 0.8s; }
+        .detail-item:nth-child(6) { animation-delay: 0.9s; }
+        .detail-item:nth-child(7) { animation-delay: 1s; }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .detail-item strong {
+            font-weight: 700;
+            color: #1e3a8a;
+        }
+
+        /* باکس هشدار */
+        .warning-box {
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            border-radius: 30px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(251, 191, 36, 0.4);
+            animation: fadeInRight 0.8s ease 0.6s both;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .warning-box::before {
+            content: '⚠️';
+            position: absolute;
+            bottom: -30px;
+            left: -30px;
+            font-size: 200px;
+            opacity: 0.1;
+            transform: rotate(15deg);
+        }
+
+        @keyframes fadeInRight {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .warning-icon {
+            font-size: 4em;
+            text-align: center;
+            margin-bottom: 20px;
+            animation: pulse 2s ease infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .warning-box h2 {
+            font-size: 1.8em;
+            margin-bottom: 25px;
+            color: #78350f;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .warning-item {
+            margin-bottom: 15px;
+            line-height: 1.9;
+            color: #78350f;
+            font-size: 1.05em;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* دکمه‌های اکشن */
+        .action-buttons {
+            grid-column: 1 / -1;
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            margin-top: 30px;
+            animation: fadeInUp 0.8s ease 0.8s both;
+        }
+
+        .btn {
+            padding: 20px 60px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.4em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn span {
+            position: relative;
+            z-index: 1;
+        }
+
+        .btn-start {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+        }
+
+        .btn-start:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 15px 40px rgba(16, 185, 129, 0.4);
+        }
+
+        .btn-back {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: white;
+        }
+
+        .btn-back:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 15px 40px rgba(239, 68, 68, 0.4);
+        }
+
+
+        /* افکت ذرات شناور */
+        .particle {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: float 15s ease-in-out infinite;
+            z-index: 0;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) translateX(0);
+            }
+            25% {
+                transform: translateY(-100px) translateX(50px);
+            }
+            50% {
+                transform: translateY(-200px) translateX(-50px);
+            }
+            75% {
+                transform: translateY(-100px) translateX(100px);
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+       <!-- Header -->
+{% include 'team14/public/header.html' %}
+
+           <!-- ذرات شناور -->
+    <div class="particle" style="top: 10%; left: 10%; animation-delay: 0s;"></div>
+    <div class="particle" style="top: 20%; left: 80%; animation-delay: 2s;"></div>
+    <div class="particle" style="top: 60%; left: 20%; animation-delay: 4s;"></div>
+    <div class="particle" style="top: 80%; left: 70%; animation-delay: 6s;"></div>
+    <div class="particle" style="top: 40%; left: 90%; animation-delay: 8s;"></div>
+
+    <div class="container">
+
+        <!-- عنوان اصلی -->
+        <div class="main-title">
+            <h1>آزمون رسمی ریدینگ تافل</h1>
+            <p>لطفاً پیش از شروع، توضیحات زیر را با دقت مطالعه کنید.</p>
+        </div>
+
+        <!-- محتوای اصلی -->
+        <div class="content-grid">
+            <!-- جزئیات آزمون -->
+            <div class="details-box">
+                <h2>جزئیات آزمون</h2>
+                <div class="detail-item">
+                    <strong>تعداد بخش‌ها:</strong> 3 تا 4 متن آکادمیک
+                </div>
+                <div class="detail-item">
+                    <strong>زمان آزمون:</strong> 54 تا 72 دقیقه (بسته به تعداد بخش‌ها)
+                </div>
+                <div class="detail-item">
+                    <strong>نوع سؤالات:</strong> Multiple Choice, Insert Sentence, Vocabulary, Summary, Inference
+                </div>
+                <div class="detail-item">
+                    <strong>محدودیت تعامل:</strong> فقط امکان جابه‌جایی بین سؤالات یک بخش
+                </div>
+                <div class="detail-item">
+                    <strong>ارسال پاسخ‌ها:</strong> با کلیک روی دکمه "Submit Test" در پایان آزمون
+                </div>
+                <div class="detail-item">
+                    <strong>تصحیح و نمره‌دهی:</strong> نمره مقیاس‌شده‌ی 0 تا 30 بر اساس استاندارد ETS
+                </div>
+            </div>
+
+            <!-- قوانین آزمون -->
+            <div class="warning-box">
+                <div class="warning-icon">⚠️</div>
+                <h2>قوانین آزمون</h2>
+                <div class="warning-item">
+                    در طول آزمون، امکان خروج از صفحه وجود ندارد.
+                </div>
+                <div class="warning-item">
+                    پس از کلیک روی "Start Exam"، تایمر فعال می‌شود.
+                </div>
+                <div class="warning-item">
+                    زمان آزمون به‌صورت خودکار پایان یافته و پاسخ‌ها ارسال می‌شوند.
+                </div>
+                <div class="warning-item">
+                    لطفاً از اتصال پایدار اینترنت اطمینان حاصل کنید.
+                </div>
+            </div>
+
+            <!-- دکمه‌های اکشن -->
+          <div class="action-buttons">
+    <a href="{% url 'start_exam' %}" class="btn btn-start">
+        <span>شروع آزمون</span>
+    </a>
+</div>
+
+        </div>
+
+        <!-- فوتر -->
+{% include 'team14/public/social-section.html' %}
+
+    <script>
+        function startExam() {
+            // افکت انیمیشن قبل از شروع
+            document.querySelector('.btn-start').style.transform = 'scale(0.9)';
+            setTimeout(() => {
+                alert('آزمون شروع می‌شود! آماده باشید...');
+                // اینجا می‌تونید به صفحه آزمون هدایت کنید
+                // window.location.href = 'exam.html';
+            }, 200);
+        }
+
+        function goBack() {
+            document.querySelector('.btn-back').style.transform = 'scale(0.9)';
+            setTimeout(() => {
+                window.history.back();
+            }, 200);
+        }
+
+        // افکت موس برای دکمه‌ها
+        document.querySelectorAll('.btn').forEach(btn => {
+            btn.addEventListener('mousemove', (e) => {
+                const rect = btn.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+
+                btn.style.setProperty('--mouse-x', x + 'px');
+                btn.style.setProperty('--mouse-y', y + 'px');
+            });
+        });
+    </script>
+    </div>
+</div>>
+</body>
+</html>

@@ -1,0 +1,639 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ lesson.title }} - جزئیات درس</title>
+    <link rel="stylesheet" href="{% static 'styles/style.css' %}">
+    <style>
+        body {
+            background: #f5f7fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .header-left a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            margin-left: 15px;
+        }
+
+        .login-container {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .login-text {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: #667eea;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .lesson-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+
+        .lesson-header h1 {
+            margin: 0 0 10px 0;
+            font-size: 2rem;
+        }
+
+        .lesson-info {
+            display: flex;
+            gap: 30px;
+            margin-top: 20px;
+            font-size: 0.95rem;
+            flex-wrap: wrap;
+        }
+
+        .lesson-info-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .lesson-info-item span {
+            opacity: 0.9;
+        }
+
+        .lesson-content {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .lesson-description {
+            color: #666;
+            font-size: 1rem;
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            color: #333;
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .videos-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .video-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .video-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+        }
+
+        .video-thumbnail {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: white;
+        }
+
+        .video-info {
+            padding: 20px;
+        }
+
+        .video-format {
+            display: inline-block;
+            background: #f0f0f0;
+            color: #667eea;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .video-info h3 {
+            margin: 10px 0 5px 0;
+            color: #333;
+        }
+
+        .video-meta {
+            color: #999;
+            font-size: 0.85rem;
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .watch-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: opacity 0.3s ease;
+            text-decoration: none;
+            display: block;
+            text-align: center;
+        }
+
+        .watch-btn:hover {
+            opacity: 0.9;
+            color: white;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            background: white;
+            border-radius: 12px;
+            color: #999;
+        }
+
+        .empty-state-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+
+        .empty-state h2 {
+            color: #666;
+            margin: 0 0 10px 0;
+        }
+
+        .empty-state p {
+            margin: 0;
+        }
+
+        /* Q&A Styles */
+        .question-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            border-right: 4px solid #667eea;
+        }
+
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .question-text {
+            color: #333;
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        .question-meta {
+            display: flex;
+            gap: 15px;
+            color: #999;
+            font-size: 0.85rem;
+            margin-bottom: 15px;
+        }
+
+        .answer-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .badge-answered {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .badge-unanswered {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .badge-mine {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .answers-section {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px solid #f0f0f0;
+        }
+
+        .answer-card {
+            background: #f7fafc;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+            border-right: 3px solid #4CAF50;
+        }
+
+        .answer-text {
+            color: #333;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        .answer-meta {
+            color: #666;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .teacher-badge {
+            background: #4CAF50;
+            color: white;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            .lesson-header {
+                padding: 20px;
+            }
+
+            .lesson-header h1 {
+                font-size: 1.5rem;
+            }
+
+            .lesson-info {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .videos-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-left">
+                <a href="{% url 'team2_base' %}">🏠 صفحه اصلی</a>
+                <a href="{% url 'team2_lessons_list' %}">← بازگشت به درس‌ها</a>
+            </div>
+            <div class="login-container">
+                {% if request.user.is_authenticated %}
+                    <span style="color: #333;">{{ request.user.email }}</span>
+                    <a href="{% url 'logout' %}" class="login-text">خروج</a>
+                {% else %}
+                    <a href="{% url 'auth' %}" class="login-text">ورود</a>
+                {% endif %}
+
+                <div class="user-avatar">
+                    <svg width="24" height="24" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="15" cy="10" r="5" fill="white" />
+                        <path d="M5 25C5 20 9 17 15 17C21 17 25 20 25 25" stroke="white" stroke-width="2"
+                            fill="none" />
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <div class="lesson-header">
+            <h1>📚 {{ lesson.title }}</h1>
+            <div class="lesson-info">
+                <div class="lesson-info-item">
+                    <span>📖 موضوع:</span>
+                    <strong>{{ lesson.subject }}</strong>
+                </div>
+                <div class="lesson-info-item">
+                    <span>🎯 مهارت:</span>
+                    <strong>{{ lesson.get_skill_display }}</strong>
+                </div>
+                <div class="lesson-info-item">
+                    <span>📊 سطح:</span>
+                    <strong>{{ lesson.get_level_display }}</strong>
+                </div>
+                <div class="lesson-info-item">
+                    <span>⏱️ مدت:</span>
+                    <strong>{{ lesson.duration_seconds }} دقیقه</strong>
+                </div>
+                <div class="lesson-info-item">
+                    <span>📺 ویدیوها:</span>
+                    <strong>{{ total_videos }} ویدیو</strong>
+                </div>
+            </div>
+        </div>
+
+        <div class="lesson-content">
+            <h2 class="section-title">📝 درباره این درس</h2>
+            <div class="lesson-description">
+                {{ lesson.description|linebreaks }}
+            </div>
+        </div>
+
+        <h2 class="section-title">🎬 ویدیوهای درس</h2>
+
+        {% if videos %}
+            <div class="videos-container">
+                {% for video in videos %}
+                    <div class="video-card">
+                        <div class="video-thumbnail">
+                            📹
+                        </div>
+                        <div class="video-info">
+                            <span class="video-format">{{ video.file_format }}</span>
+                            <h3>ویدیو {{ forloop.counter }}</h3>
+                            <div class="video-meta">
+                                <span>{{ video.formatted_size|default:video.file_size }}</span>
+                                <span>📅 {{ video.uploaded_at|date:"Y-m-d" }}</span>
+                            </div>
+                            <a href="{% url 'watch_video' lesson.id video.id %}" class="watch-btn">
+                                ▶️ پخش ویدیو
+                            </a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <div class="empty-state-icon">📹</div>
+                <h2>هیچ ویدیویی آپلود نشده</h2>
+                <p>معلم این درس هنوز ویدیویی آپلود نکرده است</p>
+            </div>
+        {% endif %}
+
+        <!-- Q&A Section -->
+        <div style="margin-top: 50px;">
+            <h2 class="section-title">💬 پرسش و پاسخ</h2>
+
+            <!-- Ask Question Form -->
+            <div class="lesson-content" style="margin-bottom: 30px;">
+                <h3 style="color: #333; font-size: 1.1rem; margin-bottom: 15px;">سؤال خود را بپرسید</h3>
+                <form id="askQuestionForm" style="display: flex; flex-direction: column; gap: 15px;">
+                    <textarea
+                        id="questionText"
+                        placeholder="سؤال خود را اینجا بنویسید (حداقل 10 کاراکتر)..."
+                        style="width: 100%; min-height: 100px; padding: 15px; border: 2px solid #e2e8f0; border-radius: 8px; font-family: inherit; font-size: 0.95rem; resize: vertical;"
+                        required
+                    ></textarea>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span id="charCount" style="color: #999; font-size: 0.85rem;">0 / 10 کاراکتر</span>
+                        <button
+                            type="submit"
+                            style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 12px 30px; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; transition: opacity 0.3s;"
+                            onmouseover="this.style.opacity='0.9'"
+                            onmouseout="this.style.opacity='1'"
+                        >
+                            ارسال سؤال
+                        </button>
+                    </div>
+                    <div id="formMessage" style="display: none; padding: 12px; border-radius: 6px; font-size: 0.9rem;"></div>
+                </form>
+            </div>
+
+            <!-- Questions List -->
+            <div id="questionsList">
+                <div style="text-align: center; padding: 40px; color: #999;">
+                    <div style="font-size: 2rem; margin-bottom: 10px;">⏳</div>
+                    <p>در حال بارگذاری سؤالات...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const lessonId = {{ lesson.id }};
+
+        // Character count for question textarea
+        const questionTextarea = document.getElementById('questionText');
+        const charCount = document.getElementById('charCount');
+
+        questionTextarea.addEventListener('input', function() {
+            const length = this.value.length;
+            charCount.textContent = `${length} / 10 کاراکتر`;
+            charCount.style.color = length >= 10 ? '#4CAF50' : '#999';
+        });
+
+        // Load questions on page load
+        document.addEventListener('DOMContentLoaded', loadQuestions);
+
+        // Submit question form
+        document.getElementById('askQuestionForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const questionText = questionTextarea.value.trim();
+
+            if (questionText.length < 10) {
+                showMessage('سؤال باید حداقل 10 کاراکتر باشد!', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(`/team2/api/lessons/${lessonId}/ask/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCookie('csrftoken')
+                    },
+                    body: JSON.stringify({ question_text: questionText })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    showMessage('سؤال شما با موفقیت ثبت شد!', 'success');
+                    questionTextarea.value = '';
+                    charCount.textContent = '0 / 10 کاراکتر';
+                    charCount.style.color = '#999';
+                    setTimeout(() => loadQuestions(), 500);
+                } else {
+                    showMessage(data.error || 'خطا در ثبت سؤال', 'error');
+                }
+            } catch (error) {
+                showMessage('خطا در ارتباط با سرور', 'error');
+                console.error('Error:', error);
+            }
+        });
+
+        async function loadQuestions() {
+            const questionsList = document.getElementById('questionsList');
+
+            try {
+                const response = await fetch(`/team2/api/lessons/${lessonId}/questions/`);
+                const data = await response.json();
+
+                if (data.questions.length === 0) {
+                    questionsList.innerHTML = `
+                        <div style="text-align: center; padding: 40px; background: white; border-radius: 12px; color: #999;">
+                            <div style="font-size: 3rem; margin-bottom: 15px;">💬</div>
+                            <h3 style="color: #666; margin-bottom: 10px;">هنوز سؤالی پرسیده نشده</h3>
+                            <p>اولین نفری باشید که سؤال می‌پرسد!</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                let html = '';
+                data.questions.forEach(q => {
+                    const answeredBadge = q.answers_count > 0
+                        ? '<span class="answer-badge badge-answered">✓ پاسخ داده شده</span>'
+                        : '<span class="answer-badge badge-unanswered">در انتظار پاسخ</span>';
+
+                    const mineBadge = q.is_mine
+                        ? '<span class="answer-badge badge-mine">سؤال من</span>'
+                        : '';
+
+                    let answersHtml = '';
+                    if (q.answers.length > 0) {
+                        answersHtml = '<div class="answers-section"><h4 style="color: #333; font-size: 0.95rem; margin-bottom: 10px;">📝 پاسخ‌ها:</h4>';
+                        q.answers.forEach(a => {
+                            answersHtml += `
+                                <div class="answer-card">
+                                    <div class="answer-text">${escapeHtml(a.answer_text)}</div>
+                                    <div class="answer-meta">
+                                        <span class="teacher-badge">👨‍🏫 معلم</span>
+                                        <span>📅 ${formatDate(a.created_at)}</span>
+                                    </div>
+                                </div>
+                            `;
+                        });
+                        answersHtml += '</div>';
+                    }
+
+                    html += `
+                        <div class="question-card">
+                            <div class="question-header">
+                                <div style="flex: 1;">
+                                    <div class="question-text">${escapeHtml(q.question_text)}</div>
+                                    <div class="question-meta">
+                                        <span>📅 ${formatDate(q.created_at)}</span>
+                                        <span>💬 ${q.answers_count} پاسخ</span>
+                                    </div>
+                                </div>
+                                <div style="display: flex; flex-direction: column; gap: 5px; align-items: flex-end;">
+                                    ${mineBadge}
+                                    ${answeredBadge}
+                                </div>
+                            </div>
+                            ${answersHtml}
+                        </div>
+                    `;
+                });
+
+                questionsList.innerHTML = html;
+            } catch (error) {
+                questionsList.innerHTML = `
+                    <div style="text-align: center; padding: 40px; background: white; border-radius: 12px; color: #dc2626;">
+                        <div style="font-size: 2rem; margin-bottom: 10px;">⚠️</div>
+                        <p>خطا در بارگذاری سؤالات</p>
+                    </div>
+                `;
+                console.error('Error loading questions:', error);
+            }
+        }
+
+        function showMessage(message, type) {
+            const formMessage = document.getElementById('formMessage');
+            formMessage.style.display = 'block';
+            formMessage.textContent = message;
+
+            if (type === 'success') {
+                formMessage.style.background = '#d1fae5';
+                formMessage.style.color = '#065f46';
+                formMessage.style.border = '1px solid #a7f3d0';
+            } else {
+                formMessage.style.background = '#fee2e2';
+                formMessage.style.color = '#991b1b';
+                formMessage.style.border = '1px solid #fecaca';
+            }
+
+            setTimeout(() => {
+                formMessage.style.display = 'none';
+            }, 5000);
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+            return new Intl.DateTimeFormat('fa-IR', options).format(date);
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+    </script>
+</body>
+
+</html>

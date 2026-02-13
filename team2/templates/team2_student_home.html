@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>صفحه اصلی دانشجو - تیم 2</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .header h1 {
+            color: #2d3748;
+            font-size: 2em;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 15px;
+        }
+
+        .nav-link {
+            padding: 10px 20px;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s;
+            font-size: 0.9em;
+        }
+
+        .nav-link:hover {
+            background: #764ba2;
+            transform: translateY(-2px);
+        }
+
+        .stats-overview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .stat-card h3 {
+            font-size: 0.9em;
+            margin-bottom: 10px;
+            opacity: 0.9;
+        }
+
+        .stat-card .number {
+            font-size: 2em;
+            font-weight: bold;
+        }
+
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            font-size: 1.5em;
+            color: #2d3748;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .lessons-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+        }
+
+        .lesson-card {
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s;
+        }
+
+        .lesson-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.2);
+            transform: translateY(-3px);
+        }
+
+        .lesson-title {
+            font-size: 1.2em;
+            color: #2d3748;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .lesson-info {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            font-weight: 600;
+        }
+
+        .badge-level {
+            background-color: #e0e7ff;
+            color: #4338ca;
+        }
+
+        .badge-skill {
+            background-color: #fef3c7;
+            color: #92400e;
+        }
+
+        .badge-completed {
+            background-color: #d1fae5;
+            color: #065f46;
+        }
+
+        .badge-in-progress {
+            background-color: #dbeafe;
+            color: #1e40af;
+        }
+
+        .progress-info {
+            margin: 10px 0;
+            color: #4a5568;
+            font-size: 0.9em;
+        }
+
+        .rating-display {
+            color: #fbbf24;
+            font-size: 1.1em;
+            margin: 5px 0;
+        }
+
+        .lesson-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 0.85em;
+            transition: all 0.3s;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #764ba2;
+        }
+
+        .btn-secondary {
+            background: #e2e8f0;
+            color: #2d3748;
+        }
+
+        .btn-secondary:hover {
+            background: #cbd5e0;
+        }
+
+        .questions-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .question-card {
+            background: #f7fafc;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+
+        .question-text {
+            font-size: 1em;
+            color: #2d3748;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+
+        .question-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85em;
+            color: #718096;
+        }
+
+        .answer-badge {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.8em;
+        }
+
+        .answered {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .unanswered {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #718096;
+        }
+
+        .empty-state h3 {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+
+        .btn-enroll {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9em;
+            font-weight: 600;
+            transition: all 0.3s;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .btn-enroll:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(16, 185, 129, 0.4);
+        }
+
+        .btn-enroll:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .enroll-message {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 0.85em;
+            text-align: center;
+        }
+
+        .enroll-message.success {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .enroll-message.error {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .lesson-description {
+            color: #718096;
+            font-size: 0.9em;
+            margin: 10px 0;
+            line-height: 1.6;
+        }
+
+        .videos-count {
+            color: #667eea;
+            font-size: 0.85em;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎓 صفحه اصلی دانشجو</h1>
+            <div class="nav-links">
+                <a href="{% url 'team2_lessons_list' %}" class="nav-link">📚 دروس من</a>
+                <a href="{% url 'team2_lessons_rating' %}" class="nav-link">⭐ امتیازدهی</a>
+                <a href="/" class="nav-link">🏠 خانه</a>
+            </div>
+        </div>
+
+        <!-- آمار کلی -->
+        <div class="stats-overview">
+            <div class="stat-card">
+                <h3>تعداد دروس ثبت‌نامی</h3>
+                <div class="number">{{ total_lessons }}</div>
+            </div>
+            <div class="stat-card">
+                <h3>دروس تکمیل شده</h3>
+                <div class="number">{{ completed_lessons }}</div>
+            </div>
+            <div class="stat-card">
+                <h3>ساعات تماشا</h3>
+                <div class="number">{{ total_watch_hours }}</div>
+            </div>
+            <div class="stat-card">
+                <h3>تعداد سؤالات</h3>
+                <div class="number">{{ total_questions }}</div>
+            </div>
+        </div>
+
+        <!-- دروس من -->
+        <div class="section">
+            <div class="section-title">📚 دروس من</div>
+            {% if lessons_stats %}
+                <div class="lessons-grid">
+                    {% for stat in lessons_stats %}
+                    <div class="lesson-card">
+                        <div class="lesson-title">{{ stat.lesson.title }}</div>
+
+                        <div class="lesson-info">
+                            <span class="badge badge-level">{{ stat.lesson.get_level_display }}</span>
+                            <span class="badge badge-skill">{{ stat.lesson.get_skill_display }}</span>
+                            {% if stat.completed %}
+                                <span class="badge badge-completed">✓ تکمیل شده</span>
+                            {% else %}
+                                <span class="badge badge-in-progress">در حال یادگیری</span>
+                            {% endif %}
+                        </div>
+
+                        <div class="progress-info">
+                            ⏱️ زمان تماشا: {{ stat.watch_time }} دقیقه
+                        </div>
+
+                        {% if stat.my_rating %}
+                            <div class="rating-display">
+                                ⭐ امتیاز شما: {{ stat.my_rating }}/5
+                            </div>
+                        {% else %}
+                            <div class="rating-display" style="color: #718096;">
+                                امتیازی ثبت نشده
+                            </div>
+                        {% endif %}
+
+                        <div class="lesson-actions">
+                            <a href="{% url 'team2_lesson_details' stat.lesson.id %}" class="btn btn-primary">
+                                مشاهده درس
+                            </a>
+                            {% if not stat.my_rating %}
+                            <a href="{% url 'team2_lessons_rating' %}" class="btn btn-secondary">
+                                امتیازدهی
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="empty-state">
+                    <h3>هنوز در هیچ درسی ثبت‌نام نکرده‌اید!</h3>
+                    <p>برای شروع، در دروس مورد نظر خود ثبت‌نام کنید.</p>
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- سؤالات من -->
+        <div class="section">
+            <div class="section-title">💬 سؤالات اخیر من</div>
+            {% if my_questions %}
+                <div class="questions-list">
+                    {% for question in my_questions %}
+                    <div class="question-card">
+                        <div class="question-text">
+                            {{ question.question_text }}
+                        </div>
+                        <div class="question-meta">
+                            <span>درس: {{ question.lesson.title }}</span>
+                            <span>{{ question.created_at|date:"Y/m/d H:i" }}</span>
+                            {% if question.answers.count > 0 %}
+                                <span class="answer-badge answered">✓ پاسخ داده شده</span>
+                            {% else %}
+                                <span class="answer-badge unanswered">در انتظار پاسخ</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="empty-state">
+                    <h3>هنوز سؤالی نپرسیده‌اید!</h3>
+                    <p>در صفحه هر درس می‌توانید سؤالات خود را بپرسید.</p>
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- دروس قابل ثبت‌نام -->
+        <div class="section">
+            <div class="section-title">🔍 دروس قابل ثبت‌نام</div>
+            {% if available_lessons %}
+                <div class="lessons-grid">
+                    {% for lesson in available_lessons %}
+                    <div class="lesson-card" id="available-lesson-{{ lesson.id }}">
+                        <div class="lesson-title">{{ lesson.title }}</div>
+
+                        <div class="lesson-description">
+                            {{ lesson.description|truncatewords:20 }}
+                        </div>
+
+                        <div class="lesson-info">
+                            <span class="badge badge-level">{{ lesson.get_level_display }}</span>
+                            <span class="badge badge-skill">{{ lesson.skill }}</span>
+                        </div>
+
+                        <div class="videos-count">
+                            {% if lesson.videos.count > 0 %}
+                                📹 {{ lesson.videos.count }} ویدیو
+                            {% else %}
+                                📹 بدون ویدیو
+                            {% endif %}
+                        </div>
+
+                        <button
+                            class="btn-enroll"
+                            onclick="enrollLesson({{ lesson.id }})"
+                            id="enroll-btn-{{ lesson.id }}"
+                        >
+                            ثبت‌نام در این درس
+                        </button>
+
+                        <div class="enroll-message" id="enroll-msg-{{ lesson.id }}" style="display: none;"></div>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="empty-state">
+                    <h3>درس جدیدی برای ثبت‌نام وجود ندارد!</h3>
+                    <p>در تمام دروس موجود ثبت‌نام کرده‌اید.</p>
+                </div>
+            {% endif %}
+        </div>
+
+    </div>
+
+    <script>
+        // Get CSRF token
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        // Enroll in a lesson
+        async function enrollLesson(lessonId) {
+            const button = document.getElementById(`enroll-btn-${lessonId}`);
+            const message = document.getElementById(`enroll-msg-${lessonId}`);
+
+            button.disabled = true;
+            button.textContent = 'در حال ثبت‌نام...';
+            message.style.display = 'none';
+
+            try {
+                const response = await fetch(`/team2/browse/${lessonId}/enroll/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCookie('csrftoken')
+                    }
+                });
+
+                if (response.ok) {
+                    message.className = 'enroll-message success';
+                    message.textContent = 'ثبت‌نام با موفقیت انجام شد! در حال به‌روزرسانی...';
+                    message.style.display = 'block';
+
+                    // Reload page after 1.5 seconds
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1500);
+                } else {
+                    const data = await response.json();
+                    message.className = 'enroll-message error';
+                    message.textContent = data.error || 'خطا در ثبت‌نام';
+                    message.style.display = 'block';
+                    button.disabled = false;
+                    button.textContent = 'ثبت‌نام در این درس';
+                }
+            } catch (error) {
+                message.className = 'enroll-message error';
+                message.textContent = 'خطا در برقراری ارتباط با سرور';
+                message.style.display = 'block';
+                button.disabled = false;
+                button.textContent = 'ثبت‌نام در این درس';
+            }
+        }
+    </script>
+</body>
+</html>

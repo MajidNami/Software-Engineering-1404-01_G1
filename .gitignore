@@ -2,7 +2,7 @@
 .env
 .env.*
 !.env.example
-
+.idea/
 # python
 __pycache__/
 *.py[cod]

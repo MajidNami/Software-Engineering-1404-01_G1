@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>VocabAI | Practice Mode</title>
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
+    <style>
+        :root { --primary-orange: #ff8a65; --bg-gradient: linear-gradient(180deg, #f8d7da 0%, #d1e7dd 100%); --text-dark: #2d3436; }
+        body { font-family: 'Vazirmatn', sans-serif; background: var(--bg-gradient); margin: 0; min-height: 100vh; }
+        
+        nav { background: white; padding: 10px 5%; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .logo-area { font-weight: bold; text-decoration: none; color: var(--text-dark); font-size: 20px; }
+        .nav-tabs { display: flex; gap: 15px; list-style: none; margin: 0; padding: 0; }
+        .nav-tabs li { padding: 8px 15px; border-radius: 20px; font-size: 14px; cursor: pointer; color: #636e72; }
+        .nav-tabs li.active { background: #ff7043; color: white; font-weight: bold; }
+
+        .container { max-width: 800px; margin: 30px auto; padding: 0 20px; }
+        .info-card { background: white; border-radius: 24px; padding: 25px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
+        
+        .progress-bar { height: 8px; background: #eee; border-radius: 10px; margin: 20px 0 5px; overflow: hidden; }
+        .progress-fill { width: 0%; height: 100%; background: #2d3436; transition: width 0.5s ease; }
+
+        .tabs-row { display: flex; gap: 10px; margin-bottom: 20px; }
+        .tab-btn { flex: 1; padding: 12px; border: 1.5px solid #dfe6e9; background: white; border-radius: 15px; text-align: center; font-size: 13px; color: #636e72; transition: 0.3s; }
+        .tab-btn.active { border-color: #ff8a65; color: #ff8a65; background: #fff5f2; font-weight: bold; }
+
+        .quiz-container { background: #fff; border-radius: 24px; padding: 40px; text-align: left; direction: ltr; min-height: 350px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); position: relative; }
+        .quiz-type-tag { background: #fff5f2; color: #ff8a65; padding: 5px 14px; border-radius: 10px; font-size: 12px; font-weight: 800; text-transform: uppercase; }
+        .question-text { font-size: 22px; font-weight: 800; margin: 25px 0 30px; color: #2d3436; line-height: 1.4; }
+
+        .option-item { background: white; border: 1.5px solid #f1f2f6; padding: 18px; border-radius: 18px; cursor: pointer; transition: 0.2s; font-size: 16px; margin-bottom: 10px; }
+        .option-item:hover { border-color: #ff8a65; background: #fffdfc; }
+        .option-item.correct { border-color: #2ed573 !important; background: #eafff2 !important; color: #1e8449 !important; font-weight: bold; }
+        .option-item.wrong { border-color: #ff4757 !important; background: #fff2f2 !important; color: #c0392b !important; }
+        .option-item.disabled { pointer-events: none; opacity: 0.7; }
+
+        .continue-btn { width: 100%; padding: 18px; margin-top: 20px; background: #f3c6b5; color: white; border: none; border-radius: 15px; font-size: 18px; font-weight: bold; cursor: not-allowed; transition: 0.3s; }
+        .continue-btn.active { background: #ff8a65; cursor: pointer; box-shadow: 0 8px 20px rgba(255, 138, 101, 0.2); }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a href="/team8/" class="logo-area">✦ VocabAI</a>
+        <ul class="nav-tabs">
+            <li onclick="location.href='/team8/wordcard/'">Word Cards</li>
+            <li class="active">Practice</li>
+            <li onclick="location.href='/team8/mnemonics/'">Mnemonics</li>
+            <li onclick="location.href='/team8/analysis/'">Text Analysis</li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <div class="info-card">
+            <h3 style="margin:0">Adaptive Practice</h3>
+            <div class="progress-bar"><div id="p-fill" class="progress-fill"></div></div>
+            <div style="display:flex; justify-content:space-between; font-size:12px; color:#b2bec3;">
+                <span>Current Step</span><span id="p-text">0/4 Steps</span>
+            </div>
+        </div>
+
+        <div class="tabs-row">
+            <div class="tab-btn" id="tab-0">Meaning</div>
+            <div class="tab-btn" id="tab-1">Context</div>
+            <div class="tab-btn" id="tab-2">Collocation</div>
+            <div class="tab-btn" id="tab-3">Sentence</div>
+        </div>
+
+        <div class="quiz-container">
+            <span class="quiz-type-tag" id="exerciseLabel">Practice</span>
+            <div id="loading" style="text-align:center; margin-top:50px; color:#a4b0be;">AI is generating exercises...</div>
+            <div id="quizContent" style="display:none;">
+                <div class="question-text" id="questionText"></div>
+                <div class="options-grid" id="optionsGrid"></div>
+            </div>
+        </div>
+
+        <button class="continue-btn" id="nextBtn" onclick="handleContinue()" disabled>Continue ❯</button>
+    </div>
+
+    <script>
+        let allExercises = [];
+        let currentIndex = 0;
+        let isSolved = false;
+        let targetWord = "";
+
+        async function init() {
+            try {
+                const res = await fetch('/team8/practice/', { method: 'POST', headers: { 'X-CSRFToken': '{{ csrf_token }}' } });
+                const data = await res.json();
+                if (data.status === "success") {
+                    allExercises = data.exercises;
+                    targetWord = data.word;
+                    document.getElementById('loading').style.display = 'none';
+                    document.getElementById('quizContent').style.display = 'block';
+                    renderStep(0);
+                } else {
+                    document.getElementById('loading').innerHTML = `<p class="text-danger">${data.message}</p>`;
+                }
+            } catch (e) { document.getElementById('loading').textContent = "Connection error."; }
+        }
+
+        function renderStep(idx) {
+            currentIndex = idx; isSolved = false;
+            const ex = allExercises[idx];
+            const labels = ["Word Meaning", "Usage Context", "Collocation", "Sentence Building"];
+            
+            document.getElementById('exerciseLabel').textContent = labels[idx];
+            document.getElementById('questionText').textContent = ex.question;
+            document.getElementById('nextBtn').disabled = true;
+            document.getElementById('nextBtn').classList.remove('active');
+
+            const grid = document.getElementById('optionsGrid');
+            grid.innerHTML = ex.options.map(opt => `<div class="option-item" onclick="checkAnswer(this, '${opt}', '${ex.answer}')">${opt}</div>`).join('');
+
+            document.querySelectorAll('.tab-btn').forEach((btn, i) => btn.classList.toggle('active', i === idx));
+            document.getElementById('p-fill').style.width = (idx * 25) + "%";
+            document.getElementById('p-text').textContent = idx + "/4 Steps";
+        }
+
+        function checkAnswer(el, selected, correct) {
+            if (isSolved) return;
+            const items = document.querySelectorAll('.option-item');
+            items.forEach(item => {
+                item.classList.add('disabled');
+                if (item.textContent.trim() === correct) item.classList.add('correct');
+            });
+            if (selected !== correct) el.classList.add('wrong');
+            
+            isSolved = true;
+            document.getElementById('nextBtn').disabled = false;
+            document.getElementById('nextBtn').classList.add('active');
+        }
+
+        function handleContinue() {
+            if (currentIndex < 3) {
+                renderStep(currentIndex + 1);
+            } else {
+                // Finalize
+                document.getElementById('p-fill').style.width = "100%";
+                document.getElementById('p-text').textContent = "4/4 Steps";
+                fetch('/team8/api/save-practice/', {
+                    method: 'POST',
+                    headers: { 'X-CSRFToken': '{{ csrf_token }}', 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ word: targetWord })
+                });
+                document.getElementById('quizContent').innerHTML = `<div style="text-align:center; padding:50px;"><h2>🎉 Session Complete!</h2><p>You mastered <b>${targetWord}</b></p></div>`;
+                const btn = document.getElementById('nextBtn');
+                btn.textContent = "Finish Session";
+                btn.onclick = () => location.href = '/team8/wordcard/';
+            }
+        }
+        window.onload = init;
+    </script>
+</body>
+</html>

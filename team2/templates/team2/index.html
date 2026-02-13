@@ -1,54 +1,643 @@
 ﻿{% load static %}
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>میکروسرویس گروه ۱</title>
 
-  <!-- Team-local shared + team-local page styles -->
-  <link rel="stylesheet" href="{% static 'team2/styles/common.css' %}">
-  <link rel="stylesheet" href="{% static 'team2/styles/style.css' %}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>کلاس‌های من - Team2</title>
+    <link rel="stylesheet" href="{% static 'team2/styles/common.css' %}">
+    <link rel="stylesheet" href="{% static 'team2/styles/style.css' %}">
+    <style>
+        body {
+            background: #f5f7fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .header-left a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .login-container {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .login-text {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: #667eea;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .welcome-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .welcome-section h1 {
+            margin: 0 0 10px 0;
+            font-size: 2rem;
+        }
+
+        .welcome-section p {
+            margin: 0;
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .page-title {
+            font-size: 2rem;
+            color: #333;
+            margin: 0;
+        }
+
+        .btn-create {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: opacity 0.3s ease;
+        }
+
+        .btn-create:hover {
+            opacity: 0.9;
+            text-decoration: none;
+            color: white;
+        }
+
+        .lessons-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .lesson-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+        }
+
+        .lesson-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+        }
+
+        .lesson-card-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+        }
+
+        .lesson-card-header h3 {
+            margin: 0 0 10px 0;
+            font-size: 1.3rem;
+        }
+
+        .lesson-subject {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin: 5px 0;
+        }
+
+        .lesson-card-body {
+            padding: 20px;
+        }
+
+        .lesson-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .stat {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            margin-top: 5px;
+        }
+
+        .lesson-description {
+            color: #666;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-bottom: 15px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .lesson-level {
+            display: inline-block;
+            background: #f0f0f0;
+            color: #667eea;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            margin-bottom: 15px;
+        }
+
+        .lesson-status {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            margin-bottom: 15px;
+        }
+
+        .status-published {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .status-draft {
+            background: #ff9800;
+            color: white;
+        }
+
+        .lesson-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 10px;
+            border-radius: 6px;
+            text-decoration: none;
+            text-align: center;
+            font-weight: 600;
+            transition: opacity 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            opacity: 0.9;
+            text-decoration: none;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #667eea;
+        }
+
+        .btn-secondary:hover {
+            background: #e0e0e0;
+            text-decoration: none;
+            color: #667eea;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            background: white;
+            border-radius: 12px;
+            color: #999;
+        }
+
+        .empty-state-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+
+        .empty-state h2 {
+            color: #666;
+            margin: 0 0 10px 0;
+        }
+
+        .empty-state p {
+            margin: 0;
+        }
+
+        .teacher-badge {
+            display: inline-block;
+            background: #4CAF50;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .messages-container {
+            margin-bottom: 20px;
+        }
+
+        .message-alert {
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+        }
+
+        .message-alert.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .message-alert.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .message-alert.info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        .message-alert.warning {
+            background-color: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+
+        @media (max-width: 768px) {
+            .lessons-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+        }
+    </style>
 </head>
 
 <body>
-  <div class="container">
-    <header class="header">
-      <div class="header-right">
-        <a href="{% url 'microservices' %}" class="home-btn">میکروسرویس‌ها</a>
-      </div>
+    <div class="container">
+        <header class="header">
+            <div class="header-left">
+                <a href="{% url 'microservices' %}" class="home-btn">میکروسرویس‌ها</a>
+            </div>
 
-      <div class="header-left">
-        <div class="flag-settings">
-          <img src="{% static 'team2/public/images/settings.png' %}" alt="" class="settings-icon">
+            <div class="header-left">
+                <div class="flag-settings">
+                    <img src="{% static 'team2/public/images/settings.png' %}" alt="" class="settings-icon">
 
-          <div class="iran-flag">
-            <div class="flag-green"></div>
-            <div class="flag-white"></div>
-            <div class="flag-red"></div>
-          </div>
-        </div>
+                    <div class="iran-flag">
+                        <div class="flag-green"></div>
+                        <div class="flag-white"></div>
+                        <div class="flag-red"></div>
+                    </div>
+                </div>
 
-        <div class="login-container">
-          {% if request.user.is_authenticated %}
-            <a href="{% url 'logout' %}" class="login-text">خروج</a>
-          {% else %}
-            <a href="{% url 'auth' %}" class="login-text">ورود</a>
-          {% endif %}
+                <div class="login-container">
+                    {% if request.user.is_authenticated %}
+                        <span style="color: #333;">{{ request.user.email }}</span>
+                        <a href="{% url 'logout' %}" class="login-text">خروج</a>
+                    {% else %}
+                        <a href="{% url 'auth' %}" class="login-text">ورود</a>
+                    {% endif %}
 
-          <div class="user-avatar" aria-hidden="true">
-            <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="15" cy="10" r="5" fill="#647eb4" />
-              <path d="M5 25C5 20 9 17 15 17C21 17 25 20 25 25" stroke="#647eb4" stroke-width="2" fill="none" />
-            </svg>
-          </div>
-        </div>
-      </div>
-    </header>
+                    <div class="user-avatar" aria-hidden="true">
+                        <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="15" cy="10" r="5" fill="white" />
+                            <path d="M5 25C5 20 9 17 15 17C21 17 25 20 25 25" stroke="white" stroke-width="2" fill="none" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </header>
 
-    <main class="welcome-section">
-      <h1 style="font-size: 3rem; color: var(--navy);">به میکروسرویس گروه 2 خوش آمدید</h1>
-    </main>
-  </div>
+        {% if messages %}
+            <div class="messages-container">
+                {% for message in messages %}
+                    <div class="message-alert {% if message.tags %}{{ message.tags }}{% else %}info{% endif %}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        {% if not is_authenticated %}
+            <div class="welcome-section">
+                <h1>به پلتفرم آموزش خوش آمدید</h1>
+                <p>لطفا برای مشاهده کلاس‌های خود وارد شوید</p>
+            </div>
+
+            {# بخش کلاس‌های منتشر شده برای کاربران لاگین نشده #}
+            {% if available_lessons %}
+                <div style="margin-top: 30px;">
+                    <div class="page-header">
+                        <h2 class="page-title">🔍 کلاس‌های منتشر شده</h2>
+                        <a href="{% url 'browse_lessons' %}" class="btn-create" style="margin: 0;">
+                            🔍 مشاهده همه کلاس‌ها
+                        </a>
+                    </div>
+                    <p style="color: #666; margin-bottom: 20px;">برای ثبت‌نام در کلاس‌ها ابتدا وارد شوید</p>
+                    <div class="lessons-grid">
+                        {% for lesson in available_lessons|slice:":6" %}
+                            <div class="lesson-card">
+                                <div class="lesson-card-header">
+                                    <h3>{{ lesson.title }}</h3>
+                                    <div class="lesson-subject">📖 {{ lesson.subject }}</div>
+                                </div>
+                                <div class="lesson-card-body">
+                                    <div class="lesson-stats">
+                                        <div class="stat">
+                                            <div class="stat-value">{{ lesson.videos.count }}</div>
+                                            <div class="stat-label">ویدیو</div>
+                                        </div>
+                                        <div class="stat">
+                                            <div class="stat-value">{{ lesson.duration_seconds }}</div>
+                                            <div class="stat-label">دقیقه</div>
+                                        </div>
+                                    </div>
+                                    <div class="lesson-description">
+                                        {{ lesson.description|truncatewords:15 }}
+                                    </div>
+                                    <div class="lesson-level">
+                                        📊 {{ lesson.get_level_display }}
+                                    </div>
+                                    <div class="lesson-status status-published">
+                                        ✅ منتشر شده
+                                    </div>
+                                    <div class="lesson-actions">
+                                        <a href="{% url 'auth' %}" class="btn btn-primary" style="width: 100%; display: block; text-align: center;">
+                                            🔐 ورود برای ثبت‌نام
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    {% if total_available > 6 %}
+                        <div style="text-align: center; margin-top: 20px;">
+                            <a href="{% url 'browse_lessons' %}" class="btn-create">
+                                🔍 مشاهده همه {{ total_available }} کلاس
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            {% endif %}
+        {% else %}
+            <div class="welcome-section">
+                <h1>کلاس‌های من</h1>
+                <p>
+                    {% if is_teacher %}
+                        شما به عنوان معلم {{ total_lessons }} کلاس دارید
+                    {% else %}
+                        شما در {{ total_lessons }} کلاس ثبت‌نام کرده‌اید
+                    {% endif %}
+                </p>
+            </div>
+
+            <div class="page-header">
+                <h2 class="page-title">
+                    {% if is_teacher %}
+                        📚 کلاس‌های من (معلم)
+                    {% else %}
+                        📚 کلاس‌های من (دانش‌آموز)
+                    {% endif %}
+                </h2>
+                {% if is_teacher %}
+                    <a href="{% url 'teacher_create_lesson' %}" class="btn-create">
+                        ➕ ایجاد کلاس جدید
+                    </a>
+                {% endif %}
+            </div>
+
+            {% if lessons %}
+                <div class="lessons-grid">
+                    {% for lesson in lessons %}
+                        <div class="lesson-card">
+                            <div class="lesson-card-header">
+                                <h3>{{ lesson.title }}</h3>
+                                <div class="lesson-subject">📖 {{ lesson.subject }}</div>
+                            </div>
+                            <div class="lesson-card-body">
+                                <div class="lesson-stats">
+                                    <div class="stat">
+                                        <div class="stat-value">{{ lesson.videos.count }}</div>
+                                        <div class="stat-label">ویدیو</div>
+                                    </div>
+                                    <div class="stat">
+                                        <div class="stat-value">{{ lesson.duration_seconds }}</div>
+                                        <div class="stat-label">دقیقه</div>
+                                    </div>
+                                </div>
+                                <div class="lesson-description">
+                                    {{ lesson.description|truncatewords:15 }}
+                                </div>
+                                <div class="lesson-level">
+                                    📊 {{ lesson.get_level_display }}
+                                </div>
+                                {% if is_teacher %}
+                                    <div class="lesson-status status-{{ lesson.status }}">
+                                        {% if lesson.status == 'published' %}
+                                            ✅ منتشر شده
+                                        {% elif lesson.status == 'draft' %}
+                                            📝 پیش‌نویس
+                                        {% else %}
+                                            📦 آرشیو شده
+                                        {% endif %}
+                                    </div>
+                                {% endif %}
+                                <div class="lesson-actions">
+                                    {% if is_teacher %}
+                                        {% if lesson.creator == user_details %}
+                                            {# کلاس‌هایی که معلم خودش ساخته #}
+                                            <a href="{% url 'teacher_lesson_videos' lesson.id %}" class="btn btn-primary">
+                                                مدیریت ویدیوها
+                                            </a>
+                                            {% if lesson.status == 'draft' %}
+                                                <form method="POST" action="{% url 'publish_lesson' lesson.id %}" style="flex: 1;">
+                                                    {% csrf_token %}
+                                                    <button type="submit" class="btn btn-secondary" style="width: 100%; border: none; cursor: pointer;">
+                                                        انتشار
+                                                    </button>
+                                                </form>
+                                            {% endif %}
+                                        {% else %}
+                                            {# کلاس‌هایی که معلم در آن‌ها ثبت‌نام کرده (به عنوان دانش‌آموز) #}
+                                            <a href="{% url 'student_lesson_videos' lesson.id %}" class="btn btn-primary">
+                                                مشاهده ویدیوها
+                                            </a>
+                                        {% endif %}
+                                    {% else %}
+                                        <a href="{% url 'student_lesson_videos' lesson.id %}" class="btn btn-primary">
+                                            مشاهده ویدیوها
+                                        </a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="empty-state">
+                    <div class="empty-state-icon">
+                        {% if is_teacher %}
+                            📚
+                        {% else %}
+                            🎓
+                        {% endif %}
+                    </div>
+                    <h2>
+                        {% if is_teacher %}
+                            هنوز کلاسی ایجاد نکرده‌اید
+                        {% else %}
+                            هنوز در هیچ کلاسی ثبت‌نام نکرده‌اید
+                        {% endif %}
+                    </h2>
+                    <p>
+                        {% if is_teacher %}
+                            برای شروع، یک کلاس جدید ایجاد کنید
+                        {% else %}
+                            برای شروع، به بخش مرور کلاس‌ها بروید و در کلاس‌های منتشر شده ثبت‌نام کنید
+                        {% endif %}
+                    </p>
+                    {% if is_teacher %}
+                        <a href="{% url 'teacher_create_lesson' %}" class="btn-create" style="margin-top: 20px; display: inline-block;">
+                            ➕ ایجاد کلاس جدید
+                        </a>
+                    {% else %}
+                        <a href="{% url 'browse_lessons' %}" class="btn-create" style="margin-top: 20px; display: inline-block;">
+                            🔍 مرور کلاس‌ها
+                        </a>
+                    {% endif %}
+                </div>
+            {% endif %}
+
+            {# بخش کلاس‌های منتشر شده برای ثبت‌نام #}
+            {% if is_authenticated %}
+                <div style="margin-top: 50px;">
+                    <div class="page-header">
+                        <h2 class="page-title">🔍 کلاس‌های منتشر شده</h2>
+                        <div style="display: flex; gap: 15px; align-items: center;">
+                            <p style="color: #666; margin: 0;">می‌توانید در کلاس‌های زیر ثبت‌نام کنید</p>
+                            <a href="{% url 'browse_lessons' %}" class="btn-create" style="margin: 0;">
+                                🔍 مشاهده همه کلاس‌ها
+                            </a>
+                        </div>
+                    </div>
+
+                    {% if available_lessons %}
+                        <div class="lessons-grid">
+                            {% for lesson in available_lessons %}
+                                <div class="lesson-card">
+                                    <div class="lesson-card-header">
+                                        <h3>{{ lesson.title }}</h3>
+                                        <div class="lesson-subject">📖 {{ lesson.subject }}</div>
+                                    </div>
+                                    <div class="lesson-card-body">
+                                        <div class="lesson-stats">
+                                            <div class="stat">
+                                                <div class="stat-value">{{ lesson.videos.count }}</div>
+                                                <div class="stat-label">ویدیو</div>
+                                            </div>
+                                            <div class="stat">
+                                                <div class="stat-value">{{ lesson.duration_seconds }}</div>
+                                                <div class="stat-label">دقیقه</div>
+                                            </div>
+                                        </div>
+                                        <div class="lesson-description">
+                                            {{ lesson.description|truncatewords:15 }}
+                                        </div>
+                                        <div class="lesson-level">
+                                            📊 {{ lesson.get_level_display }}
+                                        </div>
+                                        <div class="lesson-status status-published">
+                                            ✅ منتشر شده
+                                        </div>
+                                        <div class="lesson-actions">
+                                            <form method="POST" action="{% url 'enroll_lesson' lesson.id %}" style="width: 100%;">
+                                                {% csrf_token %}
+                                                <button type="submit" class="btn btn-primary" style="width: 100%; border: none; cursor: pointer;">
+                                                    ➕ ثبت‌نام در این کلاس
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div style="text-align: center; padding: 40px; background: white; border-radius: 12px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);">
+                            <div style="font-size: 3rem; margin-bottom: 20px;">📚</div>
+                            <h3 style="color: #333; margin-bottom: 10px;">همه کلاس‌های منتشر شده را مشاهده می‌کنید</h3>
+                            <p style="color: #666; margin-bottom: 20px;">
+                                برای مشاهده کلاس‌های جدید منتظر انتشار کلاس‌های جدید باشید یا از دکمه بالا برای مشاهده همه کلاس‌ها استفاده کنید.
+                            </p>
+                            <a href="{% url 'browse_lessons' %}" class="btn-create" style="display: inline-block;">
+                                🔍 مشاهده همه کلاس‌های منتشر شده
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            {% endif %}
+        {% endif %}
+    </div>
 </body>
+
 </html>

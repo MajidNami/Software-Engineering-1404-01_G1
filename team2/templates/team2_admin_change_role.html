@@ -1,0 +1,315 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تغییر نقش کاربر</title>
+    <link rel="stylesheet" href="{% static 'styles/style.css' %}">
+    <style>
+        .form-container {
+            max-width: 600px;
+            margin: 40px auto;
+            padding: 40px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-header {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .form-header h1 {
+            font-size: 1.8rem;
+            color: #333;
+            margin: 0 0 10px 0;
+        }
+
+        .form-header p {
+            color: #666;
+            margin: 0;
+        }
+
+        .user-info {
+            background-color: #f0f0f0;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 30px;
+        }
+
+        .user-info p {
+            margin: 8px 0;
+            color: #333;
+        }
+
+        .user-info strong {
+            color: #647eb4;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            color: #333;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .role-options {
+            display: flex;
+            gap: 15px;
+        }
+
+        .role-option {
+            flex: 1;
+        }
+
+        .role-option input[type="radio"] {
+            display: none;
+        }
+
+        .role-option label {
+            display: block;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 0;
+        }
+
+        .role-option input[type="radio"]:checked + label {
+            border-color: #647eb4;
+            background-color: #f0f0ff;
+            font-weight: 600;
+        }
+
+        .role-option label:hover {
+            border-color: #647eb4;
+        }
+
+        .role-icon {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .role-name {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .role-desc {
+            font-size: 0.8rem;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .form-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 12px 24px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-submit {
+            background-color: #647eb4;
+            color: white;
+        }
+
+        .btn-submit:hover {
+            background-color: #4a5f8f;
+        }
+
+        .btn-cancel {
+            background-color: #e8f0fe;
+            color: #647eb4;
+            border: 1px solid #647eb4;
+            text-decoration: none;
+            text-align: center;
+        }
+
+        .btn-cancel:hover {
+            background-color: #d4e3f8;
+            text-decoration: none;
+            color: #647eb4;
+        }
+
+        .breadcrumb {
+            margin-bottom: 20px;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .breadcrumb a {
+            color: #647eb4;
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        .messages {
+            margin-bottom: 20px;
+        }
+
+        .message {
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+        }
+
+        .message.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        @media (max-width: 600px) {
+            .form-container {
+                padding: 20px;
+                margin: 20px 10px;
+            }
+
+            .role-options {
+                flex-direction: column;
+            }
+
+            .form-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <a href="{% url 'microservices' %}" class="home-btn">میکروسرویس ها</a>
+            </div>
+            <div class="header-right">
+                <div class="flag-settings">
+                    <img src="{% static 'public/images/settings.png' %}" alt="" class="settings-icon">
+                    <div class="iran-flag">
+                        <div class="flag-green"></div>
+                        <div class="flag-white"></div>
+                        <div class="flag-red"></div>
+                    </div>
+                </div>
+                <div class="login-container">
+                    {% if request.user.is_authenticated %}
+                        <span style="color: #333; margin-right: 15px;">{{ request.user.email }}</span>
+                        <a href="{% url 'logout' %}" class="login-text">خروج</a>
+                    {% else %}
+                        <a href="{% url 'auth' %}" class="login-text">ورود</a>
+                    {% endif %}
+
+                    <div class="user-avatar">
+                        <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="15" cy="10" r="5" fill="#647eb4" />
+                            <path d="M5 25C5 20 9 17 15 17C21 17 25 20 25 25" stroke="#647eb4" stroke-width="2"
+                                fill="none" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="form-container">
+            <div class="breadcrumb">
+                <a href="{% url 'team2_index' %}">🏠 صفحه اصلی</a> / 
+                <a href="{% url 'admin_users' %}">مدیریت کاربران</a> / تغییر نقش
+            </div>
+
+            {% if messages %}
+                <div class="messages">
+                    {% for message in messages %}
+                        <div class="message error">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <div class="form-header">
+                <h1>تغییر نقش کاربر</h1>
+                <p>نقش جدید برای کاربر را انتخاب کنید</p>
+            </div>
+
+            <div class="user-info">
+                <p>📧 ایمیل: <strong>{{ user.email }}</strong></p>
+                <p>👤 نقش فعلی: <strong>
+                    {% if user.role == 'teacher' %}
+                        👨‍🏫 معلم
+                    {% else %}
+                        👨‍🎓 دانش‌جو
+                    {% endif %}
+                </strong></p>
+            </div>
+
+            <form method="post">
+                {% csrf_token %}
+
+                <div class="form-group">
+                    <label>نقش جدید را انتخاب کنید:</label>
+                    <div class="role-options">
+                        {% for role_value, role_label in roles %}
+                            <div class="role-option">
+                                <input type="radio" id="role_{{ role_value }}" name="role" value="{{ role_value }}" 
+                                    {% if user.role == role_value %}checked{% endif %} required>
+                                <label for="role_{{ role_value }}">
+                                    <span class="role-icon">
+                                        {% if role_value == 'teacher' %}
+                                            👨‍🏫
+                                        {% else %}
+                                            👨‍🎓
+                                        {% endif %}
+                                    </span>
+                                    <span class="role-name">{{ role_label }}</span>
+                                    <span class="role-desc">
+                                        {% if role_value == 'teacher' %}
+                                            سازنده و مدیر درس‌ها
+                                        {% else %}
+                                            دانش‌جوی عادی
+                                        {% endif %}
+                                    </span>
+                                </label>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="form-buttons">
+                    <a href="{% url 'admin_users' %}" class="btn btn-cancel">
+                        انصراف
+                    </a>
+                    <button type="submit" class="btn btn-submit">
+                        ✓ تایید تغییر
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+
+</html>

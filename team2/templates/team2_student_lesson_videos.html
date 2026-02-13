@@ -1,0 +1,634 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ lesson.title }} - ویدیوها</title>
+    <link rel="stylesheet" href="{% static 'styles/style.css' %}">
+    <style>
+        body {
+            background: #f5f7fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .header-left a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .login-container {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .login-text {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: #667eea;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .lesson-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+
+        .lesson-header h1 {
+            margin: 0 0 10px 0;
+            font-size: 2rem;
+        }
+
+        .lesson-info {
+            display: flex;
+            gap: 30px;
+            margin-top: 20px;
+            font-size: 0.95rem;
+        }
+
+        .lesson-info-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .lesson-info-item span {
+            opacity: 0.9;
+        }
+
+        .back-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background: white;
+            color: #667eea;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            margin-bottom: 20px;
+            cursor: pointer;
+        }
+
+        .back-btn:hover {
+            background: #f0f0f0;
+        }
+
+        .videos-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .video-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .video-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+        }
+
+        .video-thumbnail {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: white;
+        }
+
+        .video-info {
+            padding: 20px;
+        }
+
+        .video-format {
+            display: inline-block;
+            background: #f0f0f0;
+            color: #667eea;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .video-info h3 {
+            margin: 10px 0 5px 0;
+            color: #333;
+        }
+
+        .video-meta {
+            color: #999;
+            font-size: 0.85rem;
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .watch-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: opacity 0.3s ease;
+        }
+
+        .watch-btn:hover {
+            opacity: 0.9;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            background: white;
+            border-radius: 12px;
+            color: #999;
+        }
+
+        .empty-state-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+
+        .empty-state h2 {
+            color: #666;
+            margin: 0 0 10px 0;
+        }
+
+        .empty-state p {
+            margin: 0;
+        }
+
+        .section-title {
+            color: #333;
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .lesson-content {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Q&A Styles */
+        .question-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            border-right: 4px solid #667eea;
+        }
+
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .question-text {
+            color: #333;
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        .question-meta {
+            display: flex;
+            gap: 15px;
+            color: #999;
+            font-size: 0.85rem;
+            margin-bottom: 15px;
+        }
+
+        .answer-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .badge-answered {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .badge-unanswered {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .badge-mine {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .answers-section {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px solid #f0f0f0;
+        }
+
+        .answer-card {
+            background: #f7fafc;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+            border-right: 3px solid #4CAF50;
+        }
+
+        .answer-text {
+            color: #333;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        .answer-meta {
+            color: #666;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .teacher-badge {
+            background: #4CAF50;
+            color: white;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            .lesson-header {
+                padding: 20px;
+            }
+
+            .lesson-header h1 {
+                font-size: 1.5rem;
+            }
+
+            .lesson-info {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .videos-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-left">
+                <a href="{% url 'team2_index' %}" style="margin-left: 15px;">🏠 صفحه اصلی</a>
+                <a href="{% url 'browse_lessons' %}">← بازگشت به درس‌ها</a>
+            </div>
+            <div class="login-container">
+                {% if request.user.is_authenticated %}
+                    <span style="color: #333;">{{ request.user.email }}</span>
+                    <a href="{% url 'logout' %}" class="login-text">خروج</a>
+                {% else %}
+                    <a href="{% url 'auth' %}" class="login-text">ورود</a>
+                {% endif %}
+
+                <div class="user-avatar">
+                    <svg width="24" height="24" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="15" cy="10" r="5" fill="white" />
+                        <path d="M5 25C5 20 9 17 15 17C21 17 25 20 25 25" stroke="white" stroke-width="2"
+                            fill="none" />
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <div class="lesson-header">
+            <h1>📚 {{ lesson.title }}</h1>
+            <div class="lesson-info">
+                <div class="lesson-info-item">
+                    <span>📖 موضوع:</span>
+                    <strong>{{ lesson.subject }}</strong>
+                </div>
+                <div class="lesson-info-item">
+                    <span>⏱️ مدت:</span>
+                    <strong>{{ lesson.duration_seconds }} دقیقه</strong>
+                </div>
+                <div class="lesson-info-item">
+                    <span>📺 ویدیوها:</span>
+                    <strong>{{ total_videos }} ویدیو</strong>
+                </div>
+            </div>
+        </div>
+
+        <h2 class="section-title">🎬 ویدیوهای درس</h2>
+
+        {% if videos %}
+            <div class="videos-container">
+                {% for video in videos %}
+                    <div class="video-card">
+                        <div class="video-thumbnail">
+                            📹
+                        </div>
+                        <div class="video-info">
+                            <span class="video-format">{{ video.file_format }}</span>
+                            <h3>ویدیو {{ forloop.counter }}</h3>
+                            <div class="video-meta">
+                                <span>
+                                    {% with size=video.file_size %}
+                                        {% if size > 1073741824 %}
+                                            {{ size|divisibleby:"1073741824" }} GB
+                                        {% elif size > 1048576 %}
+                                            {{ size|divisibleby:"1048576" }} MB
+                                        {% else %}
+                                            {{ size|divisibleby:"1024" }} KB
+                                        {% endif %}
+                                    {% endwith %}
+                                </span>
+                                <span>📅 {{ video.uploaded_at|date:"Y-m-d" }}</span>
+                            </div>
+                            <a href="{% url 'watch_video' lesson.id video.id %}" class="watch-btn" style="display: block; text-decoration: none; text-align: center;">
+                                ▶️ پخش ویدیو
+                            </a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <div class="empty-state-icon">📹</div>
+                <h2>هیچ ویدیویی آپلود نشده</h2>
+                <p>معلم این درس هنوز ویدیویی آپلود نکرده است</p>
+            </div>
+        {% endif %}
+
+        <!-- Q&A Section -->
+        <div class="lesson-content" style="margin-top: 40px;">
+            <h2 class="section-title">💬 پرسش و پاسخ</h2>
+
+            <div style="background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%); padding: 25px; border-radius: 10px; margin-bottom: 25px;">
+                <h3 style="color: #333; margin-top: 0; margin-bottom: 15px;">سوال جدید بپرسید</h3>
+                <textarea
+                    id="questionInput"
+                    placeholder="سوال خود را در مورد این درس بپرسید..."
+                    style="width: 100%; min-height: 120px; padding: 15px; border: 2px solid #e2e8f0; border-radius: 8px; font-family: inherit; font-size: 0.95rem; resize: vertical;"
+                ></textarea>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px;">
+                    <span id="charCount" style="color: #999; font-size: 0.85rem;">حداقل 10 کاراکتر</span>
+                    <button
+                        onclick="submitQuestion()"
+                        style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; padding: 12px 30px; border-radius: 6px; cursor: pointer; font-weight: 600; transition: opacity 0.3s;"
+                    >
+                        ارسال سوال
+                    </button>
+                </div>
+                <div id="questionMessage" style="margin-top: 15px; padding: 15px; border-radius: 8px; display: none;"></div>
+            </div>
+
+            <div id="questionsContainer">
+                <p style="text-align: center; color: #999;">در حال بارگذاری سوالات...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const lessonId = {{ lesson.id }};
+        const currentUserId = '{{ request.user.id }}';
+
+        // Character counter
+        const questionInput = document.getElementById('questionInput');
+        const charCount = document.getElementById('charCount');
+
+        questionInput.addEventListener('input', function() {
+            const length = this.value.length;
+            if (length < 10) {
+                charCount.textContent = `حداقل ${10 - length} کاراکتر دیگر`;
+                charCount.style.color = '#e53e3e';
+            } else {
+                charCount.textContent = `${length} کاراکتر`;
+                charCount.style.color = '#48bb78';
+            }
+        });
+
+        // Get CSRF token
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        // Submit question
+        async function submitQuestion() {
+            const questionText = questionInput.value.trim();
+            const messageDiv = document.getElementById('questionMessage');
+
+            if (questionText.length < 10) {
+                messageDiv.style.display = 'block';
+                messageDiv.style.backgroundColor = '#fee2e2';
+                messageDiv.style.color = '#991b1b';
+                messageDiv.style.border = '1px solid #fecaca';
+                messageDiv.textContent = 'سوال باید حداقل 10 کاراکتر داشته باشد';
+                return;
+            }
+
+            try {
+                const response = await fetch(`/team2/api/lessons/${lessonId}/ask/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCookie('csrftoken')
+                    },
+                    body: JSON.stringify({ question_text: questionText })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    messageDiv.style.display = 'block';
+                    messageDiv.style.backgroundColor = '#d1fae5';
+                    messageDiv.style.color = '#065f46';
+                    messageDiv.style.border = '1px solid #a7f3d0';
+                    messageDiv.textContent = 'سوال شما با موفقیت ثبت شد';
+
+                    questionInput.value = '';
+                    charCount.textContent = 'حداقل 10 کاراکتر';
+                    charCount.style.color = '#999';
+
+                    setTimeout(() => {
+                        messageDiv.style.display = 'none';
+                    }, 3000);
+
+                    loadQuestions();
+                } else {
+                    messageDiv.style.display = 'block';
+                    messageDiv.style.backgroundColor = '#fee2e2';
+                    messageDiv.style.color = '#991b1b';
+                    messageDiv.style.border = '1px solid #fecaca';
+                    messageDiv.textContent = data.error || 'خطا در ثبت سوال';
+                }
+            } catch (error) {
+                messageDiv.style.display = 'block';
+                messageDiv.style.backgroundColor = '#fee2e2';
+                messageDiv.style.color = '#991b1b';
+                messageDiv.style.border = '1px solid #fecaca';
+                messageDiv.textContent = 'خطا در برقراری ارتباط با سرور';
+            }
+        }
+
+        // Load questions
+        async function loadQuestions() {
+            const container = document.getElementById('questionsContainer');
+
+            try {
+                const response = await fetch(`/team2/api/lessons/${lessonId}/questions/`);
+                const data = await response.json();
+
+                if (!response.ok) {
+                    container.innerHTML = '<p style="text-align: center; color: #e53e3e;">خطا در بارگذاری سوالات</p>';
+                    return;
+                }
+
+                if (data.questions.length === 0) {
+                    container.innerHTML = '<div style="text-align: center; padding: 40px; color: #999;"><div style="font-size: 2rem; margin-bottom: 10px;">💭</div><p>هنوز سوالی پرسیده نشده است. اولین نفر باشید!</p></div>';
+                    return;
+                }
+
+                container.innerHTML = data.questions.map(q => {
+                    const isMyQuestion = q.user_id === currentUserId;
+                    const hasAnswers = q.answers && q.answers.length > 0;
+
+                    let badges = '';
+                    if (isMyQuestion) {
+                        badges += '<span class="answer-badge badge-mine">سوال من</span> ';
+                    }
+                    if (hasAnswers) {
+                        badges += '<span class="answer-badge badge-answered">پاسخ داده شده</span>';
+                    } else {
+                        badges += '<span class="answer-badge badge-unanswered">در انتظار پاسخ</span>';
+                    }
+
+                    const answersHtml = hasAnswers ? `
+                        <div class="answers-section">
+                            <h4 style="color: #333; font-size: 0.95rem; margin-bottom: 10px;">پاسخ‌ها:</h4>
+                            ${q.answers.map(a => `
+                                <div class="answer-card">
+                                    <div class="answer-text">${escapeHtml(a.answer_text)}</div>
+                                    <div class="answer-meta">
+                                        <span class="teacher-badge">معلم</span>
+                                        <span>${formatPersianDate(a.created_at)}</span>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    ` : '';
+
+                    return `
+                        <div class="question-card">
+                            <div class="question-header">
+                                <div style="flex: 1;">
+                                    <div class="question-text">${escapeHtml(q.question_text)}</div>
+                                    <div class="question-meta">
+                                        <span>📅 ${formatPersianDate(q.created_at)}</span>
+                                        <span>💬 ${q.answers ? q.answers.length : 0} پاسخ</span>
+                                    </div>
+                                </div>
+                                <div>${badges}</div>
+                            </div>
+                            ${answersHtml}
+                        </div>
+                    `;
+                }).join('');
+
+            } catch (error) {
+                container.innerHTML = '<p style="text-align: center; color: #e53e3e;">خطا در بارگذاری سوالات</p>';
+                console.error('Error loading questions:', error);
+            }
+        }
+
+        // Utility functions
+        function escapeHtml(text) {
+            const map = {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;'
+            };
+            return text.replace(/[&<>"']/g, m => map[m]);
+        }
+
+        function formatPersianDate(dateString) {
+            const date = new Date(dateString);
+            const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+            return date.toLocaleDateString('fa-IR', options);
+        }
+
+        // Load questions on page load
+        document.addEventListener('DOMContentLoaded', loadQuestions);
+    </script>
+
+</body>
+
+</html>

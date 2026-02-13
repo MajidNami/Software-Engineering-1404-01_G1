@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+{% load static %}
+<html class="light" lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>Performance Analytics Dashboard</title>
+  <script src="{% static 'team15/vendor/js/tailwindcdn.forms.container-queries.js' %}"></script>
+  <link href="{% static 'team15/vendor/css/lexend.css' %}" rel="stylesheet" />
+  <link href="{% static 'team15/vendor/css/material-symbols-outlined.css' %}" rel="stylesheet" />
+  <style type="text/tailwindcss">
+    :root {
+            --primary-500: #FA0B67;
+            --primary-600: #80CAFF;
+            --accent-orange: #FFB02D;
+            --accent-acsanc: #0B0754;
+            --neutral-border: #D9D9E9;
+            --neutral-background-light: #F0F3F5;
+            --text-primary: #0B0754;
+            --text-secondary: #3A38A0;
+            --text-light: #A7A6BC;
+            --state-success: #4CAF50;
+            --state-warning: #FFBD2E;
+            --state-error: #E65050;
+            --state-info: #587CE6;
+        }
+    </style>
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "var(--primary-500)",
+            "background-light": "var(--neutral-background-light)",
+            "background-dark": "#101622",
+            "positive": "var(--state-success)",
+            "warning": "var(--state-warning)",
+            "text-primary": "var(--text-primary)",
+            "text-secondary": "var(--text-secondary)",
+            "text-light": "var(--text-light)",
+            "accent-orange": "var(--accent-orange)",
+            "primary-600": "var(--primary-600)",
+            "state-error": "var(--state-error)",
+            "state-info": "var(--state-info)"
+          },
+          fontFamily: {
+            "display": ["Lexend", "sans-serif"]
+          },
+          borderRadius: {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+        },
+      },
+    }
+  </script>
+  <style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      font-size: 20px;
+    }
+  </style>
+</head>
+
+<body data-page="progress" class="font-display bg-background-light dark:bg-background-dark text-text-primary dark:text-gray-200">
+  <div class="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden">
+    <div class="layout-container flex h-full grow flex-col">
+      <header
+        class="flex items-center justify-between whitespace-nowrap border-b border-solid border-neutral-border dark:border-gray-700 bg-white dark:bg-background-dark/50 px-6 sm:px-10 lg:px-20 py-3 sticky top-0 z-10 backdrop-blur-sm">
+        <div class="flex items-center gap-4 text-text-primary dark:text-white">
+          <div class="size-6 text-primary">
+            <svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+              <g clip-path="url(#clip0_6_543)">
+                <path
+                  d="M42.1739 20.1739L27.8261 5.82609C29.1366 7.13663 28.3989 10.1876 26.2002 13.7654C24.8538 15.9564 22.9595 18.3449 20.6522 20.6522C18.3449 22.9595 15.9564 24.8538 13.7654 26.2002C10.1876 28.3989 7.13663 29.1366 5.82609 27.8261L20.1739 42.1739C21.4845 43.4845 24.5355 42.7467 28.1133 40.548C30.3042 39.2016 32.6927 37.3073 35 35C37.3073 32.6927 39.2016 30.3042 40.548 28.1133C42.7467 24.5355 43.4845 21.4845 42.1739 20.1739Z"
+                  fill="currentColor"></path>
+                <path clip-rule="evenodd"
+                  d="M7.24189 26.4066C7.31369 26.4411 7.64204 26.5637 8.52504 26.3738C9.59462 26.1438 11.0343 25.5311 12.7183 24.4963C14.7583 23.2426 17.0256 21.4503 19.238 19.238C21.4503 17.0256 23.2426 14.7583 24.4963 12.7183C25.5311 11.0343 26.1438 9.59463 26.3738 8.52504C26.5637 7.64204 26.4411 7.31369 26.4066 7.24189C26.345 7.21246 26.143 7.14535 25.6664 7.1918C24.9745 7.25925 23.9954 7.5498 22.7699 8.14278C20.3369 9.32007 17.3369 11.4915 14.4142 14.4142C11.4915 17.3369 9.32007 20.3369 8.14278 22.7699C7.5498 23.9954 7.25925 24.9745 7.1918 25.6664C7.14534 26.143 7.21246 26.345 7.24189 26.4066ZM29.9001 10.7285C29.4519 12.0322 28.7617 13.4172 27.9042 14.8126C26.465 17.1544 24.4686 19.6641 22.0664 22.0664C19.6641 24.4686 17.1544 26.465 14.8126 27.9042C13.4172 28.7617 12.0322 29.4519 10.7285 29.9001L21.5754 40.747C21.6001 40.7606 21.8995 40.931 22.8729 40.7217C23.9424 40.4916 25.3821 39.879 27.0661 38.8441C29.1062 37.5904 31.3734 35.7982 33.5858 33.5858C35.7982 31.3734 37.5904 29.1062 38.8441 27.0661C39.879 25.3821 40.4916 23.9425 40.7216 22.8729C40.931 21.8995 40.7606 21.6001 40.747 21.5754L29.9001 10.7285ZM29.2403 4.41187L43.5881 18.7597C44.9757 20.1473 44.9743 22.1235 44.6322 23.7139C44.2714 25.3919 43.4158 27.2666 42.252 29.1604C40.8128 31.5022 38.8165 34.012 36.4142 36.4142C34.012 38.8165 31.5022 40.8128 29.1604 42.252C27.2666 43.4158 25.3919 44.2714 23.7139 44.6322C22.1235 44.9743 20.1473 44.9757 18.7597 43.5881L4.41187 29.2403C3.29027 28.1187 3.08209 26.5973 3.21067 25.2783C3.34099 23.9415 3.8369 22.4852 4.54214 21.0277C5.96129 18.0948 8.43335 14.7382 11.5858 11.5858C14.7382 8.43335 18.0948 5.9613 21.0277 4.54214C22.4852 3.8369 23.9415 3.34099 25.2783 3.21067C26.5973 3.08209 28.1187 3.29028 29.2403 4.41187Z"
+                  fill="currentColor" fill-rule="evenodd"></path>
+              </g>
+              <defs>
+                <clipPath id="clip0_6_543">
+                  <rect fill="white" height="48" width="48"></rect>
+                </clipPath>
+              </defs>
+            </svg>
+          </div>
+          <h2 class="text-text-primary dark:text-white text-lg font-bold leading-tight tracking-[-0.015em]">TOEFL
+            Reading Practice</h2>
+        </div>
+        <div class="flex flex-1 justify-end items-center gap-4 md:gap-8">
+          <div class="hidden lg:flex items-center gap-9">
+            <a class="text-text-light dark:text-gray-400 text-sm font-medium leading-normal hover:text-primary dark:hover:text-primary"
+              href="{% url 'team15-dashboard-page' %}">Dashboard</a>
+            <a class="text-primary dark:text-white text-sm font-bold leading-normal" href="{% url 'team15-progress-page' %}">My Progress</a>
+            <a class="text-text-light dark:text-gray-400 text-sm font-medium leading-normal hover:text-primary dark:hover:text-primary"
+              href="{% url 'team15-exam-setup-page' %}">Exams</a>
+            <!-- <a class="text-text-light dark:text-gray-400 text-sm font-medium leading-normal hover:text-primary dark:hover:text-primary"
+              href="{% url 'team15-practice-reading-page' %}">Resources</a> -->
+          </div>
+          <button id="progress-start-session" type="button"
+            class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold leading-normal tracking-[0.015em]">
+            <span class="truncate">Start New Session</span>
+          </button>
+          <div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" data-alt="User avatar"
+            style='background-image: url("{% static 'team15/public/images/avatar-result.jpg' %}");'>
+          </div>
+        </div>
+      </header>
+      <main class="px-6 sm:px-10 lg:px-20 flex flex-1 justify-center py-5">
+        <div class="layout-content-container flex flex-col w-full max-w-7xl flex-1 gap-6">
+          <div class="flex flex-wrap justify-between items-center gap-4">
+            <div class="flex flex-col gap-1">
+              <p class="text-text-primary dark:text-white text-4xl font-black leading-tight tracking-[-0.033em]">
+                Performance Analytics</p>
+              <p class="text-text-light dark:text-gray-400 text-base font-normal leading-normal">Track your performance
+                in practice sessions and official exams.</p>
+            </div>
+          </div>
+          <div class="flex gap-2 p-1 overflow-x-auto">
+            <a href="?range=30d"
+              class="flex h-8 cursor-pointer shrink-0 items-center justify-center gap-x-2 rounded-lg pl-4 pr-4 {% if progress_range == '30d' %}bg-primary/20 dark:bg-primary/30{% else %}bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700{% endif %}">
+              <p class="{% if progress_range == '30d' %}text-primary dark:text-white{% else %}text-text-light dark:text-gray-300{% endif %} text-sm font-medium leading-normal">Last 30 Days</p>
+            </a>
+            <a href="?range=6m"
+              class="flex h-8 cursor-pointer shrink-0 items-center justify-center gap-x-2 rounded-lg pl-4 pr-4 {% if progress_range == '6m' %}bg-primary/20 dark:bg-primary/30{% else %}bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700{% endif %}">
+              <p class="{% if progress_range == '6m' %}text-primary dark:text-white{% else %}text-text-light dark:text-gray-300{% endif %} text-sm font-medium leading-normal">Last 6 Months</p>
+            </a>
+            <a href="?range=all"
+              class="flex h-8 cursor-pointer shrink-0 items-center justify-center gap-x-2 rounded-lg pl-4 pr-4 {% if progress_range == 'all' %}bg-primary/20 dark:bg-primary/30{% else %}bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700{% endif %}">
+              <p class="{% if progress_range == 'all' %}text-primary dark:text-white{% else %}text-text-light dark:text-gray-300{% endif %} text-sm font-medium leading-normal">All Time</p>
+            </a>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div
+              class="flex flex-col gap-2 rounded-xl p-6 bg-white dark:bg-gray-800 border border-neutral-border dark:border-gray-700">
+              <p class="text-text-light dark:text-gray-400 text-base font-medium leading-normal">Average Score</p>
+              <p class="text-text-primary dark:text-white tracking-light text-3xl font-bold leading-tight">{{ progress_avg_score }}</p>
+              <p class="{{ progress_avg_score_delta_class }} text-base font-medium leading-normal">{{ progress_avg_score_delta }}</p>
+            </div>
+            <div
+              class="flex flex-col gap-2 rounded-xl p-6 bg-white dark:bg-gray-800 border border-neutral-border dark:border-gray-700">
+              <p class="text-text-light dark:text-gray-400 text-base font-medium leading-normal">Time per Question</p>
+              <p class="text-text-primary dark:text-white tracking-light text-3xl font-bold leading-tight">{{ progress_avg_time }}</p>
+              <p class="{{ progress_avg_time_delta_class }} text-base font-medium leading-normal">{{ progress_avg_time_delta }}</p>
+            </div>
+            <div
+              class="flex flex-col gap-2 rounded-xl p-6 bg-white dark:bg-gray-800 border border-neutral-border dark:border-gray-700">
+              <p class="text-text-light dark:text-gray-400 text-base font-medium leading-normal">Accuracy Rate</p>
+              <p class="text-text-primary dark:text-white tracking-light text-3xl font-bold leading-tight">{{ progress_accuracy }}</p>
+              <p class="{{ progress_accuracy_delta_class }} text-base font-medium leading-normal">{{ progress_accuracy_delta }}</p>
+            </div>
+            <div
+              class="flex flex-col gap-2 rounded-xl p-6 bg-white dark:bg-gray-800 border border-neutral-border dark:border-gray-700">
+              <p class="text-text-light dark:text-gray-400 text-base font-medium leading-normal">Total Sessions</p>
+              <p class="text-text-primary dark:text-white tracking-light text-3xl font-bold leading-tight">{{ progress_total_sessions }}</p>
+              <p class="{{ progress_total_sessions_delta_class }} text-base font-medium leading-normal">{{ progress_total_sessions_delta }}</p>
+            </div>
+          </div>
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div
+              class="lg:col-span-2 flex flex-col gap-2 rounded-xl border border-neutral-border dark:border-gray-700 p-6 bg-white dark:bg-gray-800">
+              <p class="text-text-primary dark:text-white text-lg font-bold leading-normal">Performance Trend</p>
+              <div class="flex gap-1 items-baseline">
+                <p class="text-text-primary dark:text-white tracking-light text-4xl font-bold leading-tight truncate">
+                  {{ progress_trend_value }}</p>
+                <p class="{{ progress_trend_delta_class }} text-base font-medium leading-normal">{{ progress_trend_delta }} {{ progress_trend_compare_label }}</p>
+              </div>
+              <div class="flex min-h-[250px] flex-1 flex-col justify-end gap-4 pt-4">
+                <svg fill="none" height="100%" preserveAspectRatio="none" viewBox="-3 0 478 150" width="100%"
+                  xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="{{ progress_trend_area_path }}"
+                    fill="url(#paint0_linear_chart)"></path>
+                  <path
+                    d="{{ progress_trend_line_path }}"
+                    stroke="var(--primary-500)" stroke-linecap="round" stroke-width="3"></path>
+                  <defs>
+                    <linearGradient gradientUnits="userSpaceOnUse" id="paint0_linear_chart" x1="236" x2="236" y1="1"
+                      y2="149">
+                      <stop stop-color="var(--primary-500)" stop-opacity="0.2"></stop>
+                      <stop offset="1" stop-color="var(--primary-500)" stop-opacity="0"></stop>
+                    </linearGradient>
+                  </defs>
+                </svg>
+                <div class="flex justify-around">
+                  {% for trend_label in progress_trend_labels %}
+                  <p class="text-text-light dark:text-gray-400 text-[13px] font-bold leading-normal tracking-[0.015em]">
+                    {{ trend_label }}</p>
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+            <div class="flex flex-col gap-6">
+              <div
+                class="flex flex-1 flex-col gap-4 rounded-xl border border-neutral-border dark:border-gray-700 p-6 bg-white dark:bg-gray-800">
+                <h3 class="text-lg font-bold text-text-primary dark:text-white">By Question Type</h3>
+                <div class="flex flex-col gap-3">
+                  {% for item in progress_by_type %}
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                      <div class="w-2 h-2 rounded-full {{ item.dot_class }}"></div>
+                      <p class="text-sm font-medium text-text-secondary dark:text-gray-200">{{ item.label }}</p>
+                    </div>
+                    <p class="text-sm font-bold text-text-primary dark:text-white">{{ item.pct }}%</p>
+                  </div>
+                  {% endfor %}
+                </div>
+              </div>
+              <div
+                class="flex flex-1 flex-col gap-4 rounded-xl border border-neutral-border dark:border-gray-700 p-6 bg-white dark:bg-gray-800">
+                <h3 class="text-lg font-bold text-text-primary dark:text-white">Key Insights</h3>
+                <ul class="space-y-3">
+                  <li class="flex items-start gap-3">
+                    <span class="material-symbols-outlined text-positive mt-0.5">check_circle</span>
+                    <p class="text-sm text-text-secondary dark:text-gray-200"><span class="font-bold">Strength:</span>
+                      Strongest on {{ progress_strength_label }} questions ({{ progress_strength_pct }}% accuracy).</p>
+                  </li>
+                  <li class="flex items-start gap-3">
+                    <span class="material-symbols-outlined text-positive mt-0.5">check_circle</span>
+                    <p class="text-sm text-text-secondary dark:text-gray-200"><span class="font-bold">Trend:</span>
+                      {{ progress_trend_insight }}</p>
+                  </li>
+                  <li class="flex items-start gap-3">
+                    <span class="material-symbols-outlined text-warning mt-0.5">warning</span>
+                    <p class="text-sm text-text-secondary dark:text-gray-200"><span class="font-bold">Improvement
+                        Area:</span> Focus on {{ progress_improve_label }} questions ({{ progress_improve_pct }}% accuracy).</p>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div
+            class="flex flex-col gap-4 rounded-xl border border-neutral-border dark:border-gray-700 p-6 bg-white dark:bg-gray-800">
+            <h3 class="text-lg font-bold text-text-primary dark:text-white">Practice History</h3>
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="border-b border-neutral-border dark:border-gray-700">
+                  <tr>
+                    <th class="p-3 text-sm font-bold text-text-light dark:text-gray-400">Date</th>
+                    <th class="p-3 text-sm font-bold text-text-light dark:text-gray-400">Session Type</th>
+                    <th class="p-3 text-sm font-bold text-text-light dark:text-gray-400">Score</th>
+                    <th class="p-3 text-sm font-bold text-text-light dark:text-gray-400">Time Taken</th>
+                    <th class="p-3 text-sm font-bold text-text-light dark:text-gray-400"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for row in progress_history_rows %}
+                  <tr class="{% if not forloop.last %}border-b border-neutral-border dark:border-gray-600{% endif %}">
+                    <td class="p-3 text-sm font-medium text-text-secondary dark:text-white">{{ row.date }}</td>
+                    <td class="p-3 text-sm font-medium text-text-light dark:text-gray-300">{{ row.mode }}</td>
+                    <td class="p-3 text-sm font-medium text-text-secondary dark:text-white">{{ row.score }}</td>
+                    <td class="p-3 text-sm font-medium text-text-light dark:text-gray-300">{{ row.time_taken }}</td>
+                    <td class="p-3 text-sm font-medium text-right"><a class="text-primary font-bold" href="{{ row.detail_url }}">View
+                        Details</a></td>
+                  </tr>
+                  {% empty %}
+                  <tr>
+                    <td class="p-3 text-sm font-medium text-text-secondary dark:text-white">-</td>
+                    <td class="p-3 text-sm font-medium text-text-light dark:text-gray-300">No sessions yet</td>
+                    <td class="p-3 text-sm font-medium text-text-secondary dark:text-white">-</td>
+                    <td class="p-3 text-sm font-medium text-text-light dark:text-gray-300">-</td>
+                    <td class="p-3 text-sm font-medium text-right">-</td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+  <script src="{% static 'team15/js/ui_actions.js' %}?v=20260211-7"></script>
+</body>
+
+</html>

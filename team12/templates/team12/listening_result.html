@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Listening Practice Result</title>
+  </head>
+  <body>
+    <main class="listening-result">
+      <header>
+        <h1>Practice Result</h1>
+      </header>
+
+      <section class="summary">
+        <p>Session ID: {{ session.id }}</p>
+        <p>Score: {{ score }}</p>
+      </section>
+
+      <section class="answers">
+        <h2>Answers</h2>
+        <ul>
+          {% for answer in answers %}
+          <li>
+            <strong>Q{{ answer.question_number }}</strong>
+            - {{ answer.selected_choice }}
+            {% if answer.is_correct %}(Correct){% else %}(Incorrect){% endif %}
+            {% if answer.time_spent_seconds %}
+            - {{ answer.time_spent_seconds }}s
+            {% endif %}
+          </li>
+          {% empty %}
+          <li>No answers yet.</li>
+          {% endfor %}
+        </ul>
+      </section>
+    </main>
+  </body>
+</html>

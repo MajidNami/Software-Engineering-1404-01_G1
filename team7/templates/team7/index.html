@@ -1,54 +1,244 @@
-﻿{% load static %}
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>میکروسرویس گروه ۱</title>
-
-  <!-- Team-local shared + team-local page styles -->
-  <link rel="stylesheet" href="{% static 'team7/styles/common.css' %}">
-  <link rel="stylesheet" href="{% static 'team7/styles/style.css' %}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="آکادمی زبان - یادگیری زبان با هوش مصنوعی">
+    <meta name="theme-color" content="#0b0754">
+    <title>آکادمی زبان - یادگیری با هوش مصنوعی</title>
+    <!-- CSS Files -->
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'team7/css/variables.css' %}">
+    <link rel="stylesheet" href="{% static 'team7/css/common.css' %}">
+    <link rel="stylesheet" href="{% static 'team7/css/home.css' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
-
 <body>
-  <div class="container">
+    <!-- Header -->
     <header class="header">
-      <div class="header-right">
-        <a href="{% url 'microservices' %}" class="home-btn">میکروسرویس‌ها</a>
-      </div>
-
-      <div class="header-left">
-        <div class="flag-settings">
-          <img src="{% static 'team7/public/images/settings.png' %}" alt="" class="settings-icon">
-
-          <div class="iran-flag">
-            <div class="flag-green"></div>
-            <div class="flag-white"></div>
-            <div class="flag-red"></div>
-          </div>
+        <div class="header-inner">
+            <div class="logo-section">
+                <a href="{% url 'team7:index' %}" class="logo-link">
+                    <div class="logo-icon">AI</div>
+                    <div class="logo-text">آکادمی زبان</div>
+                </a>
+            </div>
+            <nav class="navigation-menu">
+                <a href="{% url 'team7:index' %}" class="nav-link active">خانه</a>
+                <a href="#" class="nav-link protected-link" data-redirect="{% url 'team7:exams' %}#speaking">مکالمه</a>
+                <a href="#" class="nav-link protected-link" data-redirect="{% url 'team7:exams' %}#writing">نوشتن</a>
+                <a href="#" class="nav-link protected-link" data-redirect="{% url 'team7:exams' %}">آزمون‌ها</a>
+                <a href="#" class="nav-link protected-link" data-redirect="{% url 'team7:dashboard' %}">داشبورد</a>
+            </nav>
+            <div class="header-buttons">
+                <button class="btn-login">ورود</button>
+                <button class="btn-signup">ثبت نام</button>
+            </div>
+            <button class="menu-toggle" aria-label="Toggle navigation menu">☰</button>
         </div>
-
-        <div class="login-container">
-          {% if request.user.is_authenticated %}
-            <a href="{% url 'logout' %}" class="login-text">خروج</a>
-          {% else %}
-            <a href="{% url 'auth' %}" class="login-text">ورود</a>
-          {% endif %}
-
-          <div class="user-avatar" aria-hidden="true">
-            <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="15" cy="10" r="5" fill="#647eb4" />
-              <path d="M5 25C5 20 9 17 15 17C21 17 25 20 25 25" stroke="#647eb4" stroke-width="2" fill="none" />
-            </svg>
-          </div>
-        </div>
-      </div>
     </header>
 
-    <main class="welcome-section">
-      <h1 style="font-size: 3rem; color: var(--navy);">به میکروسرویس گروه 7 خوش آمدید</h1>
+    <main>
+        <!-- Hero Section -->
+        <section class="hero-section" id="hero">
+            <div class="hero-inner">
+                <div class="hero-content">
+                    <h1 class="hero-title">مهارت مکالمه و نوشتن خود را با هوش مصنوعی تقویت کنید</h1>
+                    <p class="hero-description">
+                        با استفاده از تکنولوژی پیشرفته هوش مصنوعی، مهارت‌های زبانی خود را به سطح حرفه‌ای برسانید. ارزیابی دقیق، بازخورد آنی و مسیر یادگیری شخصی‌سازی شده
+                    </p>
+                    <div class="hero-cta-buttons">
+                        <a href="#" class="btn-primary-cta protected-link" data-redirect="{% url 'team7:exams' %}">شروع آزمون رایگان</a>
+                        <a href="#" class="btn-secondary-cta protected-link" data-redirect="{% url 'team7:exams' %}">مشاهده نمونه آزمون</a>
+                    </div>
+                    <div class="hero-stats">
+                        <div class="stat">
+                            <div class="stat-number">+۵۰۰۰</div>
+                            <div class="stat-label">دانشجوی فعال</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-number">۹۸٪</div>
+                            <div class="stat-label">رضایت کاربران</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-number">۲۴/۷</div>
+                            <div class="stat-label">پشتیبانی آنلاین</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="hero-image">
+                    <div class="image-online-study">
+                        <img src="{% static 'team7/images/online-study.png' %}" alt="تصویر یادگیری آنلاین">
+                    </div>
+                    <div class="image-test-list">
+                        <img src="{% static 'team7/images/test list illustration.png' %}" alt="نمونه آزمون">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="features-section" id="features">
+            <div class="section-header">
+                <p class="section-label">ویژگی‌های منحصر به فرد</p>
+                <h2 class="section-title">چرا آکادمی زبان ما را انتخاب کنید؟</h2>
+            </div>
+            <div class="features-grid">
+                <article class="feature-card">
+                    <div class="feature-icon">
+                        <img src="{% static 'team7/images/Progress Icon.png' %}" alt="آیکن پیشرفت">
+                    </div>
+                    <h3 class="feature-title">رشد قابل اندازه‌گیری</h3>
+                    <p class="feature-description">
+                        پیشرفت خود را با گزارش‌های تفصیلی و نمودارهای تحلیلی دنبال کنید. اهداف شخصی تعیین کرده و به آن‌ها برسید
+                    </p>
+                </article>
+                <article class="feature-card">
+                    <div class="feature-icon">
+                        <img src="{% static 'team7/images/Writing Icon.png' %}" alt="آیکن نوشتن">
+                    </div>
+                    <h3 class="feature-title">ارزیابی نوشتار حرفه‌ای</h3>
+                    <p class="feature-description">
+                        متن‌های خود را بنویسید و تحلیل جامع از گرامر، واژگان، ساختار و انسجام دریافت کنید. پیشنهادات بهبود شخصی‌سازی شده
+                    </p>
+                </article>
+                <article class="feature-card">
+                    <div class="feature-icon">
+                        <img src="{% static 'team7/images/Speaking Icon.png' %}" alt="آیکن مکالمه">
+                    </div>
+                    <h3 class="feature-title">آزمون مکالمه هوشمند</h3>
+                    <p class="feature-description">
+                        با هوش مصنوعی پیشرفته گفتگو کنید و تلفظ، روانی و دقت گرامری خود را بهبود دهید. بازخورد فوری و تحلیل دقیق عملکرد شما
+                    </p>
+                </article>
+            </div>
+        </section>
+
+        <!-- AI Testing Section -->
+        <section class="ai-testing-section" id="ai-testing">
+            <div class="ai-inner">
+                <div class="ai-image-wrapper">
+                    <img src="{% static 'team7/images/AI Technology.png' %}" alt="تکنولوژی هوش مصنوعی">
+                </div>
+                <div class="ai-content">
+                    <p class="section-label">تکنولوژی پیشرفته</p>
+                    <h2 class="section-title-right">آزمون‌های هوشمند با هوش مصنوعی</h2>
+                    <div class="ai-features-list">
+                        <div class="ai-feature">
+                            <div class="check-icon">✓</div>
+                            <p>تشخیص و تحلیل دقیق تلفظ و لهجه شما</p>
+                        </div>
+                        <div class="ai-feature">
+                            <div class="check-icon">✓</div>
+                            <p>ارزیابی لحظه‌ای گرامر و ساختار جملات</p>
+                        </div>
+                        <div class="ai-feature">
+                            <div class="check-icon">✓</div>
+                            <p>پیشنهادات هوشمند برای بهبود مهارت‌ها</p>
+                        </div>
+                        <div class="ai-feature">
+                            <div class="check-icon">✓</div>
+                            <p>شبیه‌سازی مکالمات واقعی و طبیعی</p>
+                        </div>
+                        <div class="ai-feature">
+                            <div class="check-icon">✓</div>
+                            <p>گزارش‌های جامع و قابل فهم از عملکرد</p>
+                        </div>
+                    </div>
+                    <a href="#" class="btn-ai-cta protected-link" data-redirect="{% url 'team7:exams' %}">شروع آزمون رایگان</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- How It Works Section -->
+        <section class="how-it-works-section" id="how-it-works">
+            <div class="section-header">
+                <p class="section-label">فرآیند ساده</p>
+                <h2 class="section-title">چگونه کار می‌کند؟</h2>
+            </div>
+            <div class="steps-container">
+                <article class="step-card">
+                    <div class="step-number">۱</div>
+                    <h3 class="step-title">ثبت نام رایگان</h3>
+                    <p class="step-description">
+                        در چند ثانیه حساب کاربری خود را ایجاد کنید و به پنل کاربری دسترسی پیدا کنید
+                    </p>
+                </article>
+                <article class="step-card">
+                    <div class="step-number">۲</div>
+                    <h3 class="step-title">انتخاب آزمون</h3>
+                    <p class="step-description">
+                        بین آزمون‌های مکالمه و نوشتن انتخاب کنید و سطح مهارت خود را مشخص نمایید
+                    </p>
+                </article>
+                <article class="step-card">
+                    <div class="step-number">۳</div>
+                    <h3 class="step-title">شرکت در آزمون</h3>
+                    <p class="step-description">
+                        با هوش مصنوعی تعامل کنید و مهارت‌های خود را در محیطی واقعی تمرین کنید
+                    </p>
+                </article>
+                <article class="step-card">
+                    <div class="step-number">۴</div>
+                    <h3 class="step-title">دریافت بازخورد</h3>
+                    <p class="step-description">
+                        گزارش تفصیلی از عملکرد خود دریافت کنید و نقاط قوت و ضعف را شناسایی نمایید
+                    </p>
+                </article>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="cta-section" id="cta">
+            <div class="cta-inner">
+                <h2 class="cta-title">آماده‌اید مهارت‌های زبانی خود را ارتقا دهید؟</h2>
+                <p class="cta-description">همین حالا به هزاران دانشجوی موفق بپیوندید و سفر یادگیری خود را آغاز کنید</p>
+                <a href="#" class="btn-cta protected-link" data-redirect="{% url 'team7:exams' %}">شروع آزمون رایگان</a>
+            </div>
+        </section>
     </main>
-  </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-column">
+                <h3 class="footer-title">آکادمی زبان</h3>
+                <p class="footer-text">
+                    پلتفرم پیشرفته آموزش زبان با هوش مصنوعی برای بهبود مهارت‌های مکالمه و نوشتن
+                </p>
+            </div>
+            <div class="footer-column">
+                <h3 class="footer-title">تماس با ما</h3>
+                <a href="mailto:info@languageacademy.ir" class="footer-link">info@languageacademy.ir</a>
+                <a href="tel:+982112345678" class="footer-link">تلفن: ۰۲۱-۱۲۳۴۵۶۷۸</a>
+                <p class="footer-link">آدرس: تهران، خیابان ولیعصر</p>
+            </div>
+            <div class="footer-column">
+                <h3 class="footer-title">پشتیبانی</h3>
+                <a href="#" class="footer-link">راهنما</a>
+                <a href="#" class="footer-link">سوالات متداول</a>
+                <a href="#" class="footer-link">تماس با ما</a>
+                <a href="#" class="footer-link">شرایط و قوانین</a>
+            </div>
+            <div class="footer-column">
+                <h3 class="footer-title">دسترسی سریع</h3>
+                <a href="#" class="footer-link protected-link" data-redirect="{% url 'team7:exams' %}#speaking">آزمون مکالمه</a>
+                <a href="#" class="footer-link protected-link" data-redirect="{% url 'team7:exams' %}#writing">آزمون نوشتن</a>
+                <a href="#" class="footer-link">قیمت‌ها</a>
+                <a href="#" class="footer-link">درباره ما</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 آکادمی زبان. تمامی حقوق محفوظ است.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Files - Load auth.js first -->
+    <script src="{% static 'team7/js/auth.js' %}"></script>
+    <script src="{% static 'team7/js/auth-debug.js' %}"></script>
+    <script src="{% static 'team7/js/shared.js' %}" defer></script>
+    <script src="{% static 'team7/js/home.js' %}" defer></script>
 </body>
 </html>

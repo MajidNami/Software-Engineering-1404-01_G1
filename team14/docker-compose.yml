@@ -1,29 +1,15 @@
 services:
-  gateway:
+  team14_gateway:
     image: nginx:alpine
+    container_name: team14_gateway
     ports:
-      - "${TEAM_PORT}:80"
+      - "8014:80"  # پورت یونیک برای تیم 14
     volumes:
       - ./gateway.conf:/etc/nginx/conf.d/default.conf:ro
-    environment:
-      - CORE_BASE_URL=http://core:8000
+      - ../staticfiles:/staticfiles:ro
+      - ../media:/media:ro
     networks:
       - app404
-  #   depends_on:
-  #     - frontend
-  #     - backend
-
-  # frontend:
-  #   image: traefik/whoami
-  #   command: ["-port=5173"]
-  #   networks:
-  #     - app404
-
-  # backend:
-  #   image: traefik/whoami
-  #   command: ["-port=3000"]
-  #   networks:
-  #     - app404
 
 networks:
   app404:
