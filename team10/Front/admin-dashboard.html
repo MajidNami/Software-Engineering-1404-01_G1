@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - TOEFL Master</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <i class="fas fa-headphones me-2"></i>
+                TOEFL Master
+            </a>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <i class="fas fa-bell"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown"
+                            role="button" data-bs-toggle="dropdown">
+                            <div class="rounded-circle bg-danger d-flex align-items-center justify-content-center me-2"
+                                style="width: 32px; height: 32px;">
+                                <span class="text-white">SA</span>
+                            </div>
+                            <span>System Admin</span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="admin-profile.html"><i
+                                        class="fas fa-user me-2"></i>Profile</a></li>
+                            <li><a class="dropdown-item" href="system-configuration.html"><i
+                                        class="fas fa-cog me-2"></i>System Settings</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="index.html"><i
+                                        class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-lg-2 col-md-3 sidebar">
+                <nav class="nav flex-column">
+                    <!-- Dashboard -->
+                    <div class="nav-item">
+                        <a class="nav-link" href="student-dashboard.html">
+                            <i class="fas fa-tachometer-alt me-2"></i> Dashboard
+                        </a>
+                    </div>
+
+                    <!-- Practice Section -->
+                    <div class="nav-item">
+                        <a class="nav-link" data-bs-toggle="collapse" href="#practiceMenu">
+                            <i class="fas fa-headphones me-2"></i> Practice
+                            <i class="fas fa-chevron-down ms-auto" style="font-size: 0.8rem;"></i>
+                        </a>
+                        <div class="collapse" id="practiceMenu">
+                            <div class="nav flex-column ps-3">
+                                <a class="nav-link" href="practice-mode.html">
+                                    <i class="fas fa-play-circle me-2"></i> Start Practice
+                                </a>
+                                <a class="nav-link" href="practice-session.html">
+                                    <i class="fas fa-microphone-alt me-2"></i> Active Session
+                                </a>
+                                <a class="nav-link" href="practice-feedback.html">
+                                    <i class="fas fa-chart-line me-2"></i> Practice Results
+                                </a>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Exams Section -->
+                    <div class="nav-item">
+                        <a class="nav-link" data-bs-toggle="collapse" href="#examsMenu">
+                            <i class="fas fa-file-alt me-2"></i> Exams
+                            <i class="fas fa-chevron-down ms-auto" style="font-size: 0.8rem;"></i>
+                        </a>
+                        <div class="collapse" id="examsMenu">
+                            <div class="nav flex-column ps-3">
+                                <a class="nav-link" href="exam-selection.html">
+                                    <i class="fas fa-list me-2"></i> Select Exam
+                                </a>
+                                <a class="nav-link" href="exam-session.html">
+                                    <i class="fas fa-pencil-alt me-2"></i> Take Exam
+                                </a>
+                                <a class="nav-link" href="exam-result.html">
+                                    <i class="fas fa-chart-bar me-2"></i> Exam Results
+                                </a>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Analytics Section -->
+                    <div class="nav-item">
+                        <a class="nav-link" data-bs-toggle="collapse" href="#analyticsMenu">
+                            <i class="fas fa-chart-bar me-2"></i> Analytics
+                            <i class="fas fa-chevron-down ms-auto" style="font-size: 0.8rem;"></i>
+                        </a>
+                        <div class="collapse" id="analyticsMenu">
+                            <div class="nav flex-column ps-3">
+                                <a class="nav-link" href="student-analytics.html">
+                                    <i class="fas fa-brain me-2"></i> My Analytics
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!-- Instructor Section (Only for Instructors) -->
+                    <div class="nav-item instructor-section">
+                        <a class="nav-link" data-bs-toggle="collapse" href="#instructorMenu">
+                            <i class="fas fa-chalkboard-teacher me-2"></i> Instructor
+                            <i class="fas fa-chevron-down ms-auto" style="font-size: 0.8rem;"></i>
+                        </a>
+                        <div class="collapse" id="instructorMenu">
+                            <div class="nav flex-column ps-3">
+                                <a class="nav-link" href="instructor-dashboard.html">
+                                    <i class="fas fa-tachometer-alt me-2"></i> Instructor Dashboard
+                                </a>
+                                <a class="nav-link" href="manage-students.html">
+                                    <i class="fas fa-users me-2"></i> Manage Students
+                                </a>
+                                <a class="nav-link" href="create-exam.html">
+                                    <i class="fas fa-file-alt me-2"></i> Create Exam
+                                </a>
+                                <a class="nav-link" href="assign-exam.html">
+                                    <i class="fas fa-paper-plane me-2"></i> Assign Exams
+                                </a>
+                                <a class="nav-link" href="instructor-analytics.html">
+                                    <i class="fas fa-chart-pie me-2"></i> Class Analytics
+                                </a>
+                                <a class="nav-link" href="student-detailed-report.html">
+                                    <i class="fas fa-user-graduate me-2"></i> Student Reports
+                                </a>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Admin Section (Only for Admins) -->
+                    <div class="nav-item admin-section">
+                        <a class="nav-link" data-bs-toggle="collapse" href="#adminMenu">
+                            <i class="fas fa-cogs me-2"></i> Admin
+                            <i class="fas fa-chevron-down ms-auto" style="font-size: 0.8rem;"></i>
+                        </a>
+                        <div class="collapse" id="adminMenu">
+                            <div class="nav flex-column ps-3">
+                                <a class="nav-link" href="admin-dashboard.html">
+                                    <i class="fas fa-tachometer-alt me-2"></i> Admin Dashboard
+                                </a>
+
+                                <a class="nav-link" href="question-bank-management.html">
+                                    <i class="fas fa-database me-2"></i> Question Bank
+                                </a>
+
+                                <a class="nav-link" href="system-configuration.html">
+                                    <i class="fas fa-sliders-h me-2"></i> System Configuration
+                                </a>
+                                <a class="nav-link" href="system-logs.html">
+                                    <i class="fas fa-clipboard-list me-2"></i> System Logs
+                                </a>
+
+                            </div>
+                        </div>
+
+
+                        <!-- Help & Support -->
+                        <div class="nav-item">
+                            <a class="nav-link" data-bs-toggle="collapse" href="#helpMenu">
+                                <i class="fas fa-question-circle me-2"></i> Help & Support
+                                <i class="fas fa-chevron-down ms-auto" style="font-size: 0.8rem;"></i>
+                            </a>
+                            <div class="collapse" id="helpMenu">
+                                <div class="nav flex-column ps-3">
+                                    <a class="nav-link" href="faq.html">
+                                        <i class="fas fa-question me-2"></i> FAQ
+                                    </a>
+                                    <a class="nav-link" href="user-guide.html">
+                                        <i class="fas fa-book me-2"></i> User Guide
+                                    </a>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Logout -->
+                        <div class="nav-item mt-3">
+                            <a class="nav-link text-danger" href="index.html">
+                                <i class="fas fa-sign-out-alt me-2"></i> Logout
+                            </a>
+                        </div>
+                </nav>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-lg-10 col-md-9 p-4">
+                <!-- Page Header -->
+                <div class="page-header mb-4">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h1 class="page-title">Admin Dashboard</h1>
+                            <p class="text-muted mb-0">System overview and administration</p>
+                        </div>
+                        <div class="dropdown">
+                            <button class="btn btn-outline-primary dropdown-toggle" type="button"
+                                data-bs-toggle="dropdown">
+                                <i class="fas fa-cog me-1"></i> Quick Actions
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#"><i class="fas fa-user-plus me-2"></i>Add New
+                                        User</a></li>
+                                <li><a class="dropdown-item" href="#"><i class="fas fa-database me-2"></i>Backup
+                                        Database</a></li>
+                                <li><a class="dropdown-item" href="#"><i class="fas fa-sync-alt me-2"></i>Clear
+                                        Cache</a></li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li><a class="dropdown-item" href="#"><i class="fas fa-shield-alt me-2"></i>Security
+                                        Scan</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- System Stats -->
+                <div class="row mb-4">
+                    <div class="col-xl-3 col-md-6 mb-3">
+                        <div class="card stat-card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="text-muted mb-1">Total Users</h6>
+                                        <h3 class="mb-0">1,248</h3>
+                                    </div>
+                                    <div class="icon-lg bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center"
+                                        style="width: 50px; height: 50px;">
+                                        <i class="fas fa-users"></i>
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-between mt-2">
+                                    <small class="text-muted">Students: 1,184</small>
+                                    <small class="text-muted">Instructors: 42</small>
+                                    <small class="text-muted">Admins: 22</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-md-6 mb-3">
+                        <div class="card stat-card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="text-muted mb-1">Active Sessions</h6>
+                                        <h3 class="mb-0">186</h3>
+                                    </div>
+                                    <div class="icon-lg bg-success bg-opacity-10 text-success rounded-circle d-flex align-items-center justify-content-center"
+                                        style="width: 50px; height: 50px;">
+                                        <i class="fas fa-signal"></i>
+                                    </div>
+                                </div>
+                                <div class="progress mt-3" style="height: 6px;">
+                                    <div class="progress-bar bg-success" style="width: 62%"></div>
+                                </div>
+                                <p class="text-muted small mt-2 mb-0">Peak: 312 (3:00 PM)</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-md-6 mb-3">
+                        <div class="card stat-card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="text-muted mb-1">System Load</h6>
+                                        <h3 class="mb-0">42%</h3>
+                                    </div>
+                                    <div class="icon-lg bg-warning bg-opacity-10 text-warning rounded-circle d-flex align-items-center justify-content-center"
+                                        style="width: 50px; height: 50px;">
+                                        <i class="fas fa-server"></i>
+                                    </div>
+                                </div>
+                                <div class="progress mt-3" style="height: 6px;">
+                                    <div class="progress-bar bg-warning" style="width: 42%"></div>
+                                </div>
+                                <p class="text-muted small mt-2 mb-0">CPU: 42% • RAM: 68% • Disk: 32%</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-md-6 mb-3">
+                        <div class="card stat-card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="text-muted mb-1">Uptime</h6>
+                                        <h3 class="mb-0">99.8%</h3>
+                                    </div>
+                                    <div class="icon-lg bg-info bg-opacity-10 text-info rounded-circle d-flex align-items-center justify-content-center"
+                                        style="width: 50px; height: 50px;">
+                                        <i class="fas fa-arrow-up"></i>
+                                    </div>
+                                </div>
+                                <div class="progress mt-3" style="height: 6px;">
+                                    <div class="progress-bar bg-info" style="width: 99.8%"></div>
+                                </div>
+                                <p class="text-muted small mt-2 mb-0">Last 30 days</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Platform Overview -->
+                <div class="row mb-4">
+                    <div class="col-lg-8 mb-4">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title mb-3">Platform Usage Overview</h5>
+                                <div class="chart-placeholder">
+                                    <div class="text-center p-4">
+                                        <i class="fas fa-chart-line fa-3x text-primary mb-3"></i>
+                                        <p>Daily Active Users (Last 30 Days)</p>
+                                        <div class="d-flex justify-content-center gap-4 mt-4">
+                                            <div class="text-center">
+                                                <h4 class="text-primary mb-0">142</h4>
+                                                <small class="text-muted">Week 1 Avg</small>
+                                            </div>
+                                            <div class="text-center">
+                                                <h4 class="text-primary mb-0">168</h4>
+                                                <small class="text-muted">Week 2 Avg</small>
+                                            </div>
+                                            <div class="text-center">
+                                                <h4 class="text-primary mb-0">195</h4>
+                                                <small class="text-muted">Week 3 Avg</small>
+                                            </div>
+                                            <div class="text-center">
+                                                <h4 class="text-primary mb-0">228</h4>
+                                                <small class="text-muted">Week 4 Avg</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4 mb-4">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title mb-3">System Health</h5>
+                                <div class="system-health mb-4">
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <span>API Response Time</span>
+                                        <span class="badge bg-success">128ms</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <span>Database Latency</span>
+                                        <span class="badge bg-success">45ms</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <span>Audio Streaming</span>
+                                        <span class="badge bg-success">Optimal</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <span>Storage Available</span>
+                                        <span class="badge bg-warning">68% used</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <span>Backup Status</span>
+                                        <span class="badge bg-success">Today, 2:00 AM</span>
+                                    </div>
+                                </div>
+
+                                <div class="alert alert-info">
+                                    <h6><i class="fas fa-info-circle me-2"></i>System Status</h6>
+                                    <p class="small mb-0">All systems operational. Last maintenance: Oct 10, 2023. Next
+                                        scheduled: Nov 10, 2023.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Activities & Alerts -->
+                <div class="row mb-4">
+                    <div class="col-lg-6 mb-4">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title mb-3">Recent System Activities</h5>
+                                <div class="activity-timeline">
+                                    <div class="d-flex mb-3">
+                                        <div class="icon-sm bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center me-3"
+                                            style="width: 40px; height: 40px;">
+                                            <i class="fas fa-user-plus"></i>
+                                        </div>
+                                        <div>
+                                            <h6 class="mb-0">New user registered</h6>
+                                            <p class="text-muted small mb-0">Sarah Johnson (Student)</p>
+                                            <small class="text-muted">Today, 10:30 AM</small>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex mb-3">
+                                        <div class="icon-sm bg-success bg-opacity-10 text-success rounded-circle d-flex align-items-center justify-content-center me-3"
+                                            style="width: 40px; height: 40px;">
+                                            <i class="fas fa-database"></i>
+                                        </div>
+                                        <div>
+                                            <h6 class="mb-0">Database backup completed</h6>
+                                            <p class="text-muted small mb-0">Backup size: 2.4 GB</p>
+                                            <small class="text-muted">Yesterday, 2:00 AM</small>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex mb-3">
+                                        <div class="icon-sm bg-warning bg-opacity-10 text-warning rounded-circle d-flex align-items-center justify-content-center me-3"
+                                            style="width: 40px; height: 40px;">
+                                            <i class="fas fa-exclamation-triangle"></i>
+                                        </div>
+                                        <div>
+                                            <h6 class="mb-0">High load warning</h6>
+                                            <p class="text-muted small mb-0">CPU usage peaked at 85%</p>
+                                            <small class="text-muted">Oct 14, 2023, 3:15 PM</small>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex">
+                                        <div class="icon-sm bg-info bg-opacity-10 text-info rounded-circle d-flex align-items-center justify-content-center me-3"
+                                            style="width: 40px; height: 40px;">
+                                            <i class="fas fa-sync-alt"></i>
+                                        </div>
+                                        <div>
+                                            <h6 class="mb-0">Cache cleared</h6>
+                                            <p class="text-muted small mb-0">System performance optimized</p>
+                                            <small class="text-muted">Oct 13, 2023, 11:00 PM</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6 mb-4">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title mb-3">System Alerts</h5>
+                                <div class="alert alert-warning d-flex align-items-center mb-3">
+                                    <i class="fas fa-exclamation-triangle fa-lg me-3"></i>
+                                    <div>
+                                        <h6 class="mb-1">Storage Warning</h6>
+                                        <p class="mb-0 small">Audio storage is at 82% capacity. Consider archiving old
+                                            files.</p>
+                                    </div>
+                                </div>
+
+                                <div class="alert alert-info d-flex align-items-center mb-3">
+                                    <i class="fas fa-info-circle fa-lg me-3"></i>
+                                    <div>
+                                        <h6 class="mb-1">Certificate Renewal</h6>
+                                        <p class="mb-0 small">SSL certificate expires in 30 days. Schedule renewal.</p>
+                                    </div>
+                                </div>
+
+                                <div class="alert alert-success d-flex align-items-center mb-3">
+                                    <i class="fas fa-check-circle fa-lg me-3"></i>
+                                    <div>
+                                        <h6 class="mb-1">Backup Successful</h6>
+                                        <p class="mb-0 small">Nightly backup completed successfully. 2.4 GB backed up.
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div class="alert alert-secondary d-flex align-items-center">
+                                    <i class="fas fa-bell fa-lg me-3"></i>
+                                    <div>
+                                        <h6 class="mb-1">Monthly Report</h6>
+                                        <p class="mb-0 small">Monthly usage report is ready for review.</p>
+                                    </div>
+                                </div>
+
+                                <div class="mt-3">
+                                    <a href="system-logs.html" class="btn btn-sm btn-outline-primary w-100">
+                                        <i class="fas fa-clipboard-list me-1"></i> View All Alerts
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- User Management -->
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title mb-3">Recent User Management</h5>
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>User</th>
+                                        <th>Role</th>
+                                        <th>Status</th>
+                                        <th>Last Login</th>
+                                        <th>Created</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div class="rounded-circle bg-primary d-flex align-items-center justify-content-center me-3"
+                                                    style="width: 36px; height: 36px;">
+                                                    <span class="text-white">SJ</span>
+                                                </div>
+                                                <div>
+                                                    <h6 class="mb-0">Sarah Johnson</h6>
+                                                    <small class="text-muted">sarah.j@email.com</small>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td><span class="badge bg-primary">Student</span></td>
+                                        <td><span class="badge bg-success">Active</span></td>
+                                        <td>Today, 10:30 AM</td>
+                                        <td>Oct 16, 2023</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-primary me-1">Edit</button>
+                                            <button class="btn btn-sm btn-outline-secondary">Logs</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div class="rounded-circle bg-warning d-flex align-items-center justify-content-center me-3"
+                                                    style="width: 36px; height: 36px;">
+                                                    <span class="text-white">DW</span>
+                                                </div>
+                                                <div>
+                                                    <h6 class="mb-0">Dr. Williams</h6>
+                                                    <small class="text-muted">dr.williams@email.com</small>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td><span class="badge bg-warning">Instructor</span></td>
+                                        <td><span class="badge bg-success">Active</span></td>
+                                        <td>Yesterday, 3:15 PM</td>
+                                        <td>Sep 5, 2023</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-primary me-1">Edit</button>
+                                            <button class="btn btn-sm btn-outline-secondary">Logs</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div class="rounded-circle bg-danger d-flex align-items-center justify-content-center me-3"
+                                                    style="width: 36px; height: 36px;">
+                                                    <span class="text-white">SA</span>
+                                                </div>
+                                                <div>
+                                                    <h6 class="mb-0">System Admin</h6>
+                                                    <small class="text-muted">admin@toeflmaster.com</small>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td><span class="badge bg-danger">Admin</span></td>
+                                        <td><span class="badge bg-success">Active</span></td>
+                                        <td>Today, 8:45 AM</td>
+                                        <td>Aug 1, 2023</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-primary me-1">Edit</button>
+                                            <button class="btn btn-sm btn-outline-secondary">Logs</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center me-3"
+                                                    style="width: 36px; height: 36px;">
+                                                    <span class="text-white">TB</span>
+                                                </div>
+                                                <div>
+                                                    <h6 class="mb-0">Thomas Brown</h6>
+                                                    <small class="text-muted">thomas.b@email.com</small>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td><span class="badge bg-primary">Student</span></td>
+                                        <td><span class="badge bg-secondary">Inactive</span></td>
+                                        <td>Oct 5, 2023</td>
+                                        <td>Aug 15, 2023</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-primary me-1">Edit</button>
+                                            <button class="btn btn-sm btn-outline-warning">Activate</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="text-center mt-3">
+                            <a href="#" class="btn btn-outline-primary">
+                                <i class="fas fa-users me-1"></i> Manage All Users
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="row">
+                    <div class="col-md-3 mb-3">
+                        <a href="#" class="card text-decoration-none h-100">
+                            <div class="card-body text-center p-4">
+                                <div class="icon-lg bg-primary bg-opacity-10 text-primary rounded-circle d-inline-flex align-items-center justify-content-center mb-3"
+                                    style="width: 60px; height: 60px;">
+                                    <i class="fas fa-user-plus fa-2x"></i>
+                                </div>
+                                <h5>Add User</h5>
+                                <p class="text-muted small">Create new student or instructor account</p>
+                            </div>
+                        </a>
+                    </div>
+
+                    <div class="col-md-3 mb-3">
+                        <a href="system-configuration.html" class="card text-decoration-none h-100">
+                            <div class="card-body text-center p-4">
+                                <div class="icon-lg bg-success bg-opacity-10 text-success rounded-circle d-inline-flex align-items-center justify-content-center mb-3"
+                                    style="width: 60px; height: 60px;">
+                                    <i class="fas fa-cog fa-2x"></i>
+                                </div>
+                                <h5>System Config</h5>
+                                <p class="text-muted small">Configure platform settings</p>
+                            </div>
+                        </a>
+                    </div>
+
+                    <div class="col-md-3 mb-3">
+                        <a href="system-logs.html" class="card text-decoration-none h-100">
+                            <div class="card-body text-center p-4">
+                                <div class="icon-lg bg-warning bg-opacity-10 text-warning rounded-circle d-inline-flex align-items-center justify-content-center mb-3"
+                                    style="width: 60px; height: 60px;">
+                                    <i class="fas fa-clipboard-list fa-2x"></i>
+                                </div>
+                                <h5>View Logs</h5>
+                                <p class="text-muted small">System and audit logs</p>
+                            </div>
+                        </a>
+                    </div>
+
+                    <div class="col-md-3 mb-3">
+                        <a href="#" class="card text-decoration-none h-100">
+                            <div class="card-body text-center p-4">
+                                <div class="icon-lg bg-info bg-opacity-10 text-info rounded-circle d-inline-flex align-items-center justify-content-center mb-3"
+                                    style="width: 60px; height: 60px;">
+                                    <i class="fas fa-database fa-2x"></i>
+                                </div>
+                                <h5>Backup</h5>
+                                <p class="text-muted small">Create system backup</p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script> -->
+</body>
+
+</html>

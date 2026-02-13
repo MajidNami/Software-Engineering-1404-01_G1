@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instructor Dashboard - TOEFL Master</title>
+ 
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <i class="fas fa-headphones me-2"></i>
+                TOEFL Master
+            </a>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <i class="fas fa-bell"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown"
+                            role="button" data-bs-toggle="dropdown">
+                            <div class="rounded-circle bg-warning d-flex align-items-center justify-content-center me-2"
+                                style="width: 32px; height: 32px;">
+                                <span class="text-white">DJ</span>
+                            </div>
+                            <span>Dr. Johnson</span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="instructor-profile.html"><i
+                                        class="fas fa-user me-2"></i>Profile</a></li>
+                            <li><a class="dropdown-item" href="instructor-settings.html"><i
+                                        class="fas fa-cog me-2"></i>Settings</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="index.html"><i
+                                        class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-lg-2 col-md-3 sidebar">
+                <nav class="nav flex-column">
+                    <!-- Dashboard -->
+                    <div class="nav-item">
+                        <a class="nav-link" href="student-dashboard.html">
+                            <i class="fas fa-tachometer-alt me-2"></i> Dashboard
+                        </a>
+                    </div>
+
+                    <!-- Practice Section -->
+                    <div class="nav-item">
+                        <a class="nav-link" data-bs-toggle="collapse" href="#practiceMenu">
+                            <i class="fas fa-headphones me-2"></i> Practice
+                            <i class="fas fa-chevron-down ms-auto" style="font-size: 0.8rem;"></i>
+                        </a>
+                        <div class="collapse" id="practiceMenu">
+                            <div class="nav flex-column ps-3">
+                                <a class="nav-link" href="practice-mode.html">
+                                    <i class="fas fa-play-circle me-2"></i> Start Practice
+                                </a>
+                                <a class="nav-link" href="practice-session.html">
+                                    <i class="fas fa-microphone-alt me-2"></i> Active Session
+                                </a>
+                                <a class="nav-link" href="practice-feedback.html">
+                                    <i class="fas fa-chart-line me-2"></i> Practice Results
+                                </a>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Exams Section -->
+                    <div class="nav-item">
+                        <a class="nav-link" data-bs-toggle="collapse" href="#examsMenu">
+                            <i class="fas fa-file-alt me-2"></i> Exams
+                            <i class="fas fa-chevron-down ms-auto" style="font-size: 0.8rem;"></i>
+                        </a>
+                        <div class="collapse" id="examsMenu">
+                            <div class="nav flex-column ps-3">
+                                <a class="nav-link" href="exam-selection.html">
+                                    <i class="fas fa-list me-2"></i> Select Exam
+                                </a>
+                                <a class="nav-link" href="exam-session.html">
+                                    <i class="fas fa-pencil-alt me-2"></i> Take Exam
+                                </a>
+                                <a class="nav-link" href="exam-result.html">
+                                    <i class="fas fa-chart-bar me-2"></i> Exam Results
+                                </a>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Analytics Section -->
+                    <div class="nav-item">
+                        <a class="nav-link" data-bs-toggle="collapse" href="#analyticsMenu">
+                            <i class="fas fa-chart-bar me-2"></i> Analytics
+                            <i class="fas fa-chevron-down ms-auto" style="font-size: 0.8rem;"></i>
+                        </a>
+                        <div class="collapse" id="analyticsMenu">
+                            <div class="nav flex-column ps-3">
+                                <a class="nav-link" href="student-analytics.html">
+                                    <i class="fas fa-brain me-2"></i> My Analytics
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!-- Instructor Section (Only for Instructors) -->
+                    <div class="nav-item instructor-section">
+                        <a class="nav-link" data-bs-toggle="collapse" href="#instructorMenu">
+                            <i class="fas fa-chalkboard-teacher me-2"></i> Instructor
+                            <i class="fas fa-chevron-down ms-auto" style="font-size: 0.8rem;"></i>
+                        </a>
+                        <div class="collapse" id="instructorMenu">
+                            <div class="nav flex-column ps-3">
+                                <a class="nav-link" href="instructor-dashboard.html">
+                                    <i class="fas fa-tachometer-alt me-2"></i> Instructor Dashboard
+                                </a>
+                                <a class="nav-link" href="manage-students.html">
+                                    <i class="fas fa-users me-2"></i> Manage Students
+                                </a>
+                                <a class="nav-link" href="create-exam.html">
+                                    <i class="fas fa-file-alt me-2"></i> Create Exam
+                                </a>
+                                <a class="nav-link" href="assign-exam.html">
+                                    <i class="fas fa-paper-plane me-2"></i> Assign Exams
+                                </a>
+                                <a class="nav-link" href="instructor-analytics.html">
+                                    <i class="fas fa-chart-pie me-2"></i> Class Analytics
+                                </a>
+                                <a class="nav-link" href="student-detailed-report.html">
+                                    <i class="fas fa-user-graduate me-2"></i> Student Reports
+                                </a>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Admin Section (Only for Admins) -->
+                    <div class="nav-item admin-section">
+                        <a class="nav-link" data-bs-toggle="collapse" href="#adminMenu">
+                            <i class="fas fa-cogs me-2"></i> Admin
+                            <i class="fas fa-chevron-down ms-auto" style="font-size: 0.8rem;"></i>
+                        </a>
+                        <div class="collapse" id="adminMenu">
+                            <div class="nav flex-column ps-3">
+                                <a class="nav-link" href="admin-dashboard.html">
+                                    <i class="fas fa-tachometer-alt me-2"></i> Admin Dashboard
+                                </a>
+
+                                <a class="nav-link" href="question-bank-management.html">
+                                    <i class="fas fa-database me-2"></i> Question Bank
+                                </a>
+
+                                <a class="nav-link" href="system-configuration.html">
+                                    <i class="fas fa-sliders-h me-2"></i> System Configuration
+                                </a>
+                                <a class="nav-link" href="system-logs.html">
+                                    <i class="fas fa-clipboard-list me-2"></i> System Logs
+                                </a>
+
+                            </div>
+                        </div>
+
+
+                        <!-- Help & Support -->
+                        <div class="nav-item">
+                            <a class="nav-link" data-bs-toggle="collapse" href="#helpMenu">
+                                <i class="fas fa-question-circle me-2"></i> Help & Support
+                                <i class="fas fa-chevron-down ms-auto" style="font-size: 0.8rem;"></i>
+                            </a>
+                            <div class="collapse" id="helpMenu">
+                                <div class="nav flex-column ps-3">
+                                    <a class="nav-link" href="faq.html">
+                                        <i class="fas fa-question me-2"></i> FAQ
+                                    </a>
+                                    <a class="nav-link" href="user-guide.html">
+                                        <i class="fas fa-book me-2"></i> User Guide
+                                    </a>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Logout -->
+                        <div class="nav-item mt-3">
+                            <a class="nav-link text-danger" href="index.html">
+                                <i class="fas fa-sign-out-alt me-2"></i> Logout
+                            </a>
+                        </div>
+                </nav>
+            </div>
+            <!-- Main Content -->
+            <div class="col-lg-10 col-md-9 p-4">
+                <!-- Page Header -->
+                <div class="page-header mb-4">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h1 class="page-title">Instructor Dashboard</h1>
+                            <p class="text-muted mb-0">Welcome back, Dr. Johnson. Here's your class overview.</p>
+                        </div>
+                        <div>
+                            <button class="btn btn-primary">
+                                <i class="fas fa-plus me-1"></i> New Assignment
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stats Overview -->
+                <div class="row mb-4">
+                    <div class="col-xl-3 col-md-6 mb-3">
+                        <div class="card stat-card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="text-muted mb-1">Total Students</h6>
+                                        <h3 class="mb-0">42</h3>
+                                    </div>
+                                    <div class="icon-lg bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center"
+                                        style="width: 50px; height: 50px;">
+                                        <i class="fas fa-users"></i>
+                                    </div>
+                                </div>
+                                <p class="text-muted small mt-2 mb-0">3 new this week</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-md-6 mb-3">
+                        <div class="card stat-card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="text-muted mb-1">Active Assignments</h6>
+                                        <h3 class="mb-0">8</h3>
+                                    </div>
+                                    <div class="icon-lg bg-success bg-opacity-10 text-success rounded-circle d-flex align-items-center justify-content-center"
+                                        style="width: 50px; height: 50px;">
+                                        <i class="fas fa-file-alt"></i>
+                                    </div>
+                                </div>
+                                <p class="text-muted small mt-2 mb-0">2 due this week</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-md-6 mb-3">
+                        <div class="card stat-card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="text-muted mb-1">Avg. Class Score</h6>
+                                        <h3 class="mb-0">86%</h3>
+                                    </div>
+                                    <div class="icon-lg bg-warning bg-opacity-10 text-warning rounded-circle d-flex align-items-center justify-content-center"
+                                        style="width: 50px; height: 50px;">
+                                        <i class="fas fa-chart-line"></i>
+                                    </div>
+                                </div>
+                                <p class="text-muted small mt-2 mb-0">+2% from last month</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-md-6 mb-3">
+                        <div class="card stat-card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="text-muted mb-1">Pending Reviews</h6>
+                                        <h3 class="mb-0">12</h3>
+                                    </div>
+                                    <div class="icon-lg bg-info bg-opacity-10 text-info rounded-circle d-flex align-items-center justify-content-center"
+                                        style="width: 50px; height: 50px;">
+                                        <i class="fas fa-clock"></i>
+                                    </div>
+                                </div>
+                                <p class="text-muted small mt-2 mb-0">Require attention</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Class Performance -->
+                <div class="row mb-4">
+                    <div class="col-lg-8 mb-4">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title mb-3">Class Performance Overview</h5>
+                                <div class="chart-placeholder">
+                                    <div class="text-center p-4">
+                                        <i class="fas fa-chart-bar fa-3x text-primary mb-3"></i>
+                                        <p>Class Performance Distribution</p>
+                                        <div class="row mt-4">
+                                            <div class="col-md-2 text-center">
+                                                <h6 class="text-danger">60-70%</h6>
+                                                <h4>3</h4>
+                                                <small>Students</small>
+                                            </div>
+                                            <div class="col-md-2 text-center">
+                                                <h6 class="text-warning">71-80%</h6>
+                                                <h4>8</h4>
+                                                <small>Students</small>
+                                            </div>
+                                            <div class="col-md-2 text-center">
+                                                <h6 class="text-info">81-90%</h6>
+                                                <h4>18</h4>
+                                                <small>Students</small>
+                                            </div>
+                                            <div class="col-md-2 text-center">
+                                                <h6 class="text-primary">91-95%</h6>
+                                                <h4>10</h4>
+                                                <small>Students</small>
+                                            </div>
+                                            <div class="col-md-2 text-center">
+                                                <h6 class="text-success">96-100%</h6>
+                                                <h4>3</h4>
+                                                <small>Students</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4 mb-4">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title mb-3">Recent Activity</h5>
+                                <div class="activity-timeline">
+                                    <div class="d-flex mb-3">
+                                        <div class="icon-sm bg-success bg-opacity-10 text-success rounded-circle d-flex align-items-center justify-content-center me-3"
+                                            style="width: 40px; height: 40px;">
+                                            <i class="fas fa-check"></i>
+                                        </div>
+                                        <div>
+                                            <h6 class="mb-0">Mid-term submitted</h6>
+                                            <p class="text-muted small mb-0">Maria Rodriguez - 92%</p>
+                                            <small class="text-muted">Today, 9:30 AM</small>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex mb-3">
+                                        <div class="icon-sm bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center me-3"
+                                            style="width: 40px; height: 40px;">
+                                            <i class="fas fa-file-alt"></i>
+                                        </div>
+                                        <div>
+                                            <h6 class="mb-0">Assignment created</h6>
+                                            <p class="text-muted small mb-0">Week 6 Practice Test</p>
+                                            <small class="text-muted">Yesterday, 4:15 PM</small>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex mb-3">
+                                        <div class="icon-sm bg-warning bg-opacity-10 text-warning rounded-circle d-flex align-items-center justify-content-center me-3"
+                                            style="width: 40px; height: 40px;">
+                                            <i class="fas fa-exclamation-triangle"></i>
+                                        </div>
+                                        <div>
+                                            <h6 class="mb-0">Student struggling</h6>
+                                            <p class="text-muted small mb-0">Alex Chen - Needs help with inference
+                                                questions</p>
+                                            <small class="text-muted">2 days ago</small>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex">
+                                        <div class="icon-sm bg-info bg-opacity-10 text-info rounded-circle d-flex align-items-center justify-content-center me-3"
+                                            style="width: 40px; height: 40px;">
+                                            <i class="fas fa-user-plus"></i>
+                                        </div>
+                                        <div>
+                                            <h6 class="mb-0">New student added</h6>
+                                            <p class="text-muted small mb-0">Sarah Johnson joined your class</p>
+                                            <small class="text-muted">3 days ago</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Active Assignments -->
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="card-title mb-0">Active Assignments</h5>
+                            <a href="assign-exam.html" class="text-decoration-none small">View All</a>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Assignment</th>
+                                        <th>Class</th>
+                                        <th>Due Date</th>
+                                        <th>Submitted</th>
+                                        <th>Avg. Score</th>
+                                        <th>Status</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Mid-Term Assessment</td>
+                                        <td>TOEFL Prep A</td>
+                                        <td>Oct 22, 2023</td>
+                                        <td>32/42</td>
+                                        <td>86%</td>
+                                        <td><span class="badge bg-warning">Active</span></td>
+                                        <td>
+                                            <a href="#" class="btn btn-sm btn-outline-primary me-1">View</a>
+                                            <a href="#" class="btn btn-sm btn-outline-secondary">Extend</a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Week 5 Practice</td>
+                                        <td>TOEFL Prep B</td>
+                                        <td>Oct 15, 2023</td>
+                                        <td>28/35</td>
+                                        <td>82%</td>
+                                        <td><span class="badge bg-warning">Active</span></td>
+                                        <td>
+                                            <a href="#" class="btn btn-sm btn-outline-primary me-1">View</a>
+                                            <a href="#" class="btn btn-sm btn-outline-success">Grade</a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Listening Diagnostic</td>
+                                        <td>Advanced Listening</td>
+                                        <td>Oct 8, 2023</td>
+                                        <td>40/40</td>
+                                        <td>78%</td>
+                                        <td><span class="badge bg-success">Graded</span></td>
+                                        <td>
+                                            <a href="#" class="btn btn-sm btn-outline-primary">Review</a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Academic Lecture Quiz</td>
+                                        <td>TOEFL Prep A</td>
+                                        <td>Oct 5, 2023</td>
+                                        <td>42/42</td>
+                                        <td>91%</td>
+                                        <td><span class="badge bg-success">Graded</span></td>
+                                        <td>
+                                            <a href="#" class="btn btn-sm btn-outline-primary">Review</a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Student Highlights -->
+                <div class="row">
+                    <div class="col-lg-6 mb-4">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <h5 class="card-title mb-0">Top Performers</h5>
+                                    <a href="manage-students.html" class="text-decoration-none small">View All</a>
+                                </div>
+                                <div class="list-group list-group-flush">
+                                    <div class="list-group-item px-0">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div class="d-flex align-items-center">
+                                                <div class="rounded-circle bg-success d-flex align-items-center justify-content-center me-3"
+                                                    style="width: 40px; height: 40px;">
+                                                    <span class="text-white">MR</span>
+                                                </div>
+                                                <div>
+                                                    <h6 class="mb-0">Maria Rodriguez</h6>
+                                                    <small class="text-muted">TOEFL Prep A</small>
+                                                </div>
+                                            </div>
+                                            <div class="text-end">
+                                                <h6 class="mb-0 text-success">96%</h6>
+                                                <small class="text-muted">Avg. Score</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="list-group-item px-0">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div class="d-flex align-items-center">
+                                                <div class="rounded-circle bg-primary d-flex align-items-center justify-content-center me-3"
+                                                    style="width: 40px; height: 40px;">
+                                                    <span class="text-white">JW</span>
+                                                </div>
+                                                <div>
+                                                    <h6 class="mb-0">James Wilson</h6>
+                                                    <small class="text-muted">TOEFL Prep B</small>
+                                                </div>
+                                            </div>
+                                            <div class="text-end">
+                                                <h6 class="mb-0 text-primary">94%</h6>
+                                                <small class="text-muted">Avg. Score</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="list-group-item px-0">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div class="d-flex align-items-center">
+                                                <div class="rounded-circle bg-warning d-flex align-items-center justify-content-center me-3"
+                                                    style="width: 40px; height: 40px;">
+                                                    <span class="text-white">SK</span>
+                                                </div>
+                                                <div>
+                                                    <h6 class="mb-0">Sofia Kim</h6>
+                                                    <small class="text-muted">Advanced Listening</small>
+                                                </div>
+                                            </div>
+                                            <div class="text-end">
+                                                <h6 class="mb-0 text-warning">93%</h6>
+                                                <small class="text-muted">Avg. Score</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6 mb-4">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <h5 class="card-title mb-0">Need Attention</h5>
+                                    <a href="manage-students.html" class="text-decoration-none small">View All</a>
+                                </div>
+                                <div class="list-group list-group-flush">
+                                    <div class="list-group-item px-0">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div class="d-flex align-items-center">
+                                                <div class="rounded-circle bg-danger d-flex align-items-center justify-content-center me-3"
+                                                    style="width: 40px; height: 40px;">
+                                                    <span class="text-white">AC</span>
+                                                </div>
+                                                <div>
+                                                    <h6 class="mb-0">Alex Chen</h6>
+                                                    <small class="text-muted">TOEFL Prep A</small>
+                                                </div>
+                                            </div>
+                                            <div class="text-end">
+                                                <h6 class="mb-0 text-danger">68%</h6>
+                                                <small class="text-muted">Avg. Score</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="list-group-item px-0">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div class="d-flex align-items-center">
+                                                <div class="rounded-circle bg-warning d-flex align-items-center justify-content-center me-3"
+                                                    style="width: 40px; height: 40px;">
+                                                    <span class="text-white">TB</span>
+                                                </div>
+                                                <div>
+                                                    <h6 class="mb-0">Thomas Brown</h6>
+                                                    <small class="text-muted">TOEFL Prep B</small>
+                                                </div>
+                                            </div>
+                                            <div class="text-end">
+                                                <h6 class="mb-0 text-warning">72%</h6>
+                                                <small class="text-muted">Avg. Score</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="list-group-item px-0">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div class="d-flex align-items-center">
+                                                <div class="rounded-circle bg-info d-flex align-items-center justify-content-center me-3"
+                                                    style="width: 40px; height: 40px;">
+                                                    <span class="text-white">LS</span>
+                                                </div>
+                                                <div>
+                                                    <h6 class="mb-0">Lisa Sanchez</h6>
+                                                    <small class="text-muted">Advanced Listening</small>
+                                                </div>
+                                            </div>
+                                            <div class="text-end">
+                                                <h6 class="mb-0 text-info">75%</h6>
+                                                <small class="text-muted">Avg. Score</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mt-3">
+                                    <a href="#" class="btn btn-sm btn-outline-primary w-100">
+                                        <i class="fas fa-comment me-1"></i> Send Group Message
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

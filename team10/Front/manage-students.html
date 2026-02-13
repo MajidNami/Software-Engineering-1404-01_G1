@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Students - TOEFL Master</title>
+ 
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <i class="fas fa-headphones me-2"></i>
+                TOEFL Master
+            </a>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="instructor-dashboard.html">
+                            <i class="fas fa-arrow-left me-1"></i> Back to Dashboard
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-lg-2 col-md-3 sidebar">
+                <nav class="nav flex-column">
+                    <!-- Dashboard -->
+                    <div class="nav-item">
+                        <a class="nav-link" href="student-dashboard.html">
+                            <i class="fas fa-tachometer-alt me-2"></i> Dashboard
+                        </a>
+                    </div>
+
+                    <!-- Practice Section -->
+                    <div class="nav-item">
+                        <a class="nav-link" data-bs-toggle="collapse" href="#practiceMenu">
+                            <i class="fas fa-headphones me-2"></i> Practice
+                            <i class="fas fa-chevron-down ms-auto" style="font-size: 0.8rem;"></i>
+                        </a>
+                        <div class="collapse" id="practiceMenu">
+                            <div class="nav flex-column ps-3">
+                                <a class="nav-link" href="practice-mode.html">
+                                    <i class="fas fa-play-circle me-2"></i> Start Practice
+                                </a>
+                                <a class="nav-link" href="practice-session.html">
+                                    <i class="fas fa-microphone-alt me-2"></i> Active Session
+                                </a>
+                                <a class="nav-link" href="practice-feedback.html">
+                                    <i class="fas fa-chart-line me-2"></i> Practice Results
+                                </a>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Exams Section -->
+                    <div class="nav-item">
+                        <a class="nav-link" data-bs-toggle="collapse" href="#examsMenu">
+                            <i class="fas fa-file-alt me-2"></i> Exams
+                            <i class="fas fa-chevron-down ms-auto" style="font-size: 0.8rem;"></i>
+                        </a>
+                        <div class="collapse" id="examsMenu">
+                            <div class="nav flex-column ps-3">
+                                <a class="nav-link" href="exam-selection.html">
+                                    <i class="fas fa-list me-2"></i> Select Exam
+                                </a>
+                                <a class="nav-link" href="exam-session.html">
+                                    <i class="fas fa-pencil-alt me-2"></i> Take Exam
+                                </a>
+                                <a class="nav-link" href="exam-result.html">
+                                    <i class="fas fa-chart-bar me-2"></i> Exam Results
+                                </a>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Analytics Section -->
+                    <div class="nav-item">
+                        <a class="nav-link" data-bs-toggle="collapse" href="#analyticsMenu">
+                            <i class="fas fa-chart-bar me-2"></i> Analytics
+                            <i class="fas fa-chevron-down ms-auto" style="font-size: 0.8rem;"></i>
+                        </a>
+                        <div class="collapse" id="analyticsMenu">
+                            <div class="nav flex-column ps-3">
+                                <a class="nav-link" href="student-analytics.html">
+                                    <i class="fas fa-brain me-2"></i> My Analytics
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!-- Instructor Section (Only for Instructors) -->
+                    <div class="nav-item instructor-section">
+                        <a class="nav-link" data-bs-toggle="collapse" href="#instructorMenu">
+                            <i class="fas fa-chalkboard-teacher me-2"></i> Instructor
+                            <i class="fas fa-chevron-down ms-auto" style="font-size: 0.8rem;"></i>
+                        </a>
+                        <div class="collapse" id="instructorMenu">
+                            <div class="nav flex-column ps-3">
+                                <a class="nav-link" href="instructor-dashboard.html">
+                                    <i class="fas fa-tachometer-alt me-2"></i> Instructor Dashboard
+                                </a>
+                                <a class="nav-link" href="manage-students.html">
+                                    <i class="fas fa-users me-2"></i> Manage Students
+                                </a>
+                                <a class="nav-link" href="create-exam.html">
+                                    <i class="fas fa-file-alt me-2"></i> Create Exam
+                                </a>
+                                <a class="nav-link" href="assign-exam.html">
+                                    <i class="fas fa-paper-plane me-2"></i> Assign Exams
+                                </a>
+                                <a class="nav-link" href="instructor-analytics.html">
+                                    <i class="fas fa-chart-pie me-2"></i> Class Analytics
+                                </a>
+                                <a class="nav-link" href="student-detailed-report.html">
+                                    <i class="fas fa-user-graduate me-2"></i> Student Reports
+                                </a>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Admin Section (Only for Admins) -->
+                    <div class="nav-item admin-section">
+                        <a class="nav-link" data-bs-toggle="collapse" href="#adminMenu">
+                            <i class="fas fa-cogs me-2"></i> Admin
+                            <i class="fas fa-chevron-down ms-auto" style="font-size: 0.8rem;"></i>
+                        </a>
+                        <div class="collapse" id="adminMenu">
+                            <div class="nav flex-column ps-3">
+                                <a class="nav-link" href="admin-dashboard.html">
+                                    <i class="fas fa-tachometer-alt me-2"></i> Admin Dashboard
+                                </a>
+
+                                <a class="nav-link" href="question-bank-management.html">
+                                    <i class="fas fa-database me-2"></i> Question Bank
+                                </a>
+
+                                <a class="nav-link" href="system-configuration.html">
+                                    <i class="fas fa-sliders-h me-2"></i> System Configuration
+                                </a>
+                                <a class="nav-link" href="system-logs.html">
+                                    <i class="fas fa-clipboard-list me-2"></i> System Logs
+                                </a>
+
+                            </div>
+                        </div>
+
+
+                        <!-- Help & Support -->
+                        <div class="nav-item">
+                            <a class="nav-link" data-bs-toggle="collapse" href="#helpMenu">
+                                <i class="fas fa-question-circle me-2"></i> Help & Support
+                                <i class="fas fa-chevron-down ms-auto" style="font-size: 0.8rem;"></i>
+                            </a>
+                            <div class="collapse" id="helpMenu">
+                                <div class="nav flex-column ps-3">
+                                    <a class="nav-link" href="faq.html">
+                                        <i class="fas fa-question me-2"></i> FAQ
+                                    </a>
+                                    <a class="nav-link" href="user-guide.html">
+                                        <i class="fas fa-book me-2"></i> User Guide
+                                    </a>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Logout -->
+                        <div class="nav-item mt-3">
+                            <a class="nav-link text-danger" href="index.html">
+                                <i class="fas fa-sign-out-alt me-2"></i> Logout
+                            </a>
+                        </div>
+                </nav>
+            </div>
+            <!-- Main Content -->
+            <div class="col-lg-10 col-md-9 p-4">
+                <!-- Page Header -->
+                <div class="page-header mb-4">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h1 class="page-title">Manage Students</h1>
+                            <p class="text-muted mb-0">View and manage all students in your classes</p>
+                        </div>
+                        <div>
+                            <button class="btn btn-primary me-2" data-bs-toggle="modal"
+                                data-bs-target="#addStudentModal">
+                                <i class="fas fa-user-plus me-1"></i> Add Student
+                            </button>
+                            <button class="btn btn-outline-primary">
+                                <i class="fas fa-download me-1"></i> Export
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Filters & Search -->
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-md-3">
+                                <label class="form-label">Class</label>
+                                <select class="form-select">
+                                    <option selected>All Classes</option>
+                                    <option>TOEFL Prep A</option>
+                                    <option>TOEFL Prep B</option>
+                                    <option>Advanced Listening</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Performance</label>
+                                <select class="form-select">
+                                    <option selected>All Students</option>
+                                    <option>Top Performers (90%+)</option>
+                                    <option>Need Improvement (<75%)< /option>
+                                    <option>Average (75-90%)</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Status</label>
+                                <select class="form-select">
+                                    <option selected>All Status</option>
+                                    <option>Active</option>
+                                    <option>Inactive</option>
+                                    <option>Pending</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Search</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" placeholder="Search students...">
+                                    <button class="btn btn-outline-secondary" type="button">
+                                        <i class="fas fa-search"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Students Table -->
+                <div class="card">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="selectAll">
+                                            </div>
+                                        </th>
+                                        <th>Student</th>
+                                        <th>Class</th>
+                                        <th>Last Activity</th>
+                                        <th>Avg. Score</th>
+                                        <th>Practice Hours</th>
+                                        <th>Progress</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div class="rounded-circle bg-primary d-flex align-items-center justify-content-center me-3"
+                                                    style="width: 36px; height: 36px;">
+                                                    <span class="text-white">MR</span>
+                                                </div>
+                                                <div>
+                                                    <h6 class="mb-0">Maria Rodriguez</h6>
+                                                    <small class="text-muted">maria.rodriguez@email.com</small>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>TOEFL Prep A</td>
+                                        <td>Today, 9:30 AM</td>
+                                        <td>
+                                            <span class="fw-bold text-success">96%</span>
+                                        </td>
+                                        <td>42.5h</td>
+                                        <td>
+                                            <div class="progress" style="height: 6px; width: 100px;">
+                                                <div class="progress-bar bg-success" style="width: 95%"></div>
+                                            </div>
+                                        </td>
+                                        <td><span class="badge bg-success">Active</span></td>
+                                        <td>
+                                            <div class="dropdown">
+                                                <button class="btn btn-sm btn-outline-secondary dropdown-toggle"
+                                                    type="button" data-bs-toggle="dropdown">
+                                                    Actions
+                                                </button>
+                                                <ul class="dropdown-menu">
+                                                    <li><a class="dropdown-item" href="student-detailed-report.html"><i
+                                                                class="fas fa-chart-line me-2"></i>View Report</a></li>
+                                                    <li><a class="dropdown-item" href="#"><i
+                                                                class="fas fa-envelope me-2"></i>Message</a></li>
+                                                    <li><a class="dropdown-item" href="#"><i
+                                                                class="fas fa-edit me-2"></i>Edit</a></li>
+                                                    <li>
+                                                        <hr class="dropdown-divider">
+                                                    </li>
+                                                    <li><a class="dropdown-item text-danger" href="#"><i
+                                                                class="fas fa-user-slash me-2"></i>Deactivate</a></li>
+                                                </ul>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div class="rounded-circle bg-warning d-flex align-items-center justify-content-center me-3"
+                                                    style="width: 36px; height: 36px;">
+                                                    <span class="text-white">JW</span>
+                                                </div>
+                                                <div>
+                                                    <h6 class="mb-0">James Wilson</h6>
+                                                    <small class="text-muted">james.wilson@email.com</small>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>TOEFL Prep B</td>
+                                        <td>Yesterday, 3:15 PM</td>
+                                        <td>
+                                            <span class="fw-bold text-primary">94%</span>
+                                        </td>
+                                        <td>38.2h</td>
+                                        <td>
+                                            <div class="progress" style="height: 6px; width: 100px;">
+                                                <div class="progress-bar bg-primary" style="width: 90%"></div>
+                                            </div>
+                                        </td>
+                                        <td><span class="badge bg-success">Active</span></td>
+                                        <td>
+                                            <div class="dropdown">
+                                                <button class="btn btn-sm btn-outline-secondary dropdown-toggle"
+                                                    type="button" data-bs-toggle="dropdown">
+                                                    Actions
+                                                </button>
+                                                <ul class="dropdown-menu">
+                                                    <li><a class="dropdown-item" href="student-detailed-report.html"><i
+                                                                class="fas fa-chart-line me-2"></i>View Report</a></li>
+                                                    <li><a class="dropdown-item" href="#"><i
+                                                                class="fas fa-envelope me-2"></i>Message</a></li>
+                                                    <li><a class="dropdown-item" href="#"><i
+                                                                class="fas fa-edit me-2"></i>Edit</a></li>
+                                                </ul>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div class="rounded-circle bg-danger d-flex align-items-center justify-content-center me-3"
+                                                    style="width: 36px; height: 36px;">
+                                                    <span class="text-white">AC</span>
+                                                </div>
+                                                <div>
+                                                    <h6 class="mb-0">Alex Chen</h6>
+                                                    <small class="text-muted">alex.chen@email.com</small>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>TOEFL Prep A</td>
+                                        <td>2 days ago</td>
+                                        <td>
+                                            <span class="fw-bold text-danger">68%</span>
+                                        </td>
+                                        <td>22.8h</td>
+                                        <td>
+                                            <div class="progress" style="height: 6px; width: 100px;">
+                                                <div class="progress-bar bg-danger" style="width: 45%"></div>
+                                            </div>
+                                        </td>
+                                        <td><span class="badge bg-warning">Needs Help</span></td>
+                                        <td>
+                                            <div class="dropdown">
+                                                <button class="btn btn-sm btn-outline-secondary dropdown-toggle"
+                                                    type="button" data-bs-toggle="dropdown">
+                                                    Actions
+                                                </button>
+                                                <ul class="dropdown-menu">
+                                                    <li><a class="dropdown-item" href="student-detailed-report.html"><i
+                                                                class="fas fa-chart-line me-2"></i>View Report</a></li>
+                                                    <li><a class="dropdown-item" href="#"><i
+                                                                class="fas fa-envelope me-2"></i>Message</a></li>
+                                                    <li><a class="dropdown-item" href="#"><i
+                                                                class="fas fa-edit me-2"></i>Edit</a></li>
+                                                    <li>
+                                                        <hr class="dropdown-divider">
+                                                    </li>
+                                                    <li><a class="dropdown-item text-warning" href="#"><i
+                                                                class="fas fa-life-ring me-2"></i>Flag for Help</a></li>
+                                                </ul>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div class="rounded-circle bg-info d-flex align-items-center justify-content-center me-3"
+                                                    style="width: 36px; height: 36px;">
+                                                    <span class="text-white">SK</span>
+                                                </div>
+                                                <div>
+                                                    <h6 class="mb-0">Sofia Kim</h6>
+                                                    <small class="text-muted">sofia.kim@email.com</small>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>Advanced Listening</td>
+                                        <td>Today, 11:20 AM</td>
+                                        <td>
+                                            <span class="fw-bold text-info">93%</span>
+                                        </td>
+                                        <td>48.7h</td>
+                                        <td>
+                                            <div class="progress" style="height: 6px; width: 100px;">
+                                                <div class="progress-bar bg-info" style="width: 88%"></div>
+                                            </div>
+                                        </td>
+                                        <td><span class="badge bg-success">Active</span></td>
+                                        <td>
+                                            <div class="dropdown">
+                                                <button class="btn btn-sm btn-outline-secondary dropdown-toggle"
+                                                    type="button" data-bs-toggle="dropdown">
+                                                    Actions
+                                                </button>
+                                                <ul class="dropdown-menu">
+                                                    <li><a class="dropdown-item" href="student-detailed-report.html"><i
+                                                                class="fas fa-chart-line me-2"></i>View Report</a></li>
+                                                    <li><a class="dropdown-item" href="#"><i
+                                                                class="fas fa-envelope me-2"></i>Message</a></li>
+                                                    <li><a class="dropdown-item" href="#"><i
+                                                                class="fas fa-edit me-2"></i>Edit</a></li>
+                                                </ul>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center me-3"
+                                                    style="width: 36px; height: 36px;">
+                                                    <span class="text-white">TB</span>
+                                                </div>
+                                                <div>
+                                                    <h6 class="mb-0">Thomas Brown</h6>
+                                                    <small class="text-muted">thomas.brown@email.com</small>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>TOEFL Prep B</td>
+                                        <td>3 days ago</td>
+                                        <td>
+                                            <span class="fw-bold text-warning">72%</span>
+                                        </td>
+                                        <td>18.5h</td>
+                                        <td>
+                                            <div class="progress" style="height: 6px; width: 100px;">
+                                                <div class="progress-bar bg-warning" style="width: 55%"></div>
+                                            </div>
+                                        </td>
+                                        <td><span class="badge bg-secondary">Inactive</span></td>
+                                        <td>
+                                            <div class="dropdown">
+                                                <button class="btn btn-sm btn-outline-secondary dropdown-toggle"
+                                                    type="button" data-bs-toggle="dropdown">
+                                                    Actions
+                                                </button>
+                                                <ul class="dropdown-menu">
+                                                    <li><a class="dropdown-item" href="student-detailed-report.html"><i
+                                                                class="fas fa-chart-line me-2"></i>View Report</a></li>
+                                                    <li><a class="dropdown-item" href="#"><i
+                                                                class="fas fa-envelope me-2"></i>Message</a></li>
+                                                    <li><a class="dropdown-item" href="#"><i
+                                                                class="fas fa-edit me-2"></i>Edit</a></li>
+                                                    <li>
+                                                        <hr class="dropdown-divider">
+                                                    </li>
+                                                    <li><a class="dropdown-item text-success" href="#"><i
+                                                                class="fas fa-user-check me-2"></i>Activate</a></li>
+                                                </ul>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Pagination -->
+                        <nav aria-label="Page navigation" class="mt-4">
+                            <ul class="pagination justify-content-center">
+                                <li class="page-item disabled">
+                                    <a class="page-link" href="#" tabindex="-1">Previous</a>
+                                </li>
+                                <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                <li class="page-item">
+                                    <a class="page-link" href="#">Next</a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+
+                <!-- Bulk Actions -->
+                <div class="card mt-4">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="mb-0">Bulk Actions</h6>
+                                <p class="text-muted small mb-0">Apply actions to selected students</p>
+                            </div>
+                            <div class="d-flex gap-2">
+                                <select class="form-select form-select-sm" style="width: 200px;">
+                                    <option selected>Choose action...</option>
+                                    <option>Send message</option>
+                                    <option>Assign to class</option>
+                                    <option>Create custom assignment</option>
+                                    <option>Export selected</option>
+                                    <option>Change status</option>
+                                </select>
+                                <button class="btn btn-sm btn-primary">Apply</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Student Modal -->
+    <div class="modal fade" id="addStudentModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add New Student</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label class="form-label">Email Address</label>
+                            <input type="email" class="form-control" placeholder="student@email.com">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Full Name</label>
+                            <input type="text" class="form-control" placeholder="First and last name">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Assign to Class</label>
+                            <select class="form-select">
+                                <option selected>Select class...</option>
+                                <option>TOEFL Prep A</option>
+                                <option>TOEFL Prep B</option>
+                                <option>Advanced Listening</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Initial Access Level</label>
+                            <select class="form-select">
+                                <option selected>Full access</option>
+                                <option>Practice only</option>
+                                <option>Exams only</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary">Add Student</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

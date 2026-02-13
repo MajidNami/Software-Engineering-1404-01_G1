@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Exam - TOEFL Master</title>
+ 
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <i class="fas fa-headphones me-2"></i>
+                TOEFL Master
+            </a>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="instructor-dashboard.html">
+                            <i class="fas fa-arrow-left me-1"></i> Back to Dashboard
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-lg-2 col-md-3 sidebar">
+                <nav class="nav flex-column">
+                    <!-- Dashboard -->
+                    <div class="nav-item">
+                        <a class="nav-link" href="student-dashboard.html">
+                            <i class="fas fa-tachometer-alt me-2"></i> Dashboard
+                        </a>
+                    </div>
+
+                    <!-- Practice Section -->
+                    <div class="nav-item">
+                        <a class="nav-link" data-bs-toggle="collapse" href="#practiceMenu">
+                            <i class="fas fa-headphones me-2"></i> Practice
+                            <i class="fas fa-chevron-down ms-auto" style="font-size: 0.8rem;"></i>
+                        </a>
+                        <div class="collapse" id="practiceMenu">
+                            <div class="nav flex-column ps-3">
+                                <a class="nav-link" href="practice-mode.html">
+                                    <i class="fas fa-play-circle me-2"></i> Start Practice
+                                </a>
+                                <a class="nav-link" href="practice-session.html">
+                                    <i class="fas fa-microphone-alt me-2"></i> Active Session
+                                </a>
+                                <a class="nav-link" href="practice-feedback.html">
+                                    <i class="fas fa-chart-line me-2"></i> Practice Results
+                                </a>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Exams Section -->
+                    <div class="nav-item">
+                        <a class="nav-link" data-bs-toggle="collapse" href="#examsMenu">
+                            <i class="fas fa-file-alt me-2"></i> Exams
+                            <i class="fas fa-chevron-down ms-auto" style="font-size: 0.8rem;"></i>
+                        </a>
+                        <div class="collapse" id="examsMenu">
+                            <div class="nav flex-column ps-3">
+                                <a class="nav-link" href="exam-selection.html">
+                                    <i class="fas fa-list me-2"></i> Select Exam
+                                </a>
+                                <a class="nav-link" href="exam-session.html">
+                                    <i class="fas fa-pencil-alt me-2"></i> Take Exam
+                                </a>
+                                <a class="nav-link" href="exam-result.html">
+                                    <i class="fas fa-chart-bar me-2"></i> Exam Results
+                                </a>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Analytics Section -->
+                    <div class="nav-item">
+                        <a class="nav-link" data-bs-toggle="collapse" href="#analyticsMenu">
+                            <i class="fas fa-chart-bar me-2"></i> Analytics
+                            <i class="fas fa-chevron-down ms-auto" style="font-size: 0.8rem;"></i>
+                        </a>
+                        <div class="collapse" id="analyticsMenu">
+                            <div class="nav flex-column ps-3">
+                                <a class="nav-link" href="student-analytics.html">
+                                    <i class="fas fa-brain me-2"></i> My Analytics
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!-- Instructor Section (Only for Instructors) -->
+                    <div class="nav-item instructor-section">
+                        <a class="nav-link" data-bs-toggle="collapse" href="#instructorMenu">
+                            <i class="fas fa-chalkboard-teacher me-2"></i> Instructor
+                            <i class="fas fa-chevron-down ms-auto" style="font-size: 0.8rem;"></i>
+                        </a>
+                        <div class="collapse" id="instructorMenu">
+                            <div class="nav flex-column ps-3">
+                                <a class="nav-link" href="instructor-dashboard.html">
+                                    <i class="fas fa-tachometer-alt me-2"></i> Instructor Dashboard
+                                </a>
+                                <a class="nav-link" href="manage-students.html">
+                                    <i class="fas fa-users me-2"></i> Manage Students
+                                </a>
+                                <a class="nav-link" href="create-exam.html">
+                                    <i class="fas fa-file-alt me-2"></i> Create Exam
+                                </a>
+                                <a class="nav-link" href="assign-exam.html">
+                                    <i class="fas fa-paper-plane me-2"></i> Assign Exams
+                                </a>
+                                <a class="nav-link" href="instructor-analytics.html">
+                                    <i class="fas fa-chart-pie me-2"></i> Class Analytics
+                                </a>
+                                <a class="nav-link" href="student-detailed-report.html">
+                                    <i class="fas fa-user-graduate me-2"></i> Student Reports
+                                </a>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Admin Section (Only for Admins) -->
+                    <div class="nav-item admin-section">
+                        <a class="nav-link" data-bs-toggle="collapse" href="#adminMenu">
+                            <i class="fas fa-cogs me-2"></i> Admin
+                            <i class="fas fa-chevron-down ms-auto" style="font-size: 0.8rem;"></i>
+                        </a>
+                        <div class="collapse" id="adminMenu">
+                            <div class="nav flex-column ps-3">
+                                <a class="nav-link" href="admin-dashboard.html">
+                                    <i class="fas fa-tachometer-alt me-2"></i> Admin Dashboard
+                                </a>
+
+                                <a class="nav-link" href="question-bank-management.html">
+                                    <i class="fas fa-database me-2"></i> Question Bank
+                                </a>
+
+                                <a class="nav-link" href="system-configuration.html">
+                                    <i class="fas fa-sliders-h me-2"></i> System Configuration
+                                </a>
+                                <a class="nav-link" href="system-logs.html">
+                                    <i class="fas fa-clipboard-list me-2"></i> System Logs
+                                </a>
+
+                            </div>
+                        </div>
+
+
+                        <!-- Help & Support -->
+                        <div class="nav-item">
+                            <a class="nav-link" data-bs-toggle="collapse" href="#helpMenu">
+                                <i class="fas fa-question-circle me-2"></i> Help & Support
+                                <i class="fas fa-chevron-down ms-auto" style="font-size: 0.8rem;"></i>
+                            </a>
+                            <div class="collapse" id="helpMenu">
+                                <div class="nav flex-column ps-3">
+                                    <a class="nav-link" href="faq.html">
+                                        <i class="fas fa-question me-2"></i> FAQ
+                                    </a>
+                                    <a class="nav-link" href="user-guide.html">
+                                        <i class="fas fa-book me-2"></i> User Guide
+                                    </a>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Logout -->
+                        <div class="nav-item mt-3">
+                            <a class="nav-link text-danger" href="index.html">
+                                <i class="fas fa-sign-out-alt me-2"></i> Logout
+                            </a>
+                        </div>
+                </nav>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-lg-10 col-md-9 p-4">
+                <!-- Page Header -->
+                <div class="page-header mb-4">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h1 class="page-title">Create New Exam</h1>
+                            <p class="text-muted mb-0">Build a custom listening exam for your students</p>
+                        </div>
+                        <div>
+                            <button class="btn btn-outline-primary me-2">
+                                <i class="fas fa-save me-1"></i> Save Draft
+                            </button>
+                            <button class="btn btn-primary">
+                                <i class="fas fa-eye me-1"></i> Preview Exam
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Exam Creation Wizard -->
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <!-- Wizard Steps -->
+                        <ul class="nav nav-pills mb-4 justify-content-center" id="examWizard" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="step1-tab" data-bs-toggle="pill"
+                                    data-bs-target="#step1">
+                                    <span class="badge bg-primary rounded-circle me-2">1</span> Basic Info
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="step2-tab" data-bs-toggle="pill" data-bs-target="#step2">
+                                    <span class="badge bg-secondary rounded-circle me-2">2</span> Content
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="step3-tab" data-bs-toggle="pill" data-bs-target="#step3">
+                                    <span class="badge bg-secondary rounded-circle me-2">3</span> Settings
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="step4-tab" data-bs-toggle="pill" data-bs-target="#step4">
+                                    <span class="badge bg-secondary rounded-circle me-2">4</span> Review
+                                </button>
+                            </li>
+                        </ul>
+
+                        <!-- Wizard Content -->
+                        <div class="tab-content" id="examWizardContent">
+                            <!-- Step 1: Basic Info -->
+                            <div class="tab-pane fade show active" id="step1" role="tabpanel">
+                                <div class="row">
+                                    <div class="col-lg-8 mx-auto">
+                                        <h4 class="mb-4">Exam Information</h4>
+                                        <div class="mb-3">
+                                            <label class="form-label">Exam Title</label>
+                                            <input type="text" class="form-control"
+                                                placeholder="e.g., Mid-Term Listening Assessment"
+                                                value="Week 6 Practice Test">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Description</label>
+                                            <textarea class="form-control" rows="3"
+                                                placeholder="Describe the exam content and objectives">This exam focuses on academic lectures and campus conversations, testing comprehension of main ideas, details, and inferences.</textarea>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3">
+                                                <label class="form-label">Exam Type</label>
+                                                <select class="form-select">
+                                                    <option selected>Listening Only</option>
+                                                    <option>Full TOEFL Practice</option>
+                                                    <option>Diagnostic Test</option>
+                                                    <option>Progress Assessment</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label class="form-label">Difficulty Level</label>
+                                                <select class="form-select">
+                                                    <option selected>Medium</option>
+                                                    <option>Easy</option>
+                                                    <option>Hard</option>
+                                                    <option>Mixed</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="text-end">
+                                            <button class="btn btn-primary" type="button" onclick="nextStep(2)">Next:
+                                                Content <i class="fas fa-arrow-right ms-1"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Step 2: Content -->
+                            <div class="tab-pane fade" id="step2" role="tabpanel">
+                                <div class="row">
+                                    <div class="col-lg-10 mx-auto">
+                                        <h4 class="mb-4">Exam Content</h4>
+                                        <p class="text-muted mb-4">Add listening passages and questions to your exam</p>
+
+                                        <!-- Existing Content -->
+                                        <div class="card mb-3">
+                                            <div
+                                                class="card-header bg-light d-flex justify-content-between align-items-center">
+                                                <h6 class="mb-0">Section 1: Conversations (2 passages)</h6>
+                                                <button class="btn btn-sm btn-outline-danger">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                                    <div>
+                                                        <h6 class="mb-0">Campus Conversation: Library</h6>
+                                                        <small class="text-muted">Length: 2:48 • 6 questions</small>
+                                                    </div>
+                                                    <button class="btn btn-sm btn-outline-primary">
+                                                        <i class="fas fa-edit me-1"></i> Edit
+                                                    </button>
+                                                </div>
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <div>
+                                                        <h6 class="mb-0">Service Encounter: Bookstore</h6>
+                                                        <small class="text-muted">Length: 3:15 • 5 questions</small>
+                                                    </div>
+                                                    <button class="btn btn-sm btn-outline-primary">
+                                                        <i class="fas fa-edit me-1"></i> Edit
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="card mb-4">
+                                            <div
+                                                class="card-header bg-light d-flex justify-content-between align-items-center">
+                                                <h6 class="mb-0">Section 2: Lectures (3 passages)</h6>
+                                                <button class="btn btn-sm btn-outline-danger">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                                    <div>
+                                                        <h6 class="mb-0">Academic Lecture: Biology</h6>
+                                                        <small class="text-muted">Length: 4:30 • 6 questions</small>
+                                                    </div>
+                                                    <button class="btn btn-sm btn-outline-primary">
+                                                        <i class="fas fa-edit me-1"></i> Edit
+                                                    </button>
+                                                </div>
+                                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                                    <div>
+                                                        <h6 class="mb-0">Academic Lecture: History</h6>
+                                                        <small class="text-muted">Length: 5:15 • 7 questions</small>
+                                                    </div>
+                                                    <button class="btn btn-sm btn-outline-primary">
+                                                        <i class="fas fa-edit me-1"></i> Edit
+                                                    </button>
+                                                </div>
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <div>
+                                                        <h6 class="mb-0">Academic Lecture: Psychology</h6>
+                                                        <small class="text-muted">Length: 4:45 • 6 questions</small>
+                                                    </div>
+                                                    <button class="btn btn-sm btn-outline-primary">
+                                                        <i class="fas fa-edit me-1"></i> Edit
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Add Content -->
+                                        <div class="card">
+                                            <div class="card-header bg-light">
+                                                <h6 class="mb-0">Add New Content</h6>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <div class="col-md-6 mb-3">
+                                                        <label class="form-label">Content Type</label>
+                                                        <select class="form-select">
+                                                            <option selected>Select type...</option>
+                                                            <option>Conversation</option>
+                                                            <option>Academic Lecture</option>
+                                                            <option>Classroom Discussion</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md-6 mb-3">
+                                                        <label class="form-label">Source</label>
+                                                        <select class="form-select">
+                                                            <option selected>From Question Bank</option>
+                                                            <option>Upload New Audio</option>
+                                                            <option>Create New Content</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label class="form-label">Search Question Bank</label>
+                                                    <div class="input-group">
+                                                        <input type="text" class="form-control"
+                                                            placeholder="Search by topic, difficulty, or keyword">
+                                                        <button class="btn btn-outline-secondary" type="button">
+                                                            <i class="fas fa-search"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <div class="text-center">
+                                                    <button class="btn btn-outline-primary me-2">
+                                                        <i class="fas fa-plus me-1"></i> Add from Bank
+                                                    </button>
+                                                    <button class="btn btn-primary">
+                                                        <i class="fas fa-upload me-1"></i> Upload New
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="d-flex justify-content-between mt-4">
+                                            <button class="btn btn-outline-primary" type="button" onclick="prevStep(1)">
+                                                <i class="fas fa-arrow-left me-1"></i> Previous
+                                            </button>
+                                            <button class="btn btn-primary" type="button" onclick="nextStep(3)">
+                                                Next: Settings <i class="fas fa-arrow-right ms-1"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Step 3: Settings -->
+                            <div class="tab-pane fade" id="step3" role="tabpanel">
+                                <div class="row">
+                                    <div class="col-lg-8 mx-auto">
+                                        <h4 class="mb-4">Exam Settings</h4>
+
+                                        <div class="row mb-4">
+                                            <div class="col-md-6 mb-3">
+                                                <div class="card h-100">
+                                                    <div class="card-body">
+                                                        <h6 class="card-title">Timing & Attempts</h6>
+                                                        <div class="mb-3">
+                                                            <label class="form-label">Time Limit (minutes)</label>
+                                                            <input type="number" class="form-control" value="60">
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label class="form-label">Allowed Attempts</label>
+                                                            <select class="form-select">
+                                                                <option selected>1</option>
+                                                                <option>2</option>
+                                                                <option>3</option>
+                                                                <option>Unlimited</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="form-check form-switch">
+                                                            <input class="form-check-input" type="checkbox"
+                                                                id="allowPause" checked>
+                                                            <label class="form-check-label" for="allowPause">Allow
+                                                                pausing</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <div class="card h-100">
+                                                    <div class="card-body">
+                                                        <h6 class="card-title">Access & Security</h6>
+                                                        <div class="mb-3">
+                                                            <label class="form-label">Access Code (optional)</label>
+                                                            <input type="text" class="form-control"
+                                                                placeholder="Leave blank for no code">
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label class="form-label">Availability Window</label>
+                                                            <div class="input-group">
+                                                                <input type="date" class="form-control"
+                                                                    value="2023-10-15">
+                                                                <span class="input-group-text">to</span>
+                                                                <input type="date" class="form-control"
+                                                                    value="2023-10-22">
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-check form-switch">
+                                                            <input class="form-check-input" type="checkbox"
+                                                                id="enableProctoring">
+                                                            <label class="form-check-label"
+                                                                for="enableProctoring">Enable proctoring</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="card mb-4">
+                                            <div class="card-body">
+                                                <h6 class="card-title mb-3">Scoring & Feedback</h6>
+                                                <div class="row">
+                                                    <div class="col-md-6 mb-3">
+                                                        <label class="form-label">Passing Score (%)</label>
+                                                        <input type="number" class="form-control" value="70" min="0"
+                                                            max="100">
+                                                    </div>
+                                                    <div class="col-md-6 mb-3">
+                                                        <label class="form-label">Question Weight</label>
+                                                        <select class="form-select">
+                                                            <option selected>Equal weight</option>
+                                                            <option>Weight by difficulty</option>
+                                                            <option>Custom weights</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label class="form-label">Feedback Display</label>
+                                                    <select class="form-select">
+                                                        <option selected>Immediate after submission</option>
+                                                        <option>After exam closes</option>
+                                                        <option>Manual release by instructor</option>
+                                                        <option>No feedback</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="d-flex justify-content-between">
+                                            <button class="btn btn-outline-primary" type="button" onclick="prevStep(2)">
+                                                <i class="fas fa-arrow-left me-1"></i> Previous
+                                            </button>
+                                            <button class="btn btn-primary" type="button" onclick="nextStep(4)">
+                                                Next: Review <i class="fas fa-arrow-right ms-1"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Step 4: Review -->
+                            <div class="tab-pane fade" id="step4" role="tabpanel">
+                                <div class="row">
+                                    <div class="col-lg-8 mx-auto">
+                                        <h4 class="mb-4">Review & Finalize</h4>
+
+                                        <div class="card mb-4">
+                                            <div class="card-body">
+                                                <h6 class="card-title mb-3">Exam Summary</h6>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <table class="table table-sm">
+                                                            <tr>
+                                                                <th>Title:</th>
+                                                                <td>Week 6 Practice Test</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>Type:</th>
+                                                                <td>Listening Only</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>Difficulty:</th>
+                                                                <td>Medium</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>Time Limit:</th>
+                                                                <td>60 minutes</td>
+                                                            </tr>
+                                                        </table>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <table class="table table-sm">
+                                                            <tr>
+                                                                <th>Passages:</th>
+                                                                <td>5 (2 conversations, 3 lectures)</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>Questions:</th>
+                                                                <td>30</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>Passing Score:</th>
+                                                                <td>70%</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>Availability:</th>
+                                                                <td>Oct 15 - 22, 2023</td>
+                                                            </tr>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="card mb-4">
+                                            <div class="card-body">
+                                                <h6 class="card-title mb-3">Preview Questions</h6>
+                                                <div class="accordion" id="previewAccordion">
+                                                    <div class="accordion-item">
+                                                        <h2 class="accordion-header">
+                                                            <button class="accordion-button" type="button"
+                                                                data-bs-toggle="collapse" data-bs-target="#preview1">
+                                                                Section 1: Conversations (11 questions)
+                                                            </button>
+                                                        </h2>
+                                                        <div id="preview1" class="accordion-collapse collapse show"
+                                                            data-bs-parent="#previewAccordion">
+                                                            <div class="accordion-body">
+                                                                <p class="small mb-2">1. Campus Conversation: Library (6
+                                                                    questions)</p>
+                                                                <p class="small mb-2">2. Service Encounter: Bookstore (5
+                                                                    questions)</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="accordion-item">
+                                                        <h2 class="accordion-header">
+                                                            <button class="accordion-button collapsed" type="button"
+                                                                data-bs-toggle="collapse" data-bs-target="#preview2">
+                                                                Section 2: Lectures (19 questions)
+                                                            </button>
+                                                        </h2>
+                                                        <div id="preview2" class="accordion-collapse collapse"
+                                                            data-bs-parent="#previewAccordion">
+                                                            <div class="accordion-body">
+                                                                <p class="small mb-2">1. Academic Lecture: Biology (6
+                                                                    questions)</p>
+                                                                <p class="small mb-2">2. Academic Lecture: History (7
+                                                                    questions)</p>
+                                                                <p class="small mb-2">3. Academic Lecture: Psychology (6
+                                                                    questions)</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="alert alert-info">
+                                            <i class="fas fa-info-circle me-2"></i>
+                                            Your exam will be saved and available for assignment to students. You can
+                                            edit it later from your exam library.
+                                        </div>
+
+                                        <div class="d-flex justify-content-between">
+                                            <button class="btn btn-outline-primary" type="button" onclick="prevStep(3)">
+                                                <i class="fas fa-arrow-left me-1"></i> Previous
+                                            </button>
+                                            <div>
+                                                <button class="btn btn-outline-secondary me-2">
+                                                    <i class="fas fa-save me-1"></i> Save as Draft
+                                                </button>
+                                                <button class="btn btn-success">
+                                                    <i class="fas fa-check me-1"></i> Create Exam
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function nextStep(step) {
+            // This would normally handle step navigation
+            // For this mockup, we'll just show a simple alert
+            document.querySelectorAll('#examWizard .nav-link').forEach((link, index) => {
+                if (index + 1 === step) {
+                    link.classList.add('active');
+                    link.querySelector('.badge').classList.add('bg-primary');
+                    link.querySelector('.badge').classList.remove('bg-secondary');
+                } else {
+                    link.classList.remove('active');
+                    link.querySelector('.badge').classList.remove('bg-primary');
+                    link.querySelector('.badge').classList.add('bg-secondary');
+                }
+            });
+
+            document.querySelectorAll('.tab-pane').forEach((pane, index) => {
+                if (index + 1 === step) {
+                    pane.classList.add('show', 'active');
+                } else {
+                    pane.classList.remove('show', 'active');
+                }
+            });
+        }
+
+        function prevStep(step) {
+            nextStep(step);
+        }
+    </script>
+</body>
+
+</html>

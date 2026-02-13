@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - TOEFL Master</title>
+ 
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+        }
+
+        .login-card {
+            max-width: 420px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 1.5rem 0;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background-color: var(--gray-300);
+        }
+
+        .divider-text {
+            padding: 0 1rem;
+            color: var(--gray-500);
+            font-size: 0.875rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="login-card">
+            <!-- Header -->
+            <div class="login-header">
+                <a href="index.html" class="d-inline-block mb-4">
+                    <h3 class="text-primary">
+                        <i class="fas fa-headphones me-2"></i>
+                        TOEFL Master
+                    </h3>
+                </a>
+                <h2 class="page-title">Welcome Back</h2>
+                <p class="text-muted">Sign in to continue your TOEFL Listening practice</p>
+            </div>
+
+            <!-- Login Form -->
+            <div class="card border-0 shadow">
+                <div class="card-body p-4 p-md-5">
+                    <form>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email Address</label>
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="fas fa-envelope"></i>
+                                </span>
+                                <input type="email" class="form-control" id="email" placeholder="name@example.com"
+                                    required>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password</label>
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="fas fa-lock"></i>
+                                </span>
+                                <input type="password" class="form-control" id="password"
+                                    placeholder="Enter your password" required>
+                                <button class="btn btn-outline-secondary" type="button" id="togglePassword">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="rememberMe">
+                                <label class="form-check-label" for="rememberMe">Remember me</label>
+                            </div>
+                            <a href="forgot-password.html" class="text-decoration-none">Forgot password?</a>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100 py-2 mb-3">Sign In</button>
+
+                        <div class="divider">
+                            <span class="divider-text">Or continue with</span>
+                        </div>
+
+                        <div class="row g-2">
+                            <div class="col">
+                                <button type="button" class="btn btn-outline-secondary w-100">
+                                    <i class="fab fa-google me-2"></i> Google
+                                </button>
+                            </div>
+                            <div class="col">
+                                <button type="button" class="btn btn-outline-secondary w-100">
+                                    <i class="fab fa-microsoft me-2"></i> Microsoft
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Sign Up Link -->
+            <div class="text-center mt-4">
+                <p class="text-muted">Don't have an account? <a href="signup.html" class="text-decoration-none">Sign up
+                        now</a></p>
+                <div class="mt-3">
+                    <a href="index.html" class="text-decoration-none">
+                        <i class="fas fa-arrow-left me-1"></i> Back to Home
+                    </a>
+                </div>
+            </div>
+
+            <!-- Role Selection (for demo purposes) -->
+            <div class="mt-4">
+                <p class="text-center text-muted small mb-2">Demo Access:</p>
+                <div class="d-flex justify-content-center gap-2">
+                    <a href="student-dashboard.html" class="btn btn-sm btn-outline-primary">Student Demo</a>
+                    <a href="instructor-dashboard.html" class="btn btn-sm btn-outline-warning">Instructor Demo</a>
+                    <a href="admin-dashboard.html" class="btn btn-sm btn-outline-danger">Admin Demo</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

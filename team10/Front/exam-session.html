@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exam Session - TOEFL Master</title>
+
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            background-color: #f5f7fa;
+        }
+
+        .exam-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .exam-header {
+            background-color: white;
+            border-bottom: 1px solid var(--gray-200);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .exam-content {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            min-height: calc(100vh - 100px);
+        }
+
+        .full-screen-warning {
+            background-color: rgba(239, 68, 68, 0.1);
+            border-left: 4px solid var(--danger-color);
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .question-counter {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+
+        .section-title-exam {
+            color: var(--primary-color);
+            font-weight: 600;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--primary-color);
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Exam Header -->
+    <div class="exam-header">
+        <div class="exam-container">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="d-flex align-items-center">
+                    <a href="#" class="text-decoration-none" data-bs-toggle="modal" data-bs-target="#exitModal">
+                        <i class="fas fa-times text-danger me-3"></i>
+                    </a>
+                    <h5 class="mb-0">Full TOEFL Practice Test #1</h5>
+                </div>
+
+                <div class="d-flex align-items-center">
+                    <div class="me-4">
+                        <span class="question-counter">Question 12 of 34</span>
+                    </div>
+                    <div class="me-4">
+                        <i class="fas fa-clock text-primary me-1"></i>
+                        <span id="examTimer" class="fw-bold">47:22</span>
+                    </div>
+                    <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal"
+                        data-bs-target="#instructionsModal">
+                        <i class="fas fa-info-circle me-1"></i> Instructions
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Anti-Cheat Warning -->
+    <div class="exam-container mt-3">
+        <div class="full-screen-warning d-flex align-items-center">
+            <i class="fas fa-shield-alt fa-lg text-danger me-3"></i>
+            <div>
+                <h6 class="mb-1">Exam Integrity Monitoring Active</h6>
+                <p class="mb-0 small">Your exam session is being monitored. Do not switch tabs or windows during the
+                    exam.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Exam Content -->
+    <div class="exam-container mt-3">
+        <div class="exam-content p-4">
+            <!-- Section Info -->
+            <div class="mb-4">
+                <h4 class="section-title-exam">Section 2: Listening</h4>
+                <p class="text-muted mb-0">Listen to the conversation and answer the questions that follow.</p>
+            </div>
+
+            <!-- Audio Player -->
+            <div class="audio-player mb-5">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="mb-0">Conversation: Student and Librarian</h5>
+                    <div>
+                        <span class="badge bg-primary me-2">Conversation</span>
+                        <span class="text-muted small">Length: 2:48</span>
+                    </div>
+                </div>
+                <div class="progress mb-2">
+                    <div class="progress-bar" style="width: 45%"></div>
+                </div>
+                <div class="d-flex justify-content-between text-muted small mb-3">
+                    <span>1:15</span>
+                    <span>2:48</span>
+                </div>
+                <div class="audio-controls">
+                    <button class="audio-btn" disabled>
+                        <i class="fas fa-step-backward"></i>
+                    </button>
+                    <button class="audio-btn" style="width: 60px; height: 60px;">
+                        <i class="fas fa-play"></i>
+                    </button>
+                    <button class="audio-btn" disabled>
+                        <i class="fas fa-step-forward"></i>
+                    </button>
+                </div>
+                <div class="text-center mt-3">
+                    <small class="text-muted">
+                        <i class="fas fa-info-circle me-1"></i>
+                        Audio will play once. You cannot replay during the exam.
+                    </small>
+                </div>
+            </div>
+
+            <!-- Questions -->
+            <div class="mb-4">
+                <h5 class="mb-3">Questions 12-17</h5>
+
+                <!-- Question 12 -->
+                <div class="question-card p-4 mb-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h6 class="mb-0">Question 12</h6>
+                        <span class="text-muted small">1 point</span>
+                    </div>
+
+                    <p class="fw-medium mb-4">Why does the student go to see the librarian?</p>
+
+                    <div class="answer-option">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="question12" id="q12A">
+                            <label class="form-check-label w-100" for="q12A">
+                                A. To return a book that is overdue
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="answer-option">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="question12" id="q12B">
+                            <label class="form-check-label w-100" for="q12B">
+                                B. To get help finding research materials
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="answer-option">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="question12" id="q12C">
+                            <label class="form-check-label w-100" for="q12C">
+                                C. To complain about library hours
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="answer-option">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="question12" id="q12D">
+                            <label class="form-check-label w-100" for="q12D">
+                                D. To ask about study room reservations
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Question 13 -->
+                <div class="question-card p-4 mb-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h6 class="mb-0">Question 13</h6>
+                        <span class="text-muted small">1 point</span>
+                    </div>
+
+                    <p class="fw-medium mb-4">What does the librarian suggest the student do first?</p>
+
+                    <div class="answer-option">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="question13" id="q13A">
+                            <label class="form-check-label w-100" for="q13A">
+                                A. Check the online catalog
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="answer-option">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="question13" id="q13B">
+                            <label class="form-check-label w-100" for="q13B">
+                                B. Speak to a subject specialist
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="answer-option">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="question13" id="q13C">
+                            <label class="form-check-label w-100" for="q13C">
+                                C. Look in the reference section
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="answer-option">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="question13" id="q13D">
+                            <label class="form-check-label w-100" for="q13D">
+                                D. Search academic databases
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Navigation -->
+            <div class="d-flex justify-content-between align-items-center border-top pt-4">
+                <div>
+                    <button class="btn btn-outline-primary">
+                        <i class="fas fa-flag me-1"></i> Flag for Review
+                    </button>
+                </div>
+                <div>
+                    <button class="btn btn-outline-secondary me-2">
+                        <i class="fas fa-arrow-left me-1"></i> Previous
+                    </button>
+                    <button class="btn btn-primary">
+                        Next <i class="fas fa-arrow-right ms-1"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Question Navigator Modal -->
+    <div class="modal fade" id="navModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Exam Navigator</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <h6>Listening Section (34 questions)</h6>
+                        <div class="d-flex flex-wrap gap-2 mb-3">
+                            <button class="btn btn-sm btn-primary rounded-circle"
+                                style="width: 40px; height: 40px;">1</button>
+                            <button class="btn btn-sm btn-primary rounded-circle"
+                                style="width: 40px; height: 40px;">2</button>
+                            <button class="btn btn-sm btn-success rounded-circle"
+                                style="width: 40px; height: 40px;">3</button>
+                            <button class="btn btn-sm btn-success rounded-circle"
+                                style="width: 40px; height: 40px;">4</button>
+                            <button class="btn btn-sm btn-success rounded-circle"
+                                style="width: 40px; height: 40px;">5</button>
+                            <button class="btn btn-sm btn-success rounded-circle"
+                                style="width: 40px; height: 40px;">6</button>
+                            <button class="btn btn-sm btn-success rounded-circle"
+                                style="width: 40px; height: 40px;">7</button>
+                            <button class="btn btn-sm btn-success rounded-circle"
+                                style="width: 40px; height: 40px;">8</button>
+                            <button class="btn btn-sm btn-success rounded-circle"
+                                style="width: 40px; height: 40px;">9</button>
+                            <button class="btn btn-sm btn-success rounded-circle"
+                                style="width: 40px; height: 40px;">10</button>
+                            <button class="btn btn-sm btn-success rounded-circle"
+                                style="width: 40px; height: 40px;">11</button>
+                            <button class="btn btn-sm btn-warning rounded-circle"
+                                style="width: 40px; height: 40px;">12</button>
+                            <button class="btn btn-sm btn-outline-secondary rounded-circle"
+                                style="width: 40px; height: 40px;">13</button>
+                            <button class="btn btn-sm btn-outline-secondary rounded-circle"
+                                style="width: 40px; height: 40px;">14</button>
+                            <button class="btn btn-sm btn-outline-secondary rounded-circle"
+                                style="width: 40px; height: 40px;">15</button>
+                            <button class="btn btn-sm btn-outline-secondary rounded-circle"
+                                style="width: 40px; height: 40px;">16</button>
+                            <button class="btn btn-sm btn-outline-secondary rounded-circle"
+                                style="width: 40px; height: 40px;">17</button>
+                            <button class="btn btn-sm btn-outline-secondary rounded-circle"
+                                style="width: 40px; height: 40px;">18</button>
+                            <button class="btn btn-sm btn-outline-secondary rounded-circle"
+                                style="width: 40px; height: 40px;">19</button>
+                            <button class="btn btn-sm btn-outline-secondary rounded-circle"
+                                style="width: 40px; height: 40px;">20</button>
+                            <button class="btn btn-sm btn-outline-secondary rounded-circle"
+                                style="width: 40px; height: 40px;">21</button>
+                            <button class="btn btn-sm btn-outline-secondary rounded-circle"
+                                style="width: 40px; height: 40px;">22</button>
+                            <button class="btn btn-sm btn-outline-secondary rounded-circle"
+                                style="width: 40px; height: 40px;">23</button>
+                            <button class="btn btn-sm btn-outline-secondary rounded-circle"
+                                style="width: 40px; height: 40px;">24</button>
+                            <button class="btn btn-sm btn-outline-secondary rounded-circle"
+                                style="width: 40px; height: 40px;">25</button>
+                            <button class="btn btn-sm btn-outline-secondary rounded-circle"
+                                style="width: 40px; height: 40px;">26</button>
+                            <button class="btn btn-sm btn-outline-secondary rounded-circle"
+                                style="width: 40px; height: 40px;">27</button>
+                            <button class="btn btn-sm btn-outline-secondary rounded-circle"
+                                style="width: 40px; height: 40px;">28</button>
+                            <button class="btn btn-sm btn-outline-secondary rounded-circle"
+                                style="width: 40px; height: 40px;">29</button>
+                            <button class="btn btn-sm btn-outline-secondary rounded-circle"
+                                style="width: 40px; height: 40px;">30</button>
+                            <button class="btn btn-sm btn-outline-secondary rounded-circle"
+                                style="width: 40px; height: 40px;">31</button>
+                            <button class="btn btn-sm btn-outline-secondary rounded-circle"
+                                style="width: 40px; height: 40px;">32</button>
+                            <button class="btn btn-sm btn-outline-secondary rounded-circle"
+                                style="width: 40px; height: 40px;">33</button>
+                            <button class="btn btn-sm btn-outline-secondary rounded-circle"
+                                style="width: 40px; height: 40px;">34</button>
+                        </div>
+                        <div class="d-flex justify-content-between small">
+                            <div>
+                                <span class="badge bg-primary me-1">Current</span>
+                                <span class="badge bg-success me-1">Answered</span>
+                                <span class="badge bg-warning me-1">Flagged</span>
+                                <span class="badge bg-secondary">Not Viewed</span>
+                            </div>
+                            <div>
+                                <span class="text-muted">11 answered • 1 flagged • 22 remaining</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        You can return to any question before time runs out. Flagged questions will be highlighted for
+                        review.
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Go to Question</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Exit Exam Modal -->
+    <div class="modal fade" id="exitModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Exit Exam</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to exit the exam? Your progress will be saved, but you cannot resume once
+                        you leave.</p>
+                    <div class="alert alert-danger">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        <strong>Warning:</strong> If you exit now, this attempt will be counted as incomplete and may
+                        affect your score.
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <a href="exam-selection.html" class="btn btn-danger">Exit Exam</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Instructions Modal -->
+    <div class="modal fade" id="instructionsModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Exam Instructions</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <h6>Listening Section Instructions:</h6>
+                    <ul>
+                        <li>You will hear conversations and lectures</li>
+                        <li>Each audio will play only once</li>
+                        <li>You may take notes while listening</li>
+                        <li>Answer each question based on what is stated or implied</li>
+                    </ul>
+
+                    <h6>Navigation:</h6>
+                    <ul>
+                        <li>Click on an answer to select it</li>
+                        <li>Use "Previous" and "Next" buttons to navigate</li>
+                        <li>Flag questions to review later</li>
+                        <li>You can change answers before time expires</li>
+                    </ul>
+
+                    <div class="alert alert-warning">
+                        <i class="fas fa-clock me-2"></i>
+                        Time remaining: <strong id="modalTimer">47:22</strong>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

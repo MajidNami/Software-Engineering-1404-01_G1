@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Report - TOEFL Master</title>
+ 
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <i class="fas fa-headphones me-2"></i>
+                TOEFL Master
+            </a>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="manage-students.html">
+                            <i class="fas fa-arrow-left me-1"></i> Back to Students
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-lg-2 col-md-3 sidebar">
+                <nav class="nav flex-column">
+                    <!-- Dashboard -->
+                    <div class="nav-item">
+                        <a class="nav-link" href="student-dashboard.html">
+                            <i class="fas fa-tachometer-alt me-2"></i> Dashboard
+                        </a>
+                    </div>
+
+                    <!-- Practice Section -->
+                    <div class="nav-item">
+                        <a class="nav-link" data-bs-toggle="collapse" href="#practiceMenu">
+                            <i class="fas fa-headphones me-2"></i> Practice
+                            <i class="fas fa-chevron-down ms-auto" style="font-size: 0.8rem;"></i>
+                        </a>
+                        <div class="collapse" id="practiceMenu">
+                            <div class="nav flex-column ps-3">
+                                <a class="nav-link" href="practice-mode.html">
+                                    <i class="fas fa-play-circle me-2"></i> Start Practice
+                                </a>
+                                <a class="nav-link" href="practice-session.html">
+                                    <i class="fas fa-microphone-alt me-2"></i> Active Session
+                                </a>
+                                <a class="nav-link" href="practice-feedback.html">
+                                    <i class="fas fa-chart-line me-2"></i> Practice Results
+                                </a>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Exams Section -->
+                    <div class="nav-item">
+                        <a class="nav-link" data-bs-toggle="collapse" href="#examsMenu">
+                            <i class="fas fa-file-alt me-2"></i> Exams
+                            <i class="fas fa-chevron-down ms-auto" style="font-size: 0.8rem;"></i>
+                        </a>
+                        <div class="collapse" id="examsMenu">
+                            <div class="nav flex-column ps-3">
+                                <a class="nav-link" href="exam-selection.html">
+                                    <i class="fas fa-list me-2"></i> Select Exam
+                                </a>
+                                <a class="nav-link" href="exam-session.html">
+                                    <i class="fas fa-pencil-alt me-2"></i> Take Exam
+                                </a>
+                                <a class="nav-link" href="exam-result.html">
+                                    <i class="fas fa-chart-bar me-2"></i> Exam Results
+                                </a>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Analytics Section -->
+                    <div class="nav-item">
+                        <a class="nav-link" data-bs-toggle="collapse" href="#analyticsMenu">
+                            <i class="fas fa-chart-bar me-2"></i> Analytics
+                            <i class="fas fa-chevron-down ms-auto" style="font-size: 0.8rem;"></i>
+                        </a>
+                        <div class="collapse" id="analyticsMenu">
+                            <div class="nav flex-column ps-3">
+                                <a class="nav-link" href="student-analytics.html">
+                                    <i class="fas fa-brain me-2"></i> My Analytics
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!-- Instructor Section (Only for Instructors) -->
+                    <div class="nav-item instructor-section">
+                        <a class="nav-link" data-bs-toggle="collapse" href="#instructorMenu">
+                            <i class="fas fa-chalkboard-teacher me-2"></i> Instructor
+                            <i class="fas fa-chevron-down ms-auto" style="font-size: 0.8rem;"></i>
+                        </a>
+                        <div class="collapse" id="instructorMenu">
+                            <div class="nav flex-column ps-3">
+                                <a class="nav-link" href="instructor-dashboard.html">
+                                    <i class="fas fa-tachometer-alt me-2"></i> Instructor Dashboard
+                                </a>
+                                <a class="nav-link" href="manage-students.html">
+                                    <i class="fas fa-users me-2"></i> Manage Students
+                                </a>
+                                <a class="nav-link" href="create-exam.html">
+                                    <i class="fas fa-file-alt me-2"></i> Create Exam
+                                </a>
+                                <a class="nav-link" href="assign-exam.html">
+                                    <i class="fas fa-paper-plane me-2"></i> Assign Exams
+                                </a>
+                                <a class="nav-link" href="instructor-analytics.html">
+                                    <i class="fas fa-chart-pie me-2"></i> Class Analytics
+                                </a>
+                                <a class="nav-link" href="student-detailed-report.html">
+                                    <i class="fas fa-user-graduate me-2"></i> Student Reports
+                                </a>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Admin Section (Only for Admins) -->
+                    <div class="nav-item admin-section">
+                        <a class="nav-link" data-bs-toggle="collapse" href="#adminMenu">
+                            <i class="fas fa-cogs me-2"></i> Admin
+                            <i class="fas fa-chevron-down ms-auto" style="font-size: 0.8rem;"></i>
+                        </a>
+                        <div class="collapse" id="adminMenu">
+                            <div class="nav flex-column ps-3">
+                                <a class="nav-link" href="admin-dashboard.html">
+                                    <i class="fas fa-tachometer-alt me-2"></i> Admin Dashboard
+                                </a>
+
+                                <a class="nav-link" href="question-bank-management.html">
+                                    <i class="fas fa-database me-2"></i> Question Bank
+                                </a>
+
+                                <a class="nav-link" href="system-configuration.html">
+                                    <i class="fas fa-sliders-h me-2"></i> System Configuration
+                                </a>
+                                <a class="nav-link" href="system-logs.html">
+                                    <i class="fas fa-clipboard-list me-2"></i> System Logs
+                                </a>
+
+                            </div>
+                        </div>
+
+
+                        <!-- Help & Support -->
+                        <div class="nav-item">
+                            <a class="nav-link" data-bs-toggle="collapse" href="#helpMenu">
+                                <i class="fas fa-question-circle me-2"></i> Help & Support
+                                <i class="fas fa-chevron-down ms-auto" style="font-size: 0.8rem;"></i>
+                            </a>
+                            <div class="collapse" id="helpMenu">
+                                <div class="nav flex-column ps-3">
+                                    <a class="nav-link" href="faq.html">
+                                        <i class="fas fa-question me-2"></i> FAQ
+                                    </a>
+                                    <a class="nav-link" href="user-guide.html">
+                                        <i class="fas fa-book me-2"></i> User Guide
+                                    </a>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Logout -->
+                        <div class="nav-item mt-3">
+                            <a class="nav-link text-danger" href="index.html">
+                                <i class="fas fa-sign-out-alt me-2"></i> Logout
+                            </a>
+                        </div>
+                </nav>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-lg-10 col-md-9 p-4">
+                <!-- Student Header -->
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col-md-8">
+                                <div class="d-flex align-items-center">
+                                    <div class="rounded-circle bg-primary d-flex align-items-center justify-content-center me-4"
+                                        style="width: 80px; height: 80px;">
+                                        <span class="text-white" style="font-size: 2rem;">AC</span>
+                                    </div>
+                                    <div>
+                                        <h1 class="page-title mb-1">Alex Chen</h1>
+                                        <p class="text-muted mb-2">TOEFL Prep A • Student ID: S-2023-042</p>
+                                        <div class="d-flex flex-wrap gap-2">
+                                            <span class="badge bg-primary">Active</span>
+                                            <span class="badge bg-warning">Needs Improvement</span>
+                                            <span class="badge bg-info">Joined: Sep 15, 2023</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 text-md-end">
+                                <div class="mb-3">
+                                    <h3 class="text-primary mb-0">68%</h3>
+                                    <small class="text-muted">Average Score</small>
+                                </div>
+                                <button class="btn btn-outline-primary me-2">
+                                    <i class="fas fa-envelope me-1"></i> Message
+                                </button>
+                                <button class="btn btn-primary">
+                                    <i class="fas fa-edit me-1"></i> Add Note
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Stats -->
+                <div class="row mb-4">
+                    <div class="col-xl-3 col-md-6 mb-3">
+                        <div class="card stat-card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="text-muted mb-1">Practice Sessions</h6>
+                                        <h3 class="mb-0">18</h3>
+                                    </div>
+                                    <div class="icon-lg bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center"
+                                        style="width: 50px; height: 50px;">
+                                        <i class="fas fa-headphones"></i>
+                                    </div>
+                                </div>
+                                <p class="text-muted small mt-2 mb-0">Last: Today, 2:30 PM</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-md-6 mb-3">
+                        <div class="card stat-card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="text-muted mb-1">Study Hours</h6>
+                                        <h3 class="mb-0">22.8</h3>
+                                    </div>
+                                    <div class="icon-lg bg-success bg-opacity-10 text-success rounded-circle d-flex align-items-center justify-content-center"
+                                        style="width: 50px; height: 50px;">
+                                        <i class="fas fa-clock"></i>
+                                    </div>
+                                </div>
+                                <p class="text-muted small mt-2 mb-0">Avg: 5.7 hrs/week</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-md-6 mb-3">
+                        <div class="card stat-card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="text-muted mb-1">Assignments</h6>
+                                        <h3 class="mb-0">8/10</h3>
+                                    </div>
+                                    <div class="icon-lg bg-warning bg-opacity-10 text-warning rounded-circle d-flex align-items-center justify-content-center"
+                                        style="width: 50px; height: 50px;">
+                                        <i class="fas fa-file-alt"></i>
+                                    </div>
+                                </div>
+                                <p class="text-muted small mt-2 mb-0">80% completion rate</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-md-6 mb-3">
+                        <div class="card stat-card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="text-muted mb-1">TOEFL Estimate</h6>
+                                        <h3 class="mb-0">82</h3>
+                                    </div>
+                                    <div class="icon-lg bg-info bg-opacity-10 text-info rounded-circle d-flex align-items-center justify-content-center"
+                                        style="width: 50px; height: 50px;">
+                                        <i class="fas fa-bullseye"></i>
+                                    </div>
+                                </div>
+                                <p class="text-muted small mt-2 mb-0">+15 from baseline</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Performance Overview -->
+                <div class="row mb-4">
+                    <div class="col-lg-8 mb-4">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title mb-3">Performance Progression</h5>
+                                <div class="chart-placeholder">
+                                    <div class="text-center p-4">
+                                        <i class="fas fa-chart-line fa-3x text-primary mb-3"></i>
+                                        <p>Score Trend Over Time</p>
+                                        <div class="d-flex justify-content-center gap-4 mt-4">
+                                            <div class="text-center">
+                                                <h4 class="text-danger mb-0">67</h4>
+                                                <small class="text-muted">Week 1</small>
+                                            </div>
+                                            <div class="text-center">
+                                                <h4 class="text-warning mb-0">65</h4>
+                                                <small class="text-muted">Week 2</small>
+                                            </div>
+                                            <div class="text-center">
+                                                <h4 class="text-warning mb-0">68</h4>
+                                                <small class="text-muted">Week 3</small>
+                                            </div>
+                                            <div class="text-center">
+                                                <h4 class="text-info mb-0">72</h4>
+                                                <small class="text-muted">Week 4</small>
+                                            </div>
+                                            <div class="text-center">
+                                                <h4 class="text-primary mb-0">75</h4>
+                                                <small class="text-muted">Week 5</small>
+                                            </div>
+                                            <div class="text-center">
+                                                <h4 class="text-success mb-0">82</h4>
+                                                <small class="text-muted">Current</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4 mb-4">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title mb-3">Skill Analysis</h5>
+                                <div class="mb-4">
+                                    <h6 class="small text-muted mb-2">Listening Comprehension</h6>
+                                    <div class="progress mb-3" style="height: 10px;">
+                                        <div class="progress-bar" style="width: 72%"></div>
+                                    </div>
+
+                                    <h6 class="small text-muted mb-2">Note-taking Efficiency</h6>
+                                    <div class="progress mb-3" style="height: 10px;">
+                                        <div class="progress-bar bg-success" style="width: 65%"></div>
+                                    </div>
+
+                                    <h6 class="small text-muted mb-2">Vocabulary Recognition</h6>
+                                    <div class="progress mb-3" style="height: 10px;">
+                                        <div class="progress-bar bg-warning" style="width: 58%"></div>
+                                    </div>
+
+                                    <h6 class="small text-muted mb-2">Answer Strategy</h6>
+                                    <div class="progress mb-3" style="height: 10px;">
+                                        <div class="progress-bar bg-info" style="width: 68%"></div>
+                                    </div>
+                                </div>
+
+                                <div class="alert alert-warning">
+                                    <h6><i class="fas fa-exclamation-triangle me-2"></i>Primary Weakness</h6>
+                                    <p class="small mb-0">Vocabulary recognition is the lowest area. Recommend focused
+                                        vocabulary building exercises.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Assignment History -->
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title mb-3">Assignment History</h5>
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Assignment</th>
+                                        <th>Date</th>
+                                        <th>Score</th>
+                                        <th>Time Spent</th>
+                                        <th>Class Avg.</th>
+                                        <th>Status</th>
+                                        <th>Details</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Mid-Term Assessment</td>
+                                        <td>Oct 15, 2023</td>
+                                        <td><span class="fw-bold text-danger">68%</span></td>
+                                        <td>58:24</td>
+                                        <td>86%</td>
+                                        <td><span class="badge bg-warning">Completed</span></td>
+                                        <td><a href="#" class="btn btn-sm btn-outline-primary">View</a></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Week 5 Practice</td>
+                                        <td>Oct 8, 2023</td>
+                                        <td><span class="fw-bold text-warning">72%</span></td>
+                                        <td>42:18</td>
+                                        <td>82%</td>
+                                        <td><span class="badge bg-warning">Completed</span></td>
+                                        <td><a href="#" class="btn btn-sm btn-outline-primary">View</a></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Listening Diagnostic</td>
+                                        <td>Oct 1, 2023</td>
+                                        <td><span class="fw-bold text-danger">65%</span></td>
+                                        <td>38:45</td>
+                                        <td>78%</td>
+                                        <td><span class="badge bg-success">Completed</span></td>
+                                        <td><a href="#" class="btn btn-sm btn-outline-primary">View</a></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Academic Lecture Quiz</td>
+                                        <td>Sep 24, 2023</td>
+                                        <td><span class="fw-bold text-info">82%</span></td>
+                                        <td>35:12</td>
+                                        <td>91%</td>
+                                        <td><span class="badge bg-success">Completed</span></td>
+                                        <td><a href="#" class="btn btn-sm btn-outline-primary">View</a></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Week 3 Practice</td>
+                                        <td>Sep 17, 2023</td>
+                                        <td><span class="fw-bold text-danger">68%</span></td>
+                                        <td>40:30</td>
+                                        <td>85%</td>
+                                        <td><span class="badge bg-success">Completed</span></td>
+                                        <td><a href="#" class="btn btn-sm btn-outline-primary">View</a></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Weakness Analysis -->
+                <div class="row mb-4">
+                    <div class="col-lg-6 mb-4">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title mb-3">Weakness Analysis</h5>
+                                <div class="mb-4">
+                                    <h6 class="small text-muted mb-2">Question Type Performance</h6>
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span>Detail Questions</span>
+                                        <span class="fw-bold">75%</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span>Main Idea</span>
+                                        <span class="fw-bold">68%</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span>Inference</span>
+                                        <span class="fw-bold text-danger">58%</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between">
+                                        <span>Function</span>
+                                        <span class="fw-bold">72%</span>
+                                    </div>
+                                </div>
+
+                                <div class="mb-4">
+                                    <h6 class="small text-muted mb-2">Topic Performance</h6>
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span>Academic Lectures</span>
+                                        <span class="fw-bold">65%</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span>Campus Conversations</span>
+                                        <span class="fw-bold">72%</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span>Natural Sciences</span>
+                                        <span class="fw-bold text-danger">52%</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between">
+                                        <span>Social Sciences</span>
+                                        <span class="fw-bold">68%</span>
+                                    </div>
+                                </div>
+
+                                <div class="alert alert-info">
+                                    <h6><i class="fas fa-lightbulb me-2"></i>Key Insight</h6>
+                                    <p class="small mb-0">Struggles most with inference questions and natural sciences
+                                        topics. These areas show consistent low performance.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6 mb-4">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title mb-3">Study Patterns & Recommendations</h5>
+                                <div class="mb-4">
+                                    <h6 class="small text-muted mb-2">Study Schedule</h6>
+                                    <p class="small mb-3">Most active on Monday and Wednesday evenings. Average session
+                                        length: 45 minutes.</p>
+
+                                    <h6 class="small text-muted mb-2">Practice Consistency</h6>
+                                    <div class="progress mb-3" style="height: 10px;">
+                                        <div class="progress-bar bg-warning" style="width: 65%"></div>
+                                    </div>
+                                    <p class="small text-muted mb-3">Practices 3-4 times per week (recommended: 5-6
+                                        times)</p>
+                                </div>
+
+                                <div class="mb-4">
+                                    <h6 class="small text-muted mb-3">Recommended Actions</h6>
+                                    <div class="d-flex mb-3">
+                                        <div class="icon-sm bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center me-3"
+                                            style="width: 40px; height: 40px;">
+                                            <i class="fas fa-headphones"></i>
+                                        </div>
+                                        <div>
+                                            <h6 class="mb-0">Targeted Inference Practice</h6>
+                                            <p class="text-muted small mb-0">Assign 3 inference-focused exercises</p>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex mb-3">
+                                        <div class="icon-sm bg-success bg-opacity-10 text-success rounded-circle d-flex align-items-center justify-content-center me-3"
+                                            style="width: 40px; height: 40px;">
+                                            <i class="fas fa-book"></i>
+                                        </div>
+                                        <div>
+                                            <h6 class="mb-0">Science Vocabulary Building</h6>
+                                            <p class="text-muted small mb-0">Focus on biology and chemistry terms</p>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex">
+                                        <div class="icon-sm bg-warning bg-opacity-10 text-warning rounded-circle d-flex align-items-center justify-content-center me-3"
+                                            style="width: 40px; height: 40px;">
+                                            <i class="fas fa-calendar"></i>
+                                        </div>
+                                        <div>
+                                            <h6 class="mb-0">Increase Practice Frequency</h6>
+                                            <p class="text-muted small mb-0">Goal: 5 sessions/week minimum</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="text-center">
+                                    <button class="btn btn-primary me-2">Create Custom Assignment</button>
+                                    <button class="btn btn-outline-primary">Schedule Meeting</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Instructor Notes -->
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="card-title mb-0">Instructor Notes</h5>
+                            <button class="btn btn-sm btn-primary" data-bs-toggle="modal"
+                                data-bs-target="#addNoteModal">
+                                <i class="fas fa-plus me-1"></i> Add Note
+                            </button>
+                        </div>
+
+                        <div class="timeline">
+                            <div class="timeline-item mb-4">
+                                <div class="d-flex">
+                                    <div class="timeline-icon bg-primary rounded-circle d-flex align-items-center justify-content-center me-3"
+                                        style="width: 40px; height: 40px;">
+                                        <i class="fas fa-user text-white"></i>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <div class="d-flex justify-content-between">
+                                            <h6 class="mb-1">Dr. Johnson</h6>
+                                            <small class="text-muted">Oct 16, 2023</small>
+                                        </div>
+                                        <p class="mb-1">Spoke with Alex about his progress. He's motivated but struggles
+                                            with academic vocabulary. Recommended he use the vocabulary builder tool
+                                            daily.</p>
+                                        <div class="d-flex gap-2">
+                                            <span class="badge bg-primary">Meeting</span>
+                                            <span class="badge bg-info">Follow-up</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="timeline-item mb-4">
+                                <div class="d-flex">
+                                    <div class="timeline-icon bg-warning rounded-circle d-flex align-items-center justify-content-center me-3"
+                                        style="width: 40px; height: 40px;">
+                                        <i class="fas fa-exclamation-triangle text-white"></i>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <div class="d-flex justify-content-between">
+                                            <h6 class="mb-1">Dr. Johnson</h6>
+                                            <small class="text-muted">Oct 10, 2023</small>
+                                        </div>
+                                        <p class="mb-1">Noticed significant improvement in inference questions after
+                                            targeted practice. Still needs work on natural sciences topics.</p>
+                                        <div class="d-flex gap-2">
+                                            <span class="badge bg-success">Improvement</span>
+                                            <span class="badge bg-warning">Needs Work</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="timeline-item">
+                                <div class="d-flex">
+                                    <div class="timeline-icon bg-info rounded-circle d-flex align-items-center justify-content-center me-3"
+                                        style="width: 40px; height: 40px;">
+                                        <i class="fas fa-sticky-note text-white"></i>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <div class="d-flex justify-content-between">
+                                            <h6 class="mb-1">Dr. Johnson</h6>
+                                            <small class="text-muted">Sep 25, 2023</small>
+                                        </div>
+                                        <p class="mb-1">Initial assessment: Alex has good listening comprehension but
+                                            struggles with note-taking efficiency and vocabulary. Created personalized
+                                            study plan.</p>
+                                        <div class="d-flex gap-2">
+                                            <span class="badge bg-secondary">Initial</span>
+                                            <span class="badge bg-primary">Plan</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Note Modal -->
+    <div class="modal fade" id="addNoteModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add Note for Alex Chen</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label class="form-label">Note Type</label>
+                            <select class="form-select">
+                                <option selected>General Note</option>
+                                <option>Meeting Summary</option>
+                                <option>Progress Update</option>
+                                <option>Concern</option>
+                                <option>Recommendation</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Note</label>
+                            <textarea class="form-control" rows="5" placeholder="Enter your note here..."></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Tags</label>
+                            <div class="d-flex flex-wrap gap-2">
+                                <button type="button" class="btn btn-sm btn-outline-primary">Meeting</button>
+                                <button type="button" class="btn btn-sm btn-outline-success">Improvement</button>
+                                <button type="button" class="btn btn-sm btn-outline-warning">Needs Work</button>
+                                <button type="button" class="btn btn-sm btn-outline-info">Follow-up</button>
+                                <button type="button" class="btn btn-sm btn-outline-danger">Concern</button>
+                            </div>
+                        </div>
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="shareWithStudent">
+                            <label class="form-check-label" for="shareWithStudent">
+                                Share this note with the student
+                            </label>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary">Save Note</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .timeline {
+            position: relative;
+            padding-left: 0;
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-left: 0;
+        }
+
+        .timeline-icon {
+            flex-shrink: 0;
+        }
+    </style>
+</body>
+
+</html>

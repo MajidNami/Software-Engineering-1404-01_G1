@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Practice Session - TOEFL Master</title>
+ 
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <i class="fas fa-headphones me-2"></i>
+                TOEFL Master
+            </a>
+            <div class="navbar-text">
+                <span class="badge bg-primary me-2">Practice Mode</span>
+                <span class="text-muted">Question 5 of 15</span>
+            </div>
+            <div class="d-flex align-items-center">
+                <div class="me-3">
+                    <i class="fas fa-clock text-primary me-1"></i>
+                    <span id="timer">24:18</span>
+                </div>
+                <button class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#exitModal">
+                    Exit Practice
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid py-4">
+        <div class="row">
+            <!-- Audio Player Section -->
+            <div class="col-lg-8 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div>
+                                <h4 class="card-title mb-1">Academic Lecture: Marine Biology</h4>
+                                <p class="text-muted small mb-0">Listen to the lecture and answer the questions that
+                                    follow.</p>
+                            </div>
+                            <div>
+                                <span class="badge bg-primary">Lecture</span>
+                                <span class="badge bg-info ms-1">Biology</span>
+                            </div>
+                        </div>
+
+                        <!-- Audio Player -->
+                        <div class="audio-player mb-4">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h5 class="mb-0">Lecture: Coral Reef Ecosystems</h5>
+                                <div>
+                                    <span class="badge bg-secondary me-2">Play 1 of 2</span>
+                                    <span class="text-muted small">Length: 3:42</span>
+                                </div>
+                            </div>
+                            <div class="progress mb-2">
+                                <div class="progress-bar" style="width: 65%"></div>
+                            </div>
+                            <div class="d-flex justify-content-between text-muted small mb-3">
+                                <span>2:24</span>
+                                <span>3:42</span>
+                            </div>
+                            <div class="audio-controls">
+                                <button class="audio-btn">
+                                    <i class="fas fa-step-backward"></i>
+                                </button>
+                                <button class="audio-btn" style="width: 70px; height: 70px;">
+                                    <i class="fas fa-pause"></i>
+                                </button>
+                                <button class="audio-btn">
+                                    <i class="fas fa-step-forward"></i>
+                                </button>
+                            </div>
+                            <div class="text-center mt-3">
+                                <button class="btn btn-primary me-2">
+                                    <i class="fas fa-redo me-1"></i> Repeat Audio
+                                </button>
+                                <button class="btn btn-outline-primary" disabled>
+                                    <i class="fas fa-volume-up me-1"></i> Adjust Speed
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Note-taking Area -->
+                        <div class="mb-4">
+                            <h6 class="section-title">Your Notes</h6>
+                            <div class="card bg-light">
+                                <div class="card-body">
+                                    <textarea class="form-control border-0 bg-transparent" rows="4"
+                                        placeholder="Type your notes here while listening..."></textarea>
+                                </div>
+                                <div class="card-footer bg-light border-top py-2">
+                                    <small class="text-muted">
+                                        <i class="fas fa-info-circle me-1"></i>
+                                        Notes are for your reference only and will not be graded
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Question -->
+                        <div class="question-card p-4">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h5 class="mb-0">Question 5</h5>
+                                <div>
+                                    <span class="badge bg-warning me-2">Detail Question</span>
+                                    <span class="text-muted small">1 point</span>
+                                </div>
+                            </div>
+
+                            <p class="fw-medium mb-4">According to the professor, what is the primary threat to coral
+                                reefs mentioned in the lecture?</p>
+
+                            <div class="answer-option">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="question5" id="optionA">
+                                    <label class="form-check-label w-100" for="optionA">
+                                        A. Overfishing in reef areas
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="answer-option">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="question5" id="optionB">
+                                    <label class="form-check-label w-100" for="optionB">
+                                        B. Pollution from agricultural runoff
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="answer-option">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="question5" id="optionC">
+                                    <label class="form-check-label w-100" for="optionC">
+                                        C. Rising ocean temperatures
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="answer-option">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="question5" id="optionD">
+                                    <label class="form-check-label w-100" for="optionD">
+                                        D. Physical damage from tourism
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="mt-4 d-flex justify-content-between">
+                                <button class="btn btn-outline-primary" disabled>
+                                    <i class="fas fa-arrow-left me-1"></i> Previous
+                                </button>
+                                <div>
+                                    <button class="btn btn-outline-secondary me-2">
+                                        <i class="fas fa-flag me-1"></i> Flag for Review
+                                    </button>
+                                    <button class="btn btn-primary">
+                                        Next <i class="fas fa-arrow-right ms-1"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Question Navigator & Tools -->
+            <div class="col-lg-4">
+                <!-- Question Navigator -->
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title mb-3">Question Navigator</h5>
+                        <div class="d-flex flex-wrap gap-2 mb-3">
+                            <button class="btn btn-sm btn-primary rounded-circle"
+                                style="width: 40px; height: 40px;">1</button>
+                            <button class="btn btn-sm btn-primary rounded-circle"
+                                style="width: 40px; height: 40px;">2</button>
+                            <button class="btn btn-sm btn-success rounded-circle"
+                                style="width: 40px; height: 40px;">3</button>
+                            <button class="btn btn-sm btn-success rounded-circle"
+                                style="width: 40px; height: 40px;">4</button>
+                            <button class="btn btn-sm btn-warning rounded-circle"
+                                style="width: 40px; height: 40px;">5</button>
+                            <button class="btn btn-sm btn-outline-secondary rounded-circle"
+                                style="width: 40px; height: 40px;">6</button>
+                            <button class="btn btn-sm btn-outline-secondary rounded-circle"
+                                style="width: 40px; height: 40px;">7</button>
+                            <button class="btn btn-sm btn-outline-secondary rounded-circle"
+                                style="width: 40px; height: 40px;">8</button>
+                            <button class="btn btn-sm btn-outline-secondary rounded-circle"
+                                style="width: 40px; height: 40px;">9</button>
+                            <button class="btn btn-sm btn-outline-secondary rounded-circle"
+                                style="width: 40px; height: 40px;">10</button>
+                            <button class="btn btn-sm btn-outline-secondary rounded-circle"
+                                style="width: 40px; height: 40px;">11</button>
+                            <button class="btn btn-sm btn-outline-secondary rounded-circle"
+                                style="width: 40px; height: 40px;">12</button>
+                            <button class="btn btn-sm btn-outline-secondary rounded-circle"
+                                style="width: 40px; height: 40px;">13</button>
+                            <button class="btn btn-sm btn-outline-secondary rounded-circle"
+                                style="width: 40px; height: 40px;">14</button>
+                            <button class="btn btn-sm btn-outline-secondary rounded-circle"
+                                style="width: 40px; height: 40px;">15</button>
+                        </div>
+                        <div class="d-flex justify-content-between small">
+                            <div>
+                                <span class="badge bg-primary me-1">Current</span>
+                                <span class="badge bg-success me-1">Answered</span>
+                                <span class="badge bg-warning me-1">Flagged</span>
+                                <span class="badge bg-secondary">Not Viewed</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Practice Tools -->
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title mb-3">Practice Tools</h5>
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-outline-primary">
+                                <i class="fas fa-volume-up me-2"></i> Play Audio Again
+                            </button>
+                            <button class="btn btn-outline-primary">
+                                <i class="fas fa-transcript me-2"></i> Show Transcript
+                            </button>
+                            <button class="btn btn-outline-primary">
+                                <i class="fas fa-question-circle me-2"></i> Hint
+                            </button>
+                            <button class="btn btn-outline-warning">
+                                <i class="fas fa-flag me-2"></i> Flag Question
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Progress & Time -->
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title mb-3">Session Progress</h5>
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between mb-1">
+                                <span>Questions Completed</span>
+                                <span>4/15</span>
+                            </div>
+                            <div class="progress" style="height: 10px;">
+                                <div class="progress-bar" style="width: 27%"></div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between mb-1">
+                                <span>Time Remaining</span>
+                                <span id="timeRemaining">24:18</span>
+                            </div>
+                            <div class="progress" style="height: 10px;">
+                                <div class="progress-bar bg-warning" style="width: 65%"></div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between mb-1">
+                                <span>Estimated Score</span>
+                                <span>78%</span>
+                            </div>
+                            <div class="progress" style="height: 10px;">
+                                <div class="progress-bar bg-success" style="width: 78%"></div>
+                            </div>
+                        </div>
+
+                        <hr>
+
+                        <div class="text-center">
+                            <button class="btn btn-primary w-100 mb-2" data-bs-toggle="modal"
+                                data-bs-target="#submitModal">
+                                <i class="fas fa-check-circle me-1"></i> Submit Practice
+                            </button>
+                            <small class="text-muted">You can review answers before submitting</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Exit Practice Modal -->
+    <div class="modal fade" id="exitModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Exit Practice Session</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to exit this practice session? Your progress will be saved, but the timer
+                        will continue if you're in timed mode.</p>
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        If you exit now, you'll need to restart this session from the beginning.
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <a href="practice-mode.html" class="btn btn-danger">Exit Practice</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Submit Practice Modal -->
+    <div class="modal fade" id="submitModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Submit Practice Session</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p>You have completed 4 out of 15 questions. Are you ready to submit your practice session?</p>
+
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>11 questions remain unanswered.</strong> You can go back and answer them before
+                        submitting.
+                    </div>
+
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" id="reviewBeforeSubmit">
+                        <label class="form-check-label" for="reviewBeforeSubmit">
+                            Review all questions before submitting
+                        </label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Continue Practice</button>
+                    <a href="practice-feedback.html" class="btn btn-primary">Submit and View Results</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

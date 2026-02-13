@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics - TOEFL Master</title>
+ 
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <i class="fas fa-headphones me-2"></i>
+                TOEFL Master
+            </a>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="student-dashboard.html">
+                            <i class="fas fa-arrow-left me-1"></i> Back to Dashboard
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-lg-2 col-md-3 sidebar">
+                <nav class="nav flex-column">
+                    <!-- Dashboard -->
+                    <div class="nav-item">
+                        <a class="nav-link" href="student-dashboard.html">
+                            <i class="fas fa-tachometer-alt me-2"></i> Dashboard
+                        </a>
+                    </div>
+
+                    <!-- Practice Section -->
+                    <div class="nav-item">
+                        <a class="nav-link" data-bs-toggle="collapse" href="#practiceMenu">
+                            <i class="fas fa-headphones me-2"></i> Practice
+                            <i class="fas fa-chevron-down ms-auto" style="font-size: 0.8rem;"></i>
+                        </a>
+                        <div class="collapse" id="practiceMenu">
+                            <div class="nav flex-column ps-3">
+                                <a class="nav-link" href="practice-mode.html">
+                                    <i class="fas fa-play-circle me-2"></i> Start Practice
+                                </a>
+                                <a class="nav-link" href="practice-session.html">
+                                    <i class="fas fa-microphone-alt me-2"></i> Active Session
+                                </a>
+                                <a class="nav-link" href="practice-feedback.html">
+                                    <i class="fas fa-chart-line me-2"></i> Practice Results
+                                </a>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Exams Section -->
+                    <div class="nav-item">
+                        <a class="nav-link" data-bs-toggle="collapse" href="#examsMenu">
+                            <i class="fas fa-file-alt me-2"></i> Exams
+                            <i class="fas fa-chevron-down ms-auto" style="font-size: 0.8rem;"></i>
+                        </a>
+                        <div class="collapse" id="examsMenu">
+                            <div class="nav flex-column ps-3">
+                                <a class="nav-link" href="exam-selection.html">
+                                    <i class="fas fa-list me-2"></i> Select Exam
+                                </a>
+                                <a class="nav-link" href="exam-session.html">
+                                    <i class="fas fa-pencil-alt me-2"></i> Take Exam
+                                </a>
+                                <a class="nav-link" href="exam-result.html">
+                                    <i class="fas fa-chart-bar me-2"></i> Exam Results
+                                </a>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Analytics Section -->
+                    <div class="nav-item">
+                        <a class="nav-link" data-bs-toggle="collapse" href="#analyticsMenu">
+                            <i class="fas fa-chart-bar me-2"></i> Analytics
+                            <i class="fas fa-chevron-down ms-auto" style="font-size: 0.8rem;"></i>
+                        </a>
+                        <div class="collapse" id="analyticsMenu">
+                            <div class="nav flex-column ps-3">
+                                <a class="nav-link" href="student-analytics.html">
+                                    <i class="fas fa-brain me-2"></i> My Analytics
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!-- Instructor Section (Only for Instructors) -->
+                    <div class="nav-item instructor-section">
+                        <a class="nav-link" data-bs-toggle="collapse" href="#instructorMenu">
+                            <i class="fas fa-chalkboard-teacher me-2"></i> Instructor
+                            <i class="fas fa-chevron-down ms-auto" style="font-size: 0.8rem;"></i>
+                        </a>
+                        <div class="collapse" id="instructorMenu">
+                            <div class="nav flex-column ps-3">
+                                <a class="nav-link" href="instructor-dashboard.html">
+                                    <i class="fas fa-tachometer-alt me-2"></i> Instructor Dashboard
+                                </a>
+                                <a class="nav-link" href="manage-students.html">
+                                    <i class="fas fa-users me-2"></i> Manage Students
+                                </a>
+                                <a class="nav-link" href="create-exam.html">
+                                    <i class="fas fa-file-alt me-2"></i> Create Exam
+                                </a>
+                                <a class="nav-link" href="assign-exam.html">
+                                    <i class="fas fa-paper-plane me-2"></i> Assign Exams
+                                </a>
+                                <a class="nav-link" href="instructor-analytics.html">
+                                    <i class="fas fa-chart-pie me-2"></i> Class Analytics
+                                </a>
+                                <a class="nav-link" href="student-detailed-report.html">
+                                    <i class="fas fa-user-graduate me-2"></i> Student Reports
+                                </a>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Admin Section (Only for Admins) -->
+                    <div class="nav-item admin-section">
+                        <a class="nav-link" data-bs-toggle="collapse" href="#adminMenu">
+                            <i class="fas fa-cogs me-2"></i> Admin
+                            <i class="fas fa-chevron-down ms-auto" style="font-size: 0.8rem;"></i>
+                        </a>
+                        <div class="collapse" id="adminMenu">
+                            <div class="nav flex-column ps-3">
+                                <a class="nav-link" href="admin-dashboard.html">
+                                    <i class="fas fa-tachometer-alt me-2"></i> Admin Dashboard
+                                </a>
+
+                                <a class="nav-link" href="question-bank-management.html">
+                                    <i class="fas fa-database me-2"></i> Question Bank
+                                </a>
+
+                                <a class="nav-link" href="system-configuration.html">
+                                    <i class="fas fa-sliders-h me-2"></i> System Configuration
+                                </a>
+                                <a class="nav-link" href="system-logs.html">
+                                    <i class="fas fa-clipboard-list me-2"></i> System Logs
+                                </a>
+
+                            </div>
+                        </div>
+
+
+                        <!-- Help & Support -->
+                        <div class="nav-item">
+                            <a class="nav-link" data-bs-toggle="collapse" href="#helpMenu">
+                                <i class="fas fa-question-circle me-2"></i> Help & Support
+                                <i class="fas fa-chevron-down ms-auto" style="font-size: 0.8rem;"></i>
+                            </a>
+                            <div class="collapse" id="helpMenu">
+                                <div class="nav flex-column ps-3">
+                                    <a class="nav-link" href="faq.html">
+                                        <i class="fas fa-question me-2"></i> FAQ
+                                    </a>
+                                    <a class="nav-link" href="user-guide.html">
+                                        <i class="fas fa-book me-2"></i> User Guide
+                                    </a>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Logout -->
+                        <div class="nav-item mt-3">
+                            <a class="nav-link text-danger" href="index.html">
+                                <i class="fas fa-sign-out-alt me-2"></i> Logout
+                            </a>
+                        </div>
+                </nav>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-lg-10 col-md-9 p-4">
+                <!-- Page Header -->
+                <div class="page-header mb-4">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h1 class="page-title">Analytics Dashboard</h1>
+                            <p class="text-muted mb-0">Detailed insights into your TOEFL Listening performance</p>
+                        </div>
+                        <div class="dropdown">
+                            <button class="btn btn-outline-primary dropdown-toggle" type="button"
+                                data-bs-toggle="dropdown">
+                                Last 30 Days
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#">Last 7 Days</a></li>
+                                <li><a class="dropdown-item" href="#">Last 30 Days</a></li>
+                                <li><a class="dropdown-item" href="#">Last 90 Days</a></li>
+                                <li><a class="dropdown-item" href="#">All Time</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stats Overview -->
+                <div class="row mb-4">
+                    <div class="col-xl-3 col-md-6 mb-3">
+                        <div class="card stat-card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="text-muted mb-1">Avg. Accuracy</h6>
+                                        <h3 class="mb-0">84%</h3>
+                                    </div>
+                                    <div class="icon-lg bg-success bg-opacity-10 text-success rounded-circle d-flex align-items-center justify-content-center"
+                                        style="width: 50px; height: 50px;">
+                                        <i class="fas fa-chart-line"></i>
+                                    </div>
+                                </div>
+                                <div class="progress mt-3" style="height: 6px;">
+                                    <div class="progress-bar bg-success" style="width: 84%"></div>
+                                </div>
+                                <p class="text-muted small mt-2 mb-0">+3% from previous period</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-md-6 mb-3">
+                        <div class="card stat-card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="text-muted mb-1">Study Hours</h6>
+                                        <h3 class="mb-0">28.5</h3>
+                                    </div>
+                                    <div class="icon-lg bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center"
+                                        style="width: 50px; height: 50px;">
+                                        <i class="fas fa-clock"></i>
+                                    </div>
+                                </div>
+                                <div class="progress mt-3" style="height: 6px;">
+                                    <div class="progress-bar bg-primary" style="width: 65%"></div>
+                                </div>
+                                <p class="text-muted small mt-2 mb-0">Weekly goal: 44 hours</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-md-6 mb-3">
+                        <div class="card stat-card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="text-muted mb-1">Practice Sessions</h6>
+                                        <h3 class="mb-0">24</h3>
+                                    </div>
+                                    <div class="icon-lg bg-warning bg-opacity-10 text-warning rounded-circle d-flex align-items-center justify-content-center"
+                                        style="width: 50px; height: 50px;">
+                                        <i class="fas fa-headphones"></i>
+                                    </div>
+                                </div>
+                                <div class="progress mt-3" style="height: 6px;">
+                                    <div class="progress-bar bg-warning" style="width: 80%"></div>
+                                </div>
+                                <p class="text-muted small mt-2 mb-0">+8 from previous period</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-md-6 mb-3">
+                        <div class="card stat-card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="text-muted mb-1">TOEFL Score</h6>
+                                        <h3 class="mb-0">102</h3>
+                                    </div>
+                                    <div class="icon-lg bg-info bg-opacity-10 text-info rounded-circle d-flex align-items-center justify-content-center"
+                                        style="width: 50px; height: 50px;">
+                                        <i class="fas fa-bullseye"></i>
+                                    </div>
+                                </div>
+                                <div class="progress mt-3" style="height: 6px;">
+                                    <div class="progress-bar bg-info" style="width: 85%"></div>
+                                </div>
+                                <p class="text-muted small mt-2 mb-0">Target: 110</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Row 1 -->
+                <div class="row mb-4">
+                    <div class="col-lg-8 mb-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title mb-3">Score Progression</h5>
+                                <div class="chart-placeholder">
+                                    <div class="text-center p-4">
+                                        <i class="fas fa-chart-line fa-3x text-primary mb-3"></i>
+                                        <p>Your TOEFL Listening score trend over time</p>
+                                        <div class="d-flex justify-content-center gap-5 mt-4">
+                                            <div class="text-center">
+                                                <h4 class="text-primary mb-0">78</h4>
+                                                <small class="text-muted">Week 1</small>
+                                            </div>
+                                            <div class="text-center">
+                                                <h4 class="text-primary mb-0">82</h4>
+                                                <small class="text-muted">Week 2</small>
+                                            </div>
+                                            <div class="text-center">
+                                                <h4 class="text-primary mb-0">85</h4>
+                                                <small class="text-muted">Week 3</small>
+                                            </div>
+                                            <div class="text-center">
+                                                <h4 class="text-primary mb-0">91</h4>
+                                                <small class="text-muted">Week 4</small>
+                                            </div>
+                                            <div class="text-center">
+                                                <h4 class="text-primary mb-0">95</h4>
+                                                <small class="text-muted">Week 5</small>
+                                            </div>
+                                            <div class="text-center">
+                                                <h4 class="text-primary mb-0">102</h4>
+                                                <small class="text-muted">Current</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4 mb-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title mb-3">Question Type Breakdown</h5>
+                                <div class="chart-placeholder" style="height: 250px;">
+                                    <div class="text-center p-4">
+                                        <i class="fas fa-chart-pie fa-3x text-success mb-3"></i>
+                                        <p>Performance by Question Type</p>
+                                    </div>
+                                </div>
+                                <div class="mt-3">
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span>Detail Questions</span>
+                                        <span class="fw-bold">92%</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span>Main Idea</span>
+                                        <span class="fw-bold">85%</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span>Inference</span>
+                                        <span class="fw-bold">75%</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between">
+                                        <span>Function</span>
+                                        <span class="fw-bold">88%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Row 2 -->
+                <div class="row mb-4">
+                    <div class="col-lg-6 mb-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title mb-3">Topic Performance</h5>
+                                <div class="chart-placeholder" style="height: 300px;">
+                                    <div class="text-center p-4">
+                                        <i class="fas fa-chart-bar fa-3x text-warning mb-3"></i>
+                                        <p>Accuracy by Topic Area</p>
+                                        <div class="row text-start mt-4">
+                                            <div class="col-6">
+                                                <div class="mb-3">
+                                                    <small>Academic Lectures</small>
+                                                    <div class="progress" style="height: 8px;">
+                                                        <div class="progress-bar" style="width: 85%"></div>
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <small>Campus Conversations</small>
+                                                    <div class="progress" style="height: 8px;">
+                                                        <div class="progress-bar" style="width: 90%"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-6">
+                                                <div class="mb-3">
+                                                    <small>Natural Sciences</small>
+                                                    <div class="progress" style="height: 8px;">
+                                                        <div class="progress-bar bg-warning" style="width: 78%"></div>
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <small>Social Sciences</small>
+                                                    <div class="progress" style="height: 8px;">
+                                                        <div class="progress-bar" style="width: 82%"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6 mb-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title mb-3">Study Patterns</h5>
+                                <div class="chart-placeholder" style="height: 300px;">
+                                    <div class="text-center p-4">
+                                        <i class="fas fa-calendar-alt fa-3x text-info mb-3"></i>
+                                        <p>Study Activity Heatmap</p>
+                                        <div class="d-flex justify-content-center mt-3">
+                                            <div class="me-3">
+                                                <div class="d-flex flex-wrap" style="width: 120px;">
+                                                    <div class="square bg-success m-1"></div>
+                                                    <div class="square bg-success m-1"></div>
+                                                    <div class="square bg-warning m-1"></div>
+                                                    <div class="square bg-light m-1"></div>
+                                                    <div class="square bg-success m-1"></div>
+                                                    <div class="square bg-success m-1"></div>
+                                                    <div class="square bg-light m-1"></div>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <div class="text-start">
+                                                    <div class="d-flex align-items-center mb-2">
+                                                        <div class="square bg-success me-2"></div>
+                                                        <small>High activity (2+ hrs)</small>
+                                                    </div>
+                                                    <div class="d-flex align-items-center mb-2">
+                                                        <div class="square bg-warning me-2"></div>
+                                                        <small>Medium activity (1-2 hrs)</small>
+                                                    </div>
+                                                    <div class="d-flex align-items-center">
+                                                        <div class="square bg-light me-2"></div>
+                                                        <small>Low activity (<1 hr)</small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Weakness Analysis -->
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title mb-3">Weakness Analysis</h5>
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <div class="card border-danger h-100">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-center mb-3">
+                                            <h6 class="mb-0 text-danger">Inference Questions</h6>
+                                            <span class="badge bg-danger">75%</span>
+                                        </div>
+                                        <p class="small text-muted">Understanding implied meanings and making inferences
+                                            from listening passages.</p>
+                                        <div class="progress mb-3" style="height: 6px;">
+                                            <div class="progress-bar bg-danger" style="width: 75%"></div>
+                                        </div>
+                                        <a href="#" class="btn btn-sm btn-outline-danger">Practice This</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="card border-warning h-100">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-center mb-3">
+                                            <h6 class="mb-0 text-warning">Natural Sciences</h6>
+                                            <span class="badge bg-warning">78%</span>
+                                        </div>
+                                        <p class="small text-muted">Listening comprehension for biology, chemistry, and
+                                            physics topics.</p>
+                                        <div class="progress mb-3" style="height: 6px;">
+                                            <div class="progress-bar bg-warning" style="width: 78%"></div>
+                                        </div>
+                                        <a href="#" class="btn btn-sm btn-outline-warning">Practice This</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="card border-info h-100">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-center mb-3">
+                                            <h6 class="mb-0 text-info">Fast-paced Speech</h6>
+                                            <span class="badge bg-info">80%</span>
+                                        </div>
+                                        <p class="small text-muted">Comprehension of native-speed conversations and
+                                            lectures.</p>
+                                        <div class="progress mb-3" style="height: 6px;">
+                                            <div class="progress-bar bg-info" style="width: 80%"></div>
+                                        </div>
+                                        <a href="#" class="btn btn-sm btn-outline-info">Practice This</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Comparison & Goals -->
+                <div class="row">
+                    <div class="col-lg-6 mb-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title mb-3">Class Comparison</h5>
+                                <div class="chart-placeholder" style="height: 250px;">
+                                    <div class="text-center p-4">
+                                        <i class="fas fa-users fa-3x text-primary mb-3"></i>
+                                        <p>Your performance compared to classmates</p>
+                                        <div class="row text-start mt-3">
+                                            <div class="col-6">
+                                                <div class="d-flex align-items-center mb-3">
+                                                    <div class="rounded-circle bg-primary d-flex align-items-center justify-content-center me-2"
+                                                        style="width: 32px; height: 32px;">
+                                                        <span class="text-white">JS</span>
+                                                    </div>
+                                                    <div>
+                                                        <small class="d-block">You</small>
+                                                        <small class="fw-bold">102</small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-6">
+                                                <div class="d-flex align-items-center mb-3">
+                                                    <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center me-2"
+                                                        style="width: 32px; height: 32px;">
+                                                        <span class="text-white">MA</span>
+                                                    </div>
+                                                    <div>
+                                                        <small class="d-block">Class Avg.</small>
+                                                        <small class="fw-bold">94</small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6 mb-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title mb-3">Goal Progress</h5>
+                                <div class="mb-4">
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span>TOEFL Target Score: 110</span>
+                                        <span>Current: 102</span>
+                                    </div>
+                                    <div class="progress" style="height: 12px;">
+                                        <div class="progress-bar" style="width: 73%"></div>
+                                    </div>
+                                </div>
+
+                                <div class="mb-4">
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span>Weekly Study Goal: 10 hours</span>
+                                        <span>Current: 8.5 hours</span>
+                                    </div>
+                                    <div class="progress" style="height: 12px;">
+                                        <div class="progress-bar bg-success" style="width: 85%"></div>
+                                    </div>
+                                </div>
+
+                                <div class="mb-4">
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span>Practice Sessions: 30/month</span>
+                                        <span>Current: 24</span>
+                                    </div>
+                                    <div class="progress" style="height: 12px;">
+                                        <div class="progress-bar bg-warning" style="width: 80%"></div>
+                                    </div>
+                                </div>
+
+                                <div class="text-center">
+                                    <button class="btn btn-outline-primary">Update Goals</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .square {
+            width: 15px;
+            height: 15px;
+            border-radius: 3px;
+        }
+    </style>
+</body>
+
+</html>

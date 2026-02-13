@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assign Exam - TOEFL Master</title>
+ 
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <i class="fas fa-headphones me-2"></i>
+                TOEFL Master
+            </a>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="instructor-dashboard.html">
+                            <i class="fas fa-arrow-left me-1"></i> Back to Dashboard
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-lg-2 col-md-3 sidebar">
+                <nav class="nav flex-column">
+                    <!-- Dashboard -->
+                    <div class="nav-item">
+                        <a class="nav-link" href="student-dashboard.html">
+                            <i class="fas fa-tachometer-alt me-2"></i> Dashboard
+                        </a>
+                    </div>
+
+                    <!-- Practice Section -->
+                    <div class="nav-item">
+                        <a class="nav-link" data-bs-toggle="collapse" href="#practiceMenu">
+                            <i class="fas fa-headphones me-2"></i> Practice
+                            <i class="fas fa-chevron-down ms-auto" style="font-size: 0.8rem;"></i>
+                        </a>
+                        <div class="collapse" id="practiceMenu">
+                            <div class="nav flex-column ps-3">
+                                <a class="nav-link" href="practice-mode.html">
+                                    <i class="fas fa-play-circle me-2"></i> Start Practice
+                                </a>
+                                <a class="nav-link" href="practice-session.html">
+                                    <i class="fas fa-microphone-alt me-2"></i> Active Session
+                                </a>
+                                <a class="nav-link" href="practice-feedback.html">
+                                    <i class="fas fa-chart-line me-2"></i> Practice Results
+                                </a>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Exams Section -->
+                    <div class="nav-item">
+                        <a class="nav-link" data-bs-toggle="collapse" href="#examsMenu">
+                            <i class="fas fa-file-alt me-2"></i> Exams
+                            <i class="fas fa-chevron-down ms-auto" style="font-size: 0.8rem;"></i>
+                        </a>
+                        <div class="collapse" id="examsMenu">
+                            <div class="nav flex-column ps-3">
+                                <a class="nav-link" href="exam-selection.html">
+                                    <i class="fas fa-list me-2"></i> Select Exam
+                                </a>
+                                <a class="nav-link" href="exam-session.html">
+                                    <i class="fas fa-pencil-alt me-2"></i> Take Exam
+                                </a>
+                                <a class="nav-link" href="exam-result.html">
+                                    <i class="fas fa-chart-bar me-2"></i> Exam Results
+                                </a>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Analytics Section -->
+                    <div class="nav-item">
+                        <a class="nav-link" data-bs-toggle="collapse" href="#analyticsMenu">
+                            <i class="fas fa-chart-bar me-2"></i> Analytics
+                            <i class="fas fa-chevron-down ms-auto" style="font-size: 0.8rem;"></i>
+                        </a>
+                        <div class="collapse" id="analyticsMenu">
+                            <div class="nav flex-column ps-3">
+                                <a class="nav-link" href="student-analytics.html">
+                                    <i class="fas fa-brain me-2"></i> My Analytics
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!-- Instructor Section (Only for Instructors) -->
+                    <div class="nav-item instructor-section">
+                        <a class="nav-link" data-bs-toggle="collapse" href="#instructorMenu">
+                            <i class="fas fa-chalkboard-teacher me-2"></i> Instructor
+                            <i class="fas fa-chevron-down ms-auto" style="font-size: 0.8rem;"></i>
+                        </a>
+                        <div class="collapse" id="instructorMenu">
+                            <div class="nav flex-column ps-3">
+                                <a class="nav-link" href="instructor-dashboard.html">
+                                    <i class="fas fa-tachometer-alt me-2"></i> Instructor Dashboard
+                                </a>
+                                <a class="nav-link" href="manage-students.html">
+                                    <i class="fas fa-users me-2"></i> Manage Students
+                                </a>
+                                <a class="nav-link" href="create-exam.html">
+                                    <i class="fas fa-file-alt me-2"></i> Create Exam
+                                </a>
+                                <a class="nav-link" href="assign-exam.html">
+                                    <i class="fas fa-paper-plane me-2"></i> Assign Exams
+                                </a>
+                                <a class="nav-link" href="instructor-analytics.html">
+                                    <i class="fas fa-chart-pie me-2"></i> Class Analytics
+                                </a>
+                                <a class="nav-link" href="student-detailed-report.html">
+                                    <i class="fas fa-user-graduate me-2"></i> Student Reports
+                                </a>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Admin Section (Only for Admins) -->
+                    <div class="nav-item admin-section">
+                        <a class="nav-link" data-bs-toggle="collapse" href="#adminMenu">
+                            <i class="fas fa-cogs me-2"></i> Admin
+                            <i class="fas fa-chevron-down ms-auto" style="font-size: 0.8rem;"></i>
+                        </a>
+                        <div class="collapse" id="adminMenu">
+                            <div class="nav flex-column ps-3">
+                                <a class="nav-link" href="admin-dashboard.html">
+                                    <i class="fas fa-tachometer-alt me-2"></i> Admin Dashboard
+                                </a>
+
+                                <a class="nav-link" href="question-bank-management.html">
+                                    <i class="fas fa-database me-2"></i> Question Bank
+                                </a>
+
+                                <a class="nav-link" href="system-configuration.html">
+                                    <i class="fas fa-sliders-h me-2"></i> System Configuration
+                                </a>
+                                <a class="nav-link" href="system-logs.html">
+                                    <i class="fas fa-clipboard-list me-2"></i> System Logs
+                                </a>
+
+                            </div>
+                        </div>
+
+
+                        <!-- Help & Support -->
+                        <div class="nav-item">
+                            <a class="nav-link" data-bs-toggle="collapse" href="#helpMenu">
+                                <i class="fas fa-question-circle me-2"></i> Help & Support
+                                <i class="fas fa-chevron-down ms-auto" style="font-size: 0.8rem;"></i>
+                            </a>
+                            <div class="collapse" id="helpMenu">
+                                <div class="nav flex-column ps-3">
+                                    <a class="nav-link" href="faq.html">
+                                        <i class="fas fa-question me-2"></i> FAQ
+                                    </a>
+                                    <a class="nav-link" href="user-guide.html">
+                                        <i class="fas fa-book me-2"></i> User Guide
+                                    </a>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Logout -->
+                        <div class="nav-item mt-3">
+                            <a class="nav-link text-danger" href="index.html">
+                                <i class="fas fa-sign-out-alt me-2"></i> Logout
+                            </a>
+                        </div>
+                </nav>
+            </div>
+            <!-- Main Content -->
+            <div class="col-lg-10 col-md-9 p-4">
+                <!-- Page Header -->
+                <div class="page-header mb-4">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h1 class="page-title">Assign Exam</h1>
+                            <p class="text-muted mb-0">Assign exams to students or classes</p>
+                        </div>
+                        <div>
+                            <button class="btn btn-outline-primary me-2">
+                                <i class="fas fa-history me-1"></i> Assignment History
+                            </button>
+                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#quickAssignModal">
+                                <i class="fas fa-bolt me-1"></i> Quick Assign
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Two Column Layout -->
+                <div class="row">
+                    <!-- Left Column: Exam Selection -->
+                    <div class="col-lg-8 mb-4">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title mb-3">Select Exam to Assign</h5>
+
+                                <!-- Exam Filters -->
+                                <div class="row mb-4">
+                                    <div class="col-md-4 mb-3">
+                                        <label class="form-label">Exam Type</label>
+                                        <select class="form-select">
+                                            <option selected>All Exams</option>
+                                            <option>Listening Only</option>
+                                            <option>Full Practice Tests</option>
+                                            <option>Diagnostic Tests</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label class="form-label">Difficulty</label>
+                                        <select class="form-select">
+                                            <option selected>All Levels</option>
+                                            <option>Easy</option>
+                                            <option>Medium</option>
+                                            <option>Hard</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label class="form-label">Search</label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" placeholder="Search exams...">
+                                            <button class="btn btn-outline-secondary">
+                                                <i class="fas fa-search"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Exam List -->
+                                <div class="exam-list">
+                                    <div class="card mb-3 border-primary">
+                                        <div class="card-body">
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <div>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="radio" name="selectedExam"
+                                                            id="exam1" checked>
+                                                        <label class="form-check-label" for="exam1">
+                                                            <h6 class="mb-1">Week 6 Practice Test</h6>
+                                                        </label>
+                                                    </div>
+                                                    <p class="text-muted small mb-2">Listening only exam with 5 passages
+                                                        and 30 questions</p>
+                                                    <div class="d-flex flex-wrap gap-3">
+                                                        <small class="text-muted">
+                                                            <i class="fas fa-clock me-1"></i> 60 min
+                                                        </small>
+                                                        <small class="text-muted">
+                                                            <i class="fas fa-question-circle me-1"></i> 30 questions
+                                                        </small>
+                                                        <small class="text-muted">
+                                                            <i class="fas fa-chart-line me-1"></i> Medium
+                                                        </small>
+                                                        <small class="text-muted">
+                                                            <i class="fas fa-calendar me-1"></i> Created: Oct 10, 2023
+                                                        </small>
+                                                    </div>
+                                                </div>
+                                                <div class="text-end">
+                                                    <button class="btn btn-sm btn-outline-primary mb-2">
+                                                        <i class="fas fa-eye me-1"></i> Preview
+                                                    </button>
+                                                    <div>
+                                                        <span class="badge bg-primary">Listening</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="card mb-3">
+                                        <div class="card-body">
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <div>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="radio" name="selectedExam"
+                                                            id="exam2">
+                                                        <label class="form-check-label" for="exam2">
+                                                            <h6 class="mb-1">Mid-Term Assessment</h6>
+                                                        </label>
+                                                    </div>
+                                                    <p class="text-muted small mb-2">Comprehensive listening assessment
+                                                        with proctoring</p>
+                                                    <div class="d-flex flex-wrap gap-3">
+                                                        <small class="text-muted">
+                                                            <i class="fas fa-clock me-1"></i> 90 min
+                                                        </small>
+                                                        <small class="text-muted">
+                                                            <i class="fas fa-question-circle me-1"></i> 34 questions
+                                                        </small>
+                                                        <small class="text-muted">
+                                                            <i class="fas fa-chart-line me-1"></i> Hard
+                                                        </small>
+                                                        <small class="text-muted">
+                                                            <i class="fas fa-calendar me-1"></i> Created: Oct 5, 2023
+                                                        </small>
+                                                    </div>
+                                                </div>
+                                                <div class="text-end">
+                                                    <button class="btn btn-sm btn-outline-primary mb-2">
+                                                        <i class="fas fa-eye me-1"></i> Preview
+                                                    </button>
+                                                    <div>
+                                                        <span class="badge bg-danger">Proctored</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="card mb-3">
+                                        <div class="card-body">
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <div>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="radio" name="selectedExam"
+                                                            id="exam3">
+                                                        <label class="form-check-label" for="exam3">
+                                                            <h6 class="mb-1">Academic Lectures Focus</h6>
+                                                        </label>
+                                                    </div>
+                                                    <p class="text-muted small mb-2">Focus on academic lecture
+                                                        comprehension</p>
+                                                    <div class="d-flex flex-wrap gap-3">
+                                                        <small class="text-muted">
+                                                            <i class="fas fa-clock me-1"></i> 45 min
+                                                        </small>
+                                                        <small class="text-muted">
+                                                            <i class="fas fa-question-circle me-1"></i> 20 questions
+                                                        </small>
+                                                        <small class="text-muted">
+                                                            <i class="fas fa-chart-line me-1"></i> Medium
+                                                        </small>
+                                                        <small class="text-muted">
+                                                            <i class="fas fa-calendar me-1"></i> Created: Oct 1, 2023
+                                                        </small>
+                                                    </div>
+                                                </div>
+                                                <div class="text-end">
+                                                    <button class="btn btn-sm btn-outline-primary mb-2">
+                                                        <i class="fas fa-eye me-1"></i> Preview
+                                                    </button>
+                                                    <div>
+                                                        <span class="badge bg-success">Practice</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Pagination -->
+                                <nav aria-label="Exam pagination" class="mt-4">
+                                    <ul class="pagination justify-content-center">
+                                        <li class="page-item disabled">
+                                            <a class="page-link" href="#" tabindex="-1">Previous</a>
+                                        </li>
+                                        <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                        <li class="page-item">
+                                            <a class="page-link" href="#">Next</a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Column: Assignment Details -->
+                    <div class="col-lg-4 mb-4">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title mb-3">Assignment Details</h5>
+
+                                <!-- Assignment Form -->
+                                <div class="mb-4">
+                                    <label class="form-label">Assignment Name</label>
+                                    <input type="text" class="form-control" placeholder="e.g., Homework for Week 6"
+                                        value="Week 6 Homework Assignment">
+                                </div>
+
+                                <div class="mb-4">
+                                    <label class="form-label">Assign To</label>
+                                    <div class="mb-3">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="assignTo"
+                                                id="entireClass" checked>
+                                            <label class="form-check-label" for="entireClass">
+                                                Entire Class
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="assignTo"
+                                                id="selectStudents">
+                                            <label class="form-check-label" for="selectStudents">
+                                                Select Students
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="assignTo"
+                                                id="selectClass">
+                                            <label class="form-check-label" for="selectClass">
+                                                Select Class
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <div class="mt-3">
+                                        <label class="form-label">Class/Students</label>
+                                        <select class="form-select" multiple size="4">
+                                            <option selected>TOEFL Prep A (24 students)</option>
+                                            <option>TOEFL Prep B (18 students)</option>
+                                            <option>Advanced Listening (15 students)</option>
+                                            <option>Individual: Maria Rodriguez</option>
+                                            <option>Individual: James Wilson</option>
+                                            <option>Individual: Alex Chen</option>
+                                        </select>
+                                        <small class="text-muted">Hold Ctrl/Cmd to select multiple</small>
+                                    </div>
+                                </div>
+
+                                <div class="mb-4">
+                                    <label class="form-label">Due Date & Time</label>
+                                    <div class="input-group mb-2">
+                                        <input type="date" class="form-control" value="2023-10-22">
+                                        <input type="time" class="form-control" value="23:59">
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="noDueDate">
+                                        <label class="form-check-label" for="noDueDate">No due date</label>
+                                    </div>
+                                </div>
+
+                                <div class="mb-4">
+                                    <label class="form-label">Instructions (Optional)</label>
+                                    <textarea class="form-control" rows="3"
+                                        placeholder="Add special instructions for students...">Complete this practice test under exam conditions. You have 60 minutes to finish all 30 questions.</textarea>
+                                </div>
+
+                                <div class="mb-4">
+                                    <label class="form-label">Access Settings</label>
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="checkbox" id="allowMultipleAttempts">
+                                        <label class="form-check-label" for="allowMultipleAttempts">Allow multiple
+                                            attempts</label>
+                                    </div>
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="checkbox" id="showAnswersAfter" checked>
+                                        <label class="form-check-label" for="showAnswersAfter">Show answers after
+                                            submission</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="requirePassingScore">
+                                        <label class="form-check-label" for="requirePassingScore">Require passing score
+                                            (70%)</label>
+                                    </div>
+                                </div>
+
+                                <div class="d-grid gap-2">
+                                    <button class="btn btn-primary" data-bs-toggle="modal"
+                                        data-bs-target="#confirmAssignModal">
+                                        <i class="fas fa-paper-plane me-1"></i> Assign Exam
+                                    </button>
+                                    <button class="btn btn-outline-secondary">
+                                        <i class="fas fa-save me-1"></i> Save as Template
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Assignments -->
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title mb-3">Recent Assignments</h5>
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Exam</th>
+                                        <th>Assigned To</th>
+                                        <th>Due Date</th>
+                                        <th>Status</th>
+                                        <th>Submitted</th>
+                                        <th>Avg. Score</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Week 5 Practice</td>
+                                        <td>TOEFL Prep A, B</td>
+                                        <td>Oct 15, 2023</td>
+                                        <td><span class="badge bg-warning">Active</span></td>
+                                        <td>52/78</td>
+                                        <td>82%</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-primary me-1">View</button>
+                                            <button class="btn btn-sm btn-outline-secondary">Extend</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Listening Diagnostic</td>
+                                        <td>Advanced Listening</td>
+                                        <td>Oct 8, 2023</td>
+                                        <td><span class="badge bg-success">Completed</span></td>
+                                        <td>15/15</td>
+                                        <td>78%</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-primary">Review</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Academic Lecture Quiz</td>
+                                        <td>TOEFL Prep A</td>
+                                        <td>Oct 5, 2023</td>
+                                        <td><span class="badge bg-success">Completed</span></td>
+                                        <td>24/24</td>
+                                        <td>91%</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-primary">Review</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Assign Modal -->
+    <div class="modal fade" id="quickAssignModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Quick Assign</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Quickly assign an exam using a template or previous assignment settings.</p>
+                    <div class="mb-3">
+                        <label class="form-label">Select Template</label>
+                        <select class="form-select">
+                            <option selected>Homework Assignment (1 week due)</option>
+                            <option>Practice Test (3 days due)</option>
+                            <option>Diagnostic (No due date)</option>
+                            <option>Timed Exam (Strict proctoring)</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Select Exam</label>
+                        <select class="form-select">
+                            <option selected>Week 6 Practice Test</option>
+                            <option>Mid-Term Assessment</option>
+                            <option>Academic Lectures Focus</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Assign To Class</label>
+                        <select class="form-select">
+                            <option selected>TOEFL Prep A</option>
+                            <option>TOEFL Prep B</option>
+                            <option>Advanced Listening</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary">Quick Assign</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirm Assignment Modal -->
+    <div class="modal fade" id="confirmAssignModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Confirm Assignment</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p>You are about to assign <strong>"Week 6 Practice Test"</strong> to <strong>42 students</strong>.
+                    </p>
+
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>Assignment Details:</strong>
+                        <ul class="mb-0 mt-2">
+                            <li>Due: October 22, 2023 at 11:59 PM</li>
+                            <li>Time limit: 60 minutes</li>
+                            <li>Students will see answers after submission</li>
+                            <li>Multiple attempts not allowed</li>
+                        </ul>
+                    </div>
+
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" id="sendNotification">
+                        <label class="form-check-label" for="sendNotification">
+                            Send email notification to students
+                        </label>
+                    </div>
+
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="scheduleReminder">
+                        <label class="form-check-label" for="scheduleReminder">
+                            Schedule reminder 24 hours before due date
+                        </label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary">Confirm & Assign</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
