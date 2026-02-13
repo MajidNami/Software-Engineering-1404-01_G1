@@ -5,7 +5,7 @@ from .models import ChatRoom, PrivateChat, GroupChat, Message, ChatParticipant ,
 
 admin.site.register(ChatRoom)
 admin.site.register(PrivateChat)
-admin.site.register(GroupChat) 
+admin.site.register(GroupChat)
 admin.site.register(Message)
 admin.site.register(ChatParticipant)
 

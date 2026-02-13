@@ -1,310 +1,1593 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fa" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LingoChat Pro - Media Edition</title>
+    <title>LingoChat - نسخه کامل</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <style>
-        :root {
-            --primary: #0B0754;      /* Deep Navy */
-            --secondary: #3A5BA0;    /* Royal Blue */
-            --light-blue: #B0CAFF;   /* Soft Blue */
-            --danger: #DE7160;      /* Salmon/Coral */
-            --accent: #FFD85C;      /* Sunshine Yellow */
-            --white: #ffffff;
-            --gray-sidebar: #f8faff;
+        @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100;400;700&display=swap');
+        body { font-family: 'Vazirmatn', sans-serif; }
+        .messages-container::-webkit-scrollbar { width: 6px; }
+        .messages-container::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        .modal-active { display: flex !important; }
+        .recording-active { animation: pulse 1.5s infinite; color: #ef4444; background-color: #fee2e2; border: 1px solid red; }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
+        
+        .notification-toast {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            max-width: 350px;
+            z-index: 1000;
+            animation: slideIn 0.3s ease-out;
         }
-
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; background: var(--light-blue); color: var(--primary); height: 100vh; display: flex; align-items: center; justify-content: center; }
-        
-        /* AUTH SCREEN */
-        #auth-container { background: white; width: 400px; padding: 40px; border-radius: 30px; box-shadow: 0 15px 35px rgba(11, 7, 84, 0.2); text-align: center; border: 2px solid var(--secondary); }
-        .auth-tabs { display: flex; margin-bottom: 20px; background: var(--gray-sidebar); border-radius: 15px; padding: 5px; }
-        .auth-tab { flex: 1; padding: 10px; cursor: pointer; font-weight: bold; color: var(--secondary); border-radius: 10px; transition: 0.3s; }
-        .auth-tab.active { background: var(--primary); color: var(--white); }
-        .auth-form input { width: 100%; padding: 14px; margin-bottom: 15px; border: 2px solid #eef2ff; border-radius: 12px; box-sizing: border-box; outline: none; transition: 0.3s; }
-        
-        /* DASHBOARD LAYOUT */
-        #dashboard-container { display: none; width: 100vw; height: 100vh; background: #fff; flex-direction: row; overflow: hidden; }
-        
-        /* SIDEBAR */
-        .sidebar { width: 380px; border-right: 1px solid #dbeafe; display: flex; flex-direction: column; background: var(--gray-sidebar); }
-        .sidebar-header { padding: 20px; background: var(--white); border-bottom: 1px solid #dbeafe; }
-        .inbox { flex-grow: 1; overflow-y: auto; background: var(--white); }
-        .chat-item { padding: 15px; border-bottom: 1px solid #f0f4ff; cursor: pointer; display: flex; align-items: center; gap: 12px; position: relative; transition: 0.2s; }
-        .chat-item:hover { background: var(--light-blue); }
-        .chat-item.active { background: #e0eaff; border-left: 5px solid var(--primary); }
-        
-        /* Status Indicators */
-        .status-dot { width: 12px; height: 12px; border-radius: 50%; border: 2px solid white; background: #cbd5e1; position: absolute; left: 45px; top: 45px; }
-        .status-dot.online { background: var(--accent); }
-        .avatar-circle { width: 48px; height: 48px; border-radius: 15px; background: var(--light-blue); flex-shrink: 0; border: 1px solid var(--secondary); }
-
-        /* MAIN CHAT AREA */
-        .main-chat { flex-grow: 1; display: flex; flex-direction: column; background: #fdfdff; }
-        .chat-header { padding: 15px 25px; background: var(--primary); color: white; display: flex; justify-content: space-between; align-items: center; }
-        #chat-log { flex-grow: 1; padding: 25px; overflow-y: auto; display: flex; flex-direction: column; background: url('https://www.transparenttextures.com/patterns/cubes.png'); }
-        
-        /* Message Bubbles */
-        .msg { margin-bottom: 12px; padding: 10px 18px; border-radius: 18px; max-width: 60%; font-size: 14.5px; position: relative; box-shadow: 0 2px 4px rgba(11, 7, 84, 0.05); }
-        .msg.sent { background: var(--secondary); color: white; align-self: flex-end; border-bottom-right-radius: 4px; }
-        .msg.received { background: var(--white); color: var(--primary); align-self: flex-start; border-bottom-left-radius: 4px; border: 1px solid #dbeafe; }
-        .sender-name { font-weight: bold; font-size: 0.75em; color: var(--accent); margin-bottom: 4px; display: block; }
-        
-        /* Action Buttons */
-        .btn { background: var(--primary); color: white; border: none; padding: 10px 18px; border-radius: 10px; cursor: pointer; font-weight: bold; transition: 0.2s; }
-        .btn:hover { opacity: 0.9; transform: scale(0.98); }
-        .btn-header { font-size: 12px; padding: 6px 14px; margin-left: 5px; }
-        
-        .input-bar { padding: 15px 25px; background: var(--white); display: flex; align-items: center; gap: 12px; border-top: 1px solid #eef2ff; }
-        .input-bar input[type="text"] { flex-grow: 1; border: 2px solid #eef2ff; padding: 12px 20px; border-radius: 30px; outline: none; font-size: 14px; }
-        
-        /* Media Rendering */
-        .chat-image { max-width: 280px; border-radius: 12px; margin-top: 8px; border: 2px solid var(--white); display: block; cursor: pointer; transition: 0.2s; }
-        .chat-image:hover { opacity: 0.8; }
-        .file-attachment { display: flex; align-items: center; gap: 10px; background: rgba(0,0,0,0.1); padding: 10px; border-radius: 10px; margin-top: 8px; text-decoration: none; color: inherit; font-weight: bold; font-size: 12px; }
-        .msg.sent .file-attachment { background: rgba(255,255,255,0.2); color: white; }
-
-        .selected-members { display: flex; flex-wrap: wrap; gap: 5px; margin: 10px 0; }
-        .member-tag { background: var(--primary); color: white; padding: 4px 10px; border-radius: 15px; font-size: 11px; }
-        .member-tag span { cursor: pointer; color: var(--accent); margin-left: 5px; font-weight: bold; }
-        #group-search-results { background: white; border: 1px solid var(--secondary); max-height: 150px; overflow-y: auto; position: absolute; width: 320px; z-index: 100; border-radius: 10px; }
+        @keyframes slideIn {
+            from { transform: translateX(-100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #ef4444;
+            color: white;
+            border-radius: 9999px;
+            padding: 2px 6px;
+            font-size: 10px;
+            min-width: 18px;
+            text-align: center;
+        }
+        .notification-panel {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            display: none;
+            justify-content: flex-end;
+            backdrop-filter: blur(4px);
+        }
+        .notification-panel.active {
+            display: flex;
+        }
+        .notification-panel-content {
+            width: 100%;
+            max-width: 400px;
+            background: white;
+            height: 100%;
+            overflow-y: auto;
+            animation: slideInLeft 0.3s ease-out;
+        }
+        @keyframes slideInLeft {
+            from { transform: translateX(100%); }
+            to { transform: translateX(0); }
+        }
+        .notification-item {
+            transition: all 0.2s;
+        }
+        .notification-item:hover {
+            background: #f8fafc;
+            transform: translateX(-2px);
+        }
+        .notification-item.unread {
+            background: #eff6ff;
+            border-right: 4px solid #3b82f6;
+        }
     </style>
 </head>
-<body>
+<body class="bg-gray-100 h-screen flex items-center justify-center p-4 text-right">
 
-<!-- AUTH SCREEN -->
-<div id="auth-container">
-    <h2 style="margin-bottom: 30px;">LingoChat Pro</h2>
-    <div class="auth-tabs">
-        <div id="tab-login" class="auth-tab active" onclick="toggleAuth('login')">Login</div>
-        <div id="tab-register" class="auth-tab" onclick="toggleAuth('register')">Register</div>
-    </div>
-    <div class="auth-form">
-        <input type="text" id="auth-username" placeholder="Username">
-        <input type="email" id="auth-email" placeholder="Email Address" style="display:none">
-        <input type="password" id="auth-password" placeholder="Password">
-        <button class="btn" style="width:100%" onclick="handleAuth()">Continue</button>
-    </div>
-</div>
-
-<!-- DASHBOARD -->
-<div id="dashboard-container">
-    <div class="sidebar">
-        <div class="sidebar-header">
-            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:15px;">
-                <strong style="font-size:20px">Chats</strong>
-                <button class="btn" style="background:var(--danger); font-size:10px; padding:5px" onclick="logout()">Logout</button>
-            </div>
-            <div style="background:var(--white); padding:10px; border-radius:15px; border:1px solid #e2e8f0;">
-                <small><strong>New Group</strong></small>
-                <input type="text" id="group-name" placeholder="Group Name" style="width:100%; margin-top:8px; font-size:11px; padding:5px">
-                <div id="group-selected-members" class="selected-members"></div>
-                <input type="text" id="group-user-search" placeholder="Search members..." style="width:100%; font-size:11px; padding:5px" onkeyup="searchUsersForGroup(this.value)">
-                <div id="group-search-results"></div>
-                <button class="btn" style="width:100%; margin-top:10px; font-size:11px" onclick="createGroup()">Create</button>
-            </div>
-        </div>
-        <div class="inbox" id="inbox-list"></div>
-    </div>
-
-    <div class="main-chat">
-        <div class="chat-header">
-            <div>
-                <strong id="active-chat-title">LingoChat</strong>
-                <div id="typing-indicator" style="font-size:11px; color:var(--accent); font-style:italic"></div>
-            </div>
-            <div id="header-safety-controls" style="display:none">
-                <button class="btn btn-header btn-report" onclick="reportAction()" style="background:var(--white); color:var(--primary)">Report</button>
-                <button id="btn-toggle-block" class="btn btn-header" onclick="toggleBlockAction()"></button>
+    <div class="bg-white w-full max-w-6xl h-[90vh] rounded-[40px] shadow-2xl flex overflow-hidden relative border border-gray-200">
+        
+        <!-- سایدبار منو -->
+        <div class="w-20 bg-slate-50 border-l flex flex-col items-center py-8 gap-8 relative">
+            <div class="w-12 h-12 bg-blue-600 rounded-2xl flex items-center justify-center text-white font-bold text-xl shadow-lg">L</div>
+            <button onclick="location.reload()" class="p-3 rounded-xl bg-blue-100 text-blue-600 shadow-sm relative">💬</button>
+            <button onclick="toggleNotificationPanel()" class="p-3 rounded-xl text-gray-400 hover:bg-gray-200 transition relative">
+                🔔
+                <span id="notification-badge" class="notification-badge hidden">0</span>
+            </button>
+            <button onclick="openSettings()" class="p-3 rounded-xl text-gray-400 hover:bg-gray-200 transition">⚙️</button>
+            <div class="mt-auto p-3 text-red-500 cursor-pointer flex flex-col items-center gap-1 hover:bg-red-50 rounded-xl" onclick="logout()">
+                <span class="text-2xl">🚪</span>
+                <span class="text-[10px] font-bold">خروج</span>
             </div>
         </div>
 
-        <div id="chat-log"></div>
-
-        <div class="input-bar">
-            <input type="file" id="file-hidden" style="display:none" onchange="uploadMedia()">
-            <button class="btn btn-accent" style="font-size:20px; background:var(--accent); color:var(--primary)" onclick="document.getElementById('file-hidden').click()">📎</button>
-            <input type="text" id="chat-input" placeholder="Type a message..." oninput="handleTypingEvent()" onkeypress="if(event.key==='Enter') sendMessage()">
-            <button class="btn" onclick="sendMessage()">Send</button>
+        <!-- لیست چت‌ها -->
+        <div id="chats-sidebar" class="w-80 border-l flex flex-col bg-white">
+            <div class="p-6">
+                <div class="flex justify-between items-center">
+                    <h2 class="text-2xl font-bold text-gray-800">چت‌ها</h2>
+                    <button onclick="openCreateGroupModal()" class="w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center hover:bg-blue-700 transition shadow-md text-lg pb-1">+</button>
+                </div>
+                <div id="my-name-display" class="text-xs text-blue-600 font-bold mt-2 h-4"></div>
+                <input type="text" 
+                id="search-users-input" 
+                placeholder="جستجوی کاربران..." 
+                class="w-full mt-4 bg-gray-100 p-3 rounded-xl outline-none text-sm focus:ring-2 ring-blue-100 transition"
+                oninput="debounceSearchUsers(this.value)"
+                onkeypress="if(event.key === 'Enter') searchUsers(this.value)">
+            </div>
+            <div id="chat-list" class="flex-1 overflow-y-auto px-4 space-y-2 pb-4 messages-container">
+                <p class="text-center text-gray-400 mt-10 text-sm">در حال بارگذاری...</p>
+            </div>
         </div>
-    </div>
-</div>
 
-<script>
-    const API_BASE = "http://127.0.0.1:8000/api";
-    let activeSocket = null;
-    let authMode = 'login';
-    let myId = null;
-    let myUsername = null;
+        <!-- بخش اصلی چت -->
+        <div id="chat-area" class="flex-1 flex flex-col bg-white">
+            <div class="p-4 border-b flex items-center gap-4 cursor-pointer hover:bg-gray-50 transition" onclick="openGroupInfo()">
+                <img id="active-user-img" src="https://via.placeholder.com/40" class="w-12 h-12 rounded-full border-2 border-blue-500 object-cover">
+                <div class="flex-1">
+                    <h3 id="active-user-name" class="font-bold text-gray-800">انتخاب چت</h3>
+                    <div class="flex items-center gap-2 h-4">
+                        <span id="online-status" class="text-xs text-green-500 font-bold hidden">● آنلاین</span>
+                        <span id="typing-status" class="text-xs text-blue-500 italic hidden">در حال نوشتن...</span>
+                    </div>
+                </div>
+            </div>
+
+            <div id="messages-box" class="flex-1 overflow-y-auto p-6 space-y-4 bg-[#f8fafc] messages-container">
+                <div class="flex flex-col items-center justify-center h-full text-gray-300">
+                    <span class="text-6xl mb-4">💬</span>
+                    <p>هنوز پیامی نیست</p>
+                </div>
+            </div>
+
+            <div id="input-area" class="p-4 bg-white border-t flex items-center gap-3 opacity-50 pointer-events-none transition-all">
+                <label class="cursor-pointer text-2xl text-gray-400 hover:text-blue-500 p-2 rounded-full transition">
+                    📎 <input type="file" id="file-input" class="hidden" onchange="uploadFile()">
+                </label>
+                
+                <input id="msg-input" type="text" placeholder="پیام خود را بنویسید..." class="flex-1 bg-gray-100 p-3 rounded-2xl outline-none focus:ring-2 ring-blue-500 transition">
+                
+                <button id="voice-btn" onclick="toggleVoiceRecording()" class="text-xl p-3 bg-gray-100 text-gray-500 hover:bg-red-100 hover:text-red-500 rounded-full transition shadow-sm" title="ضبط صدا">
+                    🎤
+                </button>
+
+                <button onclick="sendText()" class="bg-blue-600 text-white px-6 py-3 rounded-2xl hover:bg-blue-700 shadow-lg transition font-bold transform active:scale-95">
+                    ➤
+                </button>
+            </div>
+        </div>
+
+        <!-- پنل نوتیفیکیشن -->
+        <div id="notification-panel" class="notification-panel">
+            <div class="notification-panel-content">
+                <div class="p-6 border-b flex justify-between items-center bg-gradient-to-r from-blue-50 to-white">
+                    <h2 class="text-xl font-bold text-gray-800 flex items-center gap-2">
+                        🔔 نوتیفیکیشن‌ها
+                        <span id="panel-unread-count" class="bg-red-500 text-white text-xs px-2 py-1 rounded-full hidden">0</span>
+                    </h2>
+                    <div class="flex gap-2">
+                        <button onclick="markAllNotificationsRead()" class="text-xs bg-blue-100 text-blue-600 px-3 py-2 rounded-xl hover:bg-blue-200 transition">✓ همه</button>
+                        <button onclick="deleteAllNotifications()" class="text-xs bg-red-100 text-red-600 px-3 py-2 rounded-xl hover:bg-red-200 transition">🗑️</button>
+                        <button onclick="toggleNotificationPanel()" class="text-2xl text-gray-400 hover:text-red-500 transition">&times;</button>
+                    </div>
+                </div>
+                <div id="notifications-container" class="flex-1 overflow-y-auto p-4 space-y-3" style="max-height: calc(100vh - 100px);">
+                    <div class="flex flex-col items-center justify-center h-64 text-gray-300">
+                        <span class="text-6xl mb-4">🔔</span>
+                        <p>در حال بارگذاری...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- مدال ورود -->
+        <div id="auth-modal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-[200] hidden items-center justify-center p-4">
+            <div class="bg-white w-full max-w-sm rounded-[30px] p-8 shadow-2xl text-center">
+                <h2 class="text-2xl font-bold mb-6 text-gray-800">ورود به حساب</h2>
+                <input id="login-username" type="text" placeholder="نام کاربری" class="w-full bg-gray-100 p-3 rounded-xl mb-3 outline-none text-right">
+                <input id="login-password" type="password" placeholder="رمز عبور" class="w-full bg-gray-100 p-3 rounded-xl mb-6 outline-none text-right">
+                <button onclick="loginUser()" class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold hover:bg-blue-700 transition">ورود</button>
+                <button onclick="registerUser()" class="w-full bg-gray-50 text-gray-600 py-3 rounded-xl font-bold mt-2 hover:bg-gray-100">ثبت‌نام</button>
+                <p id="auth-error" class="text-red-500 text-xs mt-4 hidden"></p>
+            </div>
+        </div>
+
+        <!-- مدال ساخت گروه -->
+        <div id="create-group-modal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-[100] hidden items-center justify-center p-4">
+            <div class="bg-white w-full max-w-md rounded-[30px] shadow-2xl p-8">
+                <h2 class="text-xl font-bold mb-4">ساخت گروه جدید</h2>
+                <input type="text" id="group-name-input" placeholder="نام گروه..." class="w-full bg-gray-100 p-3 rounded-2xl mb-4 outline-none">
+                <div class="mb-2 text-xs text-gray-500">افزودن اعضا:</div>
+                <input type="text" oninput="searchUsersForGroup(this.value)" placeholder="جستجوی کاربر..." class="w-full bg-gray-100 p-2 rounded-xl mb-2 outline-none text-sm">
+                <div id="group-user-results" class="max-h-40 overflow-y-auto space-y-2 mb-6 border border-gray-100 p-2 rounded-xl"></div>
+                <div class="flex gap-2">
+                    <button onclick="submitCreateGroup()" class="flex-1 bg-blue-600 text-white py-3 rounded-2xl font-bold hover:bg-blue-700">ایجاد</button>
+                    <button onclick="closeModals()" class="flex-1 bg-gray-100 py-3 rounded-2xl hover:bg-gray-200">لغو</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- مدال اطلاعات گروه -->
+        <div id="group-info-modal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-[100] hidden items-center justify-center p-4">
+            <div class="bg-white w-full max-w-md rounded-[30px] shadow-2xl overflow-hidden p-8 animate-in zoom-in duration-200">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-xl font-bold">اطلاعات گروه</h2>
+                    <button onclick="closeModals()" class="text-2xl text-gray-400 hover:text-red-500">&times;</button>
+                </div>
+                <div class="flex flex-col items-center gap-3 mb-6">
+                    <img id="info-group-img" src="" class="w-24 h-24 rounded-full object-cover border-4 border-blue-50 shadow-md">
+                    <h3 id="info-group-name" class="font-bold text-xl text-gray-800"></h3>
+                    <p id="info-group-bio" class="text-sm text-gray-500 text-center bg-gray-50 p-2 rounded-lg w-full"></p>
+                    <button id="admin-edit-btn" onclick="openEditGroup()" class="hidden bg-blue-50 text-blue-600 px-4 py-2 rounded-xl text-xs font-bold hover:bg-blue-100 transition w-full">ویرایش مشخصات گروه ✏️</button>
+                </div>
+                <div class="text-xs font-bold text-gray-400 mb-3 uppercase tracking-wide">اعضا</div>
+                <div id="member-list-container" class="space-y-3 max-h-60 overflow-y-auto pb-4 messages-container"></div>
+            </div>
+        </div>
+
+        <!-- مدال ویرایش گروه -->
+        <div id="edit-group-modal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-[110] hidden items-center justify-center p-4">
+            <div class="bg-white w-full max-w-md rounded-[30px] shadow-2xl p-8 animate-in zoom-in duration-200">
+                <h2 class="text-xl font-bold mb-6">ویرایش گروه</h2>
+                <div class="flex flex-col items-center gap-4">
+                    <div class="relative cursor-pointer group" onclick="document.getElementById('group-avatar-input').click()">
+                        <img id="edit-group-avatar-preview" src="" class="w-24 h-24 rounded-full object-cover border-4 border-blue-100 group-hover:opacity-70 transition">
+                        <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition"><span class="bg-black/50 text-white text-xs px-2 py-1 rounded">تغییر</span></div>
+                        <input type="file" id="group-avatar-input" class="hidden" accept="image/*" onchange="previewGroupAvatar(this)">
+                    </div>
+                    <input type="text" id="edit-group-name" class="w-full bg-gray-50 p-3 rounded-2xl outline-none border border-transparent focus:border-blue-500 transition" placeholder="نام گروه">
+                    <textarea id="edit-group-bio" rows="2" class="w-full bg-gray-50 p-3 rounded-2xl outline-none border border-transparent focus:border-blue-500 transition" placeholder="بیوگرافی"></textarea>
+                    <div class="flex gap-2 w-full">
+                        <button onclick="saveGroupDetails()" class="flex-1 bg-blue-600 text-white py-3 rounded-2xl font-bold hover:bg-blue-700 shadow-md">ذخیره</button>
+                        <button onclick="document.getElementById('edit-group-modal').classList.remove('modal-active')" class="flex-1 bg-gray-100 text-gray-600 py-3 rounded-2xl font-bold hover:bg-gray-200">لغو</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- مدال تنظیمات پروفایل -->
+        <div id="settings-modal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-[100] hidden items-center justify-center p-4">
+            <div class="bg-white w-full max-w-md rounded-[30px] shadow-2xl p-8">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-xl font-bold">پروفایل من</h2>
+                    <button onclick="closeModals()" class="text-2xl text-gray-400">&times;</button>
+                </div>
+                <div class="flex flex-col items-center gap-4">
+                    <div class="relative cursor-pointer group" onclick="document.getElementById('avatar-input').click()">
+                        <img id="edit-avatar-preview" src="" class="w-24 h-24 rounded-full object-cover border-4 border-blue-100 group-hover:opacity-70 transition">
+                        <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition"><span class="bg-black/50 text-white text-xs px-2 py-1 rounded">تغییر</span></div>
+                        <input type="file" id="avatar-input" class="hidden" accept="image/*" onchange="previewAvatar(this)">
+                    </div>
+                    <input type="text" id="edit-username" class="w-full bg-gray-50 p-3 rounded-2xl outline-none" placeholder="نام شما">
+                    <textarea id="edit-bio" rows="2" class="w-full bg-gray-50 p-3 rounded-2xl outline-none" placeholder="بیوگرافی"></textarea>
+                    <button onclick="saveProfile()" class="w-full bg-blue-600 text-white py-3 rounded-2xl font-bold shadow-lg hover:bg-blue-700">ذخیره تغییرات</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- کانتینر نوتیفیکیشن‌های لحظه‌ای -->
+    <div id="notification-toast-container" class="fixed top-4 left-4 z-[1000] space-y-2"></div>
+
+    <script>
+    const API_BASE = "http://127.0.0.1:8001/api";
+    let currentToken = localStorage.getItem("access");
+    let myId = localStorage.getItem("user_id");
+    let myUsername = localStorage.getItem("my_username");
     let activeChatId = null;
-    let activeTargetUserId = null; 
-    let blockedUserIds = []; 
-    let selectedGroupMembers = []; 
-    let typingTimer = null;
+    let activeChatData = null;
+    let socket = null;
+    let notificationSocket = null;
+    let selectedUserIds = [];
+    let mediaRecorder;
+    let audioChunks = [];
+    let isRecording = false;
+    let typingTimeout = null;
+    let isConnecting = false;
+    let selectChatTimeout = null;
+    let notificationSound = null;
+    let searchTimeout = null;
 
-    // --- UTILS: MEDIA RENDERING ---
-    function renderAttachment(url) {
-        if (!url) return "";
-        
-        // Detect if it is an image by extension
-        const extension = url.split('.').pop().toLowerCase();
-        const imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg'];
-        
-        if (imageExtensions.includes(extension)) {
-            return `<a href="${url}" target="_blank" download>
-                        <img src="${url}" class="chat-image" title="Click to Download">
-                    </a>`;
+    // ================ احراز هویت ================
+    function checkAuth() {
+        if (!currentToken) {
+            document.getElementById('auth-modal').classList.remove('hidden');
+            document.getElementById('auth-modal').style.display = 'flex';
         } else {
-            return `<a href="${url}" target="_blank" download class="file-attachment">
-                        <span>📁 Download File (.${extension})</span>
-                    </a>`;
+            document.getElementById('auth-modal').style.display = 'none';
+            document.getElementById('my-name-display').innerText = `کاربر: ${myUsername || '...'}`;
+            loadChats();
+            connectNotificationWebSocket();
+            updateNotificationBadge();
+            setupTypingHandler();
         }
     }
 
-    // --- 1. AUTH ---
-    function toggleAuth(mode) {
-        authMode = mode;
-        document.getElementById('tab-login').classList.toggle('active', mode === 'login');
-        document.getElementById('tab-register').classList.toggle('active', mode === 'register');
-        document.getElementById('auth-email').style.display = mode === 'register' ? 'block' : 'none';
+    async function loginUser() {
+        const u = document.getElementById('login-username').value;
+        const p = document.getElementById('login-password').value;
+        try {
+            const res = await axios.post(`${API_BASE}/login/`, { username: u, password: p });
+            localStorage.setItem("access", res.data.access);
+            const prof = await axios.get(`${API_BASE}/profile/`, { 
+                headers: { Authorization: `Bearer ${res.data.access}` } 
+            });
+            localStorage.setItem("user_id", prof.data.id);
+            localStorage.setItem("my_username", prof.data.username);
+            location.reload();
+        } catch (e) { 
+            document.getElementById('auth-error').innerText = "اطلاعات اشتباه است"; 
+            document.getElementById('auth-error').classList.remove('hidden'); 
+        }
     }
 
-    async function handleAuth() {
-        const username = document.getElementById('auth-username').value;
-        const password = document.getElementById('auth-password').value;
-        const email = document.getElementById('auth-email').value;
-        const path = authMode === 'login' ? '/login/' : '/register/';
-        const body = authMode === 'login' ? {username, password} : {username, email, password};
-
-        const res = await fetch(API_BASE + path, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(body)});
-        const data = await res.json();
-        if (res.ok) {
-            localStorage.setItem('access_token', data.access);
-            const payload = JSON.parse(atob(data.access.split('.')[1]));
-            myId = payload.user_id; myUsername = username;
-            document.getElementById('auth-container').style.display = 'none';
-            document.getElementById('dashboard-container').style.display = 'flex';
-            refreshInbox();
-        } else { alert("Error authenticating"); }
+    async function registerUser() {
+        const u = document.getElementById('login-username').value;
+        const p = document.getElementById('login-password').value;
+        if(!u || !p) return alert("لطفا فیلدها را پر کنید");
+        try {
+            await axios.post(`${API_BASE}/register/`, { 
+                username: u, 
+                password: p, 
+                email: u + "@mail.com" 
+            });
+            await loginUser();
+        } catch (e) { 
+            alert(e.response?.data?.error || "خطا در ثبت‌نام");
+        }
     }
 
-    function logout() { localStorage.clear(); location.reload(); }
+    // ================ لیست چت‌ها ================
+    async function loadChats() {
+        try {
+            const res = await axios.get(`${API_BASE}/my-chats/`, { 
+                headers: { Authorization: `Bearer ${currentToken}` } 
+            });
+            const list = document.getElementById('chat-list');
+            
+            if(res.data.length === 0) {
+                list.innerHTML = `<div class="flex flex-col items-center mt-10 opacity-50">
+                    <span class="text-4xl mb-2">📭</span>
+                    <p>هنوز چتی ندارید</p>
+                </div>`;
+                return;
+            }
 
-    // --- 2. CHAT & MESSAGES ---
-    async function refreshInbox() {
-        const res = await fetch(`${API_BASE}/chat/inbox/`, { headers: {'Authorization': `Bearer ${localStorage.getItem('access_token')}`} });
-        const data = await res.json();
-        const list = document.getElementById('inbox-list');
-        list.innerHTML = data.map(chat => {
-            let name = "", online = false, targetId = null;
-            if (chat.chat_type === 'private') {
-                const other = (chat.private_info.user1_details.id == myId) ? chat.private_info.user2_details : chat.private_info.user1_details;
-                name = other.username; online = other.is_online; targetId = other.id;
-            } else { name = chat.group_info.group_name; }
-            return `<div class="chat-item" onclick="openChat(${chat.chat_id}, '${name}', ${targetId})">
-                <div class="avatar-circle"></div><div class="status-dot ${online ? 'online' : ''}"></div>
-                <div style="overflow:hidden"><strong>${name}</strong><br><small>${chat.chat_type}</small></div></div>`;
-        }).join('');
+            list.innerHTML = res.data.map(chat => {
+                let name, img, typeLabel = "";
+                if (chat.chat_type === 'private') {
+                    const other = chat.private_info.user1 == myId 
+                        ? chat.private_info.user2_details 
+                        : chat.private_info.user1_details;
+                    name = other?.username || "کاربر"; 
+                    img = other?.profile_pic || 'https://via.placeholder.com/50';
+                    typeLabel = "شخصی";
+                } else {
+                    name = chat.group_info?.group_name || "گروه بدون نام";
+                    img = chat.group_info?.group_image || 'https://via.placeholder.com/50';
+                    typeLabel = "گروه";
+                }
+                
+                const lastMsg = chat.last_message 
+                    ? (chat.last_message.content || 'فایل/ویس') 
+                    : 'پیامی نیست';
+                const time = chat.last_message 
+                    ? new Date(chat.last_message.timestamp).toLocaleTimeString('fa-IR', {
+                        hour: '2-digit', 
+                        minute: '2-digit'
+                    }) : '';
+
+                const chatData = JSON.stringify(chat).replace(/"/g, '&quot;');
+                
+                return `
+                <div data-chat-id="${chat.chat_id}" 
+                     data-chat-data='${chatData}'
+                     data-chat-name="${name}"
+                     data-chat-img="${img}"
+                     onclick="handleChatClick(this)" 
+                     class="flex items-center gap-3 p-3 mb-1 rounded-2xl cursor-pointer transition border border-transparent hover:bg-gray-50 hover:border-gray-100 ${activeChatId == chat.chat_id ? 'bg-blue-50 border-blue-100' : ''}">
+                    <img src="${img}" class="w-12 h-12 rounded-full object-cover shadow-sm bg-white">
+                    <div class="flex-1 min-w-0">
+                        <div class="flex justify-between items-center mb-1">
+                            <h4 class="font-bold text-gray-800 text-sm truncate">${name}</h4>
+                            <span class="text-[10px] text-gray-400">${time}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <p class="text-xs text-gray-500 truncate w-32 h-4">${lastMsg}</p>
+                            <span class="text-[9px] bg-gray-100 px-1 rounded text-gray-500">${typeLabel}</span>
+                        </div>
+                    </div>
+                </div>`;
+            }).join('');
+            
+        } catch (e) { 
+            console.error('Error loading chats:', e); 
+        }
     }
 
-    function openChat(roomId, name, targetId) {
-        activeChatId = roomId; activeTargetUserId = targetId; 
-        document.getElementById('active-chat-title').innerText = name;
-        document.getElementById('chat-log').innerHTML = "Loading history...";
+    function handleChatClick(element) {
+        const chatId = element.dataset.chatId;
+        const chatData = JSON.parse(element.dataset.chatData);
+        const name = element.dataset.chatName;
+        const img = element.dataset.chatImg;
+        selectChat(chatData, name, img);
+    }
+
+
+    function setupTypingHandler() {
+    const input = document.getElementById('msg-input');
+    if (!input) return;
+    
+    // Remove existing listeners
+    if (input._listenerAdded) {
+        input.removeEventListener('input', input._typingHandler);
+        input.removeEventListener('keypress', input._keypressHandler);
+    }
+    
+    input._typingHandler = function() {
+        if (socket?.readyState === 1 && activeChatId) {
+            // Send typing start
+            socket.send(JSON.stringify({ 
+                type: 'typing', 
+                is_typing: true 
+            }));
+            
+            // Clear previous timeout
+            if (typingTimeout) clearTimeout(typingTimeout);
+            
+            // Set timeout to send typing stop after 2 seconds of inactivity
+            typingTimeout = setTimeout(() => {
+                if (socket?.readyState === 1) {
+                    socket.send(JSON.stringify({ 
+                        type: 'typing', 
+                        is_typing: false 
+                    }));
+                    console.log('✏️ Typing stopped (timeout)');
+                }
+            }, 2000);
+        }
+    };
+    
+    input._keypressHandler = function(e) {
+        if (e.key === "Enter") {
+            sendText();
+            // Immediately send typing stop when sending message
+            if (socket?.readyState === 1) {
+                socket.send(JSON.stringify({ 
+                    type: 'typing', 
+                    is_typing: false 
+                }));
+            }
+        }
+    };
+    
+    // Send typing stop when input loses focus
+    input._blurHandler = function() {
+        if (socket?.readyState === 1) {
+            socket.send(JSON.stringify({ 
+                type: 'typing', 
+                is_typing: false 
+            }));
+            console.log('✏️ Typing stopped (blur)');
+        }
+    };
+    
+    input.addEventListener('input', input._typingHandler);
+    input.addEventListener('keypress', input._keypressHandler);
+    input.addEventListener('blur', input._blurHandler);
+    input._listenerAdded = true;
+    
+    console.log('✅ Typing handler setup complete');
+}
+
+
+    function selectChat(data, name, img) {
+        if (!data || !data.chat_id) {
+            console.error('Invalid chat data:', data);
+            return;
+        }
         
-        if (activeSocket) activeSocket.close();
-        activeSocket = new WebSocket(`ws://127.0.0.1:8000/ws/chat/${roomId}/?token=${localStorage.getItem('access_token')}`);
-        activeSocket.onopen = () => loadHistory(roomId);
-        activeSocket.onmessage = (e) => {
-            const data = JSON.parse(e.data);
-            if(data.type === 'user_typing') document.getElementById('typing-indicator').innerText = (data.is_typing && data.username !== myUsername) ? `${data.username} is typing...` : "";
-            else if(data.type === 'message_deleted') document.getElementById(`msg-${data.msg_id}`).querySelector('.content-body').innerHTML = "<i>Deleted</i>";
-            else appendMessage(data);
+        if (selectChatTimeout) {
+            clearTimeout(selectChatTimeout);
+        }
+        
+        selectChatTimeout = setTimeout(() => {
+            if (activeChatId === data.chat_id) {
+                document.getElementById('messages-box').scrollTop = document.getElementById('messages-box').scrollHeight;
+                return;
+            }
+            
+            document.getElementById('messages-box').innerHTML = `
+                <div class="flex flex-col items-center justify-center h-full text-gray-300">
+                    <span class="text-6xl mb-4">🔄</span>
+                    <p>در حال بارگذاری...</p>
+                </div>
+            `;
+            
+            activeChatId = data.chat_id;
+            activeChatData = data;
+            
+            document.getElementById('active-user-name').innerText = name;
+            document.getElementById('active-user-img').src = img;
+            document.getElementById('input-area').classList.remove('opacity-50', 'pointer-events-none');
+            
+            updateActiveChatStyle();
+            
+            if (socket) {
+                socket.onclose = null;
+                socket.close();
+                socket = null;
+            }
+            
+            openChat(activeChatId);
+        }, 100);
+    }
+
+    function updateActiveChatStyle() {
+        const chatItems = document.querySelectorAll('#chat-list > div[data-chat-id]');
+        chatItems.forEach(item => {
+            if (item.dataset.chatId == activeChatId) {
+                item.classList.add('bg-blue-50', 'border-blue-100');
+            } else {
+                item.classList.remove('bg-blue-50', 'border-blue-100');
+            }
+        });
+    }
+
+    // ================ جستجوی کاربران و شروع چت خصوصی ================
+    function debounceSearchUsers(query) {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => {
+            searchUsers(query);
+        }, 500);
+    }
+
+    async function searchUsers(query) {
+        if (!query || query.length < 2) {
+            const existingResults = document.getElementById('user-search-results');
+            if (existingResults) existingResults.remove();
+            return;
+        }
+        
+        try {
+            const res = await axios.get(`${API_BASE}/search-users/?search=${encodeURIComponent(query)}`, {
+                headers: { Authorization: `Bearer ${currentToken}` }
+            });
+            
+            displayUserSearchResults(res.data);
+        } catch (e) {
+            console.error('Error searching users:', e);
+        }
+    }
+
+    function displayUserSearchResults(users) {
+        const existingResults = document.getElementById('user-search-results');
+        if (existingResults) existingResults.remove();
+        
+        if (users.length === 0) return;
+        
+        const resultsDiv = document.createElement('div');
+        resultsDiv.id = 'user-search-results';
+        resultsDiv.className = 'absolute z-50 w-80 mt-1 bg-white rounded-2xl shadow-2xl border border-gray-200 max-h-80 overflow-y-auto p-2';
+        
+        const searchInput = document.getElementById('search-users-input');
+        const rect = searchInput.getBoundingClientRect();
+        resultsDiv.style.top = rect.bottom + window.scrollY + 8 + 'px';
+        resultsDiv.style.left = rect.left + window.scrollX + 'px';
+        resultsDiv.style.width = rect.width + 'px';
+        
+        resultsDiv.innerHTML = users.map(user => `
+            <div onclick="startPrivateChat(${user.id}, '${user.username}', '${user.profile_pic || ''}')" 
+                 class="flex items-center gap-3 p-3 rounded-xl cursor-pointer hover:bg-blue-50 transition-all duration-200 group">
+                <img src="${user.profile_pic || 'https://via.placeholder.com/40'}" 
+                     class="w-10 h-10 rounded-full object-cover border-2 border-transparent group-hover:border-blue-500">
+                <div class="flex-1">
+                    <div class="flex justify-between items-center">
+                        <span class="font-bold text-sm text-gray-800">${user.username}</span>
+                        <span class="text-xs text-gray-400">${user.is_online ? '🟢 آنلاین' : '⚪ آفلاین'}</span>
+                    </div>
+                    <span class="text-xs text-gray-500">${user.bio || 'پیام خصوصی'}</span>
+                </div>
+                <button class="text-blue-600 opacity-0 group-hover:opacity-100 transition">💬</button>
+            </div>
+        `).join('');
+        
+        document.addEventListener('click', function closeSearch(e) {
+            if (!resultsDiv.contains(e.target) && e.target !== searchInput) {
+                resultsDiv.remove();
+                document.removeEventListener('click', closeSearch);
+            }
+        });
+        
+        document.body.appendChild(resultsDiv);
+    }
+
+    async function startPrivateChat(userId, username, profilePic) {
+        try {
+            const loadingToast = document.createElement('div');
+            loadingToast.className = 'fixed top-4 right-4 bg-blue-600 text-white px-4 py-2 rounded-xl shadow-lg z-50';
+            loadingToast.innerText = 'در حال ایجاد چت...';
+            document.body.appendChild(loadingToast);
+            
+            const res = await axios.post(`${API_BASE}/start-chat/${userId}/`, {}, {
+                headers: { Authorization: `Bearer ${currentToken}` }
+            });
+            
+            loadingToast.remove();
+            
+            const chat = res.data;
+            const name = username;
+            const img = profilePic || 'https://via.placeholder.com/50';
+            
+            selectChat(chat, name, img);
+            
+            const results = document.getElementById('user-search-results');
+            if (results) results.remove();
+            
+            document.getElementById('search-users-input').value = '';
+            
+        } catch (e) {
+            console.error('Error starting private chat:', e);
+            alert('خطا در ایجاد چت خصوصی');
+        }
+    }
+
+    // ================ چت و WebSocket ================
+    async function openChat(id) {
+        if (isConnecting) {
+            console.log('در حال اتصال به چت دیگر...');
+            return;
+        }
+        
+        isConnecting = true;
+        
+        try {
+            const res = await axios.get(`${API_BASE}/chat-history/${id}/`, { 
+                headers: { Authorization: `Bearer ${currentToken}` } 
+            });
+            
+            renderMessages(res.data);
+            console.log('✅ تاریخچه چت بارگذاری شد:', res.data.length, 'پیام');
+            
+            setupChatWebSocket(id);
+            
+        } catch (e) {
+            console.error('❌ خطا در بارگذاری تاریخچه چت:', e);
+            document.getElementById('messages-box').innerHTML = `
+                <div class="flex flex-col items-center justify-center h-full text-red-500">
+                    <span class="text-6xl mb-4">⚠️</span>
+                    <p>خطا در بارگذاری پیام‌ها</p>
+                </div>
+            `;
+        } finally {
+            isConnecting = false;
+        }
+    }
+
+    function setupChatWebSocket(id) {
+        if (socket) {
+            socket.onclose = null;
+            socket.close();
+            socket = null;
+        }
+        
+        socket = new WebSocket(`ws://127.0.0.1:8001/ws/chat/${id}/?token=${currentToken}`);
+        
+        socket.onopen = () => {
+            console.log('✅ WebSocket چت متصل شد:', id);
+        };
+        
+        socket.onmessage = (e) => {
+            try {
+                const data = JSON.parse(e.data);
+                
+                if (data.type === 'chat_message') {
+                    addSingleMessage(data);
+                    updateLastMessage(id, data.message || 'فایل جدید');
+                    
+                    if (data.sender_id != myId && activeChatId != id) {
+                        showMessageNotification(data);
+                    }
+                    
+                } else if (data.type === 'message_updated') {
+                    const el = document.querySelector(`.msg-text-${data.msg_id}`);
+                    if(el) { 
+                        el.innerText = data.new_content; 
+                        const flag = el.parentElement?.querySelector('.edited-flag');
+                        if (flag) flag.innerText = "(ویرایش شده)";
+                    }
+                } else if (data.type === 'message_deleted') {
+                    const el = document.getElementById(`msg-row-${data.msg_id}`);
+                    if(el) el.remove();
+                    
+                } else if (data.type === 'user_typing' && data.sender_id != myId) {
+                    const typingEl = document.getElementById('typing-status');
+                    if(data.is_typing) { 
+                        typingEl.classList.remove('hidden'); 
+                        typingEl.innerText = `${data.sender} می‌نویسد...`; 
+                    } else {
+                        typingEl.classList.add('hidden');
+                    }
+                } else if (data.type === 'user_status') {
+                    if (activeChatData?.chat_type === 'private') {
+                        const otherId = activeChatData.private_info.user1 == myId 
+                            ? activeChatData.private_info.user2 
+                            : activeChatData.private_info.user1;
+                        
+                        if (data.user_id == otherId) {
+                            const statusEl = document.getElementById('online-status');
+                            if (data.status === 'online') {
+                                statusEl.classList.remove('hidden');
+                                statusEl.innerText = '● آنلاین';
+                            } else {
+                                statusEl.classList.add('hidden');
+                            }
+                        }
+                    }
+                }
+            } catch (err) {
+                console.error('خطا در پردازش پیام WebSocket:', err);
+            }
+        };
+        
+        socket.onclose = (e) => {
+            console.log('❌ WebSocket چت قطع شد:', id);
+            if (activeChatId === id && !e.wasClean) {
+                console.log('🔄 تلاش برای اتصال مجدد...');
+                setTimeout(() => {
+                    if (activeChatId === id) {
+                        setupChatWebSocket(id);
+                    }
+                }, 3000);
+            }
+        };
+        
+        socket.onerror = (e) => {
+            console.error('⚠️ خطای WebSocket:', id);
         };
     }
 
-    async function loadHistory(roomId) {
-        const res = await fetch(`${API_BASE}/chat/history/${roomId}/`, { headers: {'Authorization': `Bearer ${localStorage.getItem('access_token')}`} });
-        const history = await res.json();
-        document.getElementById('chat-log').innerHTML = "";
-        history.forEach(msg => appendMessage(msg));
+    function updateLastMessage(chatId, message) {
+        const chatItem = document.querySelector(`#chat-list div[data-chat-id="${chatId}"]`);
+        if (chatItem) {
+            const msgEl = chatItem.querySelector('p.text-xs.text-gray-500');
+            if (msgEl) {
+                msgEl.innerText = message.length > 30 ? message.substring(0, 30) + '...' : message;
+            }
+            
+            const timeEl = chatItem.querySelector('span.text-\\[10px\\].text-gray-400');
+            if (timeEl) {
+                const now = new Date();
+                timeEl.innerText = now.toLocaleTimeString('fa-IR', {
+                    hour: '2-digit', 
+                    minute: '2-digit'
+                });
+            }
+        }
     }
 
-    function appendMessage(data) {
-        const log = document.getElementById('chat-log');
-        const div = document.createElement('div');
-        const msgId = data.msg_id;
-        const sender = data.sender_details ? data.sender_details.username : (data.sender_username || "User");
-        const isMe = (data.sender_details ? data.sender_details.id : data.sender_id) == myId;
+    function addChatToList(chat) {
+        const existingChat = document.querySelector(`#chat-list div[data-chat-id="${chat.chat_id}"]`);
+        if (existingChat) return;
         
-        div.className = `msg ${isMe ? 'sent' : 'received'}`;
-        div.id = `msg-${msgId}`;
+        let name, img, typeLabel = "";
+        if (chat.chat_type === 'private') {
+            const other = chat.private_info.user1 == myId 
+                ? chat.private_info.user2_details 
+                : chat.private_info.user1_details;
+            name = other?.username || "کاربر"; 
+            img = other?.profile_pic || 'https://via.placeholder.com/50';
+            typeLabel = "شخصی";
+        } else {
+            name = chat.group_info?.group_name || "گروه بدون نام";
+            img = chat.group_info?.group_image || 'https://via.placeholder.com/50';
+            typeLabel = "گروه";
+        }
+        
+        const lastMsg = chat.last_message 
+            ? (chat.last_message.content || 'فایل/ویس') 
+            : 'پیامی نیست';
+        const time = chat.last_message 
+            ? new Date(chat.last_message.timestamp).toLocaleTimeString('fa-IR', {
+                hour: '2-digit', 
+                minute: '2-digit'
+            }) : '';
+        
+        const chatData = JSON.stringify(chat).replace(/"/g, '&quot;');
+        
+        const chatHtml = `
+            <div data-chat-id="${chat.chat_id}" 
+                 data-chat-data='${chatData}'
+                 data-chat-name="${name}"
+                 data-chat-img="${img}"
+                 onclick="handleChatClick(this)" 
+                 class="flex items-center gap-3 p-3 mb-1 rounded-2xl cursor-pointer transition border border-transparent hover:bg-gray-50 hover:border-gray-100 animate-in slide-in-from-top duration-300">
+                <img src="${img}" class="w-12 h-12 rounded-full object-cover shadow-sm bg-white">
+                <div class="flex-1 min-w-0">
+                    <div class="flex justify-between items-center mb-1">
+                        <h4 class="font-bold text-gray-800 text-sm truncate">${name}</h4>
+                        <span class="text-[10px] text-gray-400">${time}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <p class="text-xs text-gray-500 truncate w-32 h-4">${lastMsg}</p>
+                        <span class="text-[9px] bg-gray-100 px-1 rounded text-gray-500">${typeLabel}</span>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        const chatList = document.getElementById('chat-list');
+        
+        if (chatList.children.length === 1 && chatList.children[0].querySelector('p')?.innerText === 'هنوز چتی ندارید') {
+            chatList.innerHTML = '';
+        }
+        
+        chatList.insertAdjacentHTML('afterbegin', chatHtml);
+    }
 
-        let attachmentContent = "";
-        // Support for history API (list) and websocket (single string)
-        if (data.attachment_url) {
-            attachmentContent = renderAttachment(data.attachment_url);
-        } else if (data.attachments && data.attachments.length > 0) {
-            attachmentContent = data.attachments.map(a => renderAttachment(a.file_url)).join("");
+    // ================ پیام‌ها ================
+    function createMsgHTML(m) {
+        const sender = m.sender_details ? m.sender_details.username : (m.sender_username || m.sender || "نامشخص");
+        const isMe = (m.sender == myId) || (sender === myUsername);
+        
+        let contentHtml = `<p class="text-sm leading-relaxed msg-text-${m.msg_id}">${m.content || m.message || ""}</p>`;
+        const fUrl = m.file_url || (m.attachments?.length > 0 ? m.attachments[0].file : null);
+        const type = m.type_str || (m.attachments?.length > 0 ? m.attachments[0].file_type : 'text');
+
+        if (fUrl) {
+            if (type === 'audio' || fUrl.match(/\.(webm|wav|mp3|ogg)$/i)) {
+                contentHtml = `
+                    <div class="flex items-center gap-2 mt-1 bg-white/10 p-2 rounded-xl" style="min-width: 220px;">
+                        <audio controls class="h-8 w-full" style="filter: invert(${isMe ? 0 : 0.8});">
+                            <source src="${fUrl}" type="audio/webm">
+                            <source src="${fUrl}" type="audio/wav">
+                            <source src="${fUrl}" type="audio/mp3">
+                        </audio>
+                    </div>`;
+            } else if (type === 'image' || fUrl.match(/\.(jpg|jpeg|png|webp)$/i)) {
+                contentHtml = `<img src="${fUrl}" class="rounded-lg mb-2 max-w-full shadow-sm">`;
+            } else {
+                contentHtml = `<a href="${fUrl}" target="_blank" class="flex items-center gap-2 bg-black/10 p-2 rounded-lg text-xs mt-1">📄 دانلود فایل</a>`;
+            }
         }
 
-        div.innerHTML = `
-            <span class="sender-name">${sender}</span>
-            <div class="content-body">${data.is_deleted ? '<i>Deleted</i>' : (data.message || data.content)}</div>
-            ${attachmentContent}
-        `;
-        log.appendChild(div); log.scrollTop = log.scrollHeight;
+        let actions = "";
+        if (isMe) {
+            actions = `
+            <div class="flex gap-2 opacity-0 group-hover:opacity-50 transition-opacity">
+                <button onclick="editMessage('${m.msg_id}', '${m.content || m.message}')" class="hover:text-blue-200" title="ویرایش">✏️</button>
+                <button onclick="deleteMessage('${m.msg_id}')" class="hover:text-red-300" title="حذف">🗑️</button>
+            </div>`;
+        }
+
+        return `
+        <div class="flex ${isMe ? 'justify-end' : 'justify-start'} w-full animate-in fade-in duration-300 group" id="msg-row-${m.msg_id}">
+            <div class="${isMe ? 'bg-blue-600 text-white rounded-tr-none' : 'bg-white text-gray-800 rounded-tl-none shadow-sm border border-gray-100'} p-3 rounded-2xl max-w-[85%] text-right relative">
+                <div class="flex justify-between items-center mb-1 gap-2 text-[10px]">
+                    <span class="font-bold opacity-70">${isMe ? 'شما' : sender}</span>
+                    ${actions}
+                </div>
+                ${contentHtml}
+                <div class="flex justify-end items-center gap-1 mt-1">
+                    <span class="edited-flag text-[8px] opacity-60">${m.is_edited ? '(ویرایش شده)' : ''}</span>
+                    <span class="text-[8px] opacity-60 block dir-ltr">${m.timestamp ? new Date(m.timestamp).toLocaleTimeString('fa-IR', {hour:'2-digit', minute:'2-digit'}) : 'الان'}</span>
+                </div>
+            </div>
+        </div>`;
     }
 
-    function sendMessage() {
-        const input = document.getElementById('chat-input');
-        if (!input.value || !activeSocket) return;
-        activeSocket.send(JSON.stringify({ 'action': 'message', 'message': input.value }));
-        input.value = "";
+    function renderMessages(msgs) {
+        const box = document.getElementById('messages-box');
+        if (msgs.length === 0) {
+            box.innerHTML = `<div class="flex flex-col items-center justify-center h-full text-gray-300">
+                <span class="text-6xl mb-4">💬</span>
+                <p>هنوز پیامی نیست</p>
+            </div>`;
+        } else {
+            box.innerHTML = msgs.map(m => createMsgHTML(m)).join('');
+        }
+        box.scrollTop = box.scrollHeight;
     }
 
-    async function uploadMedia() {
-        const file = document.getElementById('file-hidden').files[0];
-        const formData = new FormData(); formData.append('file', file);
+    function addSingleMessage(data) {
+        const box = document.getElementById('messages-box');
         
-        const res = await fetch(`${API_BASE}/chat/upload/`, { 
-            method: 'POST', 
-            headers: {'Authorization': `Bearer ${localStorage.getItem('access_token')}`}, 
-            body: formData 
-        });
-        const data = await res.json();
-        activeSocket.send(JSON.stringify({'action': 'message', 'message': 'Shared a file: ' + file.name, 'file_id': data.file_id}));
+        if (box.children.length === 1 && box.children[0].querySelector('p')?.innerText === 'هنوز پیامی نیست') {
+            box.innerHTML = '';
+        }
+        
+        const div = document.createElement('div');
+        div.innerHTML = createMsgHTML(data);
+        box.appendChild(div);
+        box.scrollTop = box.scrollHeight;
     }
 
-    function handleTypingEvent() {
-        if (!activeSocket) return; activeSocket.send(JSON.stringify({'action': 'typing', 'is_typing': true}));
-        clearTimeout(typingTimer); typingTimer = setTimeout(() => activeSocket.send(JSON.stringify({'action': 'typing', 'is_typing': false})), 1500);
+    function sendText() {
+        const input = document.getElementById('msg-input');
+        if (socket?.readyState === 1 && input.value.trim()) {
+            socket.send(JSON.stringify({ 
+                type: 'chat_message', 
+                message: input.value.trim() 
+            }));
+            input.value = "";
+        }
     }
 
-    // --- 3. GROUP SEARCH ---
-    async function searchUsersForGroup(query) {
-        if (query.length < 2) return;
-        const res = await fetch(`${API_BASE}/users/search/?search=${query}`, { headers: {'Authorization': `Bearer ${localStorage.getItem('access_token')}`} });
-        const users = await res.json();
-        const results = document.getElementById('group-search-results');
-        results.innerHTML = users.map(u => `<div style="padding:10px; border-bottom:1px solid #f1f5f9; cursor:pointer; font-size:11px" onclick="selectMember(${u.id}, '${u.username}')">+ ${u.username}</div>`).join('');
+    function setupTypingHandler() {
+        const input = document.getElementById('msg-input');
+        if (!input) return;
+        
+        if (input._listenerAdded) {
+            input.removeEventListener('input', input._typingHandler);
+            input.removeEventListener('keypress', input._keypressHandler);
+        }
+        
+        input._typingHandler = function() {
+            if (socket?.readyState === 1 && activeChatId) {
+                socket.send(JSON.stringify({ 
+                    type: 'typing', 
+                    is_typing: true 
+                }));
+                if (typingTimeout) clearTimeout(typingTimeout);
+                typingTimeout = setTimeout(() => {
+                    if (socket?.readyState === 1) {
+                        socket.send(JSON.stringify({ 
+                            type: 'typing', 
+                            is_typing: false 
+                        }));
+                    }
+                }, 2000);
+            }
+        };
+        
+        input._keypressHandler = function(e) {
+            if (e.key === "Enter") sendText();
+        };
+        
+        input.addEventListener('input', input._typingHandler);
+        input.addEventListener('keypress', input._keypressHandler);
+        input._listenerAdded = true;
     }
 
-    function selectMember(id, username) {
-        if (selectedGroupMembers.find(m => m.id === id)) return;
-        selectedGroupMembers.push({id, username});
-        document.getElementById('group-selected-members').innerHTML = selectedGroupMembers.map(m => `<div class="member-tag">${m.username} <span onclick="selectedGroupMembers=selectedGroupMembers.filter(x=>x.id!=${m.id});selectMember()">×</span></div>`).join('');
-        document.getElementById('group-search-results').innerHTML = "";
+    // ================ ضبط صدا ================
+    async function toggleVoiceRecording() {
+        const btn = document.getElementById('voice-btn');
+        
+        if (!isRecording) {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                
+                const options = { mimeType: 'audio/webm' };
+                if (!MediaRecorder.isTypeSupported(options.mimeType)) {
+                    console.warn("audio/webm not supported, fallback to default");
+                    mediaRecorder = new MediaRecorder(stream);
+                } else {
+                    mediaRecorder = new MediaRecorder(stream, options);
+                }
+
+                audioChunks = [];
+                mediaRecorder.ondataavailable = e => { 
+                    if (e.data.size > 0) audioChunks.push(e.data); 
+                };
+                
+                mediaRecorder.onstop = async () => {
+                    const blob = new Blob(audioChunks, { type: 'audio/webm' });
+                    if (blob.size < 500) return alert("صدایی ضبط نشد");
+
+                    const fd = new FormData();
+                    fd.append('file', blob, `voice_${Date.now()}.webm`);
+                    
+                    try {
+                        await axios.post(`${API_BASE}/upload/${activeChatId}/`, fd, { 
+                            headers: { 
+                                Authorization: `Bearer ${currentToken}`, 
+                                'Content-Type': 'multipart/form-data' 
+                            } 
+                        });
+                    } catch(e) { 
+                        alert("خطا در ارسال ویس"); 
+                    }
+                    
+                    stream.getTracks().forEach(t => t.stop());
+                };
+
+                mediaRecorder.start();
+                isRecording = true;
+                btn.innerText = "🟥";
+                btn.classList.add('recording-active');
+            } catch (err) { 
+                alert("دسترسی میکروفون داده نشد."); 
+            }
+        } else {
+            if(mediaRecorder && mediaRecorder.state !== 'inactive') mediaRecorder.stop();
+            isRecording = false;
+            btn.innerText = "🎤";
+            btn.classList.remove('recording-active');
+        }
     }
 
-    async function createGroup() {
-        const name = document.getElementById('group-name').value;
-        const user_ids = selectedGroupMembers.map(m => m.id);
-        await fetch(`${API_BASE}/chat/groups/create/`, { method: 'POST', headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}`, 'Content-Type': 'application/json' }, body: JSON.stringify({group_name: name, user_ids})});
-        selectedGroupMembers = []; refreshInbox();
+    async function uploadFile() {
+        const file = document.getElementById('file-input').files[0];
+        if(!file) return;
+        const fd = new FormData(); 
+        fd.append('file', file);
+        try {
+            await axios.post(`${API_BASE}/upload/${activeChatId}/`, fd, { 
+                headers: { 
+                    Authorization: `Bearer ${currentToken}`, 
+                    'Content-Type': 'multipart/form-data' 
+                } 
+            });
+        } catch(e) {
+            alert("خطا در آپلود فایل");
+        }
     }
+
+    // ================ ویرایش و حذف پیام ================
+    async function editMessage(id, txt) {
+        const newTxt = prompt("ویرایش متن:", txt);
+        if(newTxt && newTxt !== txt) {
+            try {
+                await axios.patch(`${API_BASE}/edit-message/${id}/`, { 
+                    content: newTxt 
+                }, { 
+                    headers: { Authorization: `Bearer ${currentToken}` } 
+                });
+            } catch(e) {
+                alert("خطا در ویرایش پیام");
+            }
+        }
+    }
+
+    async function deleteMessage(id) {
+        if(confirm("حذف شود؟")) {
+            try {
+                await axios.delete(`${API_BASE}/delete-message/${id}/`, { 
+                    headers: { Authorization: `Bearer ${currentToken}` } 
+                });
+            } catch(e) {
+                alert("خطا در حذف پیام");
+            }
+        }
+    }
+
+    async function blockUser(uid) {
+        if(confirm("کاربر بلاک شود؟")) {
+            try {
+                await axios.post(`${API_BASE}/block/${uid}/`, {}, { 
+                    headers: { Authorization: `Bearer ${currentToken}` } 
+                });
+                alert("بلاک شد");
+                openGroupInfo();
+            } catch(e) {
+                alert("خطا در بلاک کاربر");
+            }
+        }
+    }
+
+    // ================ مدیریت گروه ================
+    function openCreateGroupModal() {
+        selectedUserIds = [];
+        document.getElementById('group-user-results').innerHTML = "";
+        document.getElementById('create-group-modal').classList.add('modal-active');
+    }
+
+    async function searchUsersForGroup(val) {
+        if(val.length < 2) return;
+        try {
+            const res = await axios.get(`${API_BASE}/search-users/?search=${val}`, { 
+                headers: { Authorization: `Bearer ${currentToken}` } 
+            });
+            document.getElementById('group-user-results').innerHTML = res.data.map(u => `
+                <div class="flex justify-between items-center p-2 bg-gray-50 rounded-xl">
+                    <span class="text-sm font-bold text-gray-700">${u.username}</span>
+                    <button onclick="toggleSelectUser(${u.id}, this)" class="text-xs bg-gray-200 px-3 py-1 rounded-full hover:bg-blue-600 hover:text-white transition">افزودن</button>
+                </div>`).join('');
+        } catch(e) {
+            console.error('Search users failed:', e);
+        }
+    }
+
+    function toggleSelectUser(id, btn) {
+        if(selectedUserIds.includes(id)) {
+            selectedUserIds = selectedUserIds.filter(i => i !== id);
+            btn.innerText = "افزودن"; 
+            btn.classList.replace('bg-green-500', 'bg-gray-200'); 
+            btn.classList.remove('text-white');
+        } else {
+            selectedUserIds.push(id);
+            btn.innerText = "انتخاب"; 
+            btn.classList.replace('bg-gray-200', 'bg-green-500'); 
+            btn.classList.add('text-white');
+        }
+    }
+
+    async function submitCreateGroup() {
+        const name = document.getElementById('group-name-input').value;
+        if(!name) return alert("نام گروه؟");
+        try {
+            await axios.post(`${API_BASE}/create-group/`, { 
+                name, 
+                users: selectedUserIds 
+            }, { 
+                headers: { Authorization: `Bearer ${currentToken}` } 
+            });
+            closeModals(); 
+            loadChats();
+        } catch (e) { 
+            alert("خطا در ساخت گروه"); 
+        }
+    }
+
+    async function openGroupInfo() {
+        if(activeChatData?.chat_type !== 'group') {
+            alert("این قابلیت فقط برای گروه‌ها قابل استفاده است");
+            return;
+        }
+        try {
+            const res = await axios.get(`${API_BASE}/group-details/${activeChatId}/`, { 
+                headers: { Authorization: `Bearer ${currentToken}` } 
+            });
+            const d = res.data.details;
+            
+            document.getElementById('info-group-name').innerText = d.group_name;
+            document.getElementById('info-group-bio').innerText = d.bio || "بدون بیوگرافی";
+            document.getElementById('info-group-img').src = d.group_image || "https://via.placeholder.com/100";
+            document.getElementById('admin-edit-btn').classList.toggle('hidden', !res.data.can_edit);
+            
+            document.getElementById('group-info-modal').classList.add('modal-active');
+            fetchMembers();
+        } catch(e) {
+            console.error('Failed to load group details:', e);
+        }
+    }
+
+    async function fetchMembers() {
+        try {
+            const res = await axios.get(`${API_BASE}/group-members/${activeChatId}/`, { 
+                headers: { Authorization: `Bearer ${currentToken}` } 
+            });
+            const isAdmin = activeChatData.current_user_role?.is_admin;
+            
+            document.getElementById('member-list-container').innerHTML = res.data.map(m => `
+                <div class="flex justify-between items-center bg-gray-50 p-3 rounded-2xl">
+                    <div class="flex items-center gap-2">
+                        <img src="${m.user_details.profile_pic || 'https://via.placeholder.com/30'}" class="w-8 h-8 rounded-full object-cover">
+                        <span class="text-sm font-bold">${m.user_details.username} ${m.is_admin ? '<small class="text-blue-600">(ادمین)</small>' : ''}</span>
+                    </div>
+                    <div class="flex gap-1">
+                        ${isAdmin && m.user != myId ? `
+                            <button onclick="groupAction(${m.user}, 'promote')" class="text-[9px] bg-blue-100 text-blue-600 px-2 py-1 rounded-lg">ارتقا</button>
+                            <button onclick="groupAction(${m.user}, 'remove')" class="text-[9px] bg-red-100 text-red-600 px-2 py-1 rounded-lg">حذف</button>
+                        ` : ''}
+                        ${m.user != myId ? `
+                            <button onclick="blockUser(${m.user})" class="text-[9px] bg-black text-white px-2 py-1 rounded-lg">بلاک🚫</button>
+                        ` : ''}
+                    </div>
+                </div>`).join('');
+        } catch(e) {
+            console.error('Failed to fetch members:', e);
+        }
+    }
+
+    async function groupAction(uid, action) {
+        try {
+            await axios.post(`${API_BASE}/group-action/${activeChatId}/`, { 
+                user_id: uid, 
+                action 
+            }, { 
+                headers: { Authorization: `Bearer ${currentToken}` } 
+            });
+            fetchMembers();
+        } catch(e) {
+            alert("خطا در انجام عملیات");
+        }
+    }
+
+    function openEditGroup() {
+        document.getElementById('group-info-modal').classList.remove('modal-active');
+        document.getElementById('edit-group-name').value = document.getElementById('info-group-name').innerText;
+        document.getElementById('edit-group-bio').value = document.getElementById('info-group-bio').innerText;
+        document.getElementById('edit-group-avatar-preview').src = document.getElementById('info-group-img').src;
+        document.getElementById('edit-group-modal').classList.add('modal-active');
+    }
+
+    async function saveGroupDetails() {
+        const fd = new FormData();
+        fd.append('group_name', document.getElementById('edit-group-name').value);
+        fd.append('bio', document.getElementById('edit-group-bio').value);
+        const av = document.getElementById('group-avatar-input').files[0];
+        if(av) fd.append('group_image', av);
+        try {
+            await axios.patch(`${API_BASE}/group-update/${activeChatId}/`, fd, { 
+                headers: { Authorization: `Bearer ${currentToken}` } 
+            });
+            location.reload();
+        } catch(e) {
+            alert("خطا در ویرایش گروه");
+        }
+    }
+
+    // ================ نوتیفیکیشن ================
+    function initNotificationSound() {
+        try {
+            notificationSound = new Audio();
+            notificationSound.src = 'data:audio/wav;base64,U3R1ZmZz';
+        } catch(e) {
+            console.log('Audio not supported');
+        }
+    }
+
+    function playNotificationSound() {
+        try {
+            if (notificationSound) {
+                notificationSound.play().catch(e => console.log('Sound play failed:', e));
+            }
+        } catch(e) {
+            console.log('Sound play failed:', e);
+        }
+    }
+
+    function connectNotificationWebSocket() {
+        if (!currentToken) return;
+        
+        if (notificationSocket) {
+            notificationSocket.close();
+        }
+
+        console.log('🔔 اتصال به WebSocket نوتیفیکیشن...');
+        notificationSocket = new WebSocket(`ws://127.0.0.1:8001/ws/notifications/?token=${currentToken}`);
+        
+        notificationSocket.onopen = function() {
+            console.log('✅ WebSocket نوتیفیکیشن متصل شد');
+        };
+        
+        notificationSocket.onmessage = function(e) {
+            try {
+                const data = JSON.parse(e.data);
+                console.log('📬 WebSocket message received:', data.type);
+                
+                if (data.type === 'notification') {
+                    showNotificationToast(data.notification);
+                    updateNotificationBadge();
+                    
+                    const panel = document.getElementById('notification-panel');
+                    if (panel.classList.contains('active')) {
+                        loadNotifications();
+                    }
+                } else if (data.type === 'chat_list_updated') {
+                    console.log('🔄 Chat list update received:', data.chat);
+                    addChatToList(data.chat);
+                } else if (data.type === 'unread_notifications') {
+                    console.log('📋 نوتیفیکیشن‌های خوانده نشده:', data.notifications?.length);
+                }
+            } catch(err) {
+                console.error('خطا در پردازش نوتیفیکیشن:', err);
+            }
+        };
+        
+        notificationSocket.onclose = function(e) {
+            console.log('❌ WebSocket نوتیفیکیشن قطع شد. اتصال مجدد در 3 ثانیه...');
+            setTimeout(connectNotificationWebSocket, 3000);
+        };
+
+        notificationSocket.onerror = function(e) {
+            console.error('⚠️ خطای WebSocket نوتیفیکیشن:', e);
+        };
+    }
+
+    function showMessageNotification(data) {
+        const notification = {
+            id: 'msg-' + Date.now(),
+            title: `پیام جدید از ${data.sender_username || data.sender}`,
+            body: data.message || 'یک پیام جدید',
+            notification_type: 'message',
+            time_ago: 'الان',
+            data: {
+                chat_id: data.chat_id,
+                message_id: data.msg_id,
+                sender_name: data.sender_username || data.sender
+            }
+        };
+        showNotificationToast(notification);
+        playNotificationSound();
+        updateNotificationBadge();
+    }
+
+    function showNotificationToast(notification) {
+        const container = document.getElementById('notification-toast-container');
+        if (!container) return;
+        
+        const toastId = 'toast-' + Date.now();
+        
+        const icons = {
+            'message': '💬',
+            'group_invite': '👥',
+            'group_admin': '👑',
+            'group_removed': '🚫',
+            'mention': '@',
+            'reply': '↩️',
+            'reaction': '❤️',
+            'call': '📞'
+        };
+        
+        const icon = icons[notification.notification_type] || '🔔';
+        
+        const toast = document.createElement('div');
+        toast.id = toastId;
+        toast.className = 'notification-toast bg-white shadow-2xl rounded-2xl p-4 border-r-4 border-blue-500 transform transition-all duration-300 hover:scale-102';
+        toast.innerHTML = `
+            <div class="flex items-start gap-3">
+                <div class="text-2xl">${icon}</div>
+                <div class="flex-1 min-w-0">
+                    <div class="flex justify-between items-start">
+                        <h4 class="font-bold text-sm text-gray-900 truncate">${notification.title || 'نوتیفیکیشن جدید'}</h4>
+                        <span class="text-[10px] text-gray-400 whitespace-nowrap mr-2">${notification.time_ago || 'الان'}</span>
+                    </div>
+                    <p class="text-xs text-gray-600 mt-1 line-clamp-2">${notification.body || ''}</p>
+                    <div class="flex justify-end mt-2">
+                        <button onclick="openNotificationChat('${notification.data?.chat_id || ''}', '${notification.id}')" class="text-[10px] bg-blue-50 text-blue-600 px-3 py-1.5 rounded-full hover:bg-blue-100 transition">
+                            مشاهده
+                        </button>
+                    </div>
+                </div>
+                <button onclick="this.closest('.notification-toast').remove()" class="text-gray-400 hover:text-gray-600 text-sm">✕</button>
+            </div>
+        `;
+        
+        container.appendChild(toast);
+        playNotificationSound();
+        
+        setTimeout(() => {
+            const toastEl = document.getElementById(toastId);
+            if (toastEl) {
+                toastEl.style.opacity = '0';
+                toastEl.style.transform = 'translateX(-100%)';
+                setTimeout(() => toastEl.remove(), 300);
+            }
+        }, 5000);
+    }
+
+    function toggleNotificationPanel() {
+        const panel = document.getElementById('notification-panel');
+        if (panel.classList.contains('active')) {
+            panel.classList.remove('active');
+        } else {
+            panel.classList.add('active');
+            loadNotifications();
+        }
+    }
+
+    async function loadNotifications() {
+        const container = document.getElementById('notifications-container');
+        if (!container) return;
+        
+        try {
+            const res = await axios.get(`${API_BASE}/notifications/`, {
+                headers: { Authorization: `Bearer ${currentToken}` }
+            });
+            
+            if (res.data.length === 0) {
+                container.innerHTML = `
+                    <div class="flex flex-col items-center justify-center h-64 text-gray-300">
+                        <span class="text-6xl mb-4">🔔</span>
+                        <p>نوتیفیکیشنی ندارید</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            const unreadCount = res.data.filter(n => !n.is_read).length;
+            const panelUnread = document.getElementById('panel-unread-count');
+            if (panelUnread) {
+                panelUnread.innerText = unreadCount;
+                panelUnread.classList.toggle('hidden', unreadCount === 0);
+            }
+            
+            container.innerHTML = res.data.map(n => {
+                const icons = {
+                    'message': '💬',
+                    'group_invite': '👥',
+                    'group_admin': '👑',
+                    'group_removed': '🚫',
+                    'mention': '@',
+                    'reply': '↩️',
+                    'reaction': '❤️',
+                    'call': '📞'
+                };
+                const icon = icons[n.notification_type] || '🔔';
+                
+                return `
+                    <div class="notification-item ${!n.is_read ? 'unread' : ''} p-4 rounded-2xl cursor-pointer transition-all duration-200"
+                         onclick="openNotificationChat('${n.data?.chat_id || ''}', '${n.id}')">
+                        <div class="flex gap-3">
+                            <div class="text-2xl">${icon}</div>
+                            <div class="flex-1 min-w-0">
+                                <div class="flex justify-between items-start mb-1">
+                                    <h4 class="font-bold text-sm ${!n.is_read ? 'text-gray-900' : 'text-gray-600'} truncate">${n.title || ''}</h4>
+                                    <span class="text-[9px] text-gray-400 whitespace-nowrap mr-2">${n.time_ago || ''}</span>
+                                </div>
+                                <p class="text-xs text-gray-600 line-clamp-2 mb-2">${n.body || ''}</p>
+                                ${!n.is_read ? '<span class="text-[10px] bg-blue-500 text-white px-2 py-0.5 rounded-full">جدید</span>' : ''}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+        } catch (e) {
+            console.error('Failed to load notifications:', e);
+            container.innerHTML = '<p class="text-center text-red-500 py-4">خطا در بارگذاری نوتیفیکیشن‌ها</p>';
+        }
+    }
+
+    async function openNotificationChat(chatId, notificationId) {
+        if (notificationId) {
+            try {
+                await axios.patch(`${API_BASE}/notifications/${notificationId}/`, {}, {
+                    headers: { Authorization: `Bearer ${currentToken}` }
+                });
+                updateNotificationBadge();
+            } catch (e) {
+                console.error('Failed to mark notification as read:', e);
+            }
+        }
+        
+        if (chatId) {
+            try {
+                const res = await axios.get(`${API_BASE}/my-chats/`, {
+                    headers: { Authorization: `Bearer ${currentToken}` }
+                });
+                
+                const chat = res.data.find(c => c.chat_id == chatId);
+                if (chat) {
+                    let name, img;
+                    if (chat.chat_type === 'private') {
+                        const other = chat.private_info.user1 == myId 
+                            ? chat.private_info.user2_details 
+                            : chat.private_info.user1_details;
+                        name = other?.username || 'کاربر';
+                        img = other?.profile_pic || 'https://via.placeholder.com/50';
+                    } else {
+                        name = chat.group_info?.group_name || 'گروه';
+                        img = chat.group_info?.group_image || 'https://via.placeholder.com/50';
+                    }
+                    selectChat(chat, name, img);
+                }
+            } catch (e) {
+                console.error('Failed to find chat:', e);
+            }
+        }
+        
+        toggleNotificationPanel();
+    }
+
+    async function markAllNotificationsRead() {
+        try {
+            await axios.post(`${API_BASE}/notifications/mark-all-read/`, {}, {
+                headers: { Authorization: `Bearer ${currentToken}` }
+            });
+            loadNotifications();
+            updateNotificationBadge();
+        } catch (e) {
+            console.error('Failed to mark all as read:', e);
+        }
+    }
+
+    async function deleteAllNotifications() {
+        if (!confirm('همه نوتیفیکیشن‌ها حذف شوند؟')) return;
+        
+        try {
+            await axios.delete(`${API_BASE}/notifications/delete-all/`, {
+                headers: { Authorization: `Bearer ${currentToken}` }
+            });
+            loadNotifications();
+            updateNotificationBadge();
+        } catch (e) {
+            console.error('Failed to delete notifications:', e);
+        }
+    }
+
+    async function updateNotificationBadge() {
+        if (!currentToken) return;
+        
+        try {
+            const res = await axios.get(`${API_BASE}/notifications/unread-count/`, {
+                headers: { Authorization: `Bearer ${currentToken}` }
+            });
+            
+            const count = res.data.unread_count;
+            const badge = document.getElementById('notification-badge');
+            
+            if (count > 0) {
+                badge.innerText = count > 99 ? '99+' : count;
+                badge.classList.remove('hidden');
+                document.title = `(${count}) LingoChat`;
+            } else {
+                badge.classList.add('hidden');
+                document.title = 'LingoChat';
+            }
+        } catch (e) {
+            console.error('Failed to update notification badge:', e);
+        }
+    }
+
+    // ================ پروفایل و تنظیمات ================
+    function closeModals() { 
+        document.querySelectorAll('[id$="-modal"]').forEach(m => { 
+            if(m.id !== 'auth-modal') m.classList.remove('modal-active'); 
+        }); 
+    }
+
+    async function openSettings() {
+        try {
+            const res = await axios.get(`${API_BASE}/profile/`, { 
+                headers: { Authorization: `Bearer ${currentToken}` } 
+            });
+            document.getElementById('edit-username').value = res.data.username;
+            document.getElementById('edit-bio').value = res.data.bio || "";
+            document.getElementById('edit-avatar-preview').src = res.data.profile_pic || "https://via.placeholder.com/100";
+            document.getElementById('settings-modal').classList.add('modal-active');
+        } catch(e) {
+            console.error('Failed to load profile:', e);
+        }
+    }
+
+    async function saveProfile() {
+        const fd = new FormData();
+        fd.append('username', document.getElementById('edit-username').value);
+        fd.append('bio', document.getElementById('edit-bio').value);
+        const av = document.getElementById('avatar-input').files[0];
+        if(av) fd.append('profile_pic', av);
+        try {
+            await axios.patch(`${API_BASE}/profile/`, fd, { 
+                headers: { Authorization: `Bearer ${currentToken}` } 
+            });
+            localStorage.setItem("my_username", document.getElementById('edit-username').value);
+            location.reload();
+        } catch(e) {
+            alert("خطا در ذخیره پروفایل");
+        }
+    }
+
+    function previewAvatar(input) { 
+        if (input.files[0]) {
+            document.getElementById('edit-avatar-preview').src = URL.createObjectURL(input.files[0]); 
+        }
+    }
+
+    function previewGroupAvatar(input) { 
+        if (input.files[0]) {
+            document.getElementById('edit-group-avatar-preview').src = URL.createObjectURL(input.files[0]); 
+        }
+    }
+
+    function logout() { 
+        if(confirm("خارج می‌شوید؟")) { 
+            localStorage.clear(); 
+            location.reload(); 
+        } 
+    }
+
+    // ================ مقداردهی اولیه ================
+    initNotificationSound();
+    checkAuth();
+    
+    setInterval(() => {
+        if (currentToken) {
+            updateNotificationBadge();
+        }
+    }, 30000);
+
+    window.addEventListener('load', function() {
+        if (currentToken) {
+            setTimeout(() => {
+                if (!notificationSocket || notificationSocket.readyState !== WebSocket.OPEN) {
+                    console.log('🔄 اتصال مجدد به WebSocket نوتیفیکیشن...');
+                    connectNotificationWebSocket();
+                }
+            }, 1000);
+        }
+    });
 </script>
 </body>
 </html>
-
