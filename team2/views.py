@@ -50,7 +50,173 @@ def ping(request):
     return JsonResponse({"team": TEAM_NAME, "ok": True})
 
 def base(request):
-    return render(request, f"{TEAM_NAME}/index.html")
+    """
+    صفحه اصلی میکروسرویس
+    """
+    if not request.user.is_authenticated:
+        return render(request, f"{TEAM_NAME}/index.html")
+
+    try:
+        user_details = UserDetails.objects.using('team2').get(user_id=request.user.id)
+        if user_details.role == 'teacher':
+            return redirect('team2_teacher_home')
+        else:
+            return redirect('team2_student_home')
+    except UserDetails.DoesNotExist:
+        return render(request, f"{TEAM_NAME}/index.html")
+
+
+@api_login_required
+@require_http_methods(["GET"])
+def student_home(request):
+    """
+    صفحه اصلی دانشجو با دروس، پیشرفت و سؤالات
+    """
+    from django.db.models import Count, Avg, Q
+
+    try:
+        user_details = UserDetails.objects.using('team2').get(user_id=request.user.id)
+
+        # دروس ثبت‌نامی
+        enrolled_lessons = user_details.lessons.filter(
+            is_deleted=False,
+            status='published'
+        ).order_by('-created_at')
+
+        # آمار پیشرفت
+        lessons_stats = []
+        for lesson in enrolled_lessons:
+            # پیشرفت تماشا
+            view = LessonView.objects.using('team2').filter(
+                lesson=lesson,
+                user_id=request.user.id
+            ).first()
+
+            # امتیاز داده شده
+            rating = Rating.objects.using('team2').filter(
+                lesson=lesson,
+                user_id=request.user.id,
+                is_deleted=False
+            ).first()
+
+            lessons_stats.append({
+                'lesson': lesson,
+                'watch_time': (view.watch_duration_seconds // 60) if view else 0,
+                'completed': view.completed if view else False,
+                'my_rating': rating.score if rating else None,
+            })
+
+        # سؤالات پرسیده شده
+        my_questions = Question.objects.using('team2').filter(
+            user_id=request.user.id,
+            is_deleted=False
+        ).select_related('lesson').prefetch_related('answers').order_by('-created_at')[:5]
+
+        # آمار کلی
+        total_watch_time = LessonView.objects.using('team2').filter(
+            user_id=request.user.id
+        ).aggregate(total=models.Sum('watch_duration_seconds'))['total'] or 0
+
+        completed_lessons = LessonView.objects.using('team2').filter(
+            user_id=request.user.id,
+            completed=True
+        ).count()
+
+        context = {
+            'lessons_stats': lessons_stats,
+            'total_lessons': enrolled_lessons.count(),
+            'my_questions': my_questions,
+            'total_questions': my_questions.count(),
+            'total_watch_hours': round(total_watch_time / 3600, 1),
+            'completed_lessons': completed_lessons,
+        }
+
+    except UserDetails.DoesNotExist:
+        context = {
+            'lessons_stats': [],
+            'total_lessons': 0,
+            'my_questions': [],
+            'total_questions': 0,
+            'total_watch_hours': 0,
+            'completed_lessons': 0,
+        }
+
+    return render(request, 'team2_student_home.html', context)
+
+
+@api_login_required
+@teacher_required
+@require_http_methods(["GET"])
+def teacher_home(request):
+    """
+    صفحه اصلی معلم با دروس و آمار سریع
+    """
+    from django.db.models import Avg, Count, Sum, Q
+
+    try:
+        user_details = UserDetails.objects.using('team2').get(user_id=request.user.id)
+        lessons = user_details.lessons.filter(is_deleted=False).order_by('-created_at')
+
+        # آمار سریع برای هر درس
+        lessons_quick_stats = []
+        total_views = 0
+        total_questions_unanswered = 0
+
+        for lesson in lessons:
+            views_count = LessonView.objects.using('team2').filter(lesson=lesson).count()
+            total_views += views_count
+
+            avg_rating = Rating.objects.using('team2').filter(
+                lesson=lesson,
+                is_deleted=False
+            ).aggregate(avg=Avg('score'))['avg'] or 0
+
+            questions_count = Question.objects.using('team2').filter(
+                lesson=lesson,
+                is_deleted=False
+            ).count()
+
+            unanswered_count = Question.objects.using('team2').filter(
+                lesson=lesson,
+                is_deleted=False,
+                answers__isnull=True
+            ).count()
+
+            total_questions_unanswered += unanswered_count
+
+            lessons_quick_stats.append({
+                'lesson': lesson,
+                'views': views_count,
+                'avg_rating': round(avg_rating, 1),
+                'questions': questions_count,
+                'unanswered': unanswered_count,
+            })
+
+        # سؤالات اخیر بدون پاسخ
+        recent_unanswered = Question.objects.using('team2').filter(
+            lesson__in=lessons,
+            is_deleted=False,
+            answers__isnull=True
+        ).select_related('lesson').order_by('-created_at')[:5]
+
+        context = {
+            'lessons_stats': lessons_quick_stats,
+            'total_lessons': lessons.count(),
+            'total_views': total_views,
+            'total_unanswered': total_questions_unanswered,
+            'recent_unanswered': recent_unanswered,
+        }
+
+    except UserDetails.DoesNotExist:
+        context = {
+            'lessons_stats': [],
+            'total_lessons': 0,
+            'total_views': 0,
+            'total_unanswered': 0,
+            'recent_unanswered': [],
+        }
+
+    return render(request, 'team2_teacher_home.html', context)
 
 @api_login_required
 @require_http_methods(["GET"])
