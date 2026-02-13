@@ -1,7 +1,6 @@
 # Team 7 specific requirements
 # These are installed on top of the main project requirements
 openai
-Django==4.2.27
 PyJWT
 django-environ
 django-cors-headers

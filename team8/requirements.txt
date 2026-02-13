@@ -1,4 +1,3 @@
-Django==4.2.27
 PyJWT
 django-environ
 django-cors-headers
