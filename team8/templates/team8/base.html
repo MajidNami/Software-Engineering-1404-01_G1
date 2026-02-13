@@ -80,6 +80,9 @@
             <li class="{% if request.resolver_match.url_name == 'analysis_page' %}active{% endif %}">
                 <a href="{% url 'analysis_page' %}">Text Analysis</a>
             </li>
+            <li class="{% if request.resolver_match.url_name == 'analytics_page' %}active{% endif %}">
+                <a href="{% url 'analytics_page' %}">Analytics</a>
+            </li>
         </ul>
     </nav>
 

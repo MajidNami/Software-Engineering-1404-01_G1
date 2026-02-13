@@ -9,6 +9,8 @@ services:
       - CORE_BASE_URL=http://core:8000
     networks:
       - app404
+
+
   #   depends_on:
   #     - frontend
   #     - backend
