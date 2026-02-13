@@ -116,10 +116,7 @@ class UserDetails(models.Model):
 
 
 class Rating(models.Model):
-    """
-    امتیازدهی کاربران به دروس - برای Statistics Dashboard
-    هر کاربر فقط یک امتیاز به هر درس می‌تونه بده
-    """
+
     id = models.BigAutoField(primary_key=True)
     lesson = models.ForeignKey(
         Lesson,
