@@ -519,3 +519,23 @@ def enroll_lesson_view(request, lesson_id):
             messages.error(request, f'خطا در ثبت‌نام: {str(e)}')
             return redirect('browse_lessons')
 
+
+@api_login_required
+@require_http_methods(["GET"])
+def student_lesson_videos_view(request, lesson_id):
+
+    try:
+        user_details = UserDetails.objects.using('team2').get(user_id=request.user.id)
+        lesson = get_object_or_404(user_details.lessons.all(), id=lesson_id)
+    except UserDetails.DoesNotExist:
+        messages.error(request, 'پروفایل دانش‌آموز یافت نشد.')
+        return redirect('browse_lessons')
+
+    videos = lesson.videos.filter(is_deleted=False).order_by('-uploaded_at')
+
+    context = {
+        'lesson': lesson,
+        'videos': videos,
+        'total_videos': videos.count(),
+    }
+    return render(request, 'team2_student_lesson_videos.html', context)
