@@ -2,7 +2,14 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path("", views.base),
+    path("", views.base, name="team15-home"),
+    path("dashboard/", views.dashboard_page, name="team15-dashboard-page"),
+    path("exam-setup/", views.exam_setup_page, name="team15-exam-setup-page"),
+    path("exam-reading/", views.exam_reading_page, name="team15-exam-reading-page"),
+    path("practice-reading/", views.practice_reading_page, name="team15-practice-reading-page"),
+    path("exam-result/", views.exam_result_page, name="team15-exam-result-page"),
+    path("review/", views.exam_review_page, name="team15-exam-review-page"),
+    path("progress/", views.progress_tracking_page, name="team15-progress-page"),
     path("ping/", views.ping),
 
     # API endpoints

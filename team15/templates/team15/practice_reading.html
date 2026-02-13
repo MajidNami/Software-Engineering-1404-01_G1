@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+{% load static %}
+<html class="light" lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>TOEFL Practice</title>
+  <script src="{% static 'team15/vendor/js/tailwindcdn.forms.container-queries.js' %}"></script>
+  <link href="{% static 'team15/vendor/css/lexend.css' %}" rel="stylesheet" />
+  <link href="{% static 'team15/vendor/css/material-symbols-outlined.css' %}" rel="stylesheet" />
+  <style type="text/tailwindcss">
+    @layer base {
+          :root, .light {
+            --color-primary-500: #80CAFF;
+            --color-primary-600: #80CAFF;
+            --color-background: #F0F3F5;
+            --color-text-primary: #0F0104;
+            --color-text-secondary: #3A32A0;
+            --color-text-light: #A7BCB0;
+            --color-border: #D1D221;
+            --color-success: #4CAF50;
+            --color-warning: #FFBD2E;
+            --color-error: #E65050;
+            --color-info: #587CE6;
+            --color-neutral-text: #0d121b;
+            --color-neutral-bg-card: #ffffff;
+            --color-neutral-border-light: #e7ebf3;
+            --color-neutral-progress-bar-bg: #cfd7e7;
+          }
+          .dark {
+            --color-primary-500: #80CAFF;
+            --color-primary-600: #80CAFF;
+            --color-background: #101622;
+            --color-text-primary: #F0F3F5;
+            --color-text-secondary: #A7BCB0;
+            --color-text-light: #A7BCB0;
+            --color-border: #D1D221;
+            --color-success: #4CAF50;
+            --color-warning: #FFBD2E;
+            --color-error: #E65050;
+            --color-info: #587CE6;
+            --color-neutral-text: #f8f9fc;
+            --color-neutral-bg-card: #1f2937;--color-neutral-border-light: #374151;
+            --color-neutral-progress-bar-bg: #4b5563;
+          }
+        }
+    </style>
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "var(--color-primary-500)",
+            "background-light": "var(--color-background)",
+            "background-dark": "var(--color-background)",
+            "text-primary": "var(--color-text-primary)",
+            "text-secondary": "var(--color-text-secondary)",
+            "success": "var(--color-success)",
+            "error": "var(--color-error)",
+            "info": "var(--color-info)",
+            "warning": "var(--color-warning)",
+          },
+          fontFamily: {
+            "display": ["Lexend", "sans-serif"]
+          },
+          borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+        },
+      },
+    }
+  </script>
+  <style>
+    .material-symbols-outlined {
+      font-variation-settings:
+        'FILL' 0,
+        'wght' 400,
+        'GRAD' 0,
+        'opsz' 24
+    }
+  </style>
+</head>
+
+<body data-page="practice-reading" data-test-id="{{ practice_test_id }}" data-attempt-id="{{ practice_attempt_id }}" data-question-id="{{ practice_question_id }}" data-answer-locked="{{ practice_has_answer|yesno:'1,0' }}" class="font-display bg-background-light dark:bg-background-dark text-text-primary dark:text-text-primary">
+  <div class="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden">
+    <div class="layout-container flex h-full grow flex-col">
+      <header
+        class="flex items-center justify-between whitespace-nowrap border-b border-solid border-b-[var(--color-neutral-border-light)] dark:border-b-[var(--color-neutral-border-light)] px-6 md:px-10 py-3 fixed top-0 left-0 right-0 bg-background-light dark:bg-background-dark z-10">
+        <div class="flex items-center gap-4 text-text-primary dark:text-text-primary">
+          <div class="size-6 text-primary">
+            <svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+              <path d="M6 6H42L36 24L42 42H6L12 24L6 6Z" fill="currentColor"></path>
+            </svg>
+          </div>
+          <h2 class="text-text-primary dark:text-text-primary text-lg font-bold leading-tight tracking-[-0.015em]">TOEFL
+            Practice</h2>
+        </div>
+        <div class="flex gap-2">
+          <button id="practice-finish-button" type="button"
+            class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary text-text-primary text-sm font-bold leading-normal tracking-[0.015em]">
+            <span class="truncate">Finish Practice</span>
+          </button>
+          <button id="practice-format-size" type="button"
+            class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 bg-[var(--color-neutral-bg-card)] dark:bg-[var(--color-neutral-bg-card)] text-text-primary dark:text-text-primary gap-2 text-sm font-bold leading-normal tracking-[0.015em] min-w-0 px-2.5 border border-transparent dark:border-[var(--color-neutral-border-light)]">
+            <span class="material-symbols-outlined text-lg">format_size</span>
+          </button>
+          <button id="practice-border-color" type="button"
+            class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 bg-[var(--color-neutral-bg-card)] dark:bg-[var(--color-neutral-bg-card)] text-text-primary dark:text-text-primary gap-2 text-sm font-bold leading-normal tracking-[0.015em] min-w-0 px-2.5 border border-transparent dark:border-[var(--color-neutral-border-light)]">
+            <span class="material-symbols-outlined text-lg">border_color</span>
+          </button>
+        </div>
+      </header>
+      <main class="flex flex-1 flex-col pt-[65px]">
+        <div class="px-6 md:px-10 py-5">
+          <div class="flex flex-col gap-3">
+            <div class="flex gap-6 justify-between">
+              <p class="text-text-secondary dark:text-text-secondary text-base font-medium leading-normal">Question {{ practice_question_index }} of
+                {{ practice_total_questions }}</p>
+              <p class="text-text-secondary dark:text-text-secondary text-sm font-normal leading-normal">{{ practice_progress_pct }}%</p>
+            </div>
+            <div
+              class="rounded-full bg-[var(--color-neutral-progress-bar-bg)] dark:bg-[var(--color-neutral-progress-bar-bg)]">
+              <div class="h-2 rounded-full bg-primary" style="width: {{ practice_progress_pct }}%;"></div>
+            </div>
+          </div>
+        </div>
+        <div class="flex-grow grid grid-cols-1 lg:grid-cols-2 gap-6 px-6 md:px-10 pb-10">
+          <div
+            class="flex flex-col gap-4 bg-[var(--color-neutral-bg-card)] dark:bg-[var(--color-neutral-bg-card)] rounded-xl p-6 border border-[var(--color-neutral-border-light)] dark:border-[var(--color-neutral-border-light)]">
+            <h1
+              class="text-text-primary dark:text-text-primary tracking-tight text-2xl font-bold leading-tight text-left">
+              {{ practice_passage_title }}</h1>
+            <div id="practice-passage-text" class="overflow-y-auto pr-2 space-y-4">
+              {% for paragraph in practice_paragraphs %}
+              <p data-practice-paragraph="1" data-paragraph-index="{{ forloop.counter0 }}" class="text-text-secondary dark:text-text-secondary text-base font-normal leading-relaxed">
+                {{ forloop.counter }}. {{ paragraph }}
+              </p>
+              {% endfor %}
+            </div>
+          </div>
+          <div class="flex flex-col gap-6">
+            <div
+              class="flex flex-col gap-4 bg-[var(--color-neutral-bg-card)] dark:bg-[var(--color-neutral-bg-card)] rounded-xl p-6 border border-[var(--color-neutral-border-light)] dark:border-[var(--color-neutral-border-light)]">
+              <div class="border-l-4 {% if practice_has_answer %}{% if practice_is_correct %}border-success{% else %}border-error{% endif %}{% else %}border-[var(--color-neutral-border-light)] dark:border-[var(--color-neutral-border-light)]{% endif %} pl-4 py-2">
+                <h3 class="{% if practice_has_answer %}{% if practice_is_correct %}text-success dark:text-success{% else %}text-error dark:text-error{% endif %}{% else %}text-text-secondary dark:text-text-secondary{% endif %} text-lg font-bold leading-tight tracking-[-0.015em]">{% if practice_has_answer %}{{ practice_result_title }}{% else %}Select an answer{% endif %}
+                </h3>
+              </div>
+              <p class="text-text-primary dark:text-text-primary font-medium">{{ practice_question_text }}</p>
+              <div class="space-y-3">
+                {% for option in practice_choice_rows %}
+                <div data-option-row="1" data-choice="{{ option.text }}"
+                  class="flex items-center gap-3 p-3 rounded-lg {% if option.status == 'correct' %}border-2 border-success bg-success/10 dark:bg-success/20{% elif option.status == 'incorrect' %}border-2 border-error bg-error/10 dark:bg-error/20{% else %}border border-[var(--color-neutral-border-light)] dark:border-[var(--color-neutral-border-light)]{% endif %}">
+                  <input {% if option.is_selected %}checked=""{% endif %} class="h-4 w-4 border-gray-300 text-primary focus:ring-primary" disabled="" id="{{ option.id }}"
+                    name="question" type="radio" />
+                  <label class="text-sm {% if option.status == 'correct' %}font-semibold text-success dark:text-success{% elif option.status == 'incorrect' %}font-semibold text-error dark:text-error{% else %}text-text-secondary dark:text-text-secondary{% endif %}" for="{{ option.id }}">{{ option.text }}</label>
+                  {% if option.status == 'correct' %}
+                  <span class="material-symbols-outlined ml-auto text-success dark:text-success">check_circle</span>
+                  {% endif %}
+                  {% if option.status == 'incorrect' %}
+                  <span class="material-symbols-outlined ml-auto text-error dark:text-error">cancel</span>
+                  {% endif %}
+                </div>
+                {% endfor %}
+              </div>
+            </div>
+            <div
+              class="flex flex-col gap-4 bg-[var(--color-neutral-bg-card)] dark:bg-[var(--color-neutral-bg-card)] rounded-xl p-6 border border-[var(--color-neutral-border-light)] dark:border-[var(--color-neutral-border-light)]">
+              <h3 class="text-text-primary dark:text-text-primary text-lg font-bold leading-tight tracking-[-0.015em]">
+                Explanation</h3>
+              <p class="text-text-secondary dark:text-text-secondary text-base font-normal leading-relaxed">
+                {{ practice_explanation }}
+              </p>
+              <h3
+                class="text-text-primary dark:text-text-primary text-lg font-bold leading-tight tracking-[-0.015em] pt-2">
+                Skill Focus: {{ practice_skill_focus }}</h3>
+              <p class="text-text-secondary dark:text-text-secondary text-base font-normal leading-relaxed">
+                This question tests your ability to locate specific details in the text. To improve, practice scanning
+                for keywords from the question (e.g., "land grants") and then carefully reading the surrounding
+                sentences to find the explicitly stated consequence.
+              </p>
+            </div>
+            <div class="flex gap-4 mt-auto pt-4">
+              <button id="practice-prev-button" type="button" {% if practice_is_first %}disabled{% endif %} onclick="window.location.href='{{ practice_prev_url }}'"
+                class="flex w-full cursor-pointer items-center justify-center overflow-hidden rounded-lg h-11 px-4 bg-white dark:bg-gray-700 text-text-primary dark:text-text-primary text-base font-bold leading-normal border border-gray-300 dark:border-gray-600">
+                <span class="truncate">Previous Question</span>
+              </button>
+              <button id="practice-next-button" data-is-last="{{ practice_is_last|yesno:'1,0' }}" data-next-url="{{ practice_next_url }}" type="button" {% if practice_is_last %}data-finish-on-click="1"{% else %}onclick="window.location.href='{{ practice_next_url }}'"{% endif %}
+                class="flex w-full cursor-pointer items-center justify-center overflow-hidden rounded-lg h-11 px-4 bg-primary text-text-primary text-base font-bold leading-normal">
+                <span class="truncate">Next Question</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="{% static 'team15/js/ui_actions.js' %}?v=20260211-7"></script>
+</body>
+
+</html>

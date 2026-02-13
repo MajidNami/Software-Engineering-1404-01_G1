@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+{% load static %}
+<html class="light" lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>TOEFL Reading Practice</title>
+  <script src="{% static 'team15/vendor/js/tailwindcdn.forms.container-queries.js' %}"></script>
+  <link href="{% static 'team15/vendor/css/lexend.css' %}" rel="stylesheet" />
+  <link href="{% static 'team15/vendor/css/material-symbols-outlined.css' %}" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#FA0B67",
+            "accent": "#FFB02D",
+            "warning": "#FFBD2E",
+            "background-light": "#F0F3F5",
+            "background-dark": "#101622", "text-light": "#0F0107",
+            "text-dark": "#f8f9fc",
+            "card-light": "#ffffff",
+            "card-dark": "#182130", "border-light": "#D9E2E9",
+            "border-dark": "#2e3a4e", "muted-light": "#3A9CA0", "muted-dark": "#93a6c9",
+          },
+          fontFamily: {
+            "display": ["Lexend", "sans-serif"]
+          },
+          borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+        },
+      },
+    }
+  </script>
+  <style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+
+    ::selection {
+      background-color: #FA0B67;
+      color: #ffffff;
+    }
+  </style>
+</head>
+
+<body data-page="exam-reading" data-test-id="{{ exam_test_id }}" data-attempt-id="{{ exam_attempt_id }}" data-question-id="{{ exam_question_id }}" data-question-number="{{ question_number }}" data-answered-count="{{ exam_answered_count }}" data-remaining-seconds="{{ exam_remaining_seconds }}" data-time-limited="{{ exam_time_limited|yesno:'1,0' }}" class="font-display bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark">
+  <div class="flex flex-col h-screen">
+    <header
+      class="flex items-center justify-between whitespace-nowrap border-b border-solid border-border-light dark:border-border-dark px-6 py-3 bg-card-light dark:bg-card-dark">
+      <div class="flex items-center gap-4">
+        <div class="size-6 text-primary">
+          <svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+            <path clip-rule="evenodd"
+              d="M12.0799 24L4 19.2479L9.95537 8.75216L18.04 13.4961L18.0446 4H29.9554L29.96 13.4961L38.0446 8.75216L44 19.2479L35.92 24L44 28.7521L38.0446 39.2479L29.96 34.5039L29.9554 44H18.0446L18.04 34.5039L9.95537 39.2479L4 28.7521L12.0799 24Z"
+              fill="currentColor" fill-rule="evenodd"></path>
+          </svg>
+        </div>
+        <h2 class="text-lg font-bold tracking-[-0.015em]">Reading Section</h2>
+      </div>
+      <div class="flex gap-2 text-center">
+        <div class="flex flex-col items-center">
+          <div class="flex h-12 w-16 items-center justify-center rounded-lg bg-warning/20 text-warning">
+            <p id="exam-timer-hours" class="text-xl font-bold">{{ timer_hours }}</p>
+          </div>
+          <p class="text-xs font-normal text-muted-light dark:text-muted-dark mt-1">Hours</p>
+        </div>
+        <span class="text-xl font-bold pt-2.5 text-warning/50">:</span>
+        <div class="flex flex-col items-center">
+          <div class="flex h-12 w-16 items-center justify-center rounded-lg bg-warning/20 text-warning">
+            <p id="exam-timer-minutes" class="text-xl font-bold">{{ timer_minutes }}</p>
+          </div>
+          <p class="text-xs font-normal text-muted-light dark:text-muted-dark mt-1">Minutes</p>
+        </div>
+        <span class="text-xl font-bold pt-2.5 text-warning/50">:</span>
+        <div class="flex flex-col items-center">
+          <div class="flex h-12 w-16 items-center justify-center rounded-lg bg-warning/20 text-warning">
+            <p id="exam-timer-seconds" class="text-xl font-bold">{{ timer_seconds }}</p>
+          </div>
+          <p class="text-xs font-normal text-muted-light dark:text-muted-dark mt-1">Seconds</p>
+        </div>
+      </div>
+      <div class="flex gap-2">
+        <!-- <button
+          class="flex min-w-[84px] cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-lg h-10 px-4 bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark text-sm font-bold border border-border-light dark:border-border-dark hover:bg-border-light dark:hover:bg-border-dark/50">
+          <span class="material-symbols-outlined text-base">help</span>
+          <span class="truncate">Help</span>
+        </button>
+        <button
+          class="flex min-w-[84px] cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-lg h-10 px-4 bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark text-sm font-bold border border-border-light dark:border-border-dark hover:bg-border-light dark:hover:bg-border-dark/50">
+          <span class="material-symbols-outlined text-base">rate_review</span>
+          <span class="truncate">Review</span>
+        </button> -->
+        <button id="exam-toggle-passage" type="button"
+          class="flex cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 bg-primary text-white gap-2 text-sm font-bold min-w-0 px-3 hover:bg-primary/90">
+          <span class="material-symbols-outlined text-base">visibility_off</span>
+          <span class="truncate hidden md:inline">Hide</span>
+        </button>
+        <button id="exam-format-size" type="button"
+          class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark gap-2 text-sm font-bold min-w-0 px-2.5 border border-border-light dark:border-border-dark hover:bg-border-light dark:hover:bg-border-dark/50">
+          <span class="material-symbols-outlined text-lg">format_size</span>
+        </button>
+        <button id="exam-border-color" type="button"
+          class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark gap-2 text-sm font-bold min-w-0 px-2.5 border border-border-light dark:border-border-dark hover:bg-border-light dark:hover:bg-border-dark/50">
+          <span class="material-symbols-outlined text-lg">border_color</span>
+        </button>
+      </div>
+    </header>
+    <main class="flex-1 grid grid-cols-2 gap-4 p-4 overflow-hidden">
+      <div id="exam-passage-panel"
+        class="flex flex-col bg-card-light dark:bg-card-dark rounded-xl border border-border-light dark:border-border-dark overflow-hidden">
+        <div class="p-6 border-b border-border-light dark:border-border-dark">
+          <h1 class="text-2xl font-bold tracking-tight">{{ passage_title }}</h1>
+        </div>
+        <div id="exam-passage-text" class="p-6 space-y-4 overflow-y-auto">
+          {% for paragraph in paragraphs %}
+          <div class="flex gap-3">
+            <span
+              class="material-symbols-outlined text-muted-light dark:text-muted-dark mt-1 text-base">arrow_right</span>
+            <p data-exam-paragraph="1" data-paragraph-index="{{ forloop.counter0 }}" class="text-text-light dark:text-text-dark text-base font-normal leading-relaxed">
+              Paragraph {{ forloop.counter }}: {{ paragraph }}
+            </p>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      <div
+        class="flex flex-col bg-card-light dark:bg-card-dark rounded-xl border border-border-light dark:border-border-dark overflow-hidden">
+        <div class="p-6 border-b border-border-light dark:border-border-dark">
+          <p class="text-muted-light dark:text-muted-dark text-sm font-normal">Question {{ question_number }} of {{ total_questions }}</p>
+        </div>
+        <div class="flex-1 p-6 space-y-6 overflow-y-auto">
+          <p class="text-base leading-relaxed">{{ question_text }}</p>
+          <div id="exam-options" class="space-y-3">
+            {% for choice in question_choices %}
+            <label
+              class="flex items-center p-4 border border-border-light dark:border-border-dark rounded-lg cursor-pointer hover:bg-primary/10 hover:border-primary/50 transition-colors has-[:checked]:bg-primary/10 has-[:checked]:border-primary dark:has-[:checked]:border-primary/70">
+              <input
+                class="form-radio h-5 w-5 text-primary bg-background-light dark:bg-background-dark border-border-light dark:border-border-dark focus:ring-primary focus:ring-offset-card-light"
+                name="exam-choice" type="radio" value="{{ choice }}" data-question-id="{{ exam_question_id }}" />
+              <span class="ml-4 text-base">{{ choice }}</span>
+            </label>
+            {% endfor %}
+          </div>
+        </div>
+        <div class="p-4 border-t border-border-light dark:border-border-dark">
+          <p class="text-sm font-medium text-center mb-3">Question Map</p>
+          <div class="grid grid-cols-10 gap-2 mb-4">
+            {% for item in question_map %}
+            <button
+              type="button" data-exam-nav="1" data-question-map-item="1" data-question-id="{{ item.question_id }}" data-map-state="{{ item.state }}" data-is-current="{% if item.state == 'current' %}1{% else %}0{% endif %}" onclick="window.location.href='?test_id={{ exam_test_id }}{% if exam_attempt_id %}&attempt_id={{ exam_attempt_id }}{% endif %}&q={{ item.number }}'"
+              class="flex items-center justify-center h-9 w-9 rounded text-sm font-bold {% if item.state == 'answered' %}bg-primary/20 text-primary border border-primary/50{% else %}bg-background-light dark:bg-background-dark border border-border-light dark:border-border-dark hover:border-primary/50{% endif %}{% if item.state == 'current' %} ring-2 ring-primary ring-offset-2 ring-offset-card-light dark:ring-offset-card-dark{% endif %}">{{ item.number }}</button>
+            {% endfor %}
+          </div>
+          <div class="flex justify-between items-center">
+            <button id="btn-exam-prev" type="button" data-exam-nav="1" {% if exam_is_first %}disabled{% endif %} onclick="window.location.href='?test_id={{ exam_test_id }}{% if exam_attempt_id %}&attempt_id={{ exam_attempt_id }}{% endif %}&q={{ exam_prev_q }}'"
+              class="flex min-w-[84px] cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-lg h-10 px-4 bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark text-sm font-bold border border-border-light dark:border-border-dark hover:bg-border-light dark:hover:bg-border-dark/50">
+              <span class="material-symbols-outlined text-base">arrow_back</span>
+              <span class="truncate">Back</span>
+            </button>
+            {% if exam_is_last and exam_attempt_id %}
+            <button id="exam-submit-button" type="button"
+              class="flex min-w-[84px] cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold hover:bg-primary/90">
+              <span class="truncate">Submit</span>
+              <span class="material-symbols-outlined text-base">task_alt</span>
+            </button>
+            {% else %}
+            <button
+              id="btn-exam-next" type="button" data-exam-nav="1" onclick="window.location.href='?test_id={{ exam_test_id }}{% if exam_attempt_id %}&attempt_id={{ exam_attempt_id }}{% endif %}&q={{ exam_next_q }}'"
+              class="flex min-w-[84px] cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold hover:bg-primary/90">
+              <span class="truncate">Next</span>
+              <span class="material-symbols-outlined text-base">arrow_forward</span>
+            </button>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+  <script src="{% static 'team15/js/ui_actions.js' %}?v=20260211-7"></script>
+</body>
+
+</html>

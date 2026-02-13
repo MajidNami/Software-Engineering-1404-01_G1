@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import config from "../config";
 
 export default function LessonDetail() {
   const { id } = useParams();
@@ -8,9 +9,10 @@ export default function LessonDetail() {
   const [lesson, setLesson] = useState(null);
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
-    fetch(`http://127.0.0.1:8000/team9/api/lessons/${id}/`)
+    fetch(`${config.API_BASE_URL}/team9/api/lessons/${id}/`)
       .then((res) => res.json())
       .then((data) => {
         setLesson(data);
@@ -42,9 +44,15 @@ export default function LessonDetail() {
       });
   }, [id]);
 
-  const learnedCount = rows.filter((r) => r.status === "learned").length;
   const total = rows.length;
-  const progressPct = total === 0 ? 0 : Math.round((learnedCount / total) * 100);
+  const progressPct = lesson?.progress_percent ? Math.round(lesson.progress_percent) : 0;
+
+  // Filter words based on search query
+  const filteredRows = rows.filter((r) => {
+    if (!searchQuery.trim()) return true;
+    const query = searchQuery.toLowerCase();
+    return r.en.toLowerCase().includes(query) || r.fa.includes(query);
+  });
 
   const mark = (rowId, type) => {
     const today = new Date().toISOString().split('T')[0];
@@ -72,7 +80,7 @@ export default function LessonDetail() {
     const isNowLearned = greenCount >= 6;
 
     
-    fetch(`http://127.0.0.1:8000/team9/api/words/${rowId}/`, {
+    fetch(`${config.API_BASE_URL}/team9/api/words/${rowId}/`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -84,6 +92,7 @@ export default function LessonDetail() {
     })
     .then(res => res.json())
     .then(() => {
+      // Update local state
       setRows((prev) =>
         prev.map((r) => {
           if (r.id !== rowId) return r;
@@ -96,13 +105,18 @@ export default function LessonDetail() {
           };
         })
       );
+      
+      // Refresh lesson to get updated progress_percent
+      fetch(`${config.API_BASE_URL}/team9/api/lessons/${id}/`)
+        .then((res) => res.json())
+        .then((data) => setLesson(data));
     })
     .catch(err => console.error("Update Error:", err));
   };
 
   const removeWord = (rowId) => {
     if(!window.confirm("حذف شود؟")) return;
-    fetch(`http://127.0.0.1:8000/team9/api/words/${rowId}/`, { method: "DELETE" })
+    fetch(`${config.API_BASE_URL}/team9/api/words/${rowId}/`, { method: "DELETE" })
       .then(() => setRows(prev => prev.filter(r => r.id !== rowId)));
   };
 
@@ -114,8 +128,10 @@ export default function LessonDetail() {
         <div className="t9-topbarLeft">
           <button className="t9-pillBtn" onClick={() => navigate("/microservices")}>بازگشت</button>
           <button className="t9-pillBtn" onClick={() => navigate(`/microservices/${id}/review`)}>مرور لغات</button>
+
         </div>
         <h1 className="t9-title">{lesson?.title}</h1>
+        <div style={{ width: "120px" }}></div>
       </header>
 
       <section className="t9-panel">
@@ -124,8 +140,20 @@ export default function LessonDetail() {
           <div>پیشرفت: %{progressPct}</div>
         </div>
 
+        <div className="t9-searchRow" style={{ marginBottom: '16px' }}>
+          <span className="t9-searchIcon" aria-hidden="true">
+            🔍
+          </span>
+          <input
+            className="t9-search"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="جستجوی کلمه (انگلیسی یا فارسی)"
+          />
+        </div>
+
         <div className="t9-wordsBox">
-          {rows.map((r) => (
+          {filteredRows.map((r) => (
             <div className="t9-wordRow" key={r.id}>
               <div className="t9-wordEn">{r.en}</div>
               <div className="t9-wordActions">

@@ -71,8 +71,8 @@ class SubmitAnswerSerializer(serializers.Serializer):
 
 class BulkAnswerItemSerializer(serializers.Serializer):
     question_id = serializers.IntegerField()
-    selected_answer = serializers.CharField(max_length=255)
-    time_spent = serializers.IntegerField(required=False, default=None)
+    selected_answer = serializers.CharField(max_length=255, required=False, allow_blank=True, default="")
+    time_spent = serializers.IntegerField(required=False, allow_null=True, default=None)
 
 
 class SubmitExamSerializer(serializers.Serializer):

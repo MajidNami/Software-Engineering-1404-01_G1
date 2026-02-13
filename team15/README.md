@@ -4,30 +4,82 @@ Backend microservice for TOEFL Reading comprehension tests. Supports **Exam Mode
 
 ## Quick Start
 
-### Local Development
+### Bring Up From Scratch (New System)
+
+Prerequisites:
+- `git`
+- `docker` and `docker compose`
+
+```bash
+# 1) Clone
+git clone <REPO_URL>
+cd project
+
+# 2) Create env file
+cp .env.example .env
+```
+
+Update `.env` with at least:
+- `DJANGO_SECRET_KEY`
+- `JWT_SECRET`
+- Optional for faster startup: `TEAM_APPS=team15`
+
+```bash
+# 3) Docker network (run once)
+docker network create app404_net || true
+
+# 4) Start app (from project root)
+docker compose up --build -d
+
+# 5) Run team15 migrations
+docker compose exec core python manage.py migrate --database=team15
+
+# 6) Seed team15 mock data
+docker compose exec core python manage.py load_team15_mock_data --clear
+```
+
+Open:
+- `http://localhost:8000/team15/`
+
+Seeded test user:
+- `team15@test.local`
+- `Team15@12345`
+
+Stop:
+```bash
+docker compose down
+```
+
+### Local Development (without Docker)
 
 ```bash
 source venv/bin/activate
 
 # Run migrations
 python manage.py makemigrations team15
+python manage.py migrate
 python manage.py migrate --database=team15
 
-# Load sample data (3 tests, 5 passages, 21 questions)
-python manage.py load_mock_data
+# Load sample data
+python manage.py load_team15_mock_data --clear
 
 # Start server
 python manage.py runserver
 ```
 
-### Docker
+### Docker (team15 directory)
 
 ```bash
 # Create network (if not exists)
-docker network create app404_net
+docker network create app404_net || true
 
-# From team15/ directory
-docker compose up --build
+# Start core once from project root (if not already running)
+cd ..
+docker compose up --build -d
+
+# Then start only Team15 gateway
+cd team15
+docker compose up -d
 ```
 
 ## Base URL
@@ -360,4 +412,4 @@ All errors follow this format:
 | 2 | TOEFL Reading Exam Simulation 1 | exam     | 36 min     | 2        | 10        |
 | 3 | TOEFL Reading Practice Test 2   | practice | none       | 1        | 4         |
 
-Reload mock data: `python manage.py load_mock_data --clear`
+Reload mock data: `python manage.py load_team15_mock_data --clear`

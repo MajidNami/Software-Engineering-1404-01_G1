@@ -1,0 +1,171 @@
+================================================================================
+                    TEAM9 DATABASE SETUP - QUICK REFERENCE
+================================================================================
+
+📋 QUICK START
+================================================================================
+
+Fresh Setup (Has Conflicts):
+    Windows:  .\reset_database.bat
+    Linux:    ./reset_database.sh
+
+Regular Setup (No Conflicts):
+    python setup_and_seed.py
+
+
+🔑 ADMIN CREDENTIALS
+================================================================================
+
+Username:  admin
+Email:     admin@team9.com
+Password:  admin123
+URL:       http://127.0.0.1:8000/admin/
+
+
+📊 WHAT GETS CREATED
+================================================================================
+
+✓ 1 Superuser (admin@team9.com)
+✓ 5 Lessons with descriptions
+✓ 54 Words across all lessons
+✓ Realistic progress data (0% to 100%)
+✓ Mixed learning states for testing
+
+
+🚀 START SERVERS
+================================================================================
+
+Django Backend:
+    cd C:\Users\Asus\Software-Engineering-1404-01_G1\team9
+    python manage.py runserver
+
+React Frontend:
+    cd C:\Users\Asus\Software-Engineering-1404-01_G1\team9\frontend
+    npm run dev
+
+
+🔧 COMMON COMMANDS
+================================================================================
+
+Check migrations status:
+    python manage.py showmigrations
+
+Create new migrations:
+    python manage.py makemigrations
+
+Apply migrations:
+    python manage.py migrate
+
+Create superuser manually:
+    python manage.py createsuperuser
+
+Open Django shell:
+    python manage.py shell
+
+Check database:
+    python manage.py dbshell
+
+
+⚠️ TROUBLESHOOTING
+================================================================================
+
+"Table already exists":
+    python manage.py migrate --fake vocabulary_app zero
+    python manage.py migrate vocabulary_app
+
+"Migration conflicts":
+    Run reset_database.bat (backs up first)
+
+"No module named vocabulary_app":
+    Ensure you're in team9 directory
+    Check: echo %DJANGO_SETTINGS_MODULE%
+
+"Permission denied" (Linux/Mac):
+    chmod +x reset_database.sh
+    chmod +x setup_and_seed.py
+
+
+📁 FILES CREATED
+================================================================================
+
+setup_and_seed.py       - Main Python setup script
+reset_database.bat      - Windows reset tool
+reset_database.sh       - Linux/Mac reset tool
+DATABASE_SYNC_GUIDE.md  - Complete documentation
+QUICK_REFERENCE.txt     - This file
+
+
+✅ VERIFICATION CHECKLIST
+================================================================================
+
+[ ] Database files created (db.sqlite3 or team9.sqlite3)
+[ ] Can login to admin panel with admin / admin123
+[ ] Lessons visible in admin panel (should see 5)
+[ ] Words visible in admin panel (should see 54)
+[ ] API endpoints work: http://127.0.0.1:8000/team9/api/lessons/
+[ ] Frontend displays lessons with progress bars
+[ ] Can create new lessons and words from frontend
+[ ] Progress percentages update correctly
+
+
+📚 TEST DATA OVERVIEW
+================================================================================
+
+Lesson 1: General English Vocabulary (12 words)
+    Examples: Book, School, Friend, Family, Home...
+    
+Lesson 2: Technical Computer Terms (12 words)
+    Examples: Database, Server, Request, API...
+    
+Lesson 3: Business English (10 words)
+    Examples: Meeting, Deadline, Revenue, Budget...
+    
+Lesson 4: Travel and Tourism (10 words)
+    Examples: Airport, Hotel, Passport, Ticket...
+    
+Lesson 5: Academic Writing (10 words)
+    Examples: Hypothesis, Methodology, Analysis...
+
+
+🎯 TYPICAL WORKFLOW
+================================================================================
+
+1. Fresh Start:
+   .\reset_database.bat
+   
+2. Start Backend:
+   python manage.py runserver
+   
+3. Open New Terminal, Start Frontend:
+   cd frontend
+   npm run dev
+   
+4. Open Browser:
+   Frontend: http://localhost:5173
+   Admin:    http://127.0.0.1:8000/admin/
+   
+5. Login and Test!
+
+
+💡 PRO TIPS
+================================================================================
+
+• Always backup before reset: copy db.sqlite3 db.backup
+• Use setup_and_seed.py for regular syncs (no data loss)
+• Use reset_database.bat only for conflicts
+• Check DATABASE_SYNC_GUIDE.md for detailed help
+• Commit migrations to git after changes
+• Run setup script after pulling team changes
+
+
+📞 NEED MORE HELP?
+================================================================================
+
+Full Documentation: DATABASE_SYNC_GUIDE.md
+Script Location:    team9/setup_and_seed.py
+Reset Tools:        team9/reset_database.bat (or .sh)
+
+
+================================================================================
+Version: 1.0 | Date: 2026-02-05 | Status: Production Ready ✓
+================================================================================

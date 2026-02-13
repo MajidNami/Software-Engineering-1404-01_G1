@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+{% load static %}
+<html class="light" lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>TOEFL Reading Setup</title>
+  <script src="{% static 'team15/vendor/js/tailwindcdn.forms.container-queries.js' %}"></script>
+  <link href="{% static 'team15/vendor/css/lexend.css' %}" rel="stylesheet" />
+  <link href="{% static 'team15/vendor/css/material-symbols-outlined.css' %}" rel="stylesheet" />
+  <style type="text/tailwindcss">
+    :root {
+      --primary-500: #FA7967;--primary-600: #80CAFF;--text: #0B0754;--text-secondary: #3A3CA0;--text-light: #A7BCB4;--background-light: #F0F3FA;--border: #D9DEEB;}
+  </style>
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#135bec", // Keeping this for default, but will use CSS variables
+            "background-light": "var(--background-light)",
+            "background-dark": "#101622",
+          },
+          fontFamily: {
+            "display": ["Lexend", "sans-serif"]
+          },
+          borderRadius: {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+        },
+      },
+    }
+  </script>
+  <style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+  </style>
+</head>
+
+<body data-page="exam-setup" class="font-display bg-background-light dark:bg-background-dark">
+  <div class="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden">
+    <div class="layout-container flex h-full grow flex-col">
+      <div class="flex flex-1 justify-center py-5 sm:px-6 lg:px-8">
+        <div class="layout-content-container flex flex-col w-full max-w-[960px] flex-1 px-4">
+          <div class="flex justify-between gap-2 px-4 py-3">
+            <div class="flex gap-2">
+                <button class="p-2 text-[--text-secondary] dark:text-gray-200" onclick="window.location.href='{% url 'team15-dashboard-page' %}'">
+                  <span class="material-symbols-outlined text-2xl">arrow_back</span>
+                </button>
+            </div>
+            <div class="flex gap-2">
+                <button class="p-2 text-[--text-secondary] dark:text-gray-200" onclick="window.location.href='{% url 'team15-dashboard-page' %}'">
+                  <span class="material-symbols-outlined text-2xl">close</span>
+                </button>
+            </div>
+          </div>
+          <div class="flex flex-col gap-6 p-4 md:p-8">
+            <div class="flex flex-wrap justify-between gap-3">
+              <div class="flex min-w-72 flex-col gap-2">
+                <p class="text-[--text] dark:text-white text-4xl font-black leading-tight tracking-[-0.033em]">TOEFL
+                  Reading Setup</p>
+                <p class="text-[--text-secondary] dark:text-gray-400 text-base font-normal leading-normal">Configure
+                  your practice session</p>
+              </div>
+            </div>
+            <div class="flex flex-col gap-4">
+              <h2
+                class="text-[--text] dark:text-white text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 pb-2 pt-4">
+                Number of Passages</h2>
+              <div class="flex px-4 py-2">
+                <div
+                  class="flex h-12 w-full items-center justify-center rounded-xl bg-white dark:bg-background-dark p-1 border border-[--border] dark:border-gray-700">
+                  {% for option in session_options %}
+                  <label
+                    class="flex cursor-pointer h-full grow items-center justify-center overflow-hidden rounded-lg px-3 has-[:checked]:bg-[--primary-600] has-[:checked]:shadow-sm has-[:checked]:text-white text-[--text-secondary] dark:text-gray-400 dark:has-[:checked]:bg-[--primary-600] dark:has-[:checked]:text-white text-sm font-medium leading-normal transition-all duration-200">
+                    <span class="truncate">{{ option.label }}</span>
+                    <input {% if option.selected %}checked=""{% endif %} class="invisible w-0" name="passage-selection" type="radio" value="{{ option.value }}" data-test-id="{{ option.test_id }}" data-time-limit="{{ option.time_limit }}" />
+                  </label>
+                  {% endfor %}
+                </div>
+              </div>
+              <div class="px-4 py-2">
+                <div
+                  class="flex justify-between items-center gap-x-6 py-3 px-4 bg-white dark:bg-background-dark border border-[--border] dark:border-gray-700 rounded-xl">
+                  <p class="text-[--text-secondary] dark:text-gray-300 text-sm font-medium leading-normal">Estimated
+                    Time</p>
+                  <p id="exam-estimated-time" class="text-[--text] dark:text-yellow-400 text-base font-bold leading-normal text-right">{{ estimated_minutes }} minutes
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="flex flex-col gap-4 mt-6">
+              <h2
+                class="text-[--text] dark:text-white text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 pb-2 pt-4">
+                Important Notes</h2>
+              <ul class="flex flex-col gap-3 px-4">
+                <li class="flex items-start gap-3">
+                  <span class="material-symbols-outlined text-xl text-[--primary-500] mt-0.5">timer_off</span>
+                  <span class="text-[--text-secondary] dark:text-gray-300 text-sm flex-1">The timer will not pause once
+                    the exam begins.</span>
+                </li>
+                <li class="flex items-start gap-3">
+                  <span class="material-symbols-outlined text-xl text-[--primary-500] mt-0.5">history</span>
+                  <span class="text-[--text-secondary] dark:text-gray-300 text-sm flex-1">You can review previous
+                    questions within a passage.</span>
+                </li>
+                <li class="flex items-start gap-3">
+                  <span class="material-symbols-outlined text-xl text-[--primary-500] mt-0.5">rule</span>
+                  <span class="text-[--text-secondary] dark:text-gray-300 text-sm flex-1">Navigation between passages is
+                    restricted until all questions in the current passage are answered.</span>
+                </li>
+              </ul>
+            </div>
+            <div class="flex flex-col gap-6 px-4 pt-8 pb-4">
+              <div class="flex items-center gap-3">
+                <input
+                  class="h-5 w-5 rounded border-[--border] text-[--primary-600] focus:ring-[--primary-600] dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-offset-background-dark"
+                  id="confirm-rules" type="checkbox" />
+                <label class="text-sm text-[--text-secondary] dark:text-gray-300" for="confirm-rules">I understand the
+                  rules and limitations.</label>
+              </div>
+              <button id="exam-start-button" data-default-test-id="{{ default_test_id }}" type="button"
+                class="w-full h-12 flex items-center justify-center rounded-xl bg-[--primary-500] text-white text-base font-bold shadow-sm hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-[--primary-500] focus:ring-offset-2 disabled:bg-gray-300 disabled:cursor-not-allowed dark:disabled:bg-gray-600 dark:focus:ring-offset-background-dark">
+                Start Exam
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="{% static 'team15/js/ui_actions.js' %}?v=20260211-7"></script>
+</body>
+
+</html>

@@ -1,8 +1,5 @@
 from django.db import models
 
-import core.models
-
-
 class Lesson(models.Model):
     LEVEL_CHOICES = [
         ('beginner', 'Beginner'),
