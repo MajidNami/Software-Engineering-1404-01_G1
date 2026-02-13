@@ -423,9 +423,7 @@ def lessons_with_rating_view(request):
     return render(request, 'team2_lessons_with_rating.html', context)
 
 
-# ============================
-# Q&A System APIs
-# ============================
+
 
 @api_login_required
 @require_http_methods(["POST"])
@@ -581,15 +579,11 @@ def lesson_questions_api(request, lesson_id):
     })
 
 
-# ============================
-# Statistics & Analytics APIs
-# ============================
 
 @api_login_required
 @require_http_methods(["POST"])
 def track_view_api(request, lesson_id):
-    """
-    API برای ثبت بازدید و زمان تماشای درس
+    """API برای ثبت بازدید و مدت زمان تماشا 
     POST /team2/api/lessons/<lesson_id>/track-view/
     Body: {"watch_duration": 120, "completed": false}
     """
