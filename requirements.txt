@@ -14,7 +14,7 @@ dj-database-url
 -r team1/requirements.txt
 -r team2/requirements.txt
 -r team3/requirements.txt
--r team4/requirements.txt
+# -r team4/requirements.txt
 -r team5/requirements.txt
 -r team6/requirements.txt
 -r team7/requirements.txt
