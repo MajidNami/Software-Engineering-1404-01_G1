@@ -83,6 +83,7 @@
         let currentIndex = 0;
         let isSolved = false;
         let targetWord = "";
+        let score = 0; // Added score tracking
 
         async function init() {
             try {
@@ -91,6 +92,7 @@
                 if (data.status === "success") {
                     allExercises = data.exercises;
                     targetWord = data.word;
+                    score = 0; // Reset score
                     document.getElementById('loading').style.display = 'none';
                     document.getElementById('quizContent').style.display = 'block';
                     renderStep(0);
@@ -111,7 +113,10 @@
             document.getElementById('nextBtn').classList.remove('active');
 
             const grid = document.getElementById('optionsGrid');
-            grid.innerHTML = ex.options.map(opt => `<div class="option-item" onclick="checkAnswer(this, '${opt}', '${ex.answer}')">${opt}</div>`).join('');
+            // We use .trim() inside the onclick to ensure matches work correctly
+            grid.innerHTML = ex.options.map(opt => 
+                `<div class="option-item" onclick="checkAnswer(this, '${opt.replace(/'/g, "\\'")}', '${ex.answer.replace(/'/g, "\\'")}')">${opt}</div>`
+            ).join('');
 
             document.querySelectorAll('.tab-btn').forEach((btn, i) => btn.classList.toggle('active', i === idx));
             document.getElementById('p-fill').style.width = (idx * 25) + "%";
@@ -120,12 +125,23 @@
 
         function checkAnswer(el, selected, correct) {
             if (isSolved) return;
+            
             const items = document.querySelectorAll('.option-item');
+            
+            // 1. Logic: Highlight the CORRECT answer Green
             items.forEach(item => {
-                item.classList.add('disabled');
-                if (item.textContent.trim() === correct) item.classList.add('correct');
+                item.classList.add('disabled'); // Disable all clicks
+                if (item.textContent.trim() === correct.trim()) {
+                    item.classList.add('correct'); // Make correct answer green
+                }
             });
-            if (selected !== correct) el.classList.add('wrong');
+
+            // 2. Logic: Handle User Selection
+            if (selected.trim() === correct.trim()) {
+                score++; // Increment Score
+            } else {
+                el.classList.add('wrong'); // Make selected answer Red if wrong
+            }
             
             isSolved = true;
             document.getElementById('nextBtn').disabled = false;
@@ -139,12 +155,33 @@
                 // Finalize
                 document.getElementById('p-fill').style.width = "100%";
                 document.getElementById('p-text').textContent = "4/4 Steps";
+                
+                // Save to DB
                 fetch('/team8/api/save-practice/', {
                     method: 'POST',
                     headers: { 'X-CSRFToken': '{{ csrf_token }}', 'Content-Type': 'application/json' },
                     body: JSON.stringify({ word: targetWord })
                 });
-                document.getElementById('quizContent').innerHTML = `<div style="text-align:center; padding:50px;"><h2>🎉 Session Complete!</h2><p>You mastered <b>${targetWord}</b></p></div>`;
+
+                // Show Score UI
+                let resultColor = score >= 3 ? "#2ed573" : "#ff4757"; // Green if good, Red if bad
+                let resultMsg = score >= 3 ? "Great job!" : "Keep practicing!";
+
+                document.getElementById('quizContent').innerHTML = `
+                    <div style="text-align:center; padding:40px;">
+                        <div style="font-size:60px; margin-bottom:10px;">🎉</div>
+                        <h2>Session Complete!</h2>
+                        <p style="color:#636e72;">You practiced word: <b>${targetWord}</b></p>
+                        
+                        <div style="background: #f1f2f6; padding: 20px; border-radius: 15px; margin: 20px 0;">
+                            <span style="display:block; font-size: 14px; color:#636e72;">Your Score</span>
+                            <span style="font-size: 32px; font-weight: bold; color: ${resultColor};">
+                                ${score} / 4
+                            </span>
+                            <p style="margin:5px 0 0; font-size:14px; color:#2d3436;">${resultMsg}</p>
+                        </div>
+                    </div>`;
+                
                 const btn = document.getElementById('nextBtn');
                 btn.textContent = "Finish Session";
                 btn.onclick = () => location.href = '/team8/wordcard/';

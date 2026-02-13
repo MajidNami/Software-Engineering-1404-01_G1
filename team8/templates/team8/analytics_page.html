@@ -1,0 +1,108 @@
+{% extends 'team8/base.html' %}
+
+{% block title %}Analytics{% endblock %}
+
+{% block extra_css %}
+<style>
+    :root { --bg-gradient: linear-gradient(180deg, #e2e2e2 0%, #ffffff 100%); }
+    .container { max-width: 1000px; margin: 30px auto; padding: 0 20px; }
+    
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 25px; margin-bottom: 30px; }
+    
+    .stat-card { background: white; border-radius: 20px; padding: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); display: flex; align-items: center; gap: 20px; transition: transform 0.2s; }
+    .stat-card:hover { transform: translateY(-5px); }
+    
+    .stat-icon { width: 60px; height: 60px; border-radius: 15px; display: flex; align-items: center; justify-content: center; font-size: 28px; }
+    .icon-blue { background: #e3f2fd; color: #1e88e5; }
+    .icon-purple { background: #ede7f6; color: #5e35b1; }
+    
+    .stat-info h3 { margin: 0; font-size: 32px; color: #2d3436; }
+    .stat-info p { margin: 0; font-size: 14px; color: #636e72; font-weight: bold; text-transform: uppercase; }
+
+    .chart-container { background: white; border-radius: 24px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); margin-bottom: 30px; }
+    
+    .recent-list { background: white; border-radius: 24px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+    .list-item { display: flex; justify-content: space-between; padding: 15px 0; border-bottom: 1px solid #f1f2f6; }
+    .list-item:last-child { border-bottom: none; }
+    .word-tag { font-weight: bold; font-size: 16px; color: #2d3436; }
+    .date-tag { font-size: 12px; color: #b2bec3; }
+</style>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 style="color: #2d3436; margin-bottom: 25px;">Learning Analytics</h1>
+
+    <!-- TOP STATS -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon icon-blue">📚</div>
+            <div class="stat-info">
+                <h3>{{ total_words }}</h3>
+                <p>Total Words</p>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon icon-purple">🎯</div>
+            <div class="stat-info">
+                <h3>{{ total_practices }}</h3>
+                <p>Sessions Completed</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- GRAPH -->
+    <div class="chart-container">
+        <h3 style="margin-top:0;">Words Learned (Recent Activity)</h3>
+        <canvas id="learningChart" style="width:100%; max-height:300px;"></canvas>
+    </div>
+
+    <!-- RECENT WORDS -->
+    <div class="recent-list">
+        <h3 style="margin-top:0;">Recently Added</h3>
+        {% for w in recent_words %}
+        <div class="list-item">
+            <span class="word-tag">{{ w.word|title }}</span>
+            <span class="date-tag">{{ w.created_at|date:"M d, Y" }}</span>
+        </div>
+        {% empty %}
+        <p style="color:#b2bec3;">No words yet. Go to Word Cards to generate some!</p>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Safely pass Django data to JavaScript without syntax errors -->
+{{ chart_dates|json_script:"chartDataDates" }}
+{{ chart_counts|json_script:"chartDataCounts" }}
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Safely parse the JSON data injected by Django
+    const labelsData = JSON.parse(document.getElementById('chartDataDates').textContent);
+    const countsData = JSON.parse(document.getElementById('chartDataCounts').textContent);
+
+    const ctx = document.getElementById('learningChart').getContext('2d');
+    const myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labelsData,
+            datasets: [{
+                label: 'New Words',
+                data: countsData,
+                borderColor: '#1e88e5',
+                backgroundColor: 'rgba(30, 136, 229, 0.1)',
+                borderWidth: 3,
+                tension: 0.4,
+                fill: true
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { display: false } },
+            scales: { y: { beginAtZero: true, ticks: { precision: 0 } } }
+        }
+    });
+</script>
+{% endblock %}

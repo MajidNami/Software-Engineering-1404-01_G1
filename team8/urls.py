@@ -7,6 +7,7 @@ from .views.mnemonic_views import get_mnemonic
 from .views import tts_views  
 # --- Add this import ---
 from .views.practice_views import PracticeView, SavePracticeResultView 
+from .views import analytics_page
 
 urlpatterns = [
     path("", RedirectView.as_view(url="wordcard/", permanent=False), name="index"),
@@ -30,4 +31,5 @@ urlpatterns = [
     
     # --- NEW: API to save practice results ---
     path('api/save-practice/', SavePracticeResultView.as_view(), name='save_practice'),
+    path('analytics/', analytics_page, name='analytics_page'),
 ]

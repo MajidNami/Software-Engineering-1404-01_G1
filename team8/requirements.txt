@@ -12,3 +12,7 @@ python-dotenv
 Pillow
 huggingface_hub
 gtts
+fal-client
+openai
+huggingface_hub 
+pillow

@@ -42,6 +42,53 @@
             <strong style="font-size: 14px; display: block;">AI-Generated Study</strong>
             <span style="font-size: 12px; color: #636e72;">Words tailored to your learning level</span>
         </div>
+<<<<<<< HEAD
+
+        <div class="card" id="wordCard">
+            <!-- Word and Level -->
+            <div class="word-title-row">
+                <h1 id="word-text">Loading...</h1>
+                <span id="word-level" class="level-badge">--</span>
+            </div>
+
+            <!-- Phonetic & Audio -->
+            <div class="phonetic">
+                <button>🔊</button>
+                <span id="word-phonetic"></span>
+            </div>
+
+            <!-- Meaning -->
+            <div class="definition" id="word-definition">
+                Generating your next personalized word...
+            </div>
+
+            <!-- Synonyms & Antonyms -->
+            <div class="details-grid">
+                <div>
+                    <div class="section-label">Synonyms</div>
+                    <div class="tag-list" id="word-synonyms"></div>
+                </div>
+                <div>
+                    <div class="section-label">Antonyms</div>
+                    <div class="tag-list" id="word-antonyms"></div>
+                </div>
+            </div>
+
+            <!-- Collocations -->
+            <div class="section-label">Collocations</div>
+            <div class="tag-list" style="margin-bottom: 30px;" id="word-collocations"></div>
+
+            <!-- Examples -->
+            <div class="section-label">Example Sentences</div>
+            <div id="word-examples"></div>
+        </div>
+
+        <!-- Action Button -->
+        <button class="btn-next" id="nextBtn" onclick="generateNewWord()">
+            Generate ✨
+        </button>
+=======
+>>>>>>> 3f4ad5ba003a19e1b23dbc16be1756eb514ebb67
     </div>
 
     <div class="card" id="wordCard">
@@ -179,6 +226,10 @@
             }
         } catch (error) {
             console.error("Error:", error);
+<<<<<<< HEAD
+            alert(error);
+=======
+>>>>>>> 3f4ad5ba003a19e1b23dbc16be1756eb514ebb67
         } finally {
             btn.disabled = false;
             btn.textContent = "Generate ✨";
